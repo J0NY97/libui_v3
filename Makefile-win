@@ -7,6 +7,7 @@ SRCS = \
 	./ui_surface.c \
 	./ui_help.c \
 	./ui_label.c \
+	./ui_button.c \
 	./vec.c \
 
 OBJS = $(SRCS:.c=.o)

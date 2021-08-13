@@ -13,8 +13,10 @@ void	ui_surface_draw_rect(SDL_Surface *surface, t_vec4i rect, Uint32 color)
 	Uint32	*pixels;
 
 	pixels = surface->pixels;
+	/*
 	memcpy(pixels[(rect.y * surface->pitch) + (rect.x * surface->format->BytesPerPixel)], color, sizeof(Uint32) * rect.w);
 	memcpy(pixels[((rect.y * surface->pitch) * rect.h) + (rect.x * surface->format->BytesPerPixel)], color, sizeof(Uint32) * rect.w);
+	*/
 }
 
 void	ui_surface_draw_border(SDL_Surface *surface, size_t thicc, Uint32 color)

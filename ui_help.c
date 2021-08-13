@@ -1,5 +1,15 @@
 #include "libui_v3.h"
 
+int	point_in_rect(t_vec2i point, t_vec4i rect)
+{
+	if (point.x >= rect.x
+		&& point.y >= rect.y
+		&& point.x < rect.x + rect.w
+		&& point.y < rect.y + rect.h)
+		return (1);
+	return (0);
+}
+
 t_rgba	hex_to_rgba(Uint32 color_hex)
 {
 	t_rgba	rgba;

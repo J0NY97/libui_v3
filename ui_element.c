@@ -18,6 +18,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->surface = ui_create_surface(elem->pos);
 	elem->state = UI_STATE_DEFAULT;
 	ui_element_textures_redo(elem);
+	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], 0xff95D7AE);
 }
 
 /*

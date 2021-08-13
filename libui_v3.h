@@ -68,6 +68,8 @@ typedef struct s_ui_window
 	SDL_Renderer	*renderer;
 	SDL_Texture		*texture;
 	char			*title;
+	t_vec2i			mouse_pos;
+	bool			mouse_down;
 }					t_ui_window;
 
 enum	e_element_states
@@ -132,17 +134,15 @@ typedef struct s_ui_text_recipe
 
 typedef struct s_ui_label
 {
-	t_ui_element	elem;
-
-	t_vec4i				text_pos;
-	SDL_Texture			*text_texture;
+	t_vec4i				pos;
+	t_ui_window			*win;
+	SDL_Texture			*texture;
 	t_ui_text_recipe	recipe;
 }						t_ui_label;
 
 typedef struct s_ui_button
 {
 	t_ui_element		elem;
-
 	t_ui_label			label;
 }						t_ui_button;
 
@@ -168,6 +168,7 @@ void				print_vec(float *vec, size_t size);
 
 // Window
 void				ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
+void				ui_window_event(t_ui_window *win, SDL_Event e);
 void				ui_window_render(t_ui_window *win);
 
 // Element
@@ -183,17 +184,25 @@ void				ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, siz
 void				ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
 
 // Surface
+SDL_Surface			*ui_create_surface(t_vec4i size);
 void				ui_surface_draw_rect(SDL_Surface *surface, t_vec4i rect, Uint32 color);
 void				ui_surface_draw_border(SDL_Surface *surface, size_t thicc, Uint32 color);
 void				ui_surface_fill(SDL_Surface *surface, Uint32 color);
 
 // Help
-SDL_Surface			*ui_create_surface(t_vec4i size);
+int					point_in_rect(t_vec2i point, t_vec4i rect);
 t_rgba				hex_to_rgba(Uint32 color_hex);
 Uint32				rgba_to_hex(t_rgba rgba);
 
 // Label
 void				ui_label_new(t_ui_window *win, t_ui_label *label);
+void				ui_label_texture_redo(t_ui_label *label);
+void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
 void				ui_label_render(t_ui_label *label);
+
+// Button
+void				ui_button_new(t_ui_window *win, t_ui_button *button);
+void				ui_button_event(t_ui_button *button, SDL_Event e);
+void				ui_button_render(t_ui_button *button);
 
 #endif
