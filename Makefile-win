@@ -1,0 +1,50 @@
+NAME = test
+SRCS = \
+	./main.c \
+	./ui_window.c \
+	./ui_element.c \
+	./ui_texture.c \
+	./ui_surface.c \
+	./ui_help.c \
+	./ui_label.c \
+	./vec.c \
+
+OBJS = $(SRCS:.c=.o)
+
+SDL_DIR		:= ./libs/SDL
+SDL_INC		:= -I$(SDL_DIR)/include
+SDL_LIB_DIR	:= -L$(SDL_DIR)/lib
+SDL_LIB		:= -lSDL2 -lSDL2_ttf -lSDL2_image
+
+INCLUDES = \
+	-I./libs/libft \
+	-I./libs/libpf \
+	$(SDL_INC) \
+	-I./ \
+
+LIB_FOLDERS = \
+	-L./libs/libft \
+	-L./libs/libpf \
+	$(SDL_LIB_DIR) \
+
+LIB = $(SDL_LIB) -lpf -lft
+
+FLAGS = -Wall -Wextra
+
+all: $(NAME)
+
+$(NAME): $(SRCS)
+	@gcc -o $(NAME) $(SRCS) $(INCLUDES) $(LIB_FOLDERS) $(LIB) $(FLAGS)
+	@echo "$(NAME) was successfully created."
+
+clean:
+	@rm -f $(OBJS)
+	@echo "$(NAME) was cleaned."
+
+fclean:
+	@rm -f $(NAME)
+	@echo "$(NAME) was fcleaned."
+
+re: fclean $(LIBS) all
+
+.PHONY: clean, all, re, fclean
