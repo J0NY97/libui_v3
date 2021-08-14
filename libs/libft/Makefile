@@ -125,6 +125,7 @@ SRCS = 	add_to_list.c\
 		ft_tolower.c\
 		ft_toupper.c\
 		ft_wordcount.c\
+		ft_arraydel.c\
 		get_next_line.c
 
 OBJS = $(SRCS:.c=.o)

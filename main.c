@@ -8,6 +8,9 @@ int	main(void)
 	t_ui_label label;
 	t_ui_button button;
 
+	ui_print_accepted();
+	ui_load("layout.ui");
+
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	TTF_Init();
@@ -31,6 +34,7 @@ int	main(void)
 	int	run = 1;
 	while (run)
 	{
+		// Input
 		while (SDL_PollEvent(&e))
 		{
 			if (e.key.type == SDL_KEYDOWN)
@@ -42,9 +46,15 @@ int	main(void)
 			ui_window_event(&win, e);
 			ui_button_event(&button, e);
 		}
+
+		// User Code
+		if (ui_button(&button))
+			ft_printf("button is click.\n");
+
+		// Render
 		SDL_RenderClear(win.renderer);
 		ui_window_render(&win);
-//		ui_label_render(&label);
+		ui_label_render(&label);
 		ui_button_render(&button);
 		ui_element_render(&elem1);
 		SDL_RenderPresent(win.renderer);

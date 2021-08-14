@@ -6,6 +6,7 @@
 # include "SDL_ttf.h"
 # include "libft.h"
 # include "libpf.h"
+# include "stdio.h"
 //# include "path.h"
 
 # define VEC2_SIZE 2
@@ -87,6 +88,7 @@ enum	e_element_types
 	UI_TYPE_MENU,
 	UI_TYPE_AMOUNT
 };
+
 /*
  * t_vec4i		pos;						the position of the elem relative to its parent.
  * t_vec4i		screen_pos;					the position of the elem relative to the screen.
@@ -120,7 +122,6 @@ typedef struct s_ui_element
 	char			*id;
 	bool			is_hover;
 	bool			is_click;
-	bool			is_click_repeat;
 }					t_ui_element;
 
 typedef struct s_ui_text_recipe
@@ -203,6 +204,11 @@ void				ui_label_render(t_ui_label *label);
 // Button
 void				ui_button_new(t_ui_window *win, t_ui_button *button);
 void				ui_button_event(t_ui_button *button, SDL_Event e);
+bool				ui_button(t_ui_button *button);
 void				ui_button_render(t_ui_button *button);
+
+// Load
+void				ui_print_accepted(void);
+void				ui_load(char *ui_file_path);
 
 #endif

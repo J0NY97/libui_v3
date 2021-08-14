@@ -14,13 +14,12 @@ void	ui_button_new(t_ui_window *win, t_ui_button *button)
 
 void	ui_button_event(t_ui_button *button, SDL_Event e)
 {
+	button->elem.is_hover = 0;
 	if (point_in_rect(button->elem.win->mouse_pos, button->elem.pos))
 		button->elem.is_hover = 1;
-	else
-		button->elem.is_hover = 0;
-	if (button->elem.is_hover && button->elem.win->mouse_down)
+	if (button->elem.is_hover && e.type == SDL_MOUSEBUTTONDOWN)
 		button->elem.is_click = 1;
-	else
+	if (button->elem.is_click && e.type == SDL_MOUSEBUTTONUP)
 		button->elem.is_click = 0;
 	if (button->elem.is_click)
 		button->elem.state = UI_STATE_CLICK;
@@ -28,6 +27,16 @@ void	ui_button_event(t_ui_button *button, SDL_Event e)
 		button->elem.state = UI_STATE_HOVER;
 	else
 		button->elem.state = UI_STATE_DEFAULT;
+}
+
+bool	ui_button(t_ui_button *button)
+{
+	if (button->elem.is_click)
+	{
+		button->elem.is_click = 0;
+		return (1);
+	}
+	return (0);
 }
 
 void	ui_button_render(t_ui_button *button)
