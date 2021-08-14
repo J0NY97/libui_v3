@@ -64,51 +64,70 @@ void	ui_print_accepted(void)
 	}
 }
 
-void	ui_read_button(char *id, FILE *fd)
+void	ui_read_button(char *id, char *inside)
 {
 	t_ui_element	elem;
-	char			*line;
+	char			**values;
 	char			**arr;
-	size_t			len;
-	ssize_t			nread;
-	int				open_parentheses;
+	int				i;
 
-	open_parentheses = 1;
-	line = NULL;
-	nread = getline(&line, &len, fd);
-	nread = getline(&line, &len, fd);
-	while (open_parentheses > 0)
+	values = ft_strsplit(inside, ';');
+	i = -1;
+	while (values[++i])
 	{
-		ft_printf("nread : %d\n", nread);
-		arr = ft_strsplit(line, ' ');
-		ft_printf("arr[0] : <%s>\n", arr[0]);
-		if (ft_strchr(line, '{') || ft_strchr(line, '}'))
-		{
-			if (ft_strchr(line, '{'))
-				open_parentheses++;
-			if (ft_strchr(line, '}'))
-				open_parentheses--;
-		}
-		if (ft_strstr(arr[0], "pos") == 0)
-			ft_putstr("We have found pos.\n");
-		else if (ft_strstr(arr[0], "bg_color") == 0)
-			ft_putstr("We have found bg_color.\n");
+		arr = ft_strsplit(values[i], ':');
+		if (ft_strstr(arr[0], "pos"))
+			ft_putstr("we have found pos arg.\n");
+		else if (ft_strstr(arr[0], "bg_color"))
+			ft_putstr("we have found bg_color arg.\n");
 		else
-			ft_putstr("We have found presumably a variable of an element.\n");
-		ft_strdel(&line);
+			ft_putstr("we have found presumably element variable arg.\n");
 		ft_arraydel(arr);
-		nread = getline(&line, &len, fd);
 	}
+	ft_arraydel(values);
 }
 
-int	decide(char *str)
+int	decide(char *str, char **inside, FILE *fd)
 {
+	char	*line;
+	size_t	len;
+	ssize_t	nread;
+	int		result;
+	char	*trimmed;
+	int		open_parentheses;
+
+	result = -1;
 	if (ft_strequ(str, "Button"))
 	{
 		ft_putstr("We have found button.\n");
-		return (UI_TYPE_BUTTON);
+		result = UI_TYPE_BUTTON;
 	}
-	return (-1);
+	if (result != -1)
+	{
+		open_parentheses = 0;
+		line = NULL;
+		nread = getline(&line, &len, fd);
+		while (1)
+		{
+			if (ft_strchr(line, '}'))
+				open_parentheses--;
+			if (ft_strchr(line, '{'))
+				open_parentheses++;
+			trimmed = ft_strtrim(line);
+			ft_stradd(inside, trimmed);
+			ft_strdel(&trimmed);
+			ft_strdel(&line);
+			if (open_parentheses == 0)
+				break ;
+			nread = getline(&line, &len, fd);
+		}
+		ft_strdel(&line);
+		trimmed = ft_strsub(*inside, 1, ft_strlen(*inside) - 2);
+		ft_strdel(inside);
+		*inside = ft_strdup(trimmed);
+		ft_strdel(&trimmed);
+	}
+	return (result);
 }
 
 void	ui_load(char *ui_file_path)
@@ -119,6 +138,7 @@ void	ui_load(char *ui_file_path)
 	size_t	len;
 	ssize_t	nread;
 	int		decision;
+	char	*inside;
 
 	fd = fopen(ui_file_path, "r");
 	if (!fd)
@@ -129,18 +149,20 @@ void	ui_load(char *ui_file_path)
 	else
 		ft_printf("[ui_load] Could open ui file : %s\n", ui_file_path);
 	line = NULL;
+	inside = NULL;
 	nread = getline(&line, &len, fd);
 	while (nread != -1)
 	{
 		ft_printf("nread : %d\n", nread);
 		arr = ft_strsplit(line, ' ');
-		decision = decide(arr[0]);
+		decision = decide(arr[0], &inside, fd);
 		if (decision == -1)
 		{
 		}
 		else if (decision == UI_TYPE_BUTTON)
-			ui_read_button(arr[1], fd);
+			ui_read_button(arr[1], inside);
 		ft_strdel(&line);
+		ft_strdel(&inside);
 		ft_arraydel(arr);
 		nread = getline(&line, &len, fd);
 	}
