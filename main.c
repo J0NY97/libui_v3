@@ -7,6 +7,7 @@ int	main(void)
 	t_ui_element elem1;
 	t_ui_label label;
 	t_ui_button button;
+	t_ui_menu	menu;
 
 	ui_print_accepted();
 	ui_load("layout.ui");
@@ -29,6 +30,9 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
+
+	// Menu
+	ui_menu_new(&win, &menu);
 
 	SDL_Event	e;
 	int	run = 1;
@@ -57,6 +61,7 @@ int	main(void)
 		ui_label_render(&label);
 		ui_button_render(&button);
 		ui_element_render(&elem1);
+		ui_menu_render(&menu);
 		SDL_RenderPresent(win.renderer);
 	}
 

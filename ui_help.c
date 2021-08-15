@@ -28,3 +28,15 @@ Uint32	rgba_to_hex(t_rgba rgba)
 		| ((rgba.g & 0xff) << 8)
 		| (rgba.b & 0xff));
 }
+
+void	*ui_typecast_correct_element(void *element, int element_type)
+{
+	if (element_type == UI_TYPE_WINDOW)
+		return ((t_ui_window *)element);
+	if (element_type == UI_TYPE_BUTTON)
+		return ((t_ui_button *)element);
+	if (element_type == UI_TYPE_LABEL)
+		return ((t_ui_label *)element);
+	if (element_type == UI_TYPE_MENU)
+		return ((t_ui_menu *)element);
+}

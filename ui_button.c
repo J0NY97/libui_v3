@@ -9,13 +9,15 @@ void	ui_button_new(t_ui_window *win, t_ui_button *button)
 	ui_texture_fill_rect(button->elem.win->renderer, button->elem.textures[UI_STATE_HOVER], 0xff7BAE7F);
 	ui_texture_fill_rect(button->elem.win->renderer, button->elem.textures[UI_STATE_CLICK], 0xff73956F);
 	ui_label_new(win, &button->label);
-	ui_label_pos_set(&button->label, (t_vec4i){button->elem.pos.x, button->elem.pos.y, button->label.pos.w, button->label.pos.h});
+	button->label.parent = &button->elem;
+	button->label.parent_type = UI_TYPE_ELEMENT;
+// ui_label_pos_set(&button->label, (t_vec4i){button->elem.pos.x, button->elem.pos.y, button->label.pos.w, button->label.pos.h});
 }
 
 void	ui_button_event(t_ui_button *button, SDL_Event e)
 {
 	button->elem.is_hover = 0;
-	if (point_in_rect(button->elem.win->mouse_pos, button->elem.pos))
+	if (point_in_rect(button->elem.win->mouse_pos, button->elem.screen_pos))
 		button->elem.is_hover = 1;
 	if (button->elem.is_hover && e.type == SDL_MOUSEBUTTONDOWN)
 		button->elem.is_click = 1;
@@ -47,4 +49,12 @@ void	ui_button_render(t_ui_button *button)
 	SDL_RenderTarget(button->elem.win->renderer, NULL);
 	SDL_RenderCopy(button->elem.win->renderer, button->NULL, NULL);
 	*/
+}
+
+/*
+ * go figure.
+*/
+void	ui_button_free(void *button)
+{
+	(void)button;
 }

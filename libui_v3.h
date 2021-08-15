@@ -65,6 +65,7 @@ typedef struct s_rgba
 typedef struct s_ui_window
 {
 	t_vec4i			pos;
+	t_vec4i			screen_pos;
 	SDL_Window		*win;
 	SDL_Renderer	*renderer;
 	SDL_Texture		*texture;
@@ -83,16 +84,18 @@ enum	e_element_states
 
 enum	e_element_types
 {
-	UI_TYPE_LABEL = 0,
+	UI_TYPE_NONE = -1,
+	UI_TYPE_ELEMENT = 0,
+	UI_TYPE_LABEL,
 	UI_TYPE_BUTTON,
 	UI_TYPE_MENU,
+	UI_TYPE_WINDOW,
 	UI_TYPE_AMOUNT
 };
 
 /*
  * t_vec4i		pos;						the position of the elem relative to its parent.
  * t_vec4i		screen_pos;					the position of the elem relative to the screen.
- * SDL_Surface	*surface;					everything is first drawn on the surface.
  * SDL_Texture	*states[UI_STATE_AMOUNT];	textures for all the different states there are.
  * int			state;						the state the element is in, enum t_element_states.
  * t_ui_window	*win;						the window you want the element on.
@@ -110,7 +113,6 @@ typedef struct s_ui_element
 {
 	t_vec4i			pos;
 	t_vec4i			screen_pos;
-	SDL_Surface		*surface; // remove at some point, we are using textures rather.
 	SDL_Texture		*textures[UI_STATE_AMOUNT];
 	int				state;
 	t_ui_window		*win;
@@ -124,6 +126,20 @@ typedef struct s_ui_element
 	bool			is_click;
 }					t_ui_element;
 
+/*
+ * Description:
+ * Menu is a compilation of elements, probably makes it easier to toggle on/off
+ * a big group of elements, since children takes their ->show variable from their
+ * parent element. (Thats atleast the point)
+ *
+ * t_list				*children;		list of elements of types e_element_type
+*/
+typedef struct s_ui_menu
+{
+	t_ui_element		elem;
+	t_list				*children;
+}						t_ui_menu;
+
 typedef struct s_ui_text_recipe
 {
 	char				*text;
@@ -136,6 +152,9 @@ typedef struct s_ui_text_recipe
 typedef struct s_ui_label
 {
 	t_vec4i				pos;
+	t_vec4i				screen_pos;
+	void				*parent;
+	int					parent_type;
 	t_ui_window			*win;
 	SDL_Texture			*texture;
 	t_ui_text_recipe	recipe;
@@ -171,6 +190,8 @@ void				print_vec(float *vec, size_t size);
 void				ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void				ui_window_event(t_ui_window *win, SDL_Event e);
 void				ui_window_render(t_ui_window *win);
+void				ui_window_get(void *win);
+void				ui_window_free(void *win);
 
 // Element
 void				ui_element_new(t_ui_window *win, t_ui_element *elem);
@@ -194,18 +215,30 @@ void				ui_surface_fill(SDL_Surface *surface, Uint32 color);
 int					point_in_rect(t_vec2i point, t_vec4i rect);
 t_rgba				hex_to_rgba(Uint32 color_hex);
 Uint32				rgba_to_hex(t_rgba rgba);
+void				*ui_typecast_correct_element(void *element, int element_type);
 
 // Label
 void				ui_label_new(t_ui_window *win, t_ui_label *label);
 void				ui_label_texture_redo(t_ui_label *label);
 void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
 void				ui_label_render(t_ui_label *label);
+void				ui_label_get(void *label);
+void				ui_label_free(void *label);
 
 // Button
 void				ui_button_new(t_ui_window *win, t_ui_button *button);
 void				ui_button_event(t_ui_button *button, SDL_Event e);
 bool				ui_button(t_ui_button *button);
 void				ui_button_render(t_ui_button *button);
+void				ui_button_get(void *button);
+void				ui_button_free(void *button);
+
+// Menu
+void				ui_menu_new(t_ui_window *win, t_ui_menu *menu);
+void				ui_menu_add_child(t_ui_menu *menu, void *child);
+void				ui_menu_render(t_ui_menu *menu);
+void				ui_menu_get(void *menu);
+void				ui_menu_free(void *menu);
 
 // Load
 void				ui_print_accepted(void);

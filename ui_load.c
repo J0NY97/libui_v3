@@ -1,27 +1,37 @@
 #include "libui_v3.h"
 
+/*
+ * Funt fact: you can only have flexible array in the end of a struct.
+ * 	which actually makes sense if you think about it.
+*/
+typedef struct s_ui_acceptable
+{
+	char		*name;
+	int			type;
+	void		(*freer)(void *args);
+	void		(*getter)(void *args);
+	const char	**values;
+}				t_ui_acceptable;
+
 static const char *g_accepted_button[] = {
-	"Button",
 	"pos",
 	"bg_color",
-	"something",
+	"bg_image",
+	"Label",
 	NULL
 };
 
 static const char *g_accepted_window[] = {
-	"Window",
 	"pos",
 	NULL
 };
 
 static const char *g_accepted_menu[] = {
-	"Menu",
 	"pos",
 	NULL
 };
 
 static const char *g_accepted_label[] = {
-	"Label",
 	"pos",
 	"font_path",
 	"font_size",
@@ -29,22 +39,61 @@ static const char *g_accepted_label[] = {
 	NULL
 };
 
+static const t_ui_acceptable	g_acceptable_button =
+{
+	.name = "Button",
+	.type = UI_TYPE_BUTTON,
+	.freer = &ui_button_free,
+	.getter = &ui_button_get,
+	.values = g_accepted_button
+};
+
+static const t_ui_acceptable	g_acceptable_label =
+{
+	.name = "Label",
+	.type = UI_TYPE_LABEL,
+	.freer = &ui_label_free,
+	.getter = &ui_label_get,
+	.values = g_accepted_label
+};
+
+static const t_ui_acceptable	g_acceptable_menu =
+{
+	.name = "Menu",
+	.type = UI_TYPE_MENU,
+	.freer = &ui_menu_free,
+	.getter = &ui_menu_get,
+	.values = g_accepted_menu
+};
+
+static const t_ui_acceptable	g_acceptable_window =
+{
+	.name = "Window",
+	.type = UI_TYPE_WINDOW,
+	.freer = &ui_window_free,
+	.getter = &ui_window_get,
+	.values = g_accepted_menu
+};
+
+# define UI_ACCEPT_AMOUNT 4
+static const t_ui_acceptable	g_acceptable[] =
+{
+	g_acceptable_button,
+	g_acceptable_label,
+	g_acceptable_menu,
+	g_acceptable_window,
+	NULL
+};
+
 /*
  * Everything in Menu/Window that are not in the accepted,
  * are considered as already made elements in the ui file,
- * and will be tried to get_element_by_id from a list of elements.
+ * and will be tried to ui_element_get_by_id from a list of elements.
  *
  * If Button has something that is not in the accepted,
  * it will assume its a label, and try to find that label id
  * from the list of elements.
 */
-static const char **g_accepted[] = {
-	g_accepted_button,
-	g_accepted_window,
-	g_accepted_menu,
-	g_accepted_label,
-	NULL
-};
 
 void	ui_print_accepted(void)
 {
@@ -52,42 +101,51 @@ void	ui_print_accepted(void)
 	int	j;
 
 	i = -1;
-	while (g_accepted[++i])
+	while (++i < UI_ACCEPT_AMOUNT)
 	{
 		j = -1;
-		ft_printf("\n[%s]\n{\n", g_accepted[i][++j]);
-		while (g_accepted[i][++j])
+		ft_printf("\n[%s]\n{\n", g_acceptable[i].name);
+		while (g_acceptable[i].values[++j])
 		{
-			ft_printf(" %s\n", g_accepted[i][j]);
+			ft_printf(" %s\n", g_acceptable[i].values[j]);
 		}
 		ft_printf("}\n");
 	}
 }
 
-void	ui_read_button(char *id, char *inside)
+typedef struct	s_ui_get
 {
-	t_ui_element	elem;
+	char	*id;
+	char	*inside;
+}			t_ui_get;
+
+void	ui_button_get(void *args) //(char *id, char *inside)
+{
 	char			**values;
 	char			**arr;
 	int				i;
+	int				j;
+	t_ui_get		*butt_get;
 
-	values = ft_strsplit(inside, ';');
+	butt_get = args;
+	ft_printf("id: %s\n", butt_get->id);
+	values = ft_strsplit(butt_get->inside, ';');
 	i = -1;
 	while (values[++i])
 	{
+		j = -1;
 		arr = ft_strsplit(values[i], ':');
-		if (ft_strstr(arr[0], "pos"))
-			ft_putstr("we have found pos arg.\n");
-		else if (ft_strstr(arr[0], "bg_color"))
-			ft_putstr("we have found bg_color arg.\n");
-		else
-			ft_putstr("we have found presumably element variable arg.\n");
+		while (g_accepted_button[++j])
+		{
+			if (ft_strstr(arr[0], g_accepted_button[j]))
+				ft_printf("we have found %s arg.\n", g_accepted_button[j]);
+		}
 		ft_arraydel(arr);
 	}
 	ft_arraydel(values);
 }
 
-int	decide(char *str, char **inside, FILE *fd)
+void	decide(char *str, char *var_name, FILE *fd)
 {
 	char	*line;
 	size_t	len;
@@ -95,15 +153,22 @@ int	decide(char *str, char **inside, FILE *fd)
 	int		result;
 	char	*trimmed;
 	int		open_parentheses;
+	int		i;
+	char	*inside;
 
 	result = -1;
-	if (ft_strequ(str, "Button"))
+	i = -1;
+	while (++i < UI_ACCEPT_AMOUNT)
 	{
-		ft_putstr("We have found button.\n");
-		result = UI_TYPE_BUTTON;
+		if (ft_strequ(str, g_acceptable[i].name))
+		{
+			result = g_acceptable[i].type;
+			break ;
+		}
 	}
 	if (result != -1)
 	{
+		inside = NULL;
 		open_parentheses = 0;
 		line = NULL;
 		nread = getline(&line, &len, fd);
@@ -114,7 +179,7 @@ int	decide(char *str, char **inside, FILE *fd)
 			if (ft_strchr(line, '{'))
 				open_parentheses++;
 			trimmed = ft_strtrim(line);
-			ft_stradd(inside, trimmed);
+			ft_stradd(&inside, trimmed);
 			ft_strdel(&trimmed);
 			ft_strdel(&line);
 			if (open_parentheses == 0)
@@ -122,23 +187,23 @@ int	decide(char *str, char **inside, FILE *fd)
 			nread = getline(&line, &len, fd);
 		}
 		ft_strdel(&line);
-		trimmed = ft_strsub(*inside, 1, ft_strlen(*inside) - 2);
-		ft_strdel(inside);
-		*inside = ft_strdup(trimmed);
+		trimmed = ft_strsub(inside, 1, ft_strlen(inside) - 2);
+		ft_strdel(&inside);
+		inside = ft_strdup(trimmed);
 		ft_strdel(&trimmed);
+		g_acceptable[i].getter(&(t_ui_get){var_name, inside});
+		ft_strdel(&inside);
 	}
-	return (result);
 }
 
 void	ui_load(char *ui_file_path)
 {
 	FILE	*fd;
 	char	*line;
+	char	*trimmed;
 	char	**arr;
 	size_t	len;
 	ssize_t	nread;
-	int		decision;
-	char	*inside;
 
 	fd = fopen(ui_file_path, "r");
 	if (!fd)
@@ -149,22 +214,19 @@ void	ui_load(char *ui_file_path)
 	else
 		ft_printf("[ui_load] Could open ui file : %s\n", ui_file_path);
 	line = NULL;
-	inside = NULL;
 	nread = getline(&line, &len, fd);
 	while (nread != -1)
 	{
 		ft_printf("nread : %d\n", nread);
-		arr = ft_strsplit(line, ' ');
-		decision = decide(arr[0], &inside, fd);
-		if (decision == -1)
-		{
-		}
-		else if (decision == UI_TYPE_BUTTON)
-			ui_read_button(arr[1], inside);
+		trimmed = ft_strtrim(line);
+		arr = ft_strsplit(trimmed, ' ');
+		if (arr[0] && arr[1])
+			decide(arr[0], arr[1], fd);
 		ft_strdel(&line);
-		ft_strdel(&inside);
+		ft_strdel(&trimmed);
 		ft_arraydel(arr);
 		nread = getline(&line, &len, fd);
 	}
 	fclose(fd);
+	ft_printf("Done reading : %s\n", ui_file_path);
 }

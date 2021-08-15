@@ -1,3 +1,7 @@
+Element elem0
+{
+}
+
 Label label0
 {
 	pos : [10, 10, 50, 20];
@@ -10,7 +14,22 @@ Button button0
 {
 	pos : [10, 10, 50, 20];
 	bg_color : [default : 0xff95d7ae, hover : 0xff7bae7f, click : 0xff73956f];
+	bg_image : [default : "button.jpg", hover : "button.jpg", click : "button.jpg"];
 	label0;
+}
+
+Button button1
+{
+	pos : [10, 10, 50, 20];
+	bg_color : [default : 0xff95d7ae, hover : 0xff7bae7f, click : 0xff73956f];
+	bg_image : [ default : "button.jpg", hover : "button.jpg", click : "button.jpg"];
+	Label
+	{
+		pos : [10, 10, 50, 20];
+		font_path : "DroidSans.ttf";
+		font_size : 12;
+		font_color : 0xff037171;
+	};
 }
 
 Menu menu0
@@ -24,5 +43,3 @@ Window win0
 	pos : [100, 100, 1280, 720];
 	menu0;
 }
-
-
