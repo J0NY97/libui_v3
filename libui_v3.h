@@ -140,6 +140,9 @@ typedef struct s_ui_menu
 	t_list				*children;
 }						t_ui_menu;
 
+/*
+ * bool	font_recreate;	set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
+*/
 typedef struct s_ui_text_recipe
 {
 	char				*text;
@@ -147,6 +150,8 @@ typedef struct s_ui_text_recipe
 	unsigned int		font_size;
 	Uint32				font_color;
 	int					max_w;
+	TTF_Font			*font;
+	bool				font_recreate;
 }						t_ui_text_recipe;
 
 typedef struct s_ui_label
@@ -181,6 +186,7 @@ typedef struct s_ui_texture_recipe
 	char			*font_path;
 	int				font_size;
 	Uint32			font_color;
+	TTF_Font		*font;
 }					t_ui_texture_recipe;
 
 // Vec
@@ -200,7 +206,7 @@ void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void				ui_element_render(t_ui_element *elem);
 
 // Texture
-SDL_Texture			*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe recipe);
+SDL_Texture			*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);
 SDL_Texture			*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos);
 void				ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
 void				ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
@@ -221,6 +227,7 @@ void				*ui_typecast_correct_element(void *element, int element_type);
 void				ui_label_new(t_ui_window *win, t_ui_label *label);
 void				ui_label_texture_redo(t_ui_label *label);
 void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
+void				ui_label_text_set(t_ui_label *label, char *text);
 void				ui_label_render(t_ui_label *label);
 void				ui_label_get(void *label);
 void				ui_label_free(void *label);

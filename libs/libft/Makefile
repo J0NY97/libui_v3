@@ -40,6 +40,7 @@ SRCS = 	add_to_list.c\
 		ft_isupper.c\
 		ft_iswspace.c\
 		ft_itoa.c\
+		ft_b_itoa.c\
 		ft_itoa_base.c\
 		ft_lstadd.c\
 		ft_lstadd_new.c\

@@ -30,12 +30,15 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
+	ui_label_text_set(&button.label, "button");
 
 	// Menu
 	ui_menu_new(&win, &menu);
 
 	SDL_Event	e;
 	int	run = 1;
+	char *temp;
+	char temp2[20];
 	while (run)
 	{
 		// Input
@@ -54,6 +57,8 @@ int	main(void)
 		// User Code
 		if (ui_button(&button))
 			ft_printf("button is click.\n");
+		ft_b_itoa(SDL_GetTicks(), temp2);
+		ui_label_text_set(&label, temp2);
 
 		// Render
 		SDL_RenderClear(win.renderer);

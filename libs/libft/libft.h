@@ -56,6 +56,7 @@ int					ft_isspace(int c);
 int					ft_isupper(int c);
 int					ft_iswspace(int c);
 char				*ft_itoa(int nbr);
+int					ft_b_itoa(int nbr, char	*buffer);
 char				val(int c);
 int					ft_nbrlen_base(long long int nbr, int base);
 char				*ft_itoa_base(long long int nbr, int base);

@@ -14,6 +14,8 @@ void	ui_label_new(t_ui_window *win, t_ui_label *label)
 	label->recipe.font_size = 12;
 	label->recipe.font_color = 0xff037171;
 	label->recipe.max_w = -1;
+	label->recipe.font = NULL;
+	label->recipe.font_recreate = 1;
 	ui_label_texture_redo(label);
 }
 
@@ -21,8 +23,16 @@ void	ui_label_texture_redo(t_ui_label *label)
 {
 	if (label->texture)
 		SDL_DestroyTexture(label->texture);
-	label->texture = ui_texture_create_from_text_recipe(label->win->renderer, label->recipe);	
+	label->texture = ui_texture_create_from_text_recipe(label->win->renderer, &label->recipe);	
 	SDL_QueryTexture(label->texture, NULL, NULL, &label->pos.w, &label->pos.h);
+}
+
+void	ui_label_text_set(t_ui_label *label, char *text)
+{
+	if (label->recipe.text)
+		ft_strdel(&label->recipe.text);
+	label->recipe.text = ft_strdup(text);
+	ui_label_texture_redo(label);
 }
 
 void	ui_label_pos_set(t_ui_label *label, t_vec4i pos)

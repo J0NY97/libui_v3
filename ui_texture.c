@@ -44,31 +44,35 @@ void	ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t
 	SDL_SetRenderTarget(renderer, NULL);
 }
 
-SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe recipe)
+SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe)
 {
 	SDL_Texture	*texture;
 	SDL_Surface	*surface;
-	TTF_Font	*font;
 	t_rgba		rgba;
 	SDL_Color	color;
 
-	font = TTF_OpenFont(recipe.font_path, recipe.font_size);
-	if (!font)
+	if (!recipe->font || recipe->font_recreate)
 	{
-		ft_printf("[ui_texture_create_from_text_recipe] Failed to open font : %s\n", recipe.font_path);
+		if (recipe->font)
+			TTF_CloseFont(recipe->font);
+		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
+		recipe->font_recreate = 0;
+	}
+	if (!recipe->font)
+	{
+		ft_printf("[ui_texture_create_from_text_recipe] Failed to open font : %s\n", recipe->font_path);
 		return (NULL);
 	}
-	rgba = hex_to_rgba(recipe.font_color);
+	rgba = hex_to_rgba(recipe->font_color);
 	color.r = rgba.r;
 	color.g = rgba.g;
 	color.b = rgba.b;
 	color.a = rgba.a;
-	if (recipe.max_w == -1)
-		surface = TTF_RenderUTF8_Blended(font, recipe.text, color);
+	if (recipe->max_w == -1)
+		surface = TTF_RenderUTF8_Blended(recipe->font, recipe->text, color);
 	else
-		surface = TTF_RenderUTF8_Blended_Wrapped(font, recipe.text, color, recipe.max_w);
+		surface = TTF_RenderUTF8_Blended_Wrapped(recipe->font, recipe->text, color, recipe->max_w);
 	texture = SDL_CreateTextureFromSurface(renderer, surface);
-	TTF_CloseFont(font);
 	SDL_FreeSurface(surface);
 	return (texture);
 }
