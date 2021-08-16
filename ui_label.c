@@ -91,12 +91,6 @@ void	ui_label_color_set(t_ui_label *label, Uint32 color)
 /*
  * End of editing functions
 */
-
-void	ui_label_get(void *label)
-{
-	(void)label;
-}
-
 void	ui_label_free(void *label)
 {
 	(void)label;

@@ -48,6 +48,7 @@ int	main(void)
 	t_ui_button		menu_button1;
 	ui_menu_new(&win, &menu);
 	ui_element_pos_set(&menu.elem, (t_vec4i){150, 100, 500, 500});
+	ui_element_image_set_from_path(&menu.elem, UI_STATE_DEFAULT, "images/grass_hill.jpg");
 
 	ui_label_new(&win, &menu_label0);
 	ui_label_text_set(&menu_label0, "Menu Label");
@@ -113,6 +114,5 @@ int	main(void)
 		ui_menu_render(&menu);
 		SDL_RenderPresent(win.renderer);
 	}
-
 	return (0);
 }

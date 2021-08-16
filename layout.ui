@@ -1,7 +1,3 @@
-Element elem0
-{
-}
-
 Label label0
 {
 	pos : [10, 10, 50, 20];
@@ -12,30 +8,34 @@ Label label0
 
 Button button0
 {
-	pos : [10, 10, 50, 20];
+	pos : [10, 40, 50, 20];
 	bg_color : [default : 0xff95d7ae, hover : 0xff7bae7f, click : 0xff73956f];
 	bg_image : [default : "button.jpg", hover : "button.jpg", click : "button.jpg"];
 	label0;
 }
 
+Label label1
+{
+	pos : [0, 0, 50, 20];
+	font_path : "DroidSans.ttf";
+	font_size : 12;
+	font_color : 0xff037171;
+}
+
 Button button1
 {
-	pos : [10, 10, 50, 20];
+	pos : [10, 70, 50, 20];
 	bg_color : [default : 0xff95d7ae, hover : 0xff7bae7f, click : 0xff73956f];
-	bg_image : [ default : "button.jpg", hover : "button.jpg", click : "button.jpg"];
-	Label
-	{
-		pos : [10, 10, 50, 20];
-		font_path : "DroidSans.ttf";
-		font_size : 12;
-		font_color : 0xff037171;
-	};
+	bg_image : [default : "button.jpg", hover : "button.jpg", click : "button.jpg"];
+	label1;
 }
 
 Menu menu0
 {
 	pos : [100, 100, 1280, 720];
+	label0;
 	button0;
+	button1;
 }
 
 Window win0

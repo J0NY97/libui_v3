@@ -19,6 +19,10 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->colors[UI_STATE_DEFAULT] = 0xff95D7AE;
 	elem->colors[UI_STATE_HOVER] = 0xff7BAE7F;
 	elem->colors[UI_STATE_CLICK] = 0xff73956F;
+	elem->images[UI_STATE_DEFAULT] = NULL;
+	elem->images[UI_STATE_HOVER] = NULL;
+	elem->images[UI_STATE_CLICK] = NULL;
+	elem->use_images = 0;
 	elem->texture_recreate = 1;
 	ui_element_textures_redo(elem);
 	elem->parent = win;
@@ -45,10 +49,22 @@ void	ui_element_textures_redo(t_ui_element *elem)
 	elem->textures[UI_STATE_DEFAULT] = ui_create_texture(elem->win->renderer, elem->pos);
 	elem->textures[UI_STATE_HOVER] = ui_create_texture(elem->win->renderer, elem->pos);
 	elem->textures[UI_STATE_CLICK] = ui_create_texture(elem->win->renderer, elem->pos);
+	elem->texture_recreate = 0;
+	if (elem->use_images)
+	{
+		i = -1;
+		while (++i < UI_STATE_AMOUNT)
+		{
+			if (!elem->images[i])
+				continue ;
+			SDL_SetRenderTarget(elem->win->renderer, elem->textures[i]);
+			SDL_RenderCopy(elem->win->renderer, elem->images[i], NULL, NULL);
+		}
+		return ;
+	}
 	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
 	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
 	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
-	elem->texture_recreate = 0;
 }
 
 /*
@@ -100,3 +116,23 @@ void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 	elem->colors[state] = color;
 }
 
+void	ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path)
+{
+	SDL_Surface	*image;
+
+	image = IMG_Load(image_path);
+	if (!image)
+		return ;
+	ui_element_image_set(elem, state, image);
+	SDL_FreeSurface(image);
+}
+
+void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
+{
+	if (state < 0 || state > UI_STATE_AMOUNT)
+		return ;
+	if (elem->images[state])
+		SDL_DestroyTexture(elem->images[state]);
+	elem->images[state] = SDL_CreateTextureFromSurface(elem->win->renderer, image);
+	elem->use_images = 1;
+}

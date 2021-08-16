@@ -115,13 +115,18 @@ void	ui_print_accepted(void)
 
 typedef struct	s_ui_get
 {
-	char	*id;
-	char	*inside;
-}			t_ui_get;
+	char		*id;
+	char		*inside;
+	char		**values;
+}				t_ui_get;
+
+void	ui_label_get(void *label)
+{
+	(void)label;
+}
 
 void	ui_button_get(void *args) //(char *id, char *inside)
 {
-	char			**values;
 	char			**arr;
 	int				i;
 	int				j;
@@ -129,20 +134,19 @@ void	ui_button_get(void *args) //(char *id, char *inside)
 
 	butt_get = args;
 	ft_printf("id: %s\n", butt_get->id);
-	values = ft_strsplit(butt_get->inside, ';');
 	i = -1;
-	while (values[++i])
+	while (butt_get->values[++i])
 	{
 		j = -1;
-		arr = ft_strsplit(values[i], ':');
+		arr = ft_strsplit(butt_get->values[i], ':');
 		while (g_accepted_button[++j])
 		{
 			if (ft_strstr(arr[0], g_accepted_button[j]))
 				ft_printf("we have found %s arg.\n", g_accepted_button[j]);
 		}
+		if (ft_strequ(arr[0], "pos"))
 		ft_arraydel(arr);
 	}
-	ft_arraydel(values);
 }
 
 void	decide(char *str, char *var_name, FILE *fd)
@@ -155,6 +159,7 @@ void	decide(char *str, char *var_name, FILE *fd)
 	int		open_parentheses;
 	int		i;
 	char	*inside;
+	char	**values;
 
 	result = -1;
 	i = -1;
@@ -191,8 +196,10 @@ void	decide(char *str, char *var_name, FILE *fd)
 		ft_strdel(&inside);
 		inside = ft_strdup(trimmed);
 		ft_strdel(&trimmed);
-		g_acceptable[i].getter(&(t_ui_get){var_name, inside});
+		values = ft_strsplit(inside, ';');
+		g_acceptable[i].getter(&(t_ui_get){var_name, inside, values});
 		ft_strdel(&inside);
+		ft_arraydel(values);
 	}
 }
 

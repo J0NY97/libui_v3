@@ -98,6 +98,7 @@ enum	e_element_types
  * t_vec4i		pos;						the position of the elem relative to its parent.
  * t_vec4i		screen_pos;					the position of the elem relative to the screen.
  * SDL_Texture	*states[UI_STATE_AMOUNT];	textures for all the different states there are.
+ * SDL_Texture	*images[UI_STATE_AMOUNT];	textures for all the different state images there are.
  * int			state;						the state the element is in, enum t_element_states.
  * t_ui_window	*win;						the window you want the element on.
  * void			*parent;					the parent, controls show and screen_pos. should always be a t_ui_element
@@ -115,6 +116,8 @@ typedef struct s_ui_element
 	t_vec4i			pos;
 	t_vec4i			screen_pos;
 	SDL_Texture		*textures[UI_STATE_AMOUNT];
+	SDL_Texture		*images[UI_STATE_AMOUNT];
+	bool			use_images;
 	int				state;
 	t_ui_window		*win;
 	void			*parent;
@@ -212,6 +215,8 @@ void				ui_element_textures_redo(t_ui_element *elem);
 int					ui_element_render(t_ui_element *elem);
 void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void				ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
+void				ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
+void				ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 
 // Texture
 SDL_Texture			*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);

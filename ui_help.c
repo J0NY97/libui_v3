@@ -1,16 +1,5 @@
 #include "libui_v3.h"
 
-t_vec4i	vec4i(int x, int y, int w, int h)
-{
-	t_vec4i	v;
-
-	v.x = x;
-	v.y = y;
-	v.w = w;
-	v.h = h;
-	return (v);
-}
-
 int	point_in_rect(t_vec2i point, t_vec4i rect)
 {
 	if (point.x >= rect.x
