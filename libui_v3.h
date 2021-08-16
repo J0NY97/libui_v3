@@ -124,6 +124,8 @@ typedef struct s_ui_element
 	char			*id;
 	bool			is_hover;
 	bool			is_click;
+	bool			texture_recreate;
+	Uint32			colors[UI_STATE_AMOUNT];
 }					t_ui_element;
 
 /*
@@ -152,6 +154,7 @@ typedef struct s_ui_text_recipe
 	int					max_w;
 	TTF_Font			*font;
 	bool				font_recreate;
+	bool				texture_recreate;
 }						t_ui_text_recipe;
 
 typedef struct s_ui_label
@@ -202,8 +205,9 @@ void				ui_window_free(void *win);
 // Element
 void				ui_element_new(t_ui_window *win, t_ui_element *elem);
 void				ui_element_textures_redo(t_ui_element *elem);
-void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void				ui_element_render(t_ui_element *elem);
+void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
+void				ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 
 // Texture
 SDL_Texture			*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);
@@ -226,9 +230,13 @@ void				*ui_typecast_correct_element(void *element, int element_type);
 // Label
 void				ui_label_new(t_ui_window *win, t_ui_label *label);
 void				ui_label_texture_redo(t_ui_label *label);
-void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
-void				ui_label_text_set(t_ui_label *label, char *text);
 void				ui_label_render(t_ui_label *label);
+// edit
+void				ui_label_text_set(t_ui_label *label, char *text);
+void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
+void				ui_label_size_set(t_ui_label *label, size_t size);
+void				ui_label_color_set(t_ui_label *label, Uint32 color);
+// end edit
 void				ui_label_get(void *label);
 void				ui_label_free(void *label);
 
@@ -242,7 +250,7 @@ void				ui_button_free(void *button);
 
 // Menu
 void				ui_menu_new(t_ui_window *win, t_ui_menu *menu);
-void				ui_menu_add_child(t_ui_menu *menu, void *child);
+void				ui_menu_child_add(t_ui_menu *menu, void *child);
 void				ui_menu_render(t_ui_menu *menu);
 void				ui_menu_get(void *menu);
 void				ui_menu_free(void *menu);

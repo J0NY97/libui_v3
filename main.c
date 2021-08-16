@@ -30,10 +30,25 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
-	ui_label_text_set(&button.label, "button");
+	ui_label_text_set(&button.label, "testing");
+	ui_label_size_set(&button.label, 32);
+	ui_label_color_set(&button.label, 0xff00ff00);
 
 	// Menu
+	t_ui_element	child0;
+	t_ui_button		child1;
 	ui_menu_new(&win, &menu);
+	ui_element_pos_set(&menu.elem, (t_vec4i){150, 100, 500, 500});
+
+	ui_element_new(&win, &child0);
+
+	ui_button_new(&win, &child1);
+	ui_element_color_set(&child1.elem, UI_STATE_DEFAULT, 0xffBF6900);
+	ui_label_text_set(&child1.label, "menu button");
+	ui_label_color_set(&child1.label, 0xff000000);
+
+	ui_menu_child_add(&menu, &child0);
+	ui_menu_child_add(&menu, &child1.elem);
 
 	SDL_Event	e;
 	int	run = 1;
