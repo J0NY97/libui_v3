@@ -8,7 +8,7 @@ SDL_Texture	*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos)
 	return (texture);
 }
 
-void	ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color)
+void	ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color)
 {
 	t_rgba		rgba;
 

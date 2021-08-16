@@ -11,8 +11,8 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 {
 	memset(elem, 0, sizeof(t_ui_element));
 	elem->win = win;
-	elem->pos.x = 10;
-	elem->pos.y = 10;
+	elem->pos.x = 0;
+	elem->pos.y = 0;
 	elem->pos.w = 50;
 	elem->pos.h = 20;
 	elem->state = UI_STATE_DEFAULT;
@@ -62,9 +62,9 @@ void	ui_element_textures_redo(t_ui_element *elem)
 		}
 		return ;
 	}
-	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
-	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
-	ui_texture_fill_rect(elem->win->renderer, elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
+	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
+	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
+	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
 }
 
 /*

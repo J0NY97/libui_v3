@@ -90,6 +90,7 @@ enum	e_element_types
 	UI_TYPE_LABEL,
 	UI_TYPE_BUTTON,
 	UI_TYPE_MENU,
+	UI_TYPE_DROPDOWN,
 	UI_TYPE_WINDOW,
 	UI_TYPE_AMOUNT
 };
@@ -181,89 +182,83 @@ typedef struct s_ui_button
 	t_ui_label			label;
 }						t_ui_button;
 
-// NOTE: this is just brainstorming, some of these should probably be in a create_element_from_recipe.
-typedef struct s_ui_texture_recipe
+typedef struct s_ui_dropdown
 {
-	t_vec2i			size;
-	float			opacity; // in css all child elements get same opacity.
-	Uint32			bg_color;
-	Uint32			*bg_image; // pixels
-	t_vec4i			bg_image_pos;
-	int				border_size;
-	Uint32			border_color;
-	// Text
-	char			*text;
-	char			*font_path;
-	int				font_size;
-	Uint32			font_color;
-	TTF_Font		*font;
-}					t_ui_texture_recipe;
+	t_ui_element		elem;
+	t_ui_button			button;	
+	t_ui_menu			menu;	
+}						t_ui_dropdown;
 
 // Vec
-void				print_vec(float *vec, size_t size);
+void					print_vec(float *vec, size_t size);
 
 // Window
-void				ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
-void				ui_window_event(t_ui_window *win, SDL_Event e);
-void				ui_window_render(t_ui_window *win);
-void				ui_window_get(void *win);
-void				ui_window_free(void *win);
+void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
+void					ui_window_event(t_ui_window *win, SDL_Event e);
+void					ui_window_render(t_ui_window *win);
+void					ui_window_get(void *win);
+void					ui_window_free(void *win);
 
 // Element
-void				ui_element_new(t_ui_window *win, t_ui_element *elem);
-void				ui_element_textures_redo(t_ui_element *elem);
-int					ui_element_render(t_ui_element *elem);
-void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
-void				ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
-void				ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
-void				ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
+void					ui_element_new(t_ui_window *win, t_ui_element *elem);
+void					ui_element_textures_redo(t_ui_element *elem);
+int						ui_element_render(t_ui_element *elem);
+void					ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
+void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
+void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
+void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 
 // Texture
-SDL_Texture			*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);
-SDL_Texture			*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos);
-void				ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
-void				ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
+SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);
+SDL_Texture				*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos);
+void					ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
+void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
 
 // Surface
-SDL_Surface			*ui_create_surface(t_vec4i size);
+SDL_Surface				*ui_create_surface(t_vec4i size);
 
 // Help
-t_vec4i				vec4i(int x, int y, int w, int h);
-int					point_in_rect(t_vec2i point, t_vec4i rect);
-t_rgba				hex_to_rgba(Uint32 color_hex);
-Uint32				rgba_to_hex(t_rgba rgba);
+t_vec4i					vec4i(int x, int y, int w, int h);
+int						point_in_rect(t_vec2i point, t_vec4i rect);
+t_rgba					hex_to_rgba(Uint32 color_hex);
+Uint32					rgba_to_hex(t_rgba rgba);
 
 // Label
-void				ui_label_new(t_ui_window *win, t_ui_label *label);
-void				ui_label_texture_redo(t_ui_label *label);
-void				ui_label_render(t_ui_label *label);
+void					ui_label_new(t_ui_window *win, t_ui_label *label);
+void					ui_label_texture_redo(t_ui_label *label);
+void					ui_label_render(t_ui_label *label);
 // edit
-void				ui_label_text_set(t_ui_label *label, char *text);
-void				ui_label_pos_set(t_ui_label *label, t_vec4i pos);
-void				ui_label_size_set(t_ui_label *label, size_t size);
-void				ui_label_color_set(t_ui_label *label, Uint32 color);
+void					ui_label_text_set(t_ui_label *label, char *text);
+void					ui_label_pos_set(t_ui_label *label, t_vec4i pos);
+void					ui_label_size_set(t_ui_label *label, size_t size);
+void					ui_label_color_set(t_ui_label *label, Uint32 color);
 // end edit
-void				ui_label_get(void *label);
-void				ui_label_free(void *label);
+void					ui_label_get(void *label);
+void					ui_label_free(void *label);
 
 // Button
-void				ui_button_new(t_ui_window *win, t_ui_button *button);
-void				ui_button_event(t_ui_button *button, SDL_Event e);
-bool				ui_button(t_ui_button *button);
-void				ui_button_render(t_ui_button *button);
-void				ui_button_get(void *button);
-void				ui_button_free(void *button);
+void					ui_button_new(t_ui_window *win, t_ui_button *button);
+void					ui_button_event(t_ui_button *button, SDL_Event e);
+bool					ui_button(t_ui_button *button);
+void					ui_button_render(t_ui_button *button);
+void					ui_button_get(void *button);
+void					ui_button_free(void *button);
 
 // Menu
-void				ui_menu_new(t_ui_window *win, t_ui_menu *menu);
-void				ui_menu_child_add(t_ui_menu *menu, void *child, int type);
-void				ui_menu_render(t_ui_menu *menu);
-void				ui_menu_event(t_ui_menu *menu, SDL_Event e);
-void				ui_menu_get(void *menu);
-void				ui_menu_free(void *menu);
+void					ui_menu_new(t_ui_window *win, t_ui_menu *menu);
+void					ui_menu_child_add(t_ui_menu *menu, void *child, int type);
+void					ui_menu_render(t_ui_menu *menu);
+void					ui_menu_event(t_ui_menu *menu, SDL_Event e);
+void					ui_menu_get(void *menu);
+void					ui_menu_free(void *menu);
+
+// Dropdown
+void					ui_dropdown_new(t_ui_window *win, t_ui_dropdown *drop);
+void					ui_dropdown_event(t_ui_dropdown *drop, SDL_Event e);
+void					ui_dropdown_render(t_ui_dropdown *drop);
 
 // Load
-void				ui_print_accepted(void);
-void				ui_load(char *ui_file_path);
+void					ui_print_accepted(void);
+void					ui_load(char *ui_file_path);
 
 #endif

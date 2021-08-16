@@ -19,12 +19,13 @@ int	main(void)
 
 	// Window
 	ui_window_new(&win, "test window", (t_vec4i){100, 100, 1280, 720});
+	ui_texture_fill(win.renderer, win.texture, 0xff404040);
 	ui_texture_draw_border(win.renderer, win.texture, 2, 0xffff0000);
 
 	// Element
 	ui_element_new(&win, &elem1);
 	ui_element_pos_set(&elem1, (t_vec4i){10, 50, 50, 20});
-	ui_texture_fill_rect(elem1.win->renderer, elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
+	ui_texture_fill(elem1.win->renderer, elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
 
 	// Label
 	ui_label_new(&win, &label);
@@ -46,6 +47,8 @@ int	main(void)
 	t_ui_label		menu_label0;
 	t_ui_button		menu_button0;
 	t_ui_button		menu_button1;
+	t_ui_menu		menu_menu0;
+	t_ui_dropdown	menu_dropdown0;
 	ui_menu_new(&win, &menu);
 	ui_element_pos_set(&menu.elem, (t_vec4i){150, 100, 500, 500});
 	ui_element_image_set_from_path(&menu.elem, UI_STATE_DEFAULT, "images/grass_hill.jpg");
@@ -64,12 +67,33 @@ int	main(void)
 	ui_button_new(&win, &menu_button1);
 	ui_element_pos_set(&menu_button1.elem, vec4i(10, 70, 50, 20));
 	ui_element_color_set(&menu_button1.elem, UI_STATE_DEFAULT, 0xffBF6900);
-	ui_label_text_set(&menu_button1.label, "another one");
+	ui_label_text_set(&menu_button1.label, "Toggle menu0");
 	ui_label_color_set(&menu_button1.label, 0xffff0000);
+
+	ui_dropdown_new(&win, &menu_dropdown0);
+	ui_element_pos_set(&menu_dropdown0.elem, vec4i(10, 100, 50, 20));
+
+	t_ui_label	menu0_label;
+	ui_label_new(&win, &menu0_label);
+	ui_label_text_set(&menu0_label, "Menu0 Label");
+	ui_label_color_set(&menu0_label, 0xffff0000);
+
+	ui_menu_new(&win, &menu_menu0);
+	ui_element_pos_set(&menu_menu0.elem, vec4i(100, 10, 100, 100));
+
+	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_LABEL);
 
 	ui_menu_child_add(&menu, &menu_label0, UI_TYPE_LABEL);
 	ui_menu_child_add(&menu, &menu_button0, UI_TYPE_BUTTON);
 	ui_menu_child_add(&menu, &menu_button1, UI_TYPE_BUTTON);
+	ui_menu_child_add(&menu, &menu_menu0, UI_TYPE_MENU);
+	ui_menu_child_add(&menu, &menu_dropdown0, UI_TYPE_DROPDOWN);
+
+	// Dropdown
+	t_ui_dropdown	dropdown;
+
+	ui_dropdown_new(&win, &dropdown);
+	ui_element_pos_set(&dropdown.elem, vec4i(10, 190, 50, 20));
 
 	SDL_Event	e;
 	int	run = 1;
@@ -89,6 +113,7 @@ int	main(void)
 			ui_button_event(&button, e);
 			ui_button_event(&button2, e);
 			ui_menu_event(&menu, e);
+			ui_dropdown_event(&dropdown, e);
 		}
 
 		// User Code
@@ -101,6 +126,8 @@ int	main(void)
 			menu_button0.elem.show = menu_button0.elem.show == 0;
 		if (ui_button(&menu_button0))
 			ft_printf("clicketi clock\n");
+		if (ui_button(&menu_button1))
+			menu_menu0.elem.show = menu_menu0.elem.show == 0;
 		ft_b_itoa(SDL_GetTicks(), temp);
 		ui_label_text_set(&label, temp);
 
@@ -112,6 +139,7 @@ int	main(void)
 		ui_button_render(&button2);
 		ui_element_render(&elem1);
 		ui_menu_render(&menu);
+		ui_dropdown_render(&dropdown);
 		SDL_RenderPresent(win.renderer);
 	}
 	return (0);

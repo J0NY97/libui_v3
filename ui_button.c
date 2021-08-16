@@ -4,15 +4,13 @@ void	ui_button_new(t_ui_window *win, t_ui_button *button)
 {
 	memset(button, 0, sizeof(t_ui_button));
 	ui_element_new(win, &button->elem);
-	ui_element_pos_set(&button->elem, (t_vec4i){10, 150, button->elem.pos.w, button->elem.pos.h});
-	ui_texture_fill_rect(button->elem.win->renderer, button->elem.textures[UI_STATE_DEFAULT], 0xff95D7AE);
-	ui_texture_fill_rect(button->elem.win->renderer, button->elem.textures[UI_STATE_HOVER], 0xff7BAE7F);
-	ui_texture_fill_rect(button->elem.win->renderer, button->elem.textures[UI_STATE_CLICK], 0xff73956F);
+	ui_texture_fill(button->elem.win->renderer, button->elem.textures[UI_STATE_DEFAULT], 0xff95D7AE);
+	ui_texture_fill(button->elem.win->renderer, button->elem.textures[UI_STATE_HOVER], 0xff7BAE7F);
+	ui_texture_fill(button->elem.win->renderer, button->elem.textures[UI_STATE_CLICK], 0xff73956F);
 	ui_label_new(win, &button->label);
 	button->label.parent = &button->elem;
 	button->label.parent_type = UI_TYPE_ELEMENT;
 	button->label.parent_show = &button->elem.show;
-// ui_label_pos_set(&button->label, (t_vec4i){button->elem.pos.x, button->elem.pos.y, button->label.pos.w, button->label.pos.h});
 }
 
 void	ui_button_event(t_ui_button *button, SDL_Event e)

@@ -20,6 +20,18 @@ void	ui_menu_child_add(t_ui_menu *menu, void *child, int type)
 		((t_ui_label *)child)->parent_type = UI_TYPE_ELEMENT;
 		((t_ui_label *)child)->parent_show = &menu->elem.show;
 	}
+	else if (type == UI_TYPE_MENU)
+	{
+		((t_ui_menu *)child)->elem.parent = &menu->elem;
+		((t_ui_menu *)child)->elem.parent_type = UI_TYPE_ELEMENT;
+		((t_ui_menu *)child)->elem.parent_show = &menu->elem.show;
+	}
+	else if (type == UI_TYPE_DROPDOWN)
+	{
+		((t_ui_dropdown *)child)->elem.parent = &menu->elem;
+		((t_ui_dropdown *)child)->elem.parent_type = UI_TYPE_ELEMENT;
+		((t_ui_dropdown *)child)->elem.parent_show = &menu->elem.show;
+	}
 	add_to_list(&menu->children, child, type);	
 }
 
@@ -32,6 +44,10 @@ void	ui_menu_event(t_ui_menu *menu, SDL_Event e)
 	{
 		if (curr->content_size == UI_TYPE_BUTTON)
 			ui_button_event(curr->content, e);
+		else if (curr->content_size == UI_TYPE_MENU)
+			ui_menu_event(curr->content, e);
+		else if (curr->content_size == UI_TYPE_DROPDOWN)
+			ui_dropdown_event(curr->content, e);
 		curr = curr->next;
 	}
 }
@@ -40,6 +56,8 @@ void	ui_menu_render(t_ui_menu *menu)
 {
 	t_list	*curr;
 
+	if (!*menu->elem.parent_show || !menu->elem.show)
+		return ;
 	ui_element_render(&menu->elem);
 	curr = menu->children;
 	while (curr)
@@ -48,6 +66,10 @@ void	ui_menu_render(t_ui_menu *menu)
 			ui_button_render(curr->content);
 		else if (curr->content_size == UI_TYPE_LABEL)
 			ui_label_render(curr->content);
+		else if (curr->content_size == UI_TYPE_MENU)
+			ui_menu_render(curr->content);
+		else if (curr->content_size == UI_TYPE_DROPDOWN)
+			ui_dropdown_render(curr->content);
 		curr = curr->next;
 	}
 }
