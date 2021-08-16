@@ -5,6 +5,7 @@ void	ui_label_new(t_ui_window *win, t_ui_label *label)
 	memset(label, 0, sizeof(t_ui_label));
 	label->parent = win;
 	label->parent_type = UI_TYPE_WINDOW;
+	label->parent_show = &win->show;
 	label->win = win;
 	label->pos.x = 0;
 	label->pos.y = 0;
@@ -18,6 +19,7 @@ void	ui_label_new(t_ui_window *win, t_ui_label *label)
 	label->recipe.font_recreate = 1;
 	label->recipe.texture_recreate = 1;
 	ui_label_texture_redo(label);
+	label->show = 1;
 }
 
 void	ui_label_texture_redo(t_ui_label *label)
@@ -37,6 +39,8 @@ void	ui_label_render(t_ui_label *label)
 		parent_pos = ((t_ui_window *)label->parent)->screen_pos;
 	else
 		parent_pos = ((t_ui_element *)label->parent)->screen_pos;
+	if (!*label->parent_show || !label->show)
+		return ;
 	label->screen_pos.x = parent_pos.x + label->pos.x;
 	label->screen_pos.y = parent_pos.y + label->pos.y;
 

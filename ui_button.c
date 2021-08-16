@@ -11,11 +11,14 @@ void	ui_button_new(t_ui_window *win, t_ui_button *button)
 	ui_label_new(win, &button->label);
 	button->label.parent = &button->elem;
 	button->label.parent_type = UI_TYPE_ELEMENT;
+	button->label.parent_show = &button->elem.show;
 // ui_label_pos_set(&button->label, (t_vec4i){button->elem.pos.x, button->elem.pos.y, button->label.pos.w, button->label.pos.h});
 }
 
 void	ui_button_event(t_ui_button *button, SDL_Event e)
 {
+	if (!button->elem.show)
+		return ;
 	button->elem.is_hover = 0;
 	if (point_in_rect(button->elem.win->mouse_pos, button->elem.screen_pos))
 		button->elem.is_hover = 1;
@@ -43,7 +46,8 @@ bool	ui_button(t_ui_button *button)
 
 void	ui_button_render(t_ui_button *button)
 {
-	ui_element_render(&button->elem);
+	if (!ui_element_render(&button->elem))
+		return ;
 	ui_label_render(&button->label);
 	/*
 	SDL_RenderTarget(button->elem.win->renderer, NULL);

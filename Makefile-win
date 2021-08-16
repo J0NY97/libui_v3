@@ -4,7 +4,6 @@ SRCS = \
 	./ui_window.c \
 	./ui_element.c \
 	./ui_texture.c \
-	./ui_surface.c \
 	./ui_help.c \
 	./ui_label.c \
 	./ui_button.c \

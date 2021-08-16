@@ -8,6 +8,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4i pos)
 	win->win = SDL_CreateWindow(win->title, win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
 	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+	win->show = 1;
 }
 
 void	ui_window_event(t_ui_window *win, SDL_Event e)

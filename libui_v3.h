@@ -72,6 +72,7 @@ typedef struct s_ui_window
 	char			*title;
 	t_vec2i			mouse_pos;
 	bool			mouse_down;
+	bool			show;
 }					t_ui_window;
 
 enum	e_element_states
@@ -99,7 +100,7 @@ enum	e_element_types
  * SDL_Texture	*states[UI_STATE_AMOUNT];	textures for all the different states there are.
  * int			state;						the state the element is in, enum t_element_states.
  * t_ui_window	*win;						the window you want the element on.
- * void			*parent;					the parent of the element, controls show and screen_pos.
+ * void			*parent;					the parent, controls show and screen_pos. should always be a t_ui_element
  * int			parent_type;				the type of the parent enum t_element_type.
  * void			*element;					the real element.
  * int			element_type;				the type of the real element enum t_element_type.
@@ -118,6 +119,7 @@ typedef struct s_ui_element
 	t_ui_window		*win;
 	void			*parent;
 	int				parent_type;
+	bool			*parent_show;
 	void			*element;
 	int				element_type;
 	bool			show;
@@ -163,9 +165,11 @@ typedef struct s_ui_label
 	t_vec4i				screen_pos;
 	void				*parent;
 	int					parent_type;
+	bool				*parent_show;
 	t_ui_window			*win;
 	SDL_Texture			*texture;
 	t_ui_text_recipe	recipe;
+	bool				show;
 }						t_ui_label;
 
 typedef struct s_ui_button
@@ -205,7 +209,7 @@ void				ui_window_free(void *win);
 // Element
 void				ui_element_new(t_ui_window *win, t_ui_element *elem);
 void				ui_element_textures_redo(t_ui_element *elem);
-void				ui_element_render(t_ui_element *elem);
+int					ui_element_render(t_ui_element *elem);
 void				ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void				ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 
@@ -217,15 +221,12 @@ void				ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint3
 
 // Surface
 SDL_Surface			*ui_create_surface(t_vec4i size);
-void				ui_surface_draw_rect(SDL_Surface *surface, t_vec4i rect, Uint32 color);
-void				ui_surface_draw_border(SDL_Surface *surface, size_t thicc, Uint32 color);
-void				ui_surface_fill(SDL_Surface *surface, Uint32 color);
 
 // Help
+t_vec4i				vec4i(int x, int y, int w, int h);
 int					point_in_rect(t_vec2i point, t_vec4i rect);
 t_rgba				hex_to_rgba(Uint32 color_hex);
 Uint32				rgba_to_hex(t_rgba rgba);
-void				*ui_typecast_correct_element(void *element, int element_type);
 
 // Label
 void				ui_label_new(t_ui_window *win, t_ui_label *label);
@@ -250,8 +251,9 @@ void				ui_button_free(void *button);
 
 // Menu
 void				ui_menu_new(t_ui_window *win, t_ui_menu *menu);
-void				ui_menu_child_add(t_ui_menu *menu, void *child);
+void				ui_menu_child_add(t_ui_menu *menu, void *child, int type);
 void				ui_menu_render(t_ui_menu *menu);
+void				ui_menu_event(t_ui_menu *menu, SDL_Event e);
 void				ui_menu_get(void *menu);
 void				ui_menu_free(void *menu);
 

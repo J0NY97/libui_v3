@@ -23,8 +23,10 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_textures_redo(elem);
 	elem->parent = win;
 	elem->parent_type = UI_TYPE_WINDOW;
+	elem->parent_show = &win->show;
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_NONE;
+	elem->show = 1;
 }
 
 /*
@@ -49,7 +51,10 @@ void	ui_element_textures_redo(t_ui_element *elem)
 	elem->texture_recreate = 0;
 }
 
-void	ui_element_render(t_ui_element *elem)
+/*
+ * Return: 1 if rendering successful, 0 if not.
+*/
+int	ui_element_render(t_ui_element *elem)
 {
 	t_vec4i parent_pos;
 
@@ -57,6 +62,8 @@ void	ui_element_render(t_ui_element *elem)
 		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
 	else
 		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
+	if (!*elem->parent_show || !elem->show)
+		return (0);
 	elem->screen_pos = elem->pos;
 	elem->screen_pos.x = parent_pos.x + elem->pos.x;
 	elem->screen_pos.y = parent_pos.y + elem->pos.y;
@@ -67,6 +74,7 @@ void	ui_element_render(t_ui_element *elem)
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,
 		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->pos.w, elem->pos.h});
+	return (1);
 }
 
 /*

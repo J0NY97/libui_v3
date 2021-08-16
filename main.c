@@ -7,6 +7,7 @@ int	main(void)
 	t_ui_element elem1;
 	t_ui_label label;
 	t_ui_button button;
+	t_ui_button button2;
 	t_ui_menu	menu;
 
 	ui_print_accepted();
@@ -30,30 +31,48 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
-	ui_label_text_set(&button.label, "testing");
+	ui_element_pos_set(&button.elem, vec4i(10, 100, 50, 20));
+	ui_label_text_set(&button.label, "Toggle Menu");
 	ui_label_size_set(&button.label, 32);
 	ui_label_color_set(&button.label, 0xff00ff00);
 
+	ui_button_new(&win, &button2);
+	ui_element_pos_set(&button2.elem, vec4i(10, 150, 50, 20));
+	ui_label_text_set(&button2.label, "Toggle Button");
+	ui_label_size_set(&button2.label, 32);
+	ui_label_color_set(&button2.label, 0xff00ff00);
+
 	// Menu
-	t_ui_element	child0;
-	t_ui_button		child1;
+	t_ui_label		menu_label0;
+	t_ui_button		menu_button0;
+	t_ui_button		menu_button1;
 	ui_menu_new(&win, &menu);
 	ui_element_pos_set(&menu.elem, (t_vec4i){150, 100, 500, 500});
 
-	ui_element_new(&win, &child0);
+	ui_label_new(&win, &menu_label0);
+	ui_label_text_set(&menu_label0, "Menu Label");
+	ui_label_color_set(&menu_label0, 0xffff0000);
+	ui_label_pos_set(&menu_label0, vec4i(10, 10, 50, 20));
 
-	ui_button_new(&win, &child1);
-	ui_element_color_set(&child1.elem, UI_STATE_DEFAULT, 0xffBF6900);
-	ui_label_text_set(&child1.label, "menu button");
-	ui_label_color_set(&child1.label, 0xff000000);
+	ui_button_new(&win, &menu_button0);
+	ui_element_pos_set(&menu_button0.elem, vec4i(10, 40, 50, 20));
+	ui_element_color_set(&menu_button0.elem, UI_STATE_DEFAULT, 0xffBF6900);
+	ui_label_text_set(&menu_button0.label, "menu button");
+	ui_label_color_set(&menu_button0.label, 0xffff0000);
 
-	ui_menu_child_add(&menu, &child0);
-	ui_menu_child_add(&menu, &child1.elem);
+	ui_button_new(&win, &menu_button1);
+	ui_element_pos_set(&menu_button1.elem, vec4i(10, 70, 50, 20));
+	ui_element_color_set(&menu_button1.elem, UI_STATE_DEFAULT, 0xffBF6900);
+	ui_label_text_set(&menu_button1.label, "another one");
+	ui_label_color_set(&menu_button1.label, 0xffff0000);
+
+	ui_menu_child_add(&menu, &menu_label0, UI_TYPE_LABEL);
+	ui_menu_child_add(&menu, &menu_button0, UI_TYPE_BUTTON);
+	ui_menu_child_add(&menu, &menu_button1, UI_TYPE_BUTTON);
 
 	SDL_Event	e;
 	int	run = 1;
-	char *temp;
-	char temp2[20];
+	char temp[20];
 	while (run)
 	{
 		// Input
@@ -67,19 +86,29 @@ int	main(void)
 					run = 0;
 			ui_window_event(&win, e);
 			ui_button_event(&button, e);
+			ui_button_event(&button2, e);
+			ui_menu_event(&menu, e);
 		}
 
 		// User Code
 		if (ui_button(&button))
+		{
 			ft_printf("button is click.\n");
-		ft_b_itoa(SDL_GetTicks(), temp2);
-		ui_label_text_set(&label, temp2);
+			menu.elem.show = menu.elem.show == 0;
+		}
+		if (ui_button(&button2))
+			menu_button0.elem.show = menu_button0.elem.show == 0;
+		if (ui_button(&menu_button0))
+			ft_printf("clicketi clock\n");
+		ft_b_itoa(SDL_GetTicks(), temp);
+		ui_label_text_set(&label, temp);
 
 		// Render
 		SDL_RenderClear(win.renderer);
 		ui_window_render(&win);
 		ui_label_render(&label);
 		ui_button_render(&button);
+		ui_button_render(&button2);
 		ui_element_render(&elem1);
 		ui_menu_render(&menu);
 		SDL_RenderPresent(win.renderer);
