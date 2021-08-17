@@ -1,7 +1,27 @@
 #include "libui_v3.h"
 
 /*
- * Funt fact: you can only have flexible array in the end of a struct.
+ * Recipes.
+*/
+
+typedef struct s_ui_label_recipe
+{
+	t_vec4i				pos;	
+	char				*font_path;
+	char				*font_size;
+	Uint32				font_color;
+}						t_ui_label_recipe;
+
+typedef struct s_ui_button_recipe
+{
+	t_vec4i				pos;	
+	Uint32				bg_color[UI_STATE_AMOUNT];
+	Uint32				bg_image[UI_STATE_AMOUNT];
+	t_ui_label_recipe	label;
+}						t_ui_button_recipe;
+
+/*
+ * Fun fact: you can only have flexible array in the end of a struct.
  * 	which actually makes sense if you think about it.
 */
 typedef struct s_ui_acceptable
@@ -127,10 +147,15 @@ void	ui_label_get(void *label)
 
 void	ui_button_get(void *args) //(char *id, char *inside)
 {
-	char			**arr;
-	int				i;
-	int				j;
-	t_ui_get		*butt_get;
+	t_ui_button_recipe	recipe;
+	char				**arr;
+	char				**tarr;
+	char				*trimmed;
+	int					temp;
+	int					i;
+	int					j;
+	int					t;
+	t_ui_get			*butt_get;
 
 	butt_get = args;
 	ft_printf("id: %s\n", butt_get->id);
@@ -139,12 +164,25 @@ void	ui_button_get(void *args) //(char *id, char *inside)
 	{
 		j = -1;
 		arr = ft_strsplit(butt_get->values[i], ':');
+		trimmed = ft_strtrim(arr[0]);
 		while (g_accepted_button[++j])
 		{
-			if (ft_strstr(arr[0], g_accepted_button[j]))
+			if (ft_strstr(trimmed, g_accepted_button[j]))
 				ft_printf("we have found %s arg.\n", g_accepted_button[j]);
 		}
-		if (ft_strequ(arr[0], "pos"))
+		ft_printf("arr[0] : <%s>\n", trimmed);
+		if (ft_strequ(trimmed, "pos"))
+		{
+			tarr = ft_strsplit(arr[1], ',');
+			ft_printf("%s: <%s>\n", trimmed, arr[1]);
+			t = -1;
+			while (tarr[++t])
+			{
+				temp = ft_atoi(tarr[t]);
+				ft_printf("%d, ", temp);
+			}
+		}
+		ft_strdel(&trimmed);
 		ft_arraydel(arr);
 	}
 }
