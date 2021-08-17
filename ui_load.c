@@ -16,7 +16,7 @@ typedef struct s_ui_button_recipe
 {
 	t_vec4i				pos;	
 	Uint32				bg_color[UI_STATE_AMOUNT];
-	Uint32				bg_image[UI_STATE_AMOUNT];
+	char				*bg_image[UI_STATE_AMOUNT];
 	t_ui_label_recipe	label;
 }						t_ui_button_recipe;
 
@@ -145,7 +145,117 @@ void	ui_label_get(void *label)
 	(void)label;
 }
 
-void	ui_button_get(void *args) //(char *id, char *inside)
+char	**ft_strsplitfirstoccurence(char *str, char c)
+{
+	char	**arr;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	arr = ft_memalloc(sizeof(char *) * 3);
+	i = -1;
+	while (str[++i] && str[i] != c);
+	if (str[i] == c)
+	{
+		arr[0] = ft_strsub(str, 0, i);
+		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
+		arr[2] = NULL;
+	}
+	return (arr);
+}
+
+t_vec4i	pos_arg_to_int_arr(char *str)
+{
+	t_vec4i	pos;
+	char	*trimmed;	
+	char	*final;
+	char	**arr;
+	int		i;
+
+	trimmed = ft_strtrim(str);
+	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
+	arr = ft_strsplit(final, ',');
+	i = -1;
+	pos = vec4i(0, 0, 0, 0);
+	while (arr[++i])
+	{
+		pos.v[i] = ft_atoi(arr[i]);
+	}
+	ft_arraydel(arr);
+	return (pos);
+}
+
+void	bg_color_arg_to_int_arr(Uint32 **colors, char *str)
+{
+	char	*trimmed;	
+	char	*final;
+	char	**arr;
+	char	**col_arr;
+	char	*col_trimmed;
+	int		i;
+	int		j;
+
+	trimmed = ft_strtrim(str);
+	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
+	arr = ft_strsplit(final, ',');
+	i = -1;
+	while (arr[++i])
+	{
+		ft_printf("%s\n", arr[i]);
+		col_trimmed = ft_strtrim(arr[i]);
+		col_arr = ft_strsplitfirstoccurence(col_trimmed, ':');
+		ft_printf("[%#x]", strtoul(col_arr[1], NULL, 16));
+		ft_printf("== [%u]\n", strtoul(col_arr[1], NULL, 16));
+		if (ft_strstr(col_arr[0], "default"))
+			colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(col_arr[1], NULL, 16);
+		else if (ft_strstr(col_arr[0], "hover"))
+			colors[UI_STATE_HOVER] = (unsigned int)strtoul(col_arr[1], NULL, 16);
+		else if (ft_strstr(col_arr[0], "click"))
+			colors[UI_STATE_CLICK] = (unsigned int)strtoul(col_arr[1], NULL, 16);
+		ft_strdel(&col_trimmed);
+		ft_arraydel(col_arr);
+	}
+	ft_strdel(&final);
+	ft_strdel(&trimmed);
+	ft_arraydel(arr);
+}
+
+void	bg_image_arg_to_arr(char ***images, char *str)
+{
+	char	*trimmed;
+	char	*final;
+	char	**arr;
+	char	**img_arr;
+	char	*img_trimmed;
+	int		i;
+	int		j;
+
+	trimmed = ft_strtrim(str);
+	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
+	arr = ft_strsplit(final, ',');
+	i = -1;
+	while (arr[++i])
+	{
+		ft_printf("%s\n", arr[i]);
+		img_trimmed = ft_strtrim(arr[i]);
+		ft_printf("img_trimmed : %s\n", img_trimmed);
+		img_arr = ft_strsplitfirstoccurence(img_trimmed, ':');
+		ft_printf("img_arr[0] : <%s>\n", img_arr[0]);
+		if (ft_strstr(img_arr[0], "default"))
+			images[UI_STATE_DEFAULT] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+		else if (ft_strstr(img_arr[0], "hover"))
+			images[UI_STATE_HOVER] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+		else if (ft_strstr(img_arr[0], "click"))
+			images[UI_STATE_CLICK] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+		ft_strdel(&img_trimmed);
+		ft_arraydel(img_arr);
+	}
+	ft_strdel(&final);
+	ft_strdel(&trimmed);
+	ft_arraydel(arr);
+}
+
+void	ui_button_get(void *args)
 {
 	t_ui_button_recipe	recipe;
 	char				**arr;
@@ -157,13 +267,23 @@ void	ui_button_get(void *args) //(char *id, char *inside)
 	int					t;
 	t_ui_get			*butt_get;
 
+	memset(&recipe, 0, sizeof(t_ui_button_recipe));
 	butt_get = args;
 	ft_printf("id: %s\n", butt_get->id);
 	i = -1;
 	while (butt_get->values[++i])
 	{
 		j = -1;
-		arr = ft_strsplit(butt_get->values[i], ':');
+		arr = ft_strsplitfirstoccurence(butt_get->values[i], ':');
+		if (!arr[1])
+		{
+			ft_putstr("probably found variable\n");
+			ft_arraydel(arr);
+			continue ;
+		}
+		ft_putstr(arr[0]);
+		ft_putstr("> <");
+		ft_putstr(arr[1]);
 		trimmed = ft_strtrim(arr[0]);
 		while (g_accepted_button[++j])
 		{
@@ -173,14 +293,25 @@ void	ui_button_get(void *args) //(char *id, char *inside)
 		ft_printf("arr[0] : <%s>\n", trimmed);
 		if (ft_strequ(trimmed, "pos"))
 		{
-			tarr = ft_strsplit(arr[1], ',');
-			ft_printf("%s: <%s>\n", trimmed, arr[1]);
-			t = -1;
-			while (tarr[++t])
-			{
-				temp = ft_atoi(tarr[t]);
-				ft_printf("%d, ", temp);
-			}
+			recipe.pos = pos_arg_to_int_arr(arr[1]);
+			ft_printf("pos : %d %d %d %d\n", recipe.pos.x, recipe.pos.y, recipe.pos.w, recipe.pos.h);
+		}
+		else if (ft_strequ(trimmed, "bg_color"))
+		{
+			bg_color_arg_to_int_arr(&recipe.bg_color, arr[1]);
+			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
+				recipe.bg_color[UI_STATE_DEFAULT],
+				recipe.bg_color[UI_STATE_HOVER],
+				recipe.bg_color[UI_STATE_CLICK]);
+		}
+		else if (ft_strequ(trimmed, "bg_image"))
+		{
+			bg_image_arg_to_arr(&recipe.bg_image, arr[1]);
+			ft_printf("bg_image : %s %s %s\n",
+				recipe.bg_image[UI_STATE_DEFAULT],
+				recipe.bg_image[UI_STATE_HOVER],
+				recipe.bg_image[UI_STATE_CLICK]
+				);
 		}
 		ft_strdel(&trimmed);
 		ft_arraydel(arr);
