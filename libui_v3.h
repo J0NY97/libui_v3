@@ -64,6 +64,7 @@ typedef struct s_rgba
 
 typedef struct s_ui_window
 {
+	char			*id;
 	t_vec4i			pos;
 	t_vec4i			screen_pos;
 	SDL_Window		*win;
@@ -189,6 +190,22 @@ typedef struct s_ui_dropdown
 	t_ui_menu			menu;	
 }						t_ui_dropdown;
 
+/*
+ * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
+ * t_list		*element; list of t_ui_element /button/label/menu/...
+ * t_list		*window; list of t_ui_window .
+*/
+typedef struct s_ui_layout
+{
+	t_list				*recipes;
+	t_list				*elements;
+	t_list				*windows;
+}						t_ui_layout;
+
+// Layout
+void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
+void					ui_layout_render(t_ui_layout *layout);
+
 // Vec
 void					print_vec(float *vec, size_t size);
 
@@ -196,7 +213,7 @@ void					print_vec(float *vec, size_t size);
 void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 void					ui_window_render(t_ui_window *win);
-void					ui_window_get(void *win);
+void					ui_window_get(t_ui_layout *layout, void *win);
 void					ui_window_free(void *win);
 
 // Element
@@ -233,7 +250,7 @@ void					ui_label_pos_set(t_ui_label *label, t_vec4i pos);
 void					ui_label_size_set(t_ui_label *label, size_t size);
 void					ui_label_color_set(t_ui_label *label, Uint32 color);
 // end edit
-void					ui_label_get(void *label);
+void					ui_label_get(t_ui_layout *layout, void *label);
 void					ui_label_free(void *label);
 
 // Button
@@ -241,7 +258,7 @@ void					ui_button_new(t_ui_window *win, t_ui_button *button);
 void					ui_button_event(t_ui_button *button, SDL_Event e);
 bool					ui_button(t_ui_button *button);
 void					ui_button_render(t_ui_button *button);
-void					ui_button_get(void *button);
+void					ui_button_get(t_ui_layout *layout, void *button);
 void					ui_button_free(void *button);
 
 // Menu
@@ -249,7 +266,7 @@ void					ui_menu_new(t_ui_window *win, t_ui_menu *menu);
 void					ui_menu_child_add(t_ui_menu *menu, void *child, int type);
 void					ui_menu_render(t_ui_menu *menu);
 void					ui_menu_event(t_ui_menu *menu, SDL_Event e);
-void					ui_menu_get(void *menu);
+void					ui_menu_get(t_ui_layout *layout, void *menu);
 void					ui_menu_free(void *menu);
 
 // Dropdown
@@ -259,6 +276,6 @@ void					ui_dropdown_render(t_ui_dropdown *drop);
 
 // Load
 void					ui_print_accepted(void);
-void					ui_load(char *ui_file_path);
+void					ui_load(t_ui_layout *layout, char *ui_file_path);
 
 #endif

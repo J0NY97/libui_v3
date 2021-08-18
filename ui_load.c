@@ -4,8 +4,17 @@
  * Recipes.
 */
 
+typedef struct s_ui_window_recipe
+{
+	char				*id;
+	t_vec4i				pos;	
+	char				*title;
+	Uint32				bg_color;
+}						t_ui_window_recipe;
+
 typedef struct s_ui_label_recipe
 {
+	char				*id;
 	t_vec4i				pos;	
 	char				*font_path;
 	char				*font_size;
@@ -14,6 +23,7 @@ typedef struct s_ui_label_recipe
 
 typedef struct s_ui_button_recipe
 {
+	char				*id;
 	t_vec4i				pos;	
 	Uint32				bg_color[UI_STATE_AMOUNT];
 	char				*bg_image[UI_STATE_AMOUNT];
@@ -29,7 +39,7 @@ typedef struct s_ui_acceptable
 	char		*name;
 	int			type;
 	void		(*freer)(void *args);
-	void		(*getter)(void *args);
+	void		(*getter)(t_ui_layout *layout, void *args);
 	const char	**values;
 }				t_ui_acceptable;
 
@@ -43,6 +53,8 @@ static const char *g_accepted_button[] = {
 
 static const char *g_accepted_window[] = {
 	"pos",
+	"bg_color",
+	"title",
 	NULL
 };
 
@@ -133,17 +145,21 @@ void	ui_print_accepted(void)
 	}
 }
 
+/*
+ * arg : value
+ *
+ * args is the argument of that you want to change in the element,
+ * t.ex pos, bg_color, bg_image.
+ *
+ * values is the value that comes after the args,
+ * t.ex bg_color : 0xff000000, the '0xff000000' is the value.
+*/
 typedef struct	s_ui_get
 {
 	char		*id;
 	char		*inside;
 	char		**values;
 }				t_ui_get;
-
-void	ui_label_get(void *label)
-{
-	(void)label;
-}
 
 char	**ft_strsplitfirstoccurence(char *str, char c)
 {
@@ -155,12 +171,9 @@ char	**ft_strsplitfirstoccurence(char *str, char c)
 	arr = ft_memalloc(sizeof(char *) * 3);
 	i = -1;
 	while (str[++i] && str[i] != c);
+	arr[0] = ft_strsub(str, 0, i);
 	if (str[i] == c)
-	{
-		arr[0] = ft_strsub(str, 0, i);
 		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
-		arr[2] = NULL;
-	}
 	return (arr);
 }
 
@@ -201,11 +214,11 @@ void	bg_color_arg_to_int_arr(Uint32 **colors, char *str)
 	i = -1;
 	while (arr[++i])
 	{
-		ft_printf("%s\n", arr[i]);
+//		ft_printf("%s\n", arr[i]);
 		col_trimmed = ft_strtrim(arr[i]);
 		col_arr = ft_strsplitfirstoccurence(col_trimmed, ':');
-		ft_printf("[%#x]", strtoul(col_arr[1], NULL, 16));
-		ft_printf("== [%u]\n", strtoul(col_arr[1], NULL, 16));
+//		ft_printf("[%#x]", strtoul(col_arr[1], NULL, 16));
+//		ft_printf("== [%u]\n", strtoul(col_arr[1], NULL, 16));
 		if (ft_strstr(col_arr[0], "default"))
 			colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(col_arr[1], NULL, 16);
 		else if (ft_strstr(col_arr[0], "hover"))
@@ -220,13 +233,61 @@ void	bg_color_arg_to_int_arr(Uint32 **colors, char *str)
 	ft_arraydel(arr);
 }
 
-void	bg_image_arg_to_arr(char ***images, char *str)
+/*
+ * Not meaning normal C string.
+ * but from the ui file '"string"'
+*/
+char	*trim_string(char *str)
+{
+	char	*result;
+	int		first;
+	int		second;
+
+	result = NULL;
+	if (!str)
+		return (NULL);
+	first = ft_strchrlen(str, '"') + 1;
+	second = ft_strchrlen(str + first, '"');
+	result = ft_strsub(str, first, second);
+	return (result);
+}
+
+/*
+ * Give in str usually == 'arg : "string"'
+ * Give out arr[0] = arg
+ * 			arr[1] = string
+*/
+char	**key_value_get_string(char *str)
+{
+	char	**arr;	
+	char	*trim;
+
+	if (!str)
+		return (NULL);
+	arr = ft_strsplitfirstoccurence(str, ':');
+	if (!arr[0] || !arr[1])
+		return (NULL);
+	trim = ft_strtrim(arr[0]);
+	ft_strdel(&arr[0]);
+	arr[0] = ft_strdup(trim);
+	ft_strdel(&trim);
+
+	trim = trim_string(arr[1]);
+	ft_strdel(&arr[1]);
+	arr[1] = ft_strdup(trim);
+	ft_strdel(&trim);
+	return (arr);
+}
+
+void	bg_image_arg_to_arr(char **images, char *str)
 {
 	char	*trimmed;
 	char	*final;
 	char	**arr;
 	char	**img_arr;
 	char	*img_trimmed;
+	char	*trimtram;
+	char	*subbed;
 	int		i;
 	int		j;
 
@@ -236,17 +297,24 @@ void	bg_image_arg_to_arr(char ***images, char *str)
 	i = -1;
 	while (arr[++i])
 	{
-		ft_printf("%s\n", arr[i]);
+//		ft_printf("%s\n", arr[i]);
 		img_trimmed = ft_strtrim(arr[i]);
-		ft_printf("img_trimmed : %s\n", img_trimmed);
+//		ft_printf("img_trimmed : %s\n", img_trimmed);
 		img_arr = ft_strsplitfirstoccurence(img_trimmed, ':');
-		ft_printf("img_arr[0] : <%s>\n", img_arr[0]);
+//		ft_printf("img_arr[0] : <%s>\n", img_arr[0]);
+//		ft_printf("img_arr[1] : <%s>\n", img_arr[1]);
+		trimtram = ft_strtrim(img_arr[1]);
+//		ft_printf("trimtram : <%s>, len : %d\n", trimtram, ft_strlen(trimtram));
+		subbed = ft_strsub(trimtram, 1, ft_strlen(trimtram) - 2); 
+//		ft_printf("subbed : <%s>\n", subbed);
 		if (ft_strstr(img_arr[0], "default"))
-			images[UI_STATE_DEFAULT] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+			images[UI_STATE_DEFAULT] = subbed;
 		else if (ft_strstr(img_arr[0], "hover"))
-			images[UI_STATE_HOVER] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+			images[UI_STATE_HOVER] = subbed;
 		else if (ft_strstr(img_arr[0], "click"))
-			images[UI_STATE_CLICK] = ft_strsub(img_arr[1], 1, ft_strlen(img_arr[1] - 2)); 
+			images[UI_STATE_CLICK] = subbed; 
+		ft_strdel(&subbed);
+		ft_strdel(&trimtram);
 		ft_strdel(&img_trimmed);
 		ft_arraydel(img_arr);
 	}
@@ -255,70 +323,157 @@ void	bg_image_arg_to_arr(char ***images, char *str)
 	ft_arraydel(arr);
 }
 
-void	ui_button_get(void *args)
+typedef struct s_ui_key_value
 {
-	t_ui_button_recipe	recipe;
-	char				**arr;
-	char				**tarr;
-	char				*trimmed;
-	int					temp;
-	int					i;
-	int					j;
-	int					t;
-	t_ui_get			*butt_get;
+	char		*key;
+	char		*value;
+}				t_ui_key_value;
 
-	memset(&recipe, 0, sizeof(t_ui_button_recipe));
-	butt_get = args;
-	ft_printf("id: %s\n", butt_get->id);
+t_ui_key_value	*make_key_value(char **orig_arr, int *len)
+{
+	t_ui_key_value	*kv;
+	char			**arr;
+	int				i;
+	char			*temp;
+
 	i = -1;
-	while (butt_get->values[++i])
+	while (orig_arr[++i]);
+	kv = ft_memalloc(sizeof(t_ui_key_value) * (i + 1));
+	i = -1;
+	while (orig_arr[++i])
 	{
-		j = -1;
-		arr = ft_strsplitfirstoccurence(butt_get->values[i], ':');
-		if (!arr[1])
+		arr = ft_strsplitfirstoccurence(orig_arr[i], ':');
+		temp = ft_strtrim(arr[0]);
+		kv[i].key = ft_strdup(temp);
+		ft_strdel(&temp);
+		if (arr[1])
 		{
-			ft_putstr("probably found variable\n");
-			ft_arraydel(arr);
-			continue ;
+			temp = ft_strtrim(arr[1]);
+			kv[i].value = ft_strdup(temp);
+			ft_strdel(&temp);
 		}
-		ft_putstr(arr[0]);
-		ft_putstr("> <");
-		ft_putstr(arr[1]);
-		trimmed = ft_strtrim(arr[0]);
-		while (g_accepted_button[++j])
-		{
-			if (ft_strstr(trimmed, g_accepted_button[j]))
-				ft_printf("we have found %s arg.\n", g_accepted_button[j]);
-		}
-		ft_printf("arr[0] : <%s>\n", trimmed);
-		if (ft_strequ(trimmed, "pos"))
-		{
-			recipe.pos = pos_arg_to_int_arr(arr[1]);
-			ft_printf("pos : %d %d %d %d\n", recipe.pos.x, recipe.pos.y, recipe.pos.w, recipe.pos.h);
-		}
-		else if (ft_strequ(trimmed, "bg_color"))
-		{
-			bg_color_arg_to_int_arr(&recipe.bg_color, arr[1]);
-			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
-				recipe.bg_color[UI_STATE_DEFAULT],
-				recipe.bg_color[UI_STATE_HOVER],
-				recipe.bg_color[UI_STATE_CLICK]);
-		}
-		else if (ft_strequ(trimmed, "bg_image"))
-		{
-			bg_image_arg_to_arr(&recipe.bg_image, arr[1]);
-			ft_printf("bg_image : %s %s %s\n",
-				recipe.bg_image[UI_STATE_DEFAULT],
-				recipe.bg_image[UI_STATE_HOVER],
-				recipe.bg_image[UI_STATE_CLICK]
-				);
-		}
-		ft_strdel(&trimmed);
+		else
+			kv[i].value = NULL;
 		ft_arraydel(arr);
 	}
+	*len = i;
+	return (kv);
 }
 
-void	decide(char *str, char *var_name, FILE *fd)
+void	ui_window_get(t_ui_layout *layout, void *args)
+{
+	t_ui_window_recipe	*recipe;
+	t_ui_get			*get;
+	t_ui_key_value		*kv;
+	int					i;
+	int					len;
+
+	recipe = ft_memalloc(sizeof(t_ui_window_recipe));
+	get = args;	
+	ft_printf("Window ID : %s\n", get->id);
+	recipe->id = ft_strdup(get->id);
+	i = -1;
+	kv = make_key_value(get->values, &len);
+	while (++i < len)
+	{
+		if (ft_strequ(kv[i].key, "pos"))
+		{
+			recipe->pos = pos_arg_to_int_arr(kv[i].value);
+		}
+		else if (ft_strequ(kv[i].key, "title"))
+		{
+			recipe->title = trim_string(kv[i].value);
+		}
+		else if (ft_strequ(kv[i].key, "bg_color"))
+		{
+			recipe->bg_color = strtoul(kv[i].value, NULL, 16);
+		}
+	}
+	add_to_list(&layout->recipes, recipe, sizeof(t_ui_window_recipe));
+}
+
+void	ui_label_get(t_ui_layout *layout, void *args)
+{
+	t_ui_label_recipe	*recipe;
+	t_ui_get			*get;
+	t_ui_key_value		*kv;
+	char				**arr;
+	char				*trimmed;
+	int					i;
+
+	recipe = ft_memalloc(sizeof(t_ui_label_recipe));
+	get = args;	
+	ft_printf("Label ID : %s\n", get->id);
+	recipe->id = ft_strdup(get->id);
+	i = -1;
+	int	len;
+	kv = make_key_value(get->values, &len);
+	while (++i < len)
+	{
+		ft_printf("%s : %s\n", kv[i].key, kv[i].value);
+		if (ft_strequ(kv[i].key, "pos"))
+		{
+			recipe->pos = pos_arg_to_int_arr(kv[i].value);
+		}
+		else if (ft_strequ(kv[i].key, "font_path"))
+		{
+			recipe->font_path = trim_string(kv[i].value);
+		}
+		else if (ft_strequ(kv[i].key, "font_size"))
+		{
+			recipe->font_size = ft_atoi(kv[i].value);
+		}
+		else if (ft_strequ(kv[i].key, "font_color"))
+		{
+			recipe->font_color = strtoul(kv[i].value, NULL, 16);
+		}
+	}
+	add_to_list(&layout->recipes, recipe, sizeof(t_ui_label_recipe));
+}
+
+void	ui_button_get(t_ui_layout *layout, void *args)
+{
+	t_ui_button_recipe	*recipe;
+	int					i;
+	t_ui_get			*get;
+	t_ui_key_value		*kv;
+
+	recipe = ft_memalloc(sizeof(t_ui_button_recipe));
+	get = args;
+	ft_printf("id: %s\n", get->id);
+	recipe->id = ft_strdup(get->id);
+	i = -1;
+	int	len;
+	kv = make_key_value(get->values, &len);
+	while (++i < len)
+	{
+		if (ft_strequ(kv[i].key, "pos"))
+		{
+			recipe->pos = pos_arg_to_int_arr(kv[i].value);
+			ft_printf("pos : %d %d %d %d\n", recipe->pos.x, recipe->pos.y, recipe->pos.w, recipe->pos.h);
+		}
+		else if (ft_strequ(kv[i].key, "bg_color"))
+		{
+			bg_color_arg_to_int_arr(&recipe->bg_color, kv[i].value);
+			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
+				recipe->bg_color[UI_STATE_DEFAULT],
+				recipe->bg_color[UI_STATE_HOVER],
+				recipe->bg_color[UI_STATE_CLICK]);
+		}
+		else if (ft_strequ(kv[i].key, "bg_image"))
+		{
+			bg_image_arg_to_arr(recipe->bg_image, kv[i].value);
+			ft_printf("bg_image : %s %s %s\n",
+				recipe->bg_image[UI_STATE_DEFAULT],
+				recipe->bg_image[UI_STATE_HOVER],
+				recipe->bg_image[UI_STATE_CLICK]
+				);
+		}
+	}
+	add_to_list(&layout->recipes, recipe, sizeof(t_ui_button_recipe));
+}
+
+void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 {
 	char	*line;
 	size_t	len;
@@ -365,14 +520,57 @@ void	decide(char *str, char *var_name, FILE *fd)
 		ft_strdel(&inside);
 		inside = ft_strdup(trimmed);
 		ft_strdel(&trimmed);
+
 		values = ft_strsplit(inside, ';');
-		g_acceptable[i].getter(&(t_ui_get){var_name, inside, values});
+		g_acceptable[i].getter(layout, &(t_ui_get){var_name, inside, values});
 		ft_strdel(&inside);
 		ft_arraydel(values);
+//		free_ui_get();
 	}
 }
 
-void	ui_load(char *ui_file_path)
+void	ui_layout_window_new(t_ui_layout *layout, t_ui_window_recipe *recipe)
+{
+	t_ui_window	*window;
+
+	window = malloc(sizeof(t_ui_window));
+	ui_window_new(window, recipe->title, recipe->pos);
+	window->id = ft_strdup(recipe->id);
+	ui_texture_fill(window->renderer, window->texture, recipe->bg_color);
+	add_to_list(&layout->windows, window, sizeof(t_ui_window));
+}
+/*
+ * 1. find window.
+ * 2. make it.
+ * 3. find elements.
+ * 4. make them.
+ * 5. goto 1.
+*/
+void	compile_recipes(t_ui_layout *layout)
+{
+	t_list	*curr;
+	t_ui_window_recipe	*recipe;
+
+	curr = layout->recipes;
+	recipe = NULL;
+	while (curr)
+	{
+		if (curr->content_size == sizeof(t_ui_window_recipe))
+		{
+			recipe = curr->content;
+			ui_layout_window_new(layout, recipe);
+						/* find all the elements and make them
+			while ()
+			{}
+			*/
+		}
+		curr = curr->next;
+	}
+	if (recipe)
+		ft_printf("Window Found : %s\n", recipe->id);
+}
+
+void	ui_load(t_ui_layout *layout, char *ui_file_path)
 {
 	FILE	*fd;
 	char	*line;
@@ -381,6 +579,7 @@ void	ui_load(char *ui_file_path)
 	size_t	len;
 	ssize_t	nread;
 
+	memset(layout, 0, sizeof(t_ui_layout));
 	fd = fopen(ui_file_path, "r");
 	if (!fd)
 	{
@@ -397,12 +596,13 @@ void	ui_load(char *ui_file_path)
 		trimmed = ft_strtrim(line);
 		arr = ft_strsplit(trimmed, ' ');
 		if (arr[0] && arr[1])
-			decide(arr[0], arr[1], fd);
+			decide(layout, arr[0], arr[1], fd);
 		ft_strdel(&line);
 		ft_strdel(&trimmed);
 		ft_arraydel(arr);
 		nread = getline(&line, &len, fd);
 	}
 	fclose(fd);
+	compile_recipes(layout);
 	ft_printf("Done reading : %s\n", ui_file_path);
 }

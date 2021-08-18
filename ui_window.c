@@ -26,11 +26,6 @@ void	ui_window_render(t_ui_window *win)
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
 }
 
-void	ui_window_get(void *win)
-{
-	(void)win;
-}
-
 void	ui_window_free(void *win)
 {
 	(void)win;

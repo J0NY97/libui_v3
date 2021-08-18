@@ -3,6 +3,7 @@
 int	main(void)
 {
 	ft_putstr("Hello world!\n");
+	t_ui_layout	layout;
 	t_ui_window	win;
 	t_ui_element elem1;
 	t_ui_label label;
@@ -11,7 +12,7 @@ int	main(void)
 	t_ui_menu	menu;
 
 	ui_print_accepted();
-	ui_load("layout.ui");
+	ui_load(&layout, "layout.ui");
 
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
@@ -114,6 +115,9 @@ int	main(void)
 			ui_button_event(&button2, e);
 			ui_menu_event(&menu, e);
 			ui_dropdown_event(&dropdown, e);
+
+			// Layout
+			ui_layout_event(&layout, e);
 		}
 
 		// User Code
@@ -141,6 +145,9 @@ int	main(void)
 		ui_menu_render(&menu);
 		ui_dropdown_render(&dropdown);
 		SDL_RenderPresent(win.renderer);
+
+		// Layout
+		ui_layout_render(&layout);
 	}
 	return (0);
 }

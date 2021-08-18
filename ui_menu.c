@@ -74,7 +74,7 @@ void	ui_menu_render(t_ui_menu *menu)
 	}
 }
 
-void	ui_menu_get(void *menu)
+void	ui_menu_get(t_ui_layout *layout, void *menu)
 {
 	(void)menu;
 }

@@ -41,5 +41,7 @@ Menu menu0
 Window win0
 {
 	pos : [100, 100, 1280, 720];
+	title : "Layout testing window";
+	bg_color : 0xff404040;
 	menu0;
 }
