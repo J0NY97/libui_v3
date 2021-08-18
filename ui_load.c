@@ -457,6 +457,7 @@ void	ui_button_get(t_ui_layout *layout, void *args)
 		{
 			recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
 			ft_printf("pos : %d %d %d %d\n", recipe->pos.x, recipe->pos.y, recipe->pos.w, recipe->pos.h);
+			recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
@@ -465,6 +466,7 @@ void	ui_button_get(t_ui_layout *layout, void *args)
 				recipe->bg_color[UI_STATE_DEFAULT],
 				recipe->bg_color[UI_STATE_HOVER],
 				recipe->bg_color[UI_STATE_CLICK]);
+			recipe->bg_color_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
