@@ -1,9 +1,10 @@
 Label label0
 {
 	pos : [10, 10, 50, 20];
+	title : "this is the text of the label0";
 	font_path : "DroidSans.ttf";
-	font_size : 12;
-	font_color : 0xff037171;
+	font_size : 32;
+	font_color : 0xff0371ff;
 }
 
 Button button0
@@ -43,5 +44,6 @@ Window win0
 	pos : [100, 100, 1280, 720];
 	title : "Layout testing window";
 	bg_color : 0xff404040;
+	label0;
 	menu0;
 }

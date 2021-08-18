@@ -19,13 +19,13 @@ int	main(void)
 	TTF_Init();
 
 	// Window
-	ui_window_new(&win, "test window", (t_vec4i){100, 100, 1280, 720});
+	ui_window_new(&win, "test window", vec4i(100, 100, 1280, 720));
 	ui_texture_fill(win.renderer, win.texture, 0xff404040);
 	ui_texture_draw_border(win.renderer, win.texture, 2, 0xffff0000);
 
 	// Element
 	ui_element_new(&win, &elem1);
-	ui_element_pos_set(&elem1, (t_vec4i){10, 50, 50, 20});
+	ui_element_pos_set(&elem1, vec4i(10, 50, 50, 20));
 	ui_texture_fill(elem1.win->renderer, elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
 
 	// Label
@@ -51,7 +51,7 @@ int	main(void)
 	t_ui_menu		menu_menu0;
 	t_ui_dropdown	menu_dropdown0;
 	ui_menu_new(&win, &menu);
-	ui_element_pos_set(&menu.elem, (t_vec4i){150, 100, 500, 500});
+	ui_element_pos_set(&menu.elem, vec4i(150, 100, 500, 500));
 	ui_element_image_set_from_path(&menu.elem, UI_STATE_DEFAULT, "images/grass_hill.jpg");
 
 	ui_label_new(&win, &menu_label0);

@@ -33,6 +33,16 @@ void	ui_layout_render(t_ui_layout *layout)
 	/////////////////////////////
 	// Render all the elements
 	/////////////////////////////
+	curr = layout->elements;
+	while (curr)
+	{
+		if (curr->content_size == sizeof(t_ui_label))
+			ui_label_render(curr->content);
+		curr = curr->next;
+	}
+	/////////////////////////////
+	// Stop rendering
+	/////////////////////////////
 	curr = layout->windows;
 	while (curr)
 	{
