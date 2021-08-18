@@ -15,6 +15,14 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 	//////////////////
 	// Event elements
 	//////////////////
+	curr = layout->elements;
+	while (curr)
+	{
+		if (curr->content_size == sizeof(t_ui_button))
+			ui_button_event(curr->content, e);
+		curr = curr->next;
+	}
+
 }
 
 void	ui_layout_render(t_ui_layout *layout)
@@ -38,6 +46,8 @@ void	ui_layout_render(t_ui_layout *layout)
 	{
 		if (curr->content_size == sizeof(t_ui_label))
 			ui_label_render(curr->content);
+		else if (curr->content_size == sizeof(t_ui_button))
+			ui_button_render(curr->content);
 		curr = curr->next;
 	}
 	/////////////////////////////

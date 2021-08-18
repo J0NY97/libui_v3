@@ -59,8 +59,16 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_tex
 	}
 	if (!recipe->font)
 	{
-		ft_printf("[ui_texture_create_from_text_recipe] Failed to open font : %s\n", recipe->font_path);
-		return (NULL);
+		ft_printf("[ui_texture_create_from_text_recipe] %s, defaulting to fonts/DroidSans.ttf\n", TTF_GetError());
+		if (recipe->font_path)
+			ft_strdel(&recipe->font_path);
+		recipe->font_path = ft_strdup("fonts/DroidSans.ttf");
+		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
+		if (!recipe->font)
+		{
+			ft_printf("[ui_texture_create_from_text_recipe] Well apparently that didn\'t work either.\n");
+			return (NULL);
+		}
 	}
 	rgba = hex_to_rgba(recipe->font_color);
 	color.r = rgba.r;

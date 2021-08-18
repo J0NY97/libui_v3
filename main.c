@@ -11,12 +11,12 @@ int	main(void)
 	t_ui_button button2;
 	t_ui_menu	menu;
 
-	ui_print_accepted();
-	ui_load(&layout, "layout.ui");
-
 	SDL_Init(SDL_INIT_VIDEO);
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	TTF_Init();
+
+	ui_print_accepted();
+	ui_load(&layout, "layout.ui");
 
 	// Window
 	ui_window_new(&win, "test window", vec4i(100, 100, 1280, 720));

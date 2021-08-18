@@ -63,6 +63,14 @@ void	ui_label_text_set(t_ui_label *label, char *text)
 	label->recipe.texture_recreate = 1;
 }
 
+void	ui_label_font_set(t_ui_label *label, char *font_path)
+{
+	if (label->recipe.font_path)
+		ft_strdel(&label->recipe.font_path);
+	label->recipe.font_path = ft_strdup(font_path);
+	label->recipe.font_recreate = 1;
+}
+
 void	ui_label_pos_set(t_ui_label *label, t_vec4i pos)
 {
 	if (label->pos.w != pos.w || label->pos.h != pos.h)

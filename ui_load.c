@@ -14,6 +14,7 @@ typedef struct s_ui_recipe
 	char				*title;
 
 	char				*font_path;
+	bool				font_path_set;
 
 	Uint32				font_size;
 	bool				font_size_set;
@@ -22,7 +23,10 @@ typedef struct s_ui_recipe
 	bool				font_color_set;
 
 	Uint32				bg_color[UI_STATE_AMOUNT];
+	bool				bg_color_set;
+
 	char				*bg_image[UI_STATE_AMOUNT];
+	bool				bg_image_set;
 
 	char				**children_ids;
 	int					child_amount;
@@ -419,6 +423,7 @@ void	ui_label_get(t_ui_layout *layout, void *args)
 		else if (ft_strequ(get->kv[i].key, "font_path"))
 		{
 			recipe->font_path = trim_string(get->kv[i].value);
+			recipe->font_path_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "font_size"))
 		{
@@ -469,6 +474,11 @@ void	ui_button_get(t_ui_layout *layout, void *args)
 				recipe->bg_image[UI_STATE_HOVER],
 				recipe->bg_image[UI_STATE_CLICK]
 				);
+		}
+		else // should be variables
+		{
+			recipe->children_ids = realloc(recipe->children_ids, sizeof(char *) * (++recipe->child_amount + 1));
+			recipe->children_ids[recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
 		}
 	}
 	add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
@@ -547,12 +557,8 @@ t_ui_recipe	*get_recipe_by_id(t_list *list, char *id)
 	return (NULL);
 }
 
-void	ui_layout_label_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+void	ui_layout_label_edit(t_ui_label *label, t_ui_recipe *recipe)
 {
-	t_ui_label	*label;
-
-	label = ft_memalloc(sizeof(t_ui_label));
-	ui_label_new(win, label);
 	if (recipe->pos_set)
 		ui_label_pos_set(label, recipe->pos);
 	if (recipe->title)
@@ -561,13 +567,43 @@ void	ui_layout_label_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *rec
 		ui_label_size_set(label, recipe->font_size);
 	if (recipe->font_color_set)
 		ui_label_color_set(label, recipe->font_color);
+	if (recipe->font_path_set)
+		ui_label_font_set(label, recipe->font_path);
+}
+
+void	ui_layout_label_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+{
+	t_ui_label	*label;
+
+	label = ft_memalloc(sizeof(t_ui_label));
+	ui_label_new(win, label);
+	ui_layout_label_edit(label, recipe);
 	add_to_list(&layout->elements, label, sizeof(t_ui_label));
+}
+
+void	ui_layout_button_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+{
+	t_ui_button	*button;
+	t_ui_recipe	*child_recipe;
+
+	button = ft_memalloc(sizeof(t_ui_button));
+	ui_button_new(win, button);
+	if (recipe->pos_set)
+		ui_element_pos_set(&button->elem, recipe->pos);
+	if (recipe->child_amount > 0)
+	{
+		child_recipe = get_recipe_by_id(layout->recipes, recipe->children_ids[0]);
+		ui_layout_label_edit(&button->label, child_recipe);
+	}
+	add_to_list(&layout->elements, button, sizeof(t_ui_button));
 }
 
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
 {
 	if (recipe->type == UI_TYPE_LABEL)
 		ui_layout_label_new(layout, win, recipe);
+	else if (recipe->type == UI_TYPE_BUTTON)
+		ui_layout_button_new(layout, win, recipe);
 	else
 		ft_printf("[ui_layout_element_new] ui_type : %d, not supported.\n", recipe->type);
 }
