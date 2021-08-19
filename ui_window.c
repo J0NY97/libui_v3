@@ -13,7 +13,8 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4i pos)
 
 void	ui_window_event(t_ui_window *win, SDL_Event e)
 {
-	SDL_GetMouseState(&win->mouse_pos.x, &win->mouse_pos.y);
+	if (SDL_GetWindowFlags(win->win) & SDL_WINDOW_MOUSE_FOCUS)
+		SDL_GetMouseState(&win->mouse_pos.x, &win->mouse_pos.y);
 	if (e.button.type == SDL_MOUSEBUTTONDOWN)
 		win->mouse_down = 1;
 	else if (e.button.type == SDL_MOUSEBUTTONUP)

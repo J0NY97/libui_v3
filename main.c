@@ -16,6 +16,8 @@ int	main(void)
 	IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF);
 	TTF_Init();
 
+	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
+
 	/*
 	ui_print_accepted();
 	ui_load(&layout, "layout.ui");

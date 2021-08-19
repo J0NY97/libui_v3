@@ -26,16 +26,17 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 				ui_button_event(elem, e);
 			else if (elem->element_type == UI_TYPE_MENU)
 				ui_menu_event(elem, e);
+			else if (elem->element_type == UI_TYPE_DROPDOWN)
+				ui_dropdown_event(elem, e);
+			else if (elem->element_type == UI_TYPE_LABEL)
+				(void)curr;
 			else
 				ft_printf("[ui_layout_event] Eventing of type %d %d not supported.\n", curr->content_size, elem->element_type);
 		}
-		else if (curr->content_size == UI_TYPE_LABEL)
-			(void)curr;
 		else
 			ft_printf("[ui_layout_event] Eventing of type %d not supported.\n", curr->content_size);
 		curr = curr->next;
 	}
-
 }
 
 void	ui_layout_render(t_ui_layout *layout)
@@ -65,11 +66,11 @@ void	ui_layout_render(t_ui_layout *layout)
 				ui_button_render(elem);
 			else if (elem->element_type == UI_TYPE_MENU)
 				ui_menu_render(elem);
+			else if (elem->element_type == UI_TYPE_LABEL)
+				ui_label_render(curr->content);
 			else
 				ft_printf("[ui_layout_render] Rendering of type %d %d is not supported.\n", curr->content_size, elem->element_type);
 		}
-		else if (curr->content_size == UI_TYPE_LABEL)
-			ui_label_render(curr->content);
 		else
 			ft_printf("[ui_layout_render] Rendering of type %d is not supported.\n", curr->content_size);
 		curr = curr->next;

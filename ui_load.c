@@ -507,7 +507,7 @@ void	ui_layout_label_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t
 {
 	t_ui_element	*label;
 
-	label = ft_memalloc(sizeof(t_ui_label));
+	label = ft_memalloc(sizeof(t_ui_element));
 	ui_label_new(win, label);
 	ui_layout_label_edit(label, recipe);
 	add_to_list(list, label, UI_TYPE_ELEMENT);
@@ -529,7 +529,10 @@ void	ui_layout_button_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, 
 	{
 		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[0]);
 		if (child_recipe)
+		{
+			ft_printf("[ui_layout_button_new] We have found child recipe : %s\n", child_recipe->id);
 			ui_layout_label_edit(&button->label, child_recipe);
+		}
 		else
 			ft_printf("[ui_layout_button_new] Couldnt find recipe with id : %s\n", recipe->children_ids[0]);
 	}
