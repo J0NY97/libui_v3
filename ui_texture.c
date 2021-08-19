@@ -43,7 +43,7 @@ void	ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t
 	SDL_SetRenderTarget(renderer, NULL);
 }
 
-SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe)
+SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_label *recipe)
 {
 	SDL_Texture	*texture;
 	SDL_Surface	*surface;
