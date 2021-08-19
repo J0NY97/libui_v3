@@ -4,6 +4,7 @@
 void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
 void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
+void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
 
@@ -50,6 +51,11 @@ static const char *g_accepted_label[] = {
 	NULL
 };
 
+static const char *g_accepted_dropdown[] = {
+	"pos",
+	NULL
+};
+
 static const t_ui_acceptable	g_acceptable_button =
 {
 	.name = "Button",
@@ -86,6 +92,18 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.values = g_accepted_menu
 };
 
+static const t_ui_acceptable	g_acceptable_dropdown =
+{
+	.name = "Dropdown",
+	.type = UI_TYPE_DROPDOWN,
+	.freer = &ui_dropdown_free,
+	.getter = &ui_dropdown_get,
+	.maker = &ui_dropdown_new,
+	.editor = &ui_dropdown_editor,
+	.renderer = &ui_dropdown_render,
+	.values = g_accepted_dropdown
+};
+
 static const t_ui_acceptable	g_acceptable_window =
 {
 	.name = "Window",
@@ -98,13 +116,14 @@ static const t_ui_acceptable	g_acceptable_window =
 	.values = g_accepted_menu
 };
 
-# define UI_ACCEPT_AMOUNT 4
+# define UI_ACCEPT_AMOUNT 5
 static const t_ui_acceptable	g_acceptable[] =
 {
 	g_acceptable_button,
 	g_acceptable_label,
 	g_acceptable_menu,
 	g_acceptable_window,
+	g_acceptable_dropdown,
 	NULL
 };
 
@@ -296,6 +315,28 @@ void	bg_image_arg_to_arr(char **images, char *str)
 	ft_strdel(&final);
 	ft_strdel(&trimmed);
 	ft_arraydel(arr);
+}
+
+void	ui_dropdown_get(t_ui_get *get)
+{
+	int					i;
+
+	get->recipe->type = UI_TYPE_DROPDOWN;
+	i = -1;
+	while (++i < *get->len)
+	{
+		if (ft_strequ(get->kv[i].key, "pos"))
+		{
+			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
+			get->recipe->pos_set = 1;
+		}
+		else // should be variables, button and menu
+		{
+			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
+			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
+		}
+	}
 }
 
 void	ui_menu_get(t_ui_get *get)
@@ -536,6 +577,18 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
 	menu = elem->element;
 	ui_layout_element_new(&menu->children, elem->win, recipe, recipes);
 	ui_element_parent_set(menu->children->content, elem, UI_TYPE_ELEMENT, &elem->show);
+}
+
+void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
+{
+	t_ui_dropdown	*drop;
+
+	drop = elem->element;
+	if (recipe->type == UI_TYPE_BUTTON)
+		ui_layout_element_edit(&drop->button, recipe);
+	else if (recipe->type == UI_TYPE_MENU)
+		ui_layout_element_edit(&drop->menu, recipe);
+	(void)args;
 }
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)

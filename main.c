@@ -18,8 +18,8 @@ int	main(void)
 
 	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 
-	/*
 	ui_print_accepted();
+	/*
 	ui_load(&layout, "layout.ui");
 	*/
 	ui_load(&toolbox, "toolbox.ui");

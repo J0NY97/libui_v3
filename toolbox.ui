@@ -25,9 +25,15 @@ Label menu_label
 	font_size : 32;
 }
 
+Menu drop_menu
+{
+	bg_color : 0xffff0000;
+}
+
 Dropdown drop
 {
 	pos : [10, 100, 50, 20];
+	drop_menu;
 }
 
 Menu menu0

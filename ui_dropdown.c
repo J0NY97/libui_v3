@@ -50,3 +50,8 @@ void	ui_dropdown_render(t_ui_element *elem)
 	ui_button_render(&drop->button);
 	ui_menu_render(&drop->menu);
 }
+
+void	ui_dropdown_free(void *drop)
+{
+	(void)drop;
+}

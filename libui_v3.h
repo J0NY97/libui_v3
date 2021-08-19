@@ -210,6 +210,8 @@ void					ui_menu_free(void *menu);
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 void					ui_dropdown_render(t_ui_element *drop);
+void					ui_dropdown_get(t_ui_get *get);
+void					ui_dropdown_free(void *drop);
 
 // Load
 void					ui_print_accepted(void);
