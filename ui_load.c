@@ -1,39 +1,6 @@
 #include "libui_v3.h"
 
 /*
- * int		type;		one of enum e_element_type
-*/
-typedef struct s_ui_recipe
-{
-	char				*id;
-	int					type;
-
-	t_vec4i				pos;	
-	bool				pos_set;
-
-	char				*title;
-
-	char				*font_path;
-	bool				font_path_set;
-
-	Uint32				font_size;
-	bool				font_size_set;
-
-	Uint32				font_color;
-	bool				font_color_set;
-
-	Uint32				bg_color[UI_STATE_AMOUNT];
-	bool				bg_color_set;
-
-	char				*bg_image[UI_STATE_AMOUNT];
-	bool				bg_image_set;
-
-	char				**children_ids;
-	int					child_amount;
-	t_list				*recipes;
-}						t_ui_recipe;
-
-/*
  * Fun fact: you can only have flexible array in the end of a struct.
  * 	which actually makes sense if you think about it.
 */
@@ -42,7 +9,7 @@ typedef struct s_ui_acceptable
 	char		*name;
 	int			type;
 	void		(*freer)(void *args);
-	void		(*getter)(t_ui_layout *layout, void *args);
+	void		(*getter)(t_ui_get *get);
 	const char	**values;
 }				t_ui_acceptable;
 
@@ -147,28 +114,6 @@ void	ui_print_accepted(void)
 		ft_printf("}\n");
 	}
 }
-
-typedef struct s_ui_key_value
-{
-	char		*key;
-	char		*value;
-}				t_ui_key_value;
-/*
- * arg : value
- *
- * args is the argument of that you want to change in the element,
- * t.ex pos, bg_color, bg_image.
- *
- * values is the value that comes after the args,
- * t.ex bg_color : 0xff000000, the '0xff000000' is the value.
-*/
-typedef struct	s_ui_get
-{
-	char			*id;
-	char			*inside;
-	int				*len; // len of kv
-	t_ui_key_value	*kv;
-}					t_ui_get;
 
 char	**ft_strsplitfirstoccurence(char *str, char c)
 {
@@ -304,33 +249,6 @@ char	*trim_string(char *str)
 	return (result);
 }
 
-/*
- * Give in str usually == 'arg : "string"'
- * Give out arr[0] = arg
- * 			arr[1] = string
-*/
-char	**key_value_get_string(char *str)
-{
-	char	**arr;	
-	char	*trim;
-
-	if (!str)
-		return (NULL);
-	arr = ft_strsplitfirstoccurence(str, ':');
-	if (!arr[0] || !arr[1])
-		return (NULL);
-	trim = ft_strtrim(arr[0]);
-	ft_strdel(&arr[0]);
-	arr[0] = ft_strdup(trim);
-	ft_strdel(&trim);
-
-	trim = trim_string(arr[1]);
-	ft_strdel(&arr[1]);
-	arr[1] = ft_strdup(trim);
-	ft_strdel(&trim);
-	return (arr);
-}
-
 void	bg_image_arg_to_arr(char **images, char *str)
 {
 	char	*trimmed;
@@ -359,131 +277,138 @@ void	bg_image_arg_to_arr(char **images, char *str)
 	ft_arraydel(arr);
 }
 
-void	ui_window_get(t_ui_layout *layout, void *args)
+void	ui_menu_get(t_ui_get *get)
 {
-	t_ui_recipe	*recipe;
-	t_ui_get	*get;
 	int			i;
 
-	recipe = ft_memalloc(sizeof(t_ui_recipe));
-	recipe->type = UI_TYPE_WINDOW;
-	get = args;	
-	ft_printf("Window ID : %s\n", get->id);
-	recipe->id = ft_strdup(get->id);
+	get->recipe->type = UI_TYPE_MENU;
 	i = -1;
 	while (++i < *get->len)
 	{
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
-		}
-		else if (ft_strequ(get->kv[i].key, "title"))
-		{
-			recipe->title = trim_string(get->kv[i].value);
+			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
-			recipe->bg_color[UI_STATE_DEFAULT] = strtoul(get->kv[i].value, NULL, 16);
+			get->recipe->bg_color[UI_STATE_DEFAULT] = strtoul(get->kv[i].value, NULL, 16);
+			get->recipe->bg_color_set = 1;
 		}
 		else // should be variables
 		{
-			recipe->children_ids = realloc(recipe->children_ids, sizeof(char *) * (++recipe->child_amount + 1));
-			recipe->children_ids[recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
+			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
+			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
 		}
 	}
-	recipe->children_ids[recipe->child_amount] = NULL;
-	add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 }
 
-void	ui_label_get(t_ui_layout *layout, void *args)
+void	ui_window_get(t_ui_get *get)
 {
-	t_ui_recipe	*recipe;
-	t_ui_get	*get;
 	int			i;
 
-	recipe = ft_memalloc(sizeof(t_ui_recipe));
-	recipe->type = UI_TYPE_LABEL;
-	get = args;	
-	ft_printf("Label ID : %s\n", get->id);
-	recipe->id = ft_strdup(get->id);
+	get->recipe->type = UI_TYPE_WINDOW;
 	i = -1;
 	while (++i < *get->len)
 	{
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
-			recipe->pos_set = 1;
+			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
 		{
-			recipe->title = trim_string(get->kv[i].value);
+			get->recipe->title = trim_string(get->kv[i].value);
+		}
+		else if (ft_strequ(get->kv[i].key, "bg_color"))
+		{
+			get->recipe->bg_color[UI_STATE_DEFAULT] = strtoul(get->kv[i].value, NULL, 16);
+			get->recipe->bg_color_set = 1;
+		}
+		else // should be variables
+		{
+			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
+			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
+		}
+	}
+}
+
+void	ui_label_get(t_ui_get *get)
+{
+	int			i;
+
+	get->recipe->type = UI_TYPE_LABEL;
+	i = -1;
+	while (++i < *get->len)
+	{
+		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
+		if (ft_strequ(get->kv[i].key, "pos"))
+		{
+			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			get->recipe->pos_set = 1;
+		}
+		else if (ft_strequ(get->kv[i].key, "title"))
+		{
+			get->recipe->title = trim_string(get->kv[i].value);
 		}
 		else if (ft_strequ(get->kv[i].key, "font_path"))
 		{
-			recipe->font_path = trim_string(get->kv[i].value);
-			recipe->font_path_set = 1;
+			get->recipe->font_path = trim_string(get->kv[i].value);
+			get->recipe->font_path_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "font_size"))
 		{
-			recipe->font_size = ft_atoi(get->kv[i].value);
-			recipe->font_size_set = 1;
+			get->recipe->font_size = ft_atoi(get->kv[i].value);
+			get->recipe->font_size_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "font_color"))
 		{
-			recipe->font_color = strtoul(get->kv[i].value, NULL, 16);
-			recipe->font_color_set = 1;
+			get->recipe->font_color = strtoul(get->kv[i].value, NULL, 16);
+			get->recipe->font_color_set = 1;
 		}
 	}
-	add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 }
 
-void	ui_button_get(t_ui_layout *layout, void *args)
+void	ui_button_get(t_ui_get *get)
 {
-	t_ui_recipe	*recipe;
 	int					i;
-	t_ui_get			*get;
 
-	recipe = ft_memalloc(sizeof(t_ui_recipe));
-	recipe->type = UI_TYPE_BUTTON;
-	get = args;
-	ft_printf("id: %s\n", get->id);
-	recipe->id = ft_strdup(get->id);
+	get->recipe->type = UI_TYPE_BUTTON;
 	i = -1;
 	while (++i < *get->len)
 	{
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
-			ft_printf("pos : %d %d %d %d\n", recipe->pos.x, recipe->pos.y, recipe->pos.w, recipe->pos.h);
-			recipe->pos_set = 1;
+			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
+			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
-			bg_color_arg_to_int_arr(recipe->bg_color, get->kv[i].value);
+			bg_color_arg_to_int_arr(get->recipe->bg_color, get->kv[i].value);
 			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
-				recipe->bg_color[UI_STATE_DEFAULT],
-				recipe->bg_color[UI_STATE_HOVER],
-				recipe->bg_color[UI_STATE_CLICK]);
-			recipe->bg_color_set = 1;
+				get->recipe->bg_color[UI_STATE_DEFAULT],
+				get->recipe->bg_color[UI_STATE_HOVER],
+				get->recipe->bg_color[UI_STATE_CLICK]);
+			get->recipe->bg_color_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
-			bg_image_arg_to_arr(recipe->bg_image, get->kv[i].value);
+			bg_image_arg_to_arr(get->recipe->bg_image, get->kv[i].value);
 			ft_printf("bg_image : %s %s %s\n",
-				recipe->bg_image[UI_STATE_DEFAULT],
-				recipe->bg_image[UI_STATE_HOVER],
-				recipe->bg_image[UI_STATE_CLICK]
+				get->recipe->bg_image[UI_STATE_DEFAULT],
+				get->recipe->bg_image[UI_STATE_HOVER],
+				get->recipe->bg_image[UI_STATE_CLICK]
 				);
 		}
 		else // should be variables
 		{
-			recipe->children_ids = realloc(recipe->children_ids, sizeof(char *) * (++recipe->child_amount + 1));
-			recipe->children_ids[recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
+			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
+			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
 		}
 	}
-	add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 }
 
 void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
@@ -536,12 +461,16 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 
 		values = ft_strsplit(inside, ';');
 		int len;
+
 		t_ui_key_value	*kv = make_key_value(values, &len);
-		g_acceptable[i].getter(layout, &(t_ui_get){var_name, inside, &len, kv});
+		t_ui_recipe		*recipe = ft_memalloc(sizeof(t_ui_recipe));
+		recipe->id = ft_strdup(var_name);
+		ft_printf("Getting ID : %s\n", recipe->id);
+		g_acceptable[i].getter(&(t_ui_get){&len, kv, recipe});
+		add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 		free_key_value(kv, len);
 		ft_strdel(&inside);
 		ft_arraydel(values);
-//		free_ui_get();
 	}
 }
 
@@ -573,17 +502,18 @@ void	ui_layout_label_edit(t_ui_label *label, t_ui_recipe *recipe)
 		ui_label_font_set(label, recipe->font_path);
 }
 
-void	ui_layout_label_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+void	ui_layout_label_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
 	t_ui_label	*label;
 
 	label = ft_memalloc(sizeof(t_ui_label));
 	ui_label_new(win, label);
 	ui_layout_label_edit(label, recipe);
-	add_to_list(&layout->elements, label, sizeof(t_ui_label));
+	add_to_list(list, label, UI_TYPE_LABEL);
+	(void)recipes;
 }
 
-void	ui_layout_button_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+void	ui_layout_button_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
 	t_ui_button	*button;
 	t_ui_recipe	*child_recipe;
@@ -594,20 +524,52 @@ void	ui_layout_button_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *re
 		ui_element_pos_set(&button->elem, recipe->pos);
 	if (recipe->child_amount > 0)
 	{
-		child_recipe = get_recipe_by_id(layout->recipes, recipe->children_ids[0]);
+		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[0]);
 		ui_layout_label_edit(&button->label, child_recipe);
 	}
-	add_to_list(&layout->elements, button, sizeof(t_ui_button));
+	add_to_list(list, button, UI_TYPE_BUTTON);
 }
 
-void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
+void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+{
+	t_ui_menu	*menu;
+	t_ui_recipe	*child_recipe;
+	int			i;
+
+	menu = ft_memalloc(sizeof(t_ui_menu));
+	ui_menu_new(win, menu);
+	if (recipe->pos_set)
+		ui_element_pos_set(&menu->elem, recipe->pos);
+	if (recipe->bg_color_set)
+		ui_element_color_set(&menu->elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
+	i = -1;
+	while (++i < recipe->child_amount)
+	{
+		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[i]);
+		if (child_recipe)
+		{
+			ui_layout_add_child(&menu->children, recipes, win, child_recipe);
+			if (menu->children->content_size == UI_TYPE_BUTTON)
+				ui_element_parent_set(&((t_ui_button *)menu->children->content)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
+			else if (menu->children->content_size == UI_TYPE_LABEL)
+				ft_putstr("we have found a label.\n");
+			else
+				ft_printf("[ui_layout_menu_new] Element of type %d is not supported.\n");
+		}
+	}
+	add_to_list(list, menu, UI_TYPE_MENU);
+}
+
+void	ui_layout_add_child(t_list **list, t_list *recipes, t_ui_window *win, t_ui_recipe *recipe)
 {
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_label_new(layout, win, recipe);
+		ui_layout_label_new(list, win, recipe, recipes);
 	else if (recipe->type == UI_TYPE_BUTTON)
-		ui_layout_button_new(layout, win, recipe);
+		ui_layout_button_new(list, win, recipe, recipes);
+	else if (recipe->type == UI_TYPE_MENU)
+		ui_layout_menu_new(list, win, recipe, recipes);
 	else
-		ft_printf("[ui_layout_element_new] ui_type : %d, not supported.\n", recipe->type);
+		ft_printf("[ui_layout_add_child] ui_type : %d, not supported.\n", recipe->type);
 }
 
 void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
@@ -620,7 +582,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 	ui_window_new(window, recipe->title, recipe->pos);
 	window->id = ft_strdup(recipe->id);
 	ui_texture_fill(window->renderer, window->texture, recipe->bg_color[UI_STATE_DEFAULT]);
-	add_to_list(&layout->windows, window, sizeof(t_ui_window));
+	add_to_list(&layout->windows, window, UI_TYPE_WINDOW);
 
 	i = -1;
 	ft_printf("Child Amount : %d\n", recipe->child_amount);
@@ -631,7 +593,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 		if (child_recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);
-			ui_layout_element_new(layout, window, child_recipe);
+			ui_layout_add_child(&layout->elements, layout->recipes, window, child_recipe);
 		}
 		else
 			ft_printf("[ui_layout_window_new] Couldnt find: %s\n", recipe->children_ids[i]);

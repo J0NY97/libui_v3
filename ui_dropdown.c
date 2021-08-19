@@ -6,6 +6,7 @@
 */
 void	ui_dropdown_new(t_ui_window *win, t_ui_dropdown *drop)
 {
+	memset(drop, 0, sizeof(t_ui_dropdown));
 	ui_element_new(win, &drop->elem);
 	ui_element_color_set(&drop->elem, UI_STATE_DEFAULT, 0xffff0000);
 	ui_element_pos_set(&drop->elem, vec4i(0, 0, 0, 0));

@@ -27,7 +27,8 @@ Button button0
 Label label1
 {
 	pos : [0, 0, 50, 20];
-	font_path : "DroidSans.ttf";
+	title : "button1 label1 text";
+	font_path : "fonts/DroidSans.ttf";
 	font_size : 12;
 	font_color : 0xff037171;
 }
@@ -42,7 +43,8 @@ Button button1
 
 Menu menu0
 {
-	pos : [100, 100, 1280, 720];
+	pos : [100, 100, 500, 500];
+	bg_color : 0xff7bae7f;
 	label0;
 	button0;
 	button1;

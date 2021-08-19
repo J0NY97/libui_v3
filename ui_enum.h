@@ -1,0 +1,24 @@
+#ifndef UI_ENUM_H
+# define UI_ENUM_H
+
+enum	e_element_states
+{
+	UI_STATE_DEFAULT = 0,
+	UI_STATE_HOVER,
+	UI_STATE_CLICK,
+	UI_STATE_AMOUNT
+};
+
+enum	e_element_types
+{
+	UI_TYPE_NONE = -1,
+	UI_TYPE_ELEMENT = 0,
+	UI_TYPE_LABEL,
+	UI_TYPE_BUTTON,
+	UI_TYPE_MENU,
+	UI_TYPE_DROPDOWN,
+	UI_TYPE_WINDOW,
+	UI_TYPE_AMOUNT
+};
+
+#endif

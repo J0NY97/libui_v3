@@ -136,3 +136,10 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	elem->images[state] = SDL_CreateTextureFromSurface(elem->win->renderer, image);
 	elem->use_images = 1;
 }
+
+void	ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show)
+{
+	elem->parent = parent;
+	elem->parent_type = type;
+	elem->parent_show = show;
+}

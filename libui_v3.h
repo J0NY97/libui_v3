@@ -7,47 +7,10 @@
 # include "libft.h"
 # include "libpf.h"
 # include "stdio.h"
+# include "ui_enum.h"
+# include "ui_vec.h"
+# include "ui_load.h"
 //# include "path.h"
-
-# define VEC2_SIZE 2
-# define VEC4_SIZE 4
-
-typedef struct s_vec2i
-{
-	union {
-		struct {
-			int x;
-			int y;
-		};
-		int v[VEC2_SIZE];
-	};
-}					t_vec2i;
-
-typedef struct s_vec4
-{
-	union {
-		struct {
-			float x;
-			float y;
-			float w;
-			float h;
-		};
-		float v[VEC4_SIZE];
-	};
-}					t_vec4;
-
-typedef struct s_vec4i
-{
-	union {
-		struct {
-			int x;
-			int y;
-			int w;
-			int h;
-		};
-		int v[VEC4_SIZE];
-	};
-}					t_vec4i;
 
 typedef struct s_rgba
 {
@@ -75,26 +38,6 @@ typedef struct s_ui_window
 	bool			mouse_down;
 	bool			show;
 }					t_ui_window;
-
-enum	e_element_states
-{
-	UI_STATE_DEFAULT = 0,
-	UI_STATE_HOVER,
-	UI_STATE_CLICK,
-	UI_STATE_AMOUNT
-};
-
-enum	e_element_types
-{
-	UI_TYPE_NONE = -1,
-	UI_TYPE_ELEMENT = 0,
-	UI_TYPE_LABEL,
-	UI_TYPE_BUTTON,
-	UI_TYPE_MENU,
-	UI_TYPE_DROPDOWN,
-	UI_TYPE_WINDOW,
-	UI_TYPE_AMOUNT
-};
 
 /*
  * t_vec4i		pos;						the position of the elem relative to its parent.
@@ -213,7 +156,7 @@ void					print_vec(float *vec, size_t size);
 void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 void					ui_window_render(t_ui_window *win);
-void					ui_window_get(t_ui_layout *layout, void *win);
+void					ui_window_get(t_ui_get *get);
 void					ui_window_free(void *win);
 
 // Element
@@ -224,6 +167,7 @@ void					ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
+void					ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show);
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_text_recipe *recipe);
@@ -250,8 +194,9 @@ void					ui_label_font_set(t_ui_label *label, char *font_path);
 void					ui_label_pos_set(t_ui_label *label, t_vec4i pos);
 void					ui_label_size_set(t_ui_label *label, size_t size);
 void					ui_label_color_set(t_ui_label *label, Uint32 color);
+void					ui_label_parent_set(t_ui_label *label, t_ui_element *parent, int type, bool *show);
 // end edit
-void					ui_label_get(t_ui_layout *layout, void *label);
+void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);
 
 // Button
@@ -259,7 +204,7 @@ void					ui_button_new(t_ui_window *win, t_ui_button *button);
 void					ui_button_event(t_ui_button *button, SDL_Event e);
 bool					ui_button(t_ui_button *button);
 void					ui_button_render(t_ui_button *button);
-void					ui_button_get(t_ui_layout *layout, void *button);
+void					ui_button_get(t_ui_get *get);
 void					ui_button_free(void *button);
 
 // Menu
@@ -267,7 +212,7 @@ void					ui_menu_new(t_ui_window *win, t_ui_menu *menu);
 void					ui_menu_child_add(t_ui_menu *menu, void *child, int type);
 void					ui_menu_render(t_ui_menu *menu);
 void					ui_menu_event(t_ui_menu *menu, SDL_Event e);
-void					ui_menu_get(t_ui_layout *layout, void *menu);
+void					ui_menu_get(t_ui_get *get);
 void					ui_menu_free(void *menu);
 
 // Dropdown

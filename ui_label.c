@@ -95,7 +95,12 @@ void	ui_label_color_set(t_ui_label *label, Uint32 color)
 	label->recipe.font_color = color;
 }
 
-
+void	ui_label_parent_set(t_ui_label *label, t_ui_element *parent, int type, bool *show)
+{
+	label->parent = parent;
+	label->parent_type = type;
+	label->parent_show = show;
+}
 /*
  * End of editing functions
 */

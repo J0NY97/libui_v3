@@ -18,8 +18,14 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 	curr = layout->elements;
 	while (curr)
 	{
-		if (curr->content_size == sizeof(t_ui_button))
+		if (curr->content_size == UI_TYPE_BUTTON)
 			ui_button_event(curr->content, e);
+		else if (curr->content_size == UI_TYPE_MENU)
+			ui_menu_event(curr->content, e);
+		else if (curr->content_size == UI_TYPE_LABEL)
+			(void)curr;
+		else
+			ft_printf("[ui_layout_event] Eventing of type %d not supported.\n", curr->content_size);
 		curr = curr->next;
 	}
 
@@ -44,10 +50,14 @@ void	ui_layout_render(t_ui_layout *layout)
 	curr = layout->elements;
 	while (curr)
 	{
-		if (curr->content_size == sizeof(t_ui_label))
+		if (curr->content_size == UI_TYPE_LABEL)
 			ui_label_render(curr->content);
-		else if (curr->content_size == sizeof(t_ui_button))
+		else if (curr->content_size == UI_TYPE_BUTTON)
 			ui_button_render(curr->content);
+		else if (curr->content_size == UI_TYPE_MENU)
+			ui_menu_render(curr->content);
+		else
+			ft_printf("[ui_layout_render] Rendering of type %d is not supported.\n", curr->content_size);
 		curr = curr->next;
 	}
 	/////////////////////////////

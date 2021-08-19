@@ -2,6 +2,7 @@
 
 void	ui_menu_new(t_ui_window *win, t_ui_menu *menu)
 {
+	memset(menu, 0, sizeof(t_ui_menu));
 	ui_element_new(win, &menu->elem);
 	menu->children = NULL;
 }
@@ -9,11 +10,7 @@ void	ui_menu_new(t_ui_window *win, t_ui_menu *menu)
 void	ui_menu_child_add(t_ui_menu *menu, void *child, int type)
 {
 	if (type == UI_TYPE_BUTTON)
-	{
-		((t_ui_button *)child)->elem.parent = &menu->elem;
-		((t_ui_button *)child)->elem.parent_type = UI_TYPE_ELEMENT;
-		((t_ui_button *)child)->elem.parent_show = &menu->elem.show;
-	}
+		ui_element_parent_set(&((t_ui_button *)child)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
 	else if (type == UI_TYPE_LABEL)
 	{
 		((t_ui_label *)child)->parent = &menu->elem;
@@ -21,17 +18,9 @@ void	ui_menu_child_add(t_ui_menu *menu, void *child, int type)
 		((t_ui_label *)child)->parent_show = &menu->elem.show;
 	}
 	else if (type == UI_TYPE_MENU)
-	{
-		((t_ui_menu *)child)->elem.parent = &menu->elem;
-		((t_ui_menu *)child)->elem.parent_type = UI_TYPE_ELEMENT;
-		((t_ui_menu *)child)->elem.parent_show = &menu->elem.show;
-	}
+		ui_element_parent_set(&((t_ui_menu *)child)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
 	else if (type == UI_TYPE_DROPDOWN)
-	{
-		((t_ui_dropdown *)child)->elem.parent = &menu->elem;
-		((t_ui_dropdown *)child)->elem.parent_type = UI_TYPE_ELEMENT;
-		((t_ui_dropdown *)child)->elem.parent_show = &menu->elem.show;
-	}
+		ui_element_parent_set(&((t_ui_dropdown *)child)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
 	add_to_list(&menu->children, child, type);	
 }
 
@@ -72,12 +61,6 @@ void	ui_menu_render(t_ui_menu *menu)
 			ui_dropdown_render(curr->content);
 		curr = curr->next;
 	}
-}
-
-void	ui_menu_get(t_ui_layout *layout, void *menu)
-{
-	(void)layout;
-	(void)menu;
 }
 
 void	ui_menu_free(void *menu)
