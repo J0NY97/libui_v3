@@ -88,12 +88,13 @@ typedef struct s_ui_element
 */
 typedef struct s_ui_menu
 {
-	t_ui_element		elem;
+	t_ui_element		*elem;
 	t_list				*children;
 }						t_ui_menu;
 
 /*
- * bool	font_recreate;	set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
+ * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
+ * bool	texture_recreate;	set this to 1 if you edit something of the texture like.. anything.. will be set to 0 after creation.
 */
 typedef struct s_ui_text_recipe
 {
@@ -120,17 +121,20 @@ typedef struct s_ui_label
 	bool				show;
 }						t_ui_label;
 
+/*
+ * t_ui_element		elem;		actual elem, dont free.
+*/
 typedef struct s_ui_button
 {
-	t_ui_element		elem;
+	t_ui_element		*elem;
 	t_ui_label			label;
 }						t_ui_button;
 
 typedef struct s_ui_dropdown
 {
-	t_ui_element		elem;
-	t_ui_button			button;	
-	t_ui_menu			menu;	
+	t_ui_element		*elem;
+	t_ui_element		button;	
+	t_ui_element		menu;	
 }						t_ui_dropdown;
 
 /*
@@ -148,6 +152,7 @@ typedef struct s_ui_layout
 // Layout
 void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
 void					ui_layout_render(t_ui_layout *layout);
+t_ui_element			*ui_layout_get_element_by_id(t_ui_layout *layout, char *id);
 
 // Vec
 void					print_vec(float *vec, size_t size);
@@ -200,25 +205,25 @@ void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);
 
 // Button
-void					ui_button_new(t_ui_window *win, t_ui_button *button);
-void					ui_button_event(t_ui_button *button, SDL_Event e);
-bool					ui_button(t_ui_button *button);
-void					ui_button_render(t_ui_button *button);
+void					ui_button_new(t_ui_window *win, t_ui_element *button);
+void					ui_button_event(t_ui_element *button, SDL_Event e);
+bool					ui_button(t_ui_element *button);
+void					ui_button_render(t_ui_element *button);
 void					ui_button_get(t_ui_get *get);
 void					ui_button_free(void *button);
 
 // Menu
-void					ui_menu_new(t_ui_window *win, t_ui_menu *menu);
-void					ui_menu_child_add(t_ui_menu *menu, void *child, int type);
-void					ui_menu_render(t_ui_menu *menu);
-void					ui_menu_event(t_ui_menu *menu, SDL_Event e);
+void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
+void					ui_menu_child_add(t_ui_element *menu, void *child, int type);
+void					ui_menu_render(t_ui_element *menu);
+void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_get(t_ui_get *get);
 void					ui_menu_free(void *menu);
 
 // Dropdown
-void					ui_dropdown_new(t_ui_window *win, t_ui_dropdown *drop);
-void					ui_dropdown_event(t_ui_dropdown *drop, SDL_Event e);
-void					ui_dropdown_render(t_ui_dropdown *drop);
+void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
+void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
+void					ui_dropdown_render(t_ui_element *drop);
 
 // Load
 void					ui_print_accepted(void);

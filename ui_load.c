@@ -1,4 +1,5 @@
 #include "libui_v3.h"
+#include "ui_load.h"
 
 /*
  * Fun fact: you can only have flexible array in the end of a struct.
@@ -515,33 +516,40 @@ void	ui_layout_label_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t
 
 void	ui_layout_button_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
-	t_ui_button	*button;
-	t_ui_recipe	*child_recipe;
+	t_ui_element	*button_elem;
+	t_ui_button		*button;
+	t_ui_recipe		*child_recipe;
 
-	button = ft_memalloc(sizeof(t_ui_button));
-	ui_button_new(win, button);
+	button_elem = ft_memalloc(sizeof(t_ui_element));
+	ui_button_new(win, button_elem);
+	button = button_elem->element;
 	if (recipe->pos_set)
-		ui_element_pos_set(&button->elem, recipe->pos);
+		ui_element_pos_set(button_elem, recipe->pos);
 	if (recipe->child_amount > 0)
 	{
 		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[0]);
-		ui_layout_label_edit(&button->label, child_recipe);
+		if (child_recipe)
+			ui_layout_label_edit(&button->label, child_recipe);
+		else
+			ft_printf("[ui_layout_button_new] Couldnt find recipe with id : %s\n", recipe->children_ids[0]);
 	}
-	add_to_list(list, button, UI_TYPE_BUTTON);
+	add_to_list(list, button_elem, UI_TYPE_ELEMENT);
 }
 
 void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
-	t_ui_menu	*menu;
-	t_ui_recipe	*child_recipe;
-	int			i;
+	t_ui_element	*menu_elem;
+	t_ui_menu		*menu;
+	t_ui_recipe		*child_recipe;
+	int				i;
 
-	menu = ft_memalloc(sizeof(t_ui_menu));
-	ui_menu_new(win, menu);
+	menu_elem = ft_memalloc(sizeof(t_ui_element));
+	ui_menu_new(win, menu_elem);
+	menu = menu_elem->element;
 	if (recipe->pos_set)
-		ui_element_pos_set(&menu->elem, recipe->pos);
+		ui_element_pos_set(menu_elem, recipe->pos);
 	if (recipe->bg_color_set)
-		ui_element_color_set(&menu->elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
+		ui_element_color_set(menu_elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
 	i = -1;
 	while (++i < recipe->child_amount)
 	{
@@ -549,19 +557,20 @@ void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_
 		if (child_recipe)
 		{
 			ui_layout_add_child(&menu->children, recipes, win, child_recipe);
-			if (menu->children->content_size == UI_TYPE_BUTTON)
-				ui_element_parent_set(&((t_ui_button *)menu->children->content)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
+			if (menu->children->content_size == UI_TYPE_ELEMENT)
+				ui_element_parent_set(menu->children->content, menu_elem, UI_TYPE_ELEMENT, &menu_elem->show);
 			else if (menu->children->content_size == UI_TYPE_LABEL)
-				ui_label_parent_set(menu->children->content, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
+				ui_label_parent_set(menu->children->content, menu_elem, UI_TYPE_ELEMENT, &menu_elem->show);
 			else
 				ft_printf("[ui_layout_menu_new] Element of type %d is not supported.\n");
 		}
 	}
-	add_to_list(list, menu, UI_TYPE_MENU);
+	add_to_list(list, menu_elem, UI_TYPE_ELEMENT);
 }
 
 void	ui_layout_add_child(t_list **list, t_list *recipes, t_ui_window *win, t_ui_recipe *recipe)
 {
+	ft_printf("[ui_layout_add_child] ui_type : %d\n", recipe->type);
 	if (recipe->type == UI_TYPE_LABEL)
 		ui_layout_label_new(list, win, recipe, recipes);
 	else if (recipe->type == UI_TYPE_BUTTON)
@@ -594,6 +603,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);
 			ui_layout_add_child(&layout->elements, layout->recipes, window, child_recipe);
+			ft_printf("[ui_layout_window_new] Was succesful to make: %s\n", child_recipe->id);
 		}
 		else
 			ft_printf("[ui_layout_window_new] Couldnt find: %s\n", recipe->children_ids[i]);

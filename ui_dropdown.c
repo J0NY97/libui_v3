@@ -4,43 +4,49 @@
  * NOTE: the reason dropdown has element, is becuase of the parent stuff,
  * 	we dont actually need to show anything thats why the size of it is 0 x 0
 */
-void	ui_dropdown_new(t_ui_window *win, t_ui_dropdown *drop)
+void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 {
-	memset(drop, 0, sizeof(t_ui_dropdown));
-	ui_element_new(win, &drop->elem);
-	ui_element_color_set(&drop->elem, UI_STATE_DEFAULT, 0xffff0000);
-	ui_element_pos_set(&drop->elem, vec4i(0, 0, 0, 0));
+	t_ui_dropdown	*drop;
+
+	ui_element_new(win, elem);
+	elem->element = ft_memalloc(sizeof(t_ui_dropdown));
+	elem->element_type = UI_TYPE_DROPDOWN;
+	drop = elem->element;
+
+	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xffff0000);
+	ui_element_pos_set(elem, vec4i(0, 0, 0, 0));
 
 	ui_button_new(win, &drop->button);
-	ui_label_text_set(&drop->button.label, "Dropdown");
+	ui_label_text_set(&((t_ui_button *)drop->button.element)->label, "Dropdown");
 
 	ui_menu_new(win, &drop->menu);
-	ui_element_pos_set(&drop->menu.elem,
-		vec4i(0, drop->button.elem.pos.h,
-			drop->menu.elem.pos.w, drop->menu.elem.pos.h));
+	ui_element_pos_set(&drop->menu,
+		vec4i(0, drop->button.pos.h,
+			drop->menu.pos.w, drop->menu.pos.h));
 
-	drop->button.elem.parent = &drop->elem;
-	drop->button.elem.parent_type = UI_TYPE_DROPDOWN;
-	drop->button.elem.parent_show = &drop->elem.show;
-
-	drop->menu.elem.parent = &drop->elem;
-	drop->menu.elem.parent_type = UI_TYPE_DROPDOWN;
-	drop->menu.elem.parent_show = &drop->elem.show;
+	ui_element_parent_set(&drop->button, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT, &elem->show);
 }
 
-void	ui_dropdown_event(t_ui_dropdown *drop, SDL_Event e)
+void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 {
+	t_ui_dropdown	*drop;
+
+	drop = elem->element;
 	ui_button_event(&drop->button, e);
 	if (ui_button(&drop->button))
-		drop->menu.elem.show = drop->menu.elem.show == 0;
-	if (drop->menu.elem.show)
-		drop->button.elem.state = UI_STATE_CLICK;
+		drop->menu.show = drop->menu.show == 0;
+	if (drop->menu.show)
+		drop->button.state = UI_STATE_CLICK;
 	ui_menu_event(&drop->menu, e);
 }
 
-void	ui_dropdown_render(t_ui_dropdown *drop)
+void	ui_dropdown_render(t_ui_element *elem)
 {
-	ui_element_render(&drop->elem);
+	t_ui_dropdown	*drop;
+
+	drop = elem->element;
+	ui_element_render(elem);
 	ui_button_render(&drop->button);
 	ui_menu_render(&drop->menu);
 }
