@@ -489,7 +489,7 @@ t_ui_recipe	*get_recipe_by_id(t_list *list, char *id)
 	return (NULL);
 }
 
-void	ui_layout_label_edit(t_ui_label *label, t_ui_recipe *recipe)
+void	ui_layout_label_edit(t_ui_element *label, t_ui_recipe *recipe)
 {
 	if (recipe->pos_set)
 		ui_label_pos_set(label, recipe->pos);
@@ -505,12 +505,12 @@ void	ui_layout_label_edit(t_ui_label *label, t_ui_recipe *recipe)
 
 void	ui_layout_label_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
-	t_ui_label	*label;
+	t_ui_element	*label;
 
 	label = ft_memalloc(sizeof(t_ui_label));
 	ui_label_new(win, label);
 	ui_layout_label_edit(label, recipe);
-	add_to_list(list, label, UI_TYPE_LABEL);
+	add_to_list(list, label, UI_TYPE_ELEMENT);
 	(void)recipes;
 }
 
@@ -559,8 +559,6 @@ void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_
 			ui_layout_add_child(&menu->children, recipes, win, child_recipe);
 			if (menu->children->content_size == UI_TYPE_ELEMENT)
 				ui_element_parent_set(menu->children->content, menu_elem, UI_TYPE_ELEMENT, &menu_elem->show);
-			else if (menu->children->content_size == UI_TYPE_LABEL)
-				ui_label_parent_set(menu->children->content, menu_elem, UI_TYPE_ELEMENT, &menu_elem->show);
 			else
 				ft_printf("[ui_layout_menu_new] Element of type %d is not supported.\n");
 		}

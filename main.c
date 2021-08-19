@@ -7,7 +7,7 @@ int	main(void)
 	t_ui_layout		toolbox;
 	t_ui_window		win;
 	t_ui_element	elem1;
-	t_ui_label		label;
+	t_ui_element	label;
 	t_ui_element	button;
 	t_ui_element	button2;
 	t_ui_element	menu;
@@ -49,7 +49,7 @@ int	main(void)
 	ui_label_color_set(&((t_ui_button *)button2.element)->label, 0xff00ff00);
 
 	// Menu
-	t_ui_label		menu_label0;
+	t_ui_element	menu_label0;
 	t_ui_element	menu_button0;
 	t_ui_element	menu_button1;
 	t_ui_element	menu_menu0;
@@ -78,7 +78,7 @@ int	main(void)
 	ui_dropdown_new(&win, &menu_dropdown0);
 	ui_element_pos_set(&menu_dropdown0, vec4i(10, 100, 50, 20));
 
-	t_ui_label	menu0_label;
+	t_ui_element	menu0_label;
 	ui_label_new(&win, &menu0_label);
 	ui_label_text_set(&menu0_label, "Menu0 Label");
 	ui_label_color_set(&menu0_label, 0xffff0000);
@@ -86,9 +86,9 @@ int	main(void)
 	ui_menu_new(&win, &menu_menu0);
 	ui_element_pos_set(&menu_menu0, vec4i(100, 10, 100, 100));
 
-	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_LABEL);
+	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_ELEMENT);
 
-	ui_menu_child_add(&menu, &menu_label0, UI_TYPE_LABEL);
+	ui_menu_child_add(&menu, &menu_label0, UI_TYPE_ELEMENT);
 	ui_menu_child_add(&menu, &menu_button0, UI_TYPE_ELEMENT);
 	ui_menu_child_add(&menu, &menu_button1, UI_TYPE_ELEMENT);
 	ui_menu_child_add(&menu, &menu_menu0, UI_TYPE_ELEMENT);

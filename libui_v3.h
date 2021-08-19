@@ -110,15 +110,7 @@ typedef struct s_ui_text_recipe
 
 typedef struct s_ui_label
 {
-	t_vec4i				pos;
-	t_vec4i				screen_pos;
-	void				*parent;
-	int					parent_type;
-	bool				*parent_show;
-	t_ui_window			*win;
-	SDL_Texture			*texture;
 	t_ui_text_recipe	recipe;
-	bool				show;
 }						t_ui_label;
 
 /*
@@ -127,7 +119,7 @@ typedef struct s_ui_label
 typedef struct s_ui_button
 {
 	t_ui_element		*elem;
-	t_ui_label			label;
+	t_ui_element		label;
 }						t_ui_button;
 
 typedef struct s_ui_dropdown
@@ -190,16 +182,16 @@ t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
 
 // Label
-void					ui_label_new(t_ui_window *win, t_ui_label *label);
-void					ui_label_texture_redo(t_ui_label *label);
-void					ui_label_render(t_ui_label *label);
+void					ui_label_new(t_ui_window *win, t_ui_element *label);
+void					ui_label_texture_redo(t_ui_element *label);
+void					ui_label_render(t_ui_element *label);
 // edit
-void					ui_label_text_set(t_ui_label *label, char *text);
-void					ui_label_font_set(t_ui_label *label, char *font_path);
-void					ui_label_pos_set(t_ui_label *label, t_vec4i pos);
-void					ui_label_size_set(t_ui_label *label, size_t size);
-void					ui_label_color_set(t_ui_label *label, Uint32 color);
-void					ui_label_parent_set(t_ui_label *label, t_ui_element *parent, int type, bool *show);
+void					ui_label_text_set(t_ui_element *label, char *text);
+void					ui_label_font_set(t_ui_element *label, char *font_path);
+void					ui_label_pos_set(t_ui_element *label, t_vec4i pos);
+void					ui_label_size_set(t_ui_element *label, size_t size);
+void					ui_label_color_set(t_ui_element *label, Uint32 color);
+void					ui_label_parent_set(t_ui_element *label, t_ui_element *parent, int type, bool *show);
 // end edit
 void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);
