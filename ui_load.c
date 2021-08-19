@@ -552,7 +552,7 @@ void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_
 			if (menu->children->content_size == UI_TYPE_BUTTON)
 				ui_element_parent_set(&((t_ui_button *)menu->children->content)->elem, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
 			else if (menu->children->content_size == UI_TYPE_LABEL)
-				ft_putstr("we have found a label.\n");
+				ui_label_parent_set(menu->children->content, &menu->elem, UI_TYPE_ELEMENT, &menu->elem.show);
 			else
 				ft_printf("[ui_layout_menu_new] Element of type %d is not supported.\n");
 		}
@@ -625,7 +625,7 @@ void	compile_recipes(t_ui_layout *layout)
 		curr = curr->next;
 	}
 	if (!recipe)
-		ft_printf("Window Not Found!\n");
+		ft_printf("[compile_recipes] Window Not Found!\n");
 }
 
 void	ui_load(t_ui_layout *layout, char *ui_file_path)

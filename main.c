@@ -4,6 +4,7 @@ int	main(void)
 {
 	ft_putstr("Hello world!\n");
 	t_ui_layout	layout;
+	t_ui_layout	toolbox;
 	t_ui_window	win;
 	t_ui_element elem1;
 	t_ui_label label;
@@ -17,9 +18,10 @@ int	main(void)
 
 	ui_print_accepted();
 	ui_load(&layout, "layout.ui");
+	ui_load(&toolbox, "toolbox.ui");
 
 	// Window
-	ui_window_new(&win, "test window", vec4i(100, 100, 1280, 720));
+	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));
 	ui_texture_fill(win.renderer, win.texture, 0xff404040);
 	ui_texture_draw_border(win.renderer, win.texture, 2, 0xffff0000);
 
@@ -118,6 +120,7 @@ int	main(void)
 
 			// Layout
 			ui_layout_event(&layout, e);
+			ui_layout_event(&toolbox, e);
 		}
 
 		// User Code
@@ -148,6 +151,7 @@ int	main(void)
 
 		// Layout
 		ui_layout_render(&layout);
+		ui_layout_render(&toolbox);
 	}
 	return (0);
 }

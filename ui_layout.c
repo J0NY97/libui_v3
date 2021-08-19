@@ -71,3 +71,16 @@ void	ui_layout_render(t_ui_layout *layout)
 		curr = curr->next;
 	}
 }
+
+void	ui_layout_get_element_by_id(t_ui_layout *layout, char *id)
+{
+	t_list	*curr;
+
+	curr = layout->elements;
+	while (curr)
+	{
+		if (ft_strequ(curr->content->id, id))
+			return (
+		curr = curr->next;
+	}
+}
