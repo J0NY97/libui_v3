@@ -1,6 +1,12 @@
 #include "libui_v3.h"
 #include "ui_load.h"
 
+void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
+void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
+void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
+void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
+void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
+
 /*
  * Fun fact: you can only have flexible array in the end of a struct.
  * 	which actually makes sense if you think about it.
@@ -11,6 +17,9 @@ typedef struct s_ui_acceptable
 	int			type;
 	void		(*freer)(void *args);
 	void		(*getter)(t_ui_get *get);
+	void		(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, void *args);
+	void		(*maker)(t_ui_window *win, t_ui_element *elem);
+	void		(*renderer)(t_ui_element *elem);
 	const char	**values;
 }				t_ui_acceptable;
 
@@ -18,7 +27,6 @@ static const char *g_accepted_button[] = {
 	"pos",
 	"bg_color",
 	"bg_image",
-	"Label",
 	NULL
 };
 
@@ -48,6 +56,9 @@ static const t_ui_acceptable	g_acceptable_button =
 	.type = UI_TYPE_BUTTON,
 	.freer = &ui_button_free,
 	.getter = &ui_button_get,
+	.editor = &ui_button_editor,
+	.maker = &ui_button_new,
+	.renderer = &ui_button_render,
 	.values = g_accepted_button
 };
 
@@ -57,6 +68,9 @@ static const t_ui_acceptable	g_acceptable_label =
 	.type = UI_TYPE_LABEL,
 	.freer = &ui_label_free,
 	.getter = &ui_label_get,
+	.maker = &ui_label_new,
+	.editor = &ui_label_editor,
+	.renderer = &ui_label_render,
 	.values = g_accepted_label
 };
 
@@ -66,6 +80,9 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.type = UI_TYPE_MENU,
 	.freer = &ui_menu_free,
 	.getter = &ui_menu_get,
+	.maker = &ui_menu_new,
+	.editor = &ui_menu_editor,
+	.renderer = &ui_menu_render,
 	.values = g_accepted_menu
 };
 
@@ -75,6 +92,9 @@ static const t_ui_acceptable	g_acceptable_window =
 	.type = UI_TYPE_WINDOW,
 	.freer = &ui_window_free,
 	.getter = &ui_window_get,
+	.maker = &ui_window_new,
+	.editor = NULL,
+	.renderer = &ui_window_render,
 	.values = g_accepted_menu
 };
 
@@ -489,97 +509,105 @@ t_ui_recipe	*get_recipe_by_id(t_list *list, char *id)
 	return (NULL);
 }
 
-void	ui_layout_label_edit(t_ui_element *label, t_ui_recipe *recipe)
+////////////////////
+// Editors
+////////////////////
+
+void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
 {
-	if (recipe->pos_set)
-		ui_label_pos_set(label, recipe->pos);
-	if (recipe->title)
-		ui_label_text_set(label, recipe->title);
-	if (recipe->font_size_set)
-		ui_label_size_set(label, recipe->font_size);
-	if (recipe->font_color_set)
-		ui_label_color_set(label, recipe->font_color);
-	if (recipe->font_path_set)
-		ui_label_font_set(label, recipe->font_path);
+	(void)elem;
+	(void)recipe;
+	(void)args;
 }
 
-void	ui_layout_label_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
 {
-	t_ui_element	*label;
-
-	label = ft_memalloc(sizeof(t_ui_element));
-	ui_label_new(win, label);
-	ui_layout_label_edit(label, recipe);
-	add_to_list(list, label, UI_TYPE_ELEMENT);
-	(void)recipes;
+	(void)args;
+	if (recipe->type == UI_TYPE_LABEL)
+		ui_layout_element_edit(&((t_ui_button *)elem->element)->label, recipe);
 }
 
-void	ui_layout_button_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
 {
-	t_ui_element	*button_elem;
-	t_ui_button		*button;
-	t_ui_recipe		*child_recipe;
+	t_ui_menu	*menu;
+	t_list		*recipes;
 
-	button_elem = ft_memalloc(sizeof(t_ui_element));
-	ui_button_new(win, button_elem);
-	button = button_elem->element;
+	recipes = args;
+	menu = elem->element;
+	ui_layout_element_new(&menu->children, elem->win, recipe, recipes);
+	ui_element_parent_set(menu->children->content, elem, UI_TYPE_ELEMENT, &elem->show);
+}
+
+void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
+{
+	// All stuff
 	if (recipe->pos_set)
-		ui_element_pos_set(button_elem, recipe->pos);
-	if (recipe->child_amount > 0)
+		ui_element_pos_set(elem, recipe->pos);
+	if (recipe->bg_color_set)
 	{
-		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[0]);
-		if (child_recipe)
-		{
-			ft_printf("[ui_layout_button_new] We have found child recipe : %s\n", child_recipe->id);
-			ui_layout_label_edit(&button->label, child_recipe);
-		}
-		else
-			ft_printf("[ui_layout_button_new] Couldnt find recipe with id : %s\n", recipe->children_ids[0]);
+		ui_element_color_set(elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
+		ui_element_color_set(elem, UI_STATE_HOVER, recipe->bg_color[UI_STATE_HOVER]);
+		ui_element_color_set(elem, UI_STATE_CLICK, recipe->bg_color[UI_STATE_CLICK]);
 	}
-	add_to_list(list, button_elem, UI_TYPE_ELEMENT);
+	if (recipe->bg_image_set)
+	{
+		ui_element_image_set_from_path(elem, UI_STATE_DEFAULT, recipe->bg_image[UI_STATE_DEFAULT]);
+		ui_element_image_set_from_path(elem, UI_STATE_HOVER, recipe->bg_image[UI_STATE_HOVER]);
+		ui_element_image_set_from_path(elem, UI_STATE_CLICK, recipe->bg_image[UI_STATE_CLICK]);
+	}
+	// Label Stuff
+	if (recipe->title)
+		ui_label_text_set(elem, recipe->title);
+	if (recipe->font_size_set)
+		ui_label_size_set(elem, recipe->font_size);
+	if (recipe->font_color_set)
+		ui_label_color_set(elem, recipe->font_color);
+	if (recipe->font_path_set)
+		ui_label_font_set(elem, recipe->font_path);
 }
 
-void	ui_layout_menu_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
-	t_ui_element	*menu_elem;
-	t_ui_menu		*menu;
+	t_ui_element	*elem;	
 	t_ui_recipe		*child_recipe;
 	int				i;
+	int				j;
 
-	menu_elem = ft_memalloc(sizeof(t_ui_element));
-	ui_menu_new(win, menu_elem);
-	menu = menu_elem->element;
-	if (recipe->pos_set)
-		ui_element_pos_set(menu_elem, recipe->pos);
-	if (recipe->bg_color_set)
-		ui_element_color_set(menu_elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
+	elem = ft_memalloc(sizeof(t_ui_element));
 	i = -1;
-	while (++i < recipe->child_amount)
+	while (++i < UI_ACCEPT_AMOUNT)
 	{
-		child_recipe = get_recipe_by_id(recipes, recipe->children_ids[i]);
-		if (child_recipe)
+		if (g_acceptable[i].type == recipe->type)
 		{
-			ui_layout_add_child(&menu->children, recipes, win, child_recipe);
-			if (menu->children->content_size == UI_TYPE_ELEMENT)
-				ui_element_parent_set(menu->children->content, menu_elem, UI_TYPE_ELEMENT, &menu_elem->show);
-			else
-				ft_printf("[ui_layout_menu_new] Element of type %d is not supported.\n");
+			g_acceptable[i].maker(win, elem);
+			ui_layout_element_edit(elem, recipe);
+			j = -1;
+			ft_printf("[ui_layout_element_new] Element has %d children.\n", recipe->child_amount);
+			while (++j < recipe->child_amount)
+			{
+				child_recipe = get_recipe_by_id(recipes, recipe->children_ids[j]);
+				if (child_recipe)
+				{
+					ft_printf("[ui_layout_element_new] We have found child recipe : %s\n", child_recipe->id);
+					if (g_acceptable[i].editor)
+					{
+						if (recipe->type == UI_TYPE_MENU)
+							g_acceptable[i].editor(elem, child_recipe, recipes);
+						else
+							g_acceptable[i].editor(elem, child_recipe, NULL);
+					}
+					else
+						ft_printf("[ui_layout_element_new] No editor made for element type %d.\n", recipe->type);
+				}
+				else
+					ft_printf("[ui_layout_element_new] When searching for child, Couldnt find recipe with id : %s\n", recipe->children_ids[j]);
+			}
+			add_to_list(list, elem, UI_TYPE_ELEMENT);
+			ft_printf("[ui_layout_element_new] Successful make of %s.\n", recipe->id);
+			return ;
 		}
 	}
-	add_to_list(list, menu_elem, UI_TYPE_ELEMENT);
-}
-
-void	ui_layout_add_child(t_list **list, t_list *recipes, t_ui_window *win, t_ui_recipe *recipe)
-{
-	ft_printf("[ui_layout_add_child] ui_type : %d\n", recipe->type);
-	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_label_new(list, win, recipe, recipes);
-	else if (recipe->type == UI_TYPE_BUTTON)
-		ui_layout_button_new(list, win, recipe, recipes);
-	else if (recipe->type == UI_TYPE_MENU)
-		ui_layout_menu_new(list, win, recipe, recipes);
-	else
-		ft_printf("[ui_layout_add_child] ui_type : %d, not supported.\n", recipe->type);
+	ft_printf("Failed to make new layout element.\n");
 }
 
 void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
@@ -603,7 +631,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 		if (child_recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);
-			ui_layout_add_child(&layout->elements, layout->recipes, window, child_recipe);
+			ui_layout_element_new(&layout->elements, window, child_recipe, layout->recipes);
 			ft_printf("[ui_layout_window_new] Was succesful to make: %s\n", child_recipe->id);
 		}
 		else

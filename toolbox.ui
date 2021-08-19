@@ -6,12 +6,14 @@ Label label0
 Button button0
 {
 	pos : [10, 10, 50, 20];
+	bg_color : [default : 0xff453F78, hover : 0xff3F2E56, click : 0xff401F3E];
 	label0;
 }
 
 Button button1
 {
 	pos : [10, 40, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
 	label0;
 }
 
