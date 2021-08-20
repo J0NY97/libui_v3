@@ -171,6 +171,42 @@ char	**ft_strsplitfirstoccurence(char *str, char c)
 	return (arr);
 }
 
+/*
+ * Description in function name.
+*/
+char	**ft_strsplitthatchecksifcharinsidestring(char *str, char c)
+{
+	char	**arr;
+	int		count;
+	int		i;
+	int		last;
+	int		has_been_hash;
+
+	if (!str)
+		return (NULL);
+	count = 0;
+	i = -1;
+	last = 0;
+	has_been_hash = 0;
+	arr = malloc(sizeof(char *) * 1);
+	while (str[++i])
+	{
+		if (str[i] == '"')
+			has_been_hash++;
+		if (str[i] == c && has_been_hash % 2 == 0)
+		{
+			arr = realloc(arr, sizeof(char *) * ++count);
+			arr[count - 1] = ft_strsub(str, last, i - last);
+			last = i + 1;
+		}
+	}
+	arr = realloc(arr, sizeof(char *) * ++count);
+	arr[count - 1] = ft_strsub(str, last, i - last);
+	arr = realloc(arr, sizeof(char *) * ++count);
+	arr[count - 1] = NULL;
+	return (arr);
+}
+
 t_ui_key_value	*make_key_value(char **orig_arr, int *len)
 {
 	t_ui_key_value	*kv;
@@ -215,58 +251,39 @@ void	free_key_value(t_ui_key_value *kv, int len)
 	free(kv);
 }
 
-t_vec4i	pos_arg_to_int_arr(char *str)
+void	int_arr_arg_to_int_arr(char *str, int *result_arr, int result_arr_len)
 {
-	t_vec4i	pos;
-	char	*trimmed;	
-	char	*final;
+	char	*trimmed;
 	char	**arr;
 	int		i;
 
 	trimmed = ft_strtrim(str);
-	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
-	arr = ft_strsplit(final, ',');
+	arr = ft_strsplit(trimmed, ',');
 	i = -1;
-	pos = vec4i(0, 0, 0, 0);
-	while (arr[++i])
+	while (arr[++i] && i < result_arr_len)
 	{
-		pos.v[i] = ft_atoi(arr[i]);
+		if (ft_strequ(arr[i], "NULL"))
+			continue ;
+		result_arr[i] = ft_atoi(arr[i]);
 	}
 	ft_arraydel(arr);
-	return (pos);
 }
 
-void	bg_color_arg_to_int_arr(Uint32 *colors, char *str)
+void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, int result_arr_len)
 {
-	char	*trimmed;	
-	char	*final;
+	char	*trimmed;
 	char	**arr;
-	char	**col_arr;
-	char	*col_trimmed;
 	int		i;
 
 	trimmed = ft_strtrim(str);
-	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
-	arr = ft_strsplit(final, ',');
+	arr = ft_strsplit(trimmed, ',');
 	i = -1;
-	while (arr[++i])
+	while (arr[++i] && i < result_arr_len)
 	{
-//		ft_printf("%s\n", arr[i]);
-		col_trimmed = ft_strtrim(arr[i]);
-		col_arr = ft_strsplitfirstoccurence(col_trimmed, ':');
-//		ft_printf("[%#x]", strtoul(col_arr[1], NULL, 16));
-//		ft_printf("== [%u]\n", strtoul(col_arr[1], NULL, 16));
-		if (ft_strstr(col_arr[0], "default"))
-			colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(col_arr[1], NULL, 16);
-		else if (ft_strstr(col_arr[0], "hover"))
-			colors[UI_STATE_HOVER] = (unsigned int)strtoul(col_arr[1], NULL, 16);
-		else if (ft_strstr(col_arr[0], "click"))
-			colors[UI_STATE_CLICK] = (unsigned int)strtoul(col_arr[1], NULL, 16);
-		ft_strdel(&col_trimmed);
-		ft_arraydel(col_arr);
+		if (ft_strequ(arr[i], "NULL"))
+			continue ;
+		result_arr[i] = (unsigned int)strtoul(arr[i], NULL, 16);
 	}
-	ft_strdel(&final);
-	ft_strdel(&trimmed);
 	ft_arraydel(arr);
 }
 
@@ -289,31 +306,24 @@ char	*trim_string(char *str)
 	return (result);
 }
 
-void	bg_image_arg_to_arr(char **images, char *str)
+void	str_arr_arg_to_str_arr(char *str, char **result_arr, int result_arr_len)
 {
 	char	*trimmed;
-	char	*final;
+	char	*trimtrim;
 	char	**arr;
 	int		i;
 
 	trimmed = ft_strtrim(str);
-	final = ft_strsub(trimmed, 1, ft_strlen(trimmed) - 2);
-	arr = ft_strsplit(final, ',');
-	int	len;
-	t_ui_key_value	*kv = make_key_value(arr, &len);
+	arr = ft_strsplit(trimmed, ',');
 	i = -1;
-	while (++i < len)
+	while (arr[++i] && i < result_arr_len)
 	{
-		if (ft_strstr(kv[i].key, "default"))
-			images[UI_STATE_DEFAULT] = trim_string(kv[i].value);
-		else if (ft_strstr(kv[i].key, "hover"))
-			images[UI_STATE_HOVER] = trim_string(kv[i].value);
-		else if (ft_strstr(kv[i].key, "click"))
-			images[UI_STATE_CLICK] = trim_string(kv[i].value);
+		if (ft_strequ(arr[i], "NULL"))
+			continue ;
+		trimtrim = trim_string(arr[i]);
+		result_arr[i] = ft_strdup(trimtrim);
+		ft_strdel(&trimtrim);
 	}
-	free_key_value(kv, len);
-	ft_strdel(&final);
-	ft_strdel(&trimmed);
 	ft_arraydel(arr);
 }
 
@@ -327,7 +337,7 @@ void	ui_dropdown_get(t_ui_get *get)
 	{
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 			get->recipe->pos_set = 1;
 		}
@@ -350,12 +360,12 @@ void	ui_menu_get(t_ui_get *get)
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
-			get->recipe->bg_color[UI_STATE_DEFAULT] = strtoul(get->kv[i].value, NULL, 16);
+			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
 			get->recipe->bg_color_set = 1;
 		}
 		else // should be variables
@@ -378,7 +388,7 @@ void	ui_window_get(t_ui_get *get)
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
@@ -409,7 +419,7 @@ void	ui_label_get(t_ui_get *get)
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
@@ -444,22 +454,26 @@ void	ui_button_get(t_ui_get *get)
 	{
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
-			get->recipe->pos = pos_arg_to_int_arr(get->kv[i].value);
-			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+
+			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
-			bg_color_arg_to_int_arr(get->recipe->bg_color, get->kv[i].value);
+			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
+			get->recipe->bg_color_set = 1;
+
 			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
 				get->recipe->bg_color[UI_STATE_DEFAULT],
 				get->recipe->bg_color[UI_STATE_HOVER],
 				get->recipe->bg_color[UI_STATE_CLICK]);
-			get->recipe->bg_color_set = 1;
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
-			bg_image_arg_to_arr(get->recipe->bg_image, get->kv[i].value);
+			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
+			//get->recipe->bg_image_set = 1;
+
 			ft_printf("bg_image : %s %s %s\n",
 				get->recipe->bg_image[UI_STATE_DEFAULT],
 				get->recipe->bg_image[UI_STATE_HOVER],
@@ -522,7 +536,7 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 		inside = ft_strdup(trimmed);
 		ft_strdel(&trimmed);
 
-		values = ft_strsplit(inside, ';');
+		values = ft_strsplitthatchecksifcharinsidestring(inside, ';');
 		int len;
 
 		t_ui_key_value	*kv = make_key_value(values, &len);

@@ -25,7 +25,7 @@ int	main(void)
 	ui_load(&layout, "layout.ui");
 	*/
 	ui_load(&toolbox, "toolbox.ui");
-	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
+//	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
 	// Window
 	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));
@@ -136,7 +136,7 @@ int	main(void)
 			ui_layout_event(&layout, e);
 			*/
 			ui_layout_event(&toolbox, e);
-			ui_layout_event(&guimp_toolbox, e);
+//			ui_layout_event(&guimp_toolbox, e);
 		}
 
 		// User Code
@@ -171,7 +171,7 @@ int	main(void)
 		ui_layout_render(&layout);
 		*/
 		ui_layout_render(&toolbox);
-		ui_layout_render(&guimp_toolbox);
+//		ui_layout_render(&guimp_toolbox);
 	}
 	return (0);
 }
