@@ -9,7 +9,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	label->element_type = UI_TYPE_LABEL;
 	lab = label->element;
 	lab->text = ft_strdup("label text");
-	lab->text_align = UI_TEXT_ALIGN_CENTER;
+	lab->text_align = UI_TEXT_ALIGN_NONE;
 	lab->font_path = ft_strdup("fonts/DroidSans.ttf");
 	lab->font_size = 12;
 	lab->font_color = 0xff037171;
@@ -32,15 +32,37 @@ void	ui_label_texture_redo(t_ui_element *label)
 /*
  * Maybe only realign if you have updated the label.
 */
-void	ui_label_text_align(t_ui_element *elem)
+void	ui_label_text_align(t_ui_element *elem, int align)
 {
 	t_ui_label	*label;
+	t_vec4i		parent_pos;
 
 	label = elem->element;
-	if (label->text_align == UI_TEXT_ALIGN_NONE)
-		return ;
-	if (label->text_align == UI_TEXT_ALIGN_CENTER)
-		ui_label_text_center(elem);
+	if ((align | UI_TEXT_ALIGN_TOP)
+		|| (align | UI_TEXT_ALIGN_BOT)
+		|| (align | UI_TEXT_ALIGN_LEFT)
+		|| (align | UI_TEXT_ALIGN_RIGHT)
+		|| (align | UI_TEXT_ALIGN_CENTER))
+	{
+		if (elem->parent_type == UI_TYPE_WINDOW)
+			parent_pos = ((t_ui_window *)elem->parent)->pos;
+		else
+			parent_pos = ((t_ui_element *)elem->parent)->pos;
+		label->text_align = align;
+		if (align & UI_TEXT_ALIGN_CENTER)
+		{
+			elem->pos.x = (parent_pos.w / 2) - (label->text_wh.x / 2);
+			elem->pos.y = (parent_pos.h / 2) - (label->text_wh.y / 2);
+		}
+		if (align & UI_TEXT_ALIGN_TOP)
+			elem->pos.y = 0;
+		if (align & UI_TEXT_ALIGN_BOT)
+			elem->pos.y = parent_pos.h - label->text_wh.y;
+		if (align & UI_TEXT_ALIGN_LEFT)
+			elem->pos.x = 0;
+		if (align & UI_TEXT_ALIGN_RIGHT)
+			elem->pos.x = parent_pos.w - label->text_wh.x;
+	}
 	else
 		ft_printf("[ui_label_text_align] Align type [%d] not supported.\n", label->text_align);
 }
@@ -63,7 +85,8 @@ void	ui_label_render(t_ui_element *elem)
 	if (label->texture_recreate)
 		ui_label_texture_redo(elem);
 	
-	ui_label_text_align(elem);
+	// fix this so we dont do it everytime?
+	ui_label_text_align(elem, label->text_align);
 
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], NULL,
@@ -93,20 +116,6 @@ void	ui_label_font_set(t_ui_element *label, char *font_path)
 		ft_strdel(&lab->font_path);
 	lab->font_path = ft_strdup(font_path);
 	lab->font_recreate = 1;
-}
-
-/*
- * NOTE: if you set the label position manually, it will reset the text align.
-*/
-void	ui_label_pos_set(t_ui_element *elem, t_vec4i pos)
-{
-	t_ui_label	*label;
-
-	label = elem->element;
-	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
-		((t_ui_label *)elem->element)->texture_recreate = 1;
-	elem->pos = pos;
-	label->text_align = UI_TEXT_ALIGN_NONE;
 }
 
 void	ui_label_size_set(t_ui_element *label, size_t size)

@@ -92,12 +92,18 @@ typedef struct s_ui_menu
 	t_list				*children;
 }						t_ui_menu;
 
+/*
+ * NOTE:
+ * LEFT/RIGHT can be combined with TOP/BOT
+*/
 enum e_ui_text_align
 {
-	UI_TEXT_ALIGN_NONE = -1,
-	UI_TEXT_ALIGN_LEFT = 0,
-	UI_TEXT_ALIGN_RIGHT,
-	UI_TEXT_ALIGN_CENTER
+	UI_TEXT_ALIGN_NONE = 0x00000000,
+	UI_TEXT_ALIGN_LEFT = 0x00000001,
+	UI_TEXT_ALIGN_RIGHT = 0x00000010,
+	UI_TEXT_ALIGN_TOP = 0x00000100,
+	UI_TEXT_ALIGN_BOT = 0x00001000,
+	UI_TEXT_ALIGN_CENTER = 0x00010000,
 };
 /*
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
@@ -194,11 +200,10 @@ void					ui_label_render(t_ui_element *label);
 // edit
 void					ui_label_text_set(t_ui_element *label, char *text);
 void					ui_label_font_set(t_ui_element *label, char *font_path);
-void					ui_label_pos_set(t_ui_element *label, t_vec4i pos);
 void					ui_label_size_set(t_ui_element *label, size_t size);
 void					ui_label_color_set(t_ui_element *label, Uint32 color);
 void					ui_label_text_center(t_ui_element *elem);
-void					ui_label_text_align(t_ui_element *elem);
+void					ui_label_text_align(t_ui_element *elem, int align);
 // end edit
 void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);

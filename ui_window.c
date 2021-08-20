@@ -3,7 +3,10 @@
 void	ui_window_new(t_ui_window *win, char *title, t_vec4i pos)
 {
 	memset(win, 0, sizeof(t_ui_window));
-	win->title = ft_strdup(title);
+	if (!title)
+		win->title = ft_strdup("Window Title Not Set");
+	else
+		win->title = ft_strdup(title);
 	win->pos = pos;
 	win->win = SDL_CreateWindow(win->title, win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);

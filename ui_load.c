@@ -372,6 +372,7 @@ void	ui_window_get(t_ui_get *get)
 
 	get->recipe->type = UI_TYPE_WINDOW;
 	i = -1;
+	get->recipe->title = NULL;
 	while (++i < *get->len)
 	{
 		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);

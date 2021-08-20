@@ -5,6 +5,7 @@ int	main(void)
 	ft_putstr("Hello world!\n");
 	t_ui_layout		layout;
 	t_ui_layout		toolbox;
+	t_ui_layout		guimp_toolbox;
 	t_ui_window		win;
 	t_ui_element	elem1;
 	t_ui_element	label;
@@ -24,6 +25,7 @@ int	main(void)
 	ui_load(&layout, "layout.ui");
 	*/
 	ui_load(&toolbox, "toolbox.ui");
+	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
 	// Window
 	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));
@@ -67,7 +69,7 @@ int	main(void)
 	ui_label_new(&win, &menu_label0);
 	ui_label_text_set(&menu_label0, "Menu Label");
 	ui_label_color_set(&menu_label0, 0xffff0000);
-	ui_label_pos_set(&menu_label0, vec4i(10, 10, 50, 20));
+	ui_element_pos_set(&menu_label0, vec4i(10, 10, 50, 20));
 
 	ui_button_new(&win, &menu_button0);
 	ui_element_pos_set(&menu_button0, vec4i(10, 40, 50, 20));
@@ -134,6 +136,7 @@ int	main(void)
 			ui_layout_event(&layout, e);
 			*/
 			ui_layout_event(&toolbox, e);
+			ui_layout_event(&guimp_toolbox, e);
 		}
 
 		// User Code
@@ -168,6 +171,7 @@ int	main(void)
 		ui_layout_render(&layout);
 		*/
 		ui_layout_render(&toolbox);
+		ui_layout_render(&guimp_toolbox);
 	}
 	return (0);
 }

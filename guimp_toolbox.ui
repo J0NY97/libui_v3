@@ -1,0 +1,128 @@
+Element brush_button_elem
+{
+	bg_color : [default : 0xff, hover : 0xff, click : 0xff];
+}
+
+// Brush Menu
+// Draw button
+Label draw_button_label
+{
+	title : "Draw Button";
+}
+
+Button draw_button
+{
+	pos : [10, 10, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	draw_button_label;
+}
+
+// Text button
+Label text_button_label
+{
+	title : "Text Button";
+}
+
+Button text_button
+{
+	pos : [70, 10, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	text_button_label;
+}
+
+// Erase button
+Label erase_button_label
+{
+	title : "Erase Button";
+}
+
+Button erase_button
+{
+	pos : [130, 10, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	erase_button_label;
+}
+
+// Flood button
+Label flood_button_label
+{
+	title : "Flood Button";
+}
+
+Button flood_button
+{
+	pos : [10, 40, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	flood_button_label;
+}
+
+// Sticker button
+Label sticker_button_label
+{
+	title : "Sticker Button";
+}
+
+Button sticker_button
+{
+	pos : [70, 40, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	sticker_button_label;
+}
+
+// Move button
+Label move_button_label
+{
+	title : "Move Button";
+}
+
+Button move_button
+{
+	pos : [130, 40, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	move_button_label;
+}
+
+// Shape button
+Label shape_button_label
+{
+	title : "Shape Button";
+}
+
+Button shape_button
+{
+	pos : [10, 70, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	shape_button_label;
+}
+
+// Pipette button
+Label pipette_button_label
+{
+	title : "Pipette Button";
+}
+
+Button pipette_button
+{
+	pos : [70, 70, 50, 20];
+	bg_color : [default : 0xffF4D35E, hover : 0xffEE964B, click : 0xffF95738];
+	pipette_button_label;
+}
+Menu brush_buttons_menu
+{
+	pos : [10, 10, 200, 100];	
+	draw_button;
+	text_button;
+	erase_button;
+	flood_button;
+	sticker_button;
+	move_button;
+	shape_button;
+	pipette_button;
+}
+
+// Toolbox window
+Window toolbox_window
+{
+	pos : [0, 25, 300, 1055];
+	brush_buttons_menu;
+}
