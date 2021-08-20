@@ -8,7 +8,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	label->element = ft_memalloc(sizeof(t_ui_label));
 	label->element_type = UI_TYPE_LABEL;
 	lab = label->element;
-	lab->text = ft_strdup("default text");
+	lab->text = ft_strdup("label text");
 	lab->text_align = UI_TEXT_ALIGN_CENTER;
 	lab->font_path = ft_strdup("fonts/DroidSans.ttf");
 	lab->font_size = 12;
@@ -134,7 +134,7 @@ void	ui_label_color_set(t_ui_element *label, Uint32 color)
 
 void	ui_label_text_center(t_ui_element *elem)
 {
-	t_ui_label	*label;
+	t_ui_label		*label;
 
 	label = elem->element;
 	if (!label || elem->element_type != UI_TYPE_LABEL || !label->font || !label->text)
@@ -147,8 +147,17 @@ void	ui_label_text_center(t_ui_element *elem)
 			ft_printf("[ui_label_text_center] One of the 15 warning you could get... come here and check.\n");
 		return ;
 	}
-	elem->pos.x = (elem->pos.w / 2) - (label->text_wh.x / 2);	
-	elem->pos.y = (elem->pos.h / 2) - (label->text_wh.y / 2);	
+	if (elem->parent_type == UI_TYPE_WINDOW)
+	{
+		elem->pos.x = (((t_ui_window *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);	
+		elem->pos.y = (((t_ui_window *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);	
+	}
+	else
+	{
+		elem->pos.x = (((t_ui_element *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);	
+		elem->pos.y = (((t_ui_element *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);	
+	}
+	label->text_align = UI_TEXT_ALIGN_CENTER;
 }
 
 /*
