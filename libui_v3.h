@@ -92,13 +92,23 @@ typedef struct s_ui_menu
 	t_list				*children;
 }						t_ui_menu;
 
+enum e_ui_text_align
+{
+	UI_TEXT_ALIGN_NONE = -1,
+	UI_TEXT_ALIGN_LEFT = 0,
+	UI_TEXT_ALIGN_RIGHT,
+	UI_TEXT_ALIGN_CENTER
+};
 /*
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
  * bool	texture_recreate;	set this to 1 if you edit something of the texture like.. anything.. will be set to 0 after creation.
+ * t_vec2i	text_wh;		w and h of the whole text.
+ * int		text_align;		one of enum e_ui_text_align.
 */
 typedef struct s_ui_label
 {
 	char				*text;
+	t_vec2i				text_wh;
 	char				*font_path;
 	unsigned int		font_size;
 	Uint32				font_color;
@@ -106,6 +116,7 @@ typedef struct s_ui_label
 	TTF_Font			*font;
 	bool				font_recreate;
 	bool				texture_recreate;
+	int					text_align;
 }						t_ui_label;
 
 /*
@@ -186,6 +197,8 @@ void					ui_label_font_set(t_ui_element *label, char *font_path);
 void					ui_label_pos_set(t_ui_element *label, t_vec4i pos);
 void					ui_label_size_set(t_ui_element *label, size_t size);
 void					ui_label_color_set(t_ui_element *label, Uint32 color);
+void					ui_label_text_center(t_ui_element *elem);
+void					ui_label_text_align(t_ui_element *elem);
 // end edit
 void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);

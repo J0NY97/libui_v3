@@ -70,6 +70,7 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 			return (NULL);
 		}
 	}
+	TTF_SizeUTF8(recipe->font, recipe->text, &recipe->text_wh.x, &recipe->text_wh.y);
 	rgba = hex_to_rgba(recipe->font_color);
 	color.r = rgba.r;
 	color.g = rgba.g;

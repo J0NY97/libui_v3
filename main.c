@@ -10,6 +10,7 @@ int	main(void)
 	t_ui_element	label;
 	t_ui_element	button;
 	t_ui_element	button2;
+	t_ui_element	button3;
 	t_ui_element	menu;
 
 	SDL_Init(SDL_INIT_VIDEO);
@@ -39,16 +40,19 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
-	ui_element_pos_set(&button, vec4i(10, 100, 50, 20));
+	ui_element_pos_set(&button, vec4i(10, 100, button.pos.w, button.pos.h));
 	ui_label_text_set(&((t_ui_button *)button.element)->label, "Toggle Menu");
 	ui_label_size_set(&((t_ui_button *)button.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
 
 	ui_button_new(&win, &button2);
-	ui_element_pos_set(&button2, vec4i(10, 150, 50, 20));
+	ui_element_pos_set(&button2, vec4i(10, 150, button.pos.w, button.pos.h));
 	ui_label_text_set(&((t_ui_button *)button2.element)->label, "Toggle Button");
 	ui_label_size_set(&((t_ui_button *)button2.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button2.element)->label, 0xff00ff00);
+
+	ui_button_new(&win, &button3);
+	ui_element_pos_set(&button3, vec4i(10, 300, button.pos.w, button.pos.h));
 
 	// Menu
 	t_ui_element	menu_label0;
@@ -121,6 +125,7 @@ int	main(void)
 			ui_window_event(&win, e);
 			ui_button_event(&button, e);
 			ui_button_event(&button2, e);
+			ui_button_event(&button3, e);
 			ui_menu_event(&menu, e);
 			ui_dropdown_event(&dropdown, e);
 
@@ -152,6 +157,7 @@ int	main(void)
 		ui_label_render(&label);
 		ui_button_render(&button);
 		ui_button_render(&button2);
+		ui_button_render(&button3);
 		ui_element_render(&elem1);
 		ui_menu_render(&menu);
 		ui_dropdown_render(&dropdown);

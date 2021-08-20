@@ -2,16 +2,20 @@
 
 void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 {
+	t_ui_button	*button;
+
 	ui_element_new(win, elem);
 	elem->element = ft_memalloc(sizeof(t_ui_button));
 	elem->element_type = UI_TYPE_BUTTON;
-	((t_ui_button *)elem->element)->elem = elem;
+	button = elem->element;
+	button->elem = elem;
 	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xff95d7ae);
 	ui_element_color_set(elem, UI_STATE_HOVER, 0xff7bae7f);
 	ui_element_color_set(elem, UI_STATE_CLICK, 0xff73956f);
 
-	ui_label_new(win, &((t_ui_button *)elem->element)->label);
-	ui_element_parent_set(&((t_ui_button *)elem->element)->label, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_label_new(win, &button->label);
+	ui_label_text_center(&button->label);
+	ui_element_parent_set(&button->label, elem, UI_TYPE_ELEMENT, &elem->show);
 }
 
 void	ui_button_event(t_ui_element *elem, SDL_Event e)

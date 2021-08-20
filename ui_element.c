@@ -13,7 +13,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->win = win;
 	elem->pos.x = 0;
 	elem->pos.y = 0;
-	elem->pos.w = 50;
+	elem->pos.w = 60;
 	elem->pos.h = 20;
 	elem->state = UI_STATE_DEFAULT;
 	elem->colors[UI_STATE_DEFAULT] = 0xff95D7AE;

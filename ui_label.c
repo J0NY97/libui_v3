@@ -9,6 +9,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	label->element_type = UI_TYPE_LABEL;
 	lab = label->element;
 	lab->text = ft_strdup("default text");
+	lab->text_align = UI_TEXT_ALIGN_CENTER;
 	lab->font_path = ft_strdup("fonts/DroidSans.ttf");
 	lab->font_size = 12;
 	lab->font_color = 0xff037171;
@@ -28,27 +29,45 @@ void	ui_label_texture_redo(t_ui_element *label)
 	((t_ui_label *)label->element)->texture_recreate = 0;
 }
 
-void	ui_label_render(t_ui_element *label)
+/*
+ * Maybe only realign if you have updated the label.
+*/
+void	ui_label_text_align(t_ui_element *elem)
 {
-	t_vec4i				parent_pos;
-	t_ui_label			*lab;
+	t_ui_label	*label;
 
-	lab = label->element;
-	if (label->parent_type == UI_TYPE_WINDOW)
-		parent_pos = ((t_ui_window *)label->parent)->screen_pos;
-	else
-		parent_pos = ((t_ui_element *)label->parent)->screen_pos;
-	if (!*label->parent_show || !label->show)
+	label = elem->element;
+	if (label->text_align == UI_TEXT_ALIGN_NONE)
 		return ;
-	label->screen_pos.x = parent_pos.x + label->pos.x;
-	label->screen_pos.y = parent_pos.y + label->pos.y;
+	if (label->text_align == UI_TEXT_ALIGN_CENTER)
+		ui_label_text_center(elem);
+	else
+		ft_printf("[ui_label_text_align] Align type [%d] not supported.\n", label->text_align);
+}
 
-	if (lab->texture_recreate)
-		ui_label_texture_redo(label);
+void	ui_label_render(t_ui_element *elem)
+{
+	t_vec4i		parent_pos;
+	t_ui_label	*label;
 
-	SDL_SetRenderTarget(label->win->renderer, NULL);
-	SDL_RenderCopy(label->win->renderer, label->textures[UI_STATE_DEFAULT], NULL,
-		&(SDL_Rect){label->screen_pos.x, label->screen_pos.y, label->pos.w, label->pos.h});
+	label = elem->element;
+	if (elem->parent_type == UI_TYPE_WINDOW)
+		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
+	else
+		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
+	if (!*elem->parent_show || !elem->show)
+		return ;
+	elem->screen_pos.x = parent_pos.x + elem->pos.x;
+	elem->screen_pos.y = parent_pos.y + elem->pos.y;
+
+	if (label->texture_recreate)
+		ui_label_texture_redo(elem);
+	
+	ui_label_text_align(elem);
+
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+	SDL_RenderCopy(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], NULL,
+		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->pos.w, elem->pos.h});
 }
 
 /*
@@ -76,11 +95,18 @@ void	ui_label_font_set(t_ui_element *label, char *font_path)
 	lab->font_recreate = 1;
 }
 
-void	ui_label_pos_set(t_ui_element *label, t_vec4i pos)
+/*
+ * NOTE: if you set the label position manually, it will reset the text align.
+*/
+void	ui_label_pos_set(t_ui_element *elem, t_vec4i pos)
 {
-	if (label->pos.w != pos.w || label->pos.h != pos.h)
-		((t_ui_label *)label->element)->texture_recreate = 1;
-	label->pos = pos;
+	t_ui_label	*label;
+
+	label = elem->element;
+	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
+		((t_ui_label *)elem->element)->texture_recreate = 1;
+	elem->pos = pos;
+	label->text_align = UI_TEXT_ALIGN_NONE;
 }
 
 void	ui_label_size_set(t_ui_element *label, size_t size)
@@ -104,6 +130,25 @@ void	ui_label_color_set(t_ui_element *label, Uint32 color)
 	if (lab->font_color != color)
 		lab->texture_recreate = 1;
 	lab->font_color = color;
+}
+
+void	ui_label_text_center(t_ui_element *elem)
+{
+	t_ui_label	*label;
+
+	label = elem->element;
+	if (!label || elem->element_type != UI_TYPE_LABEL || !label->font || !label->text)
+	{
+		if (!label)
+			ft_printf("[ui_label_text_center] No label in element.\n");
+		else if (elem->element_type != UI_TYPE_LABEL)
+			ft_printf("[ui_label_text_center] Element not of type UI_TYPE_LABEL is %d.\n", elem->element_type);
+		else
+			ft_printf("[ui_label_text_center] One of the 15 warning you could get... come here and check.\n");
+		return ;
+	}
+	elem->pos.x = (elem->pos.w / 2) - (label->text_wh.x / 2);	
+	elem->pos.y = (elem->pos.h / 2) - (label->text_wh.y / 2);	
 }
 
 /*
