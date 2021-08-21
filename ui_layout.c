@@ -62,7 +62,6 @@ void	ui_layout_render(t_ui_layout *layout)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			elem = curr->content;
-			ft_printf("Rendering Element ID : %s\n", elem->id);
 			if (elem->element_type == UI_TYPE_BUTTON)
 				ui_button_render(elem);
 			else if (elem->element_type == UI_TYPE_MENU)
