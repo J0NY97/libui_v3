@@ -160,6 +160,7 @@ t_ui_element			*ui_layout_get_element_by_id(t_ui_layout *layout, char *id);
 
 // Vec
 void					print_vec(float *vec, size_t size);
+void					print_veci(int *vec, size_t size);
 
 // Window
 void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);

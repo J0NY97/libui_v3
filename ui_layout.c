@@ -62,6 +62,7 @@ void	ui_layout_render(t_ui_layout *layout)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			elem = curr->content;
+			ft_printf("Rendering Element ID : %s\n", elem->id);
 			if (elem->element_type == UI_TYPE_BUTTON)
 				ui_button_render(elem);
 			else if (elem->element_type == UI_TYPE_MENU)
@@ -89,13 +90,20 @@ void	ui_layout_render(t_ui_layout *layout)
 
 t_ui_element	*ui_layout_get_element_by_id(t_ui_layout *layout, char *id)
 {
-	t_list	*curr;
+	t_list			*curr;
+	t_ui_element	*elem;
 
 	curr = layout->elements;
+	ft_printf("lets see if we can find element with id : %s\n", id);
 	while (curr)
 	{
-		if (ft_strequ(((t_ui_element *)curr->content)->id, id))
+		elem = curr->content;
+		ft_printf("checking id : %s of type %d @ pos ", elem->id, elem->element_type);
+		print_veci(elem->pos.v, 4);
+		/*
+		if (elem->id && ft_strequ(elem->id, id))
 			return (curr->content);
+			*/
 		curr = curr->next;
 	}
 	return (NULL);

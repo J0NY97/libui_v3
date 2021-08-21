@@ -1,3 +1,9 @@
+Element test_elem
+{
+	pos : 10, 10, 50, 20;
+	bg_color : 0xff453F78, 0xff3F2E56, 0xff401F3E;
+}
+
 Label label0
 {
 	title : "button text";
@@ -5,8 +11,7 @@ Label label0
 
 Button button0
 {
-	pos : 10, 10, 50, 20;
-	bg_color : 0xff453F78, 0xff3F2E56, 0xff401F3E;
+	test_elem;
 	bg_image : "button.jpg", "button.jpg", "button.jpg";
 	label0;
 }

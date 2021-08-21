@@ -7,6 +7,7 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
+void	ui_element_get(t_ui_get *get);
 
 /*
  * Fun fact: you can only have flexible array in the end of a struct.
@@ -54,6 +55,18 @@ static const char *g_accepted_label[] = {
 static const char *g_accepted_dropdown[] = {
 	"pos",
 	NULL
+};
+
+static const t_ui_acceptable	g_acceptable_element =
+{
+	.name = "Element",
+	.type = UI_TYPE_ELEMENT,
+	.freer = NULL,
+	.getter = &ui_element_get,
+	.editor = NULL,
+	.maker = NULL,
+	.renderer = NULL,
+	.values = NULL 
 };
 
 static const t_ui_acceptable	g_acceptable_button =
@@ -116,9 +129,10 @@ static const t_ui_acceptable	g_acceptable_window =
 	.values = g_accepted_menu
 };
 
-# define UI_ACCEPT_AMOUNT 5
+# define UI_ACCEPT_AMOUNT 6
 static const t_ui_acceptable	g_acceptable[] =
 {
+	g_acceptable_element,
 	g_acceptable_button,
 	g_acceptable_label,
 	g_acceptable_menu,
@@ -147,7 +161,7 @@ void	ui_print_accepted(void)
 	{
 		j = -1;
 		ft_printf("\n[%s]\n{\n", g_acceptable[i].name);
-		while (g_acceptable[i].values[++j])
+		while (g_acceptable[i].values && g_acceptable[i].values[++j])
 		{
 			ft_printf(" %s\n", g_acceptable[i].values[j]);
 		}
@@ -200,8 +214,11 @@ char	**ft_strsplitthatchecksifcharinsidestring(char *str, char c)
 			last = i + 1;
 		}
 	}
-	arr = realloc(arr, sizeof(char *) * ++count);
-	arr[count - 1] = ft_strsub(str, last, i - last);
+	if (i != last) // because if the c == last char in str (not variable last, the actual last character)
+	{
+		arr = realloc(arr, sizeof(char *) * ++count);
+		arr[count - 1] = ft_strsub(str, last, i - last);
+	}
 	arr = realloc(arr, sizeof(char *) * ++count);
 	arr[count - 1] = NULL;
 	return (arr);
@@ -269,6 +286,52 @@ void	int_arr_arg_to_int_arr(char *str, int *result_arr, int result_arr_len)
 	ft_arraydel(arr);
 }
 
+enum e_pos_info
+{
+	UI_POS_NONE = 0x00,
+	UI_POS_X = 0x000001,
+	UI_POS_Y = 0x000010,
+	UI_POS_W = 0x000100,
+	UI_POS_H = 0x001000
+};
+
+void	pos_arr_getter(char *str, int *result_arr, int pos_info)
+{
+	char	*trimmed;
+	char	**arr;
+	int		i;
+
+	trimmed = ft_strtrim(str);
+	arr = ft_strsplit(trimmed, ',');
+	i = -1;
+	while (arr[++i])
+	{
+		if (ft_strequ(arr[i], "NULL"))
+			continue ;
+		if (pos_info & UI_POS_X)
+		{
+			result_arr[0] = ft_atoi(arr[i]);
+			pos_info ^= UI_POS_X;
+		}
+		else if (pos_info & UI_POS_Y)
+		{
+			result_arr[1] = ft_atoi(arr[i]);
+			pos_info ^= UI_POS_Y;
+		}
+		else if (pos_info & UI_POS_W)
+		{
+			result_arr[2] = ft_atoi(arr[i]);
+			pos_info ^= UI_POS_W;
+		}
+		else if (pos_info & UI_POS_H)
+		{
+			result_arr[3] = ft_atoi(arr[i]);
+			pos_info ^= UI_POS_H;
+		}
+	}
+	ft_arraydel(arr);
+}
+
 void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, int result_arr_len)
 {
 	char	*trimmed;
@@ -327,9 +390,37 @@ void	str_arr_arg_to_str_arr(char *str, char **result_arr, int result_arr_len)
 	ft_arraydel(arr);
 }
 
+void	ui_element_get(t_ui_get *get)
+{
+	int	i;
+
+	get->recipe->type = UI_TYPE_ELEMENT;
+	i = -1;
+	while (++i < *get->len)
+	{
+		if (ft_strequ(get->kv[i].key, "pos"))
+		{
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
+			get->recipe->pos_set = 1;
+		}
+		else if (ft_strequ(get->kv[i].key, "bg_color"))
+		{
+			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
+			get->recipe->bg_color_set = 1;
+		}
+		else if (ft_strequ(get->kv[i].key, "bg_image"))
+		{
+			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
+			get->recipe->bg_image_set = 1;
+		}
+		else
+			ft_printf("[ui_element_get] %s arg is not supported.\n", get->kv[i].key);
+	}
+}
+
 void	ui_dropdown_get(t_ui_get *get)
 {
-	int					i;
+	int	i;
 
 	get->recipe->type = UI_TYPE_DROPDOWN;
 	i = -1;
@@ -378,7 +469,7 @@ void	ui_menu_get(t_ui_get *get)
 
 void	ui_window_get(t_ui_get *get)
 {
-	int			i;
+	int	i;
 
 	get->recipe->type = UI_TYPE_WINDOW;
 	i = -1;
@@ -410,7 +501,7 @@ void	ui_window_get(t_ui_get *get)
 
 void	ui_label_get(t_ui_get *get)
 {
-	int			i;
+	int	i;
 
 	get->recipe->type = UI_TYPE_LABEL;
 	i = -1;
@@ -446,15 +537,33 @@ void	ui_label_get(t_ui_get *get)
 
 void	ui_button_get(t_ui_get *get)
 {
-	int					i;
+	int		i;
+	int		pos_info;
+	char	**temp_arr;
 
 	get->recipe->type = UI_TYPE_BUTTON;
 	i = -1;
+	pos_info = 0;
 	while (++i < *get->len)
 	{
-		if (ft_strequ(get->kv[i].key, "pos"))
+		if (ft_strstr(get->kv[i].key, "pos"))
 		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
+		//	int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
+			temp_arr = ft_strsplitfirstoccurence(get->kv[i].key, '.');	
+			if (temp_arr[1])
+			{
+				if (ft_strchr(temp_arr[1], 'x'))	
+					pos_info |= UI_POS_X;
+				if (ft_strchr(temp_arr[1], 'y'))	
+					pos_info |= UI_POS_Y;
+				if (ft_strchr(temp_arr[1], 'w'))	
+					pos_info |= UI_POS_W;
+				if (ft_strchr(temp_arr[1], 'h'))	
+					pos_info |= UI_POS_H;
+			}
+			else
+				pos_info = UI_POS_X | UI_POS_Y | UI_POS_W | UI_POS_H;
+			pos_arr_getter(get->kv[i].value, get->recipe->pos.v, pos_info);
 			get->recipe->pos_set = 1;
 
 			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
@@ -543,8 +652,13 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 		t_ui_recipe		*recipe = ft_memalloc(sizeof(t_ui_recipe));
 		recipe->id = ft_strdup(var_name);
 		ft_printf("Getting ID : %s\n", recipe->id);
-		g_acceptable[i].getter(&(t_ui_get){&len, kv, recipe});
-		add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
+		if (!g_acceptable[i].getter)
+			ft_printf("[decide] No getter for %s made.\n", g_acceptable[i].name);
+		else
+		{
+			g_acceptable[i].getter(&(t_ui_get){&len, kv, recipe});
+			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
+		}
 		free_key_value(kv, len);
 		ft_strdel(&inside);
 		ft_arraydel(values);
@@ -642,6 +756,8 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 	int				j;
 
 	elem = ft_memalloc(sizeof(t_ui_element));
+	elem->id = ft_strdup(recipe->id);
+	ft_printf("New Element ID : %s\n", elem->id);
 	i = -1;
 	while (++i < UI_ACCEPT_AMOUNT)
 	{
@@ -657,7 +773,9 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 				if (child_recipe)
 				{
 					ft_printf("[ui_layout_element_new] We have found child recipe : %s\n", child_recipe->id);
-					if (g_acceptable[i].editor)
+					if (child_recipe->type == UI_TYPE_ELEMENT)
+						ui_layout_element_edit(elem, child_recipe);
+					else if (g_acceptable[i].editor)
 					{
 						if (recipe->type == UI_TYPE_MENU)
 							g_acceptable[i].editor(elem, child_recipe, recipes);
