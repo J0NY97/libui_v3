@@ -49,7 +49,7 @@ Button sticker_button
 Button move_button
 {
 	pos.xy : 130, 30;
-	draw_button_elem;
+	brush_button_elem;
 }
 
 // Shape button

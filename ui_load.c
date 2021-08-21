@@ -755,16 +755,15 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 	int				i;
 	int				j;
 
-	elem = ft_memalloc(sizeof(t_ui_element));
-	elem->id = ft_strdup(recipe->id);
-	ft_printf("New Element ID : %s\n", elem->id);
 	i = -1;
 	while (++i < UI_ACCEPT_AMOUNT)
 	{
 		if (g_acceptable[i].type == recipe->type)
 		{
+			elem = ft_memalloc(sizeof(t_ui_element));
 			g_acceptable[i].maker(win, elem);
 			ui_layout_element_edit(elem, recipe);
+			elem->id = ft_strdup(recipe->id);
 			j = -1;
 			ft_printf("[ui_layout_element_new] Element has %d children.\n", recipe->child_amount);
 			while (++j < recipe->child_amount)
