@@ -306,6 +306,7 @@ int	pos_info_getter(char *str)
 	}
 	else
 		pos_info = UI_POS_X | UI_POS_Y | UI_POS_W | UI_POS_H;
+	ft_arraydel(temp);
 	return (pos_info);
 }
 
@@ -471,6 +472,7 @@ void	ui_dropdown_get(t_ui_get *get)
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else // should be variables, button and menu
 		{
@@ -553,6 +555,7 @@ void	ui_label_get(t_ui_get *get)
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
 		{
@@ -763,29 +766,18 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->pos_set)
 	{
 		t_vec4i new_pos;
-		int		i = 0;
+		int		i;
 	
+		i = -1;
 		new_pos = elem->pos;
 		if (recipe->pos_info & UI_POS_X)
-		{
-			new_pos.x = recipe->pos.v[i];
-			i++;
-		}
+			new_pos.x = recipe->pos.v[++i];
 		if (recipe->pos_info & UI_POS_Y)
-		{
-			new_pos.y = recipe->pos.v[i];
-			i++;
-		}
+			new_pos.y = recipe->pos.v[++i];
 		if (recipe->pos_info & UI_POS_W)
-		{
-			new_pos.w = recipe->pos.v[i];
-			i++;
-		}
+			new_pos.w = recipe->pos.v[++i];
 		if (recipe->pos_info & UI_POS_H)
-		{
-			new_pos.h = recipe->pos.v[i];
-			i++;
-		}
+			new_pos.h = recipe->pos.v[++i];
 		ui_element_pos_set(elem, new_pos);
 	}
 	if (recipe->bg_color_set)
