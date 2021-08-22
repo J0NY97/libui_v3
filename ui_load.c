@@ -732,20 +732,29 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->pos_set)
 	{
 		t_vec4i new_pos;
+		int		i = 0;
 	
 		new_pos = elem->pos;
 		if (recipe->pos_info & UI_POS_X)
-			new_pos.x = recipe->pos.x;
-
+		{
+			new_pos.x = recipe->pos.v[i];
+			i++;
+		}
 		if (recipe->pos_info & UI_POS_Y)
-			new_pos.y = recipe->pos.y;
-
+		{
+			new_pos.y = recipe->pos.v[i];
+			i++;
+		}
 		if (recipe->pos_info & UI_POS_W)
-			new_pos.w = recipe->pos.w;
-
+		{
+			new_pos.w = recipe->pos.v[i];
+			i++;
+		}
 		if (recipe->pos_info & UI_POS_H)
-			new_pos.h = recipe->pos.h;
-
+		{
+			new_pos.h = recipe->pos.v[i];
+			i++;
+		}
 		ui_element_pos_set(elem, new_pos);
 	}
 	if (recipe->bg_color_set)

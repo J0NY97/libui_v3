@@ -31,7 +31,7 @@ Button erase_button
 // Flood button
 Button flood_button
 {
-	pos.y : 1, 40;
+	pos.y : 40;
 	title : "Flood";
 	brush_button_elem;
 }
@@ -55,7 +55,7 @@ Button move_button
 // Shape button
 Button shape_button
 {
-	pos.y : 1, 70;
+	pos.y : 70;
 	title : "Shape";
 	brush_button_elem;
 }
