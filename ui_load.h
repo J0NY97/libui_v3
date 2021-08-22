@@ -5,8 +5,20 @@
 # include "libui_v3.h"
 
 typedef struct s_ui_window	t_ui_window;
+
+enum e_pos_info
+{
+	UI_POS_NONE = 0x00,
+	UI_POS_X = 0x000001,
+	UI_POS_Y = 0x000010,
+	UI_POS_W = 0x000100,
+	UI_POS_H = 0x001000
+};
+
+
 /*
  * int		type;		one of enum e_element_type
+ * int		pos_info;	one or more of the enum e_pos_info
 */
 typedef struct s_ui_recipe
 {
@@ -15,6 +27,7 @@ typedef struct s_ui_recipe
 
 	t_vec4i				pos;	
 	bool				pos_set;
+	int					pos_info;
 
 	char				*title;
 

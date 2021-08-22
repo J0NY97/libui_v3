@@ -87,6 +87,22 @@ void	ui_layout_render(t_ui_layout *layout)
 	}
 }
 
+t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
+{
+	t_list			*curr;
+	t_ui_element	*elem;
+
+	curr = list;
+	while (list)
+	{
+		elem = curr->content;
+		if (ft_strequ(elem->id, id))
+			return (elem);
+		curr = curr->next;
+	}
+	return (NULL);
+}
+
 t_ui_element	*ui_layout_get_element_by_id(t_ui_layout *layout, char *id)
 {
 	t_list			*curr;
@@ -97,12 +113,16 @@ t_ui_element	*ui_layout_get_element_by_id(t_ui_layout *layout, char *id)
 	while (curr)
 	{
 		elem = curr->content;
-		ft_printf("checking id : %s of type %d @ pos ", elem->id, elem->element_type);
+		ft_printf("[%s] checking id : %s of type %d @ pos ", __FUNCTION__, elem->id, elem->element_type);
 		print_veci(elem->pos.v, 4);
-		/*
 		if (elem->id && ft_strequ(elem->id, id))
 			return (curr->content);
-			*/
+		if (elem->element_type == UI_TYPE_MENU)
+		{
+			elem = ui_list_get_element_by_id(((t_ui_menu *)elem->element)->children, id);
+			if (elem)
+				return (elem);
+		}
 		curr = curr->next;
 	}
 	return (NULL);

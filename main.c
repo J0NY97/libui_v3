@@ -28,10 +28,10 @@ int	main(void)
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
 	t_ui_element *test = NULL;
-	ft_printf("is test ? %d\n", test != NULL);
 	test = ui_layout_get_element_by_id(&guimp_toolbox, "draw_button");
-	ft_printf("is test ? %d\n", test != NULL);
-//	print_veci(test->pos.v, VEC4_SIZE);
+	print_veci(test->pos.v, VEC4_SIZE);
+	test = ui_layout_get_element_by_id(&guimp_toolbox, "text_button");
+	print_veci(test->pos.v, VEC4_SIZE);
 
 	// Window
 	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));

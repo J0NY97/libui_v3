@@ -286,14 +286,28 @@ void	int_arr_arg_to_int_arr(char *str, int *result_arr, int result_arr_len)
 	ft_arraydel(arr);
 }
 
-enum e_pos_info
+int	pos_info_getter(char *str)
 {
-	UI_POS_NONE = 0x00,
-	UI_POS_X = 0x000001,
-	UI_POS_Y = 0x000010,
-	UI_POS_W = 0x000100,
-	UI_POS_H = 0x001000
-};
+	char	**temp;
+	int		pos_info;
+
+	temp = ft_strsplitfirstoccurence(str, '.');	
+	pos_info = 0;
+	if (temp[1])
+	{
+		if (ft_strchr(temp[1], 'x'))	
+			pos_info |= UI_POS_X;
+		if (ft_strchr(temp[1], 'y'))	
+			pos_info |= UI_POS_Y;
+		if (ft_strchr(temp[1], 'w'))	
+			pos_info |= UI_POS_W;
+		if (ft_strchr(temp[1], 'h'))	
+			pos_info |= UI_POS_H;
+	}
+	else
+		pos_info = UI_POS_X | UI_POS_Y | UI_POS_W | UI_POS_H;
+	return (pos_info);
+}
 
 void	pos_arr_getter(char *str, int *result_arr, int pos_info)
 {
@@ -402,6 +416,7 @@ void	ui_element_get(t_ui_get *get)
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
@@ -442,7 +457,7 @@ void	ui_dropdown_get(t_ui_get *get)
 
 void	ui_menu_get(t_ui_get *get)
 {
-	int			i;
+	int	i;
 
 	get->recipe->type = UI_TYPE_MENU;
 	i = -1;
@@ -453,6 +468,7 @@ void	ui_menu_get(t_ui_get *get)
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
@@ -548,23 +564,9 @@ void	ui_button_get(t_ui_get *get)
 	{
 		if (ft_strstr(get->kv[i].key, "pos"))
 		{
-		//	int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			temp_arr = ft_strsplitfirstoccurence(get->kv[i].key, '.');	
-			if (temp_arr[1])
-			{
-				if (ft_strchr(temp_arr[1], 'x'))	
-					pos_info |= UI_POS_X;
-				if (ft_strchr(temp_arr[1], 'y'))	
-					pos_info |= UI_POS_Y;
-				if (ft_strchr(temp_arr[1], 'w'))	
-					pos_info |= UI_POS_W;
-				if (ft_strchr(temp_arr[1], 'h'))	
-					pos_info |= UI_POS_H;
-			}
-			else
-				pos_info = UI_POS_X | UI_POS_Y | UI_POS_W | UI_POS_H;
-			pos_arr_getter(get->kv[i].value, get->recipe->pos.v, pos_info);
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 
 			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 		}
@@ -588,6 +590,10 @@ void	ui_button_get(t_ui_get *get)
 				get->recipe->bg_image[UI_STATE_HOVER],
 				get->recipe->bg_image[UI_STATE_CLICK]
 				);
+		}
+		else if (ft_strequ(get->kv[i].key, "title"))
+		{
+			get->recipe->title = trim_string(get->kv[i].value);
 		}
 		else // should be variables
 		{
@@ -724,7 +730,24 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	// All stuff
 	if (recipe->pos_set)
-		ui_element_pos_set(elem, recipe->pos);
+	{
+		t_vec4i new_pos;
+	
+		new_pos = elem->pos;
+		if (recipe->pos_info & UI_POS_X)
+			new_pos.x = recipe->pos.x;
+
+		if (recipe->pos_info & UI_POS_Y)
+			new_pos.y = recipe->pos.y;
+
+		if (recipe->pos_info & UI_POS_W)
+			new_pos.w = recipe->pos.w;
+
+		if (recipe->pos_info & UI_POS_H)
+			new_pos.h = recipe->pos.h;
+
+		ui_element_pos_set(elem, new_pos);
+	}
 	if (recipe->bg_color_set)
 	{
 		ui_element_color_set(elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
@@ -739,7 +762,12 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	}
 	// Label Stuff
 	if (recipe->title)
-		ui_label_text_set(elem, recipe->title);
+	{
+		if (recipe->type == UI_TYPE_LABEL)
+			ui_label_text_set(elem, recipe->title);
+		else if (recipe->type == UI_TYPE_BUTTON)
+			ui_label_text_set(&((t_ui_button *)elem->element)->label, recipe->title);
+	}
 	if (recipe->font_size_set)
 		ui_label_size_set(elem, recipe->font_size);
 	if (recipe->font_color_set)
@@ -762,7 +790,6 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 		{
 			elem = ft_memalloc(sizeof(t_ui_element));
 			g_acceptable[i].maker(win, elem);
-			ui_layout_element_edit(elem, recipe);
 			elem->id = ft_strdup(recipe->id);
 			j = -1;
 			ft_printf("[ui_layout_element_new] Element has %d children.\n", recipe->child_amount);
@@ -787,6 +814,7 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 				else
 					ft_printf("[ui_layout_element_new] When searching for child, Couldnt find recipe with id : %s\n", recipe->children_ids[j]);
 			}
+			ui_layout_element_edit(elem, recipe);
 			add_to_list(list, elem, UI_TYPE_ELEMENT);
 			ft_printf("[ui_layout_element_new] Successful make of %s.\n", recipe->id);
 			return ;

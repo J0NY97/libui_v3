@@ -6,14 +6,9 @@ Element brush_button_elem
 
 // Brush Menu
 // Draw button
-Label draw_button_label
-{
-	title : "Draw Button";
-}
-
 Button draw_button
 {
-	draw_button_label;
+	title : "Draw";
 	brush_button_elem;
 }
 
@@ -21,6 +16,7 @@ Button draw_button
 Button text_button
 {
 	pos.x : 70;
+	title : "Text";
 	brush_button_elem;
 }
 
@@ -28,34 +24,39 @@ Button text_button
 Button erase_button
 {
 	pos.x : 130;
+	title : "Erase";
 	brush_button_elem;
 }
 
 // Flood button
 Button flood_button
 {
-	pos.y : 30;
+	pos.y : 1, 40;
+	title : "Flood";
 	brush_button_elem;
 }
 
 // Sticker button
 Button sticker_button
 {
-	pos.xy : 70, 30;
+	pos.xy : 70, 40;
+	title : "Sticker";
 	brush_button_elem;
 }
 
 // Move button
 Button move_button
 {
-	pos.xy : 130, 30;
+	pos.xy : 130, 40;
+	title : "Move";
 	brush_button_elem;
 }
 
 // Shape button
 Button shape_button
 {
-	pos.y : 70;
+	pos.y : 1, 70;
+	title : "Shape";
 	brush_button_elem;
 }
 
@@ -63,6 +64,7 @@ Button shape_button
 Button pipette_button
 {
 	pos.xy : 70, 70;
+	title : "Pipette";
 	brush_button_elem;
 }
 
