@@ -346,6 +346,31 @@ void	pos_arr_getter(char *str, int *result_arr, int pos_info)
 	ft_arraydel(arr);
 }
 
+int	text_align_getter(char *str)
+{
+	char	**temp;
+	int		result;
+	int		i;
+
+	temp = ft_strsplit(str, ' ');
+	result = 0;
+	i = -1;
+	while (temp[++i])
+	{
+		if (ft_strequ(temp[i], "center"))
+			result |= UI_TEXT_ALIGN_CENTER;
+		else if (ft_strequ(temp[i], "top"))
+			result |= UI_TEXT_ALIGN_TOP;
+		else if (ft_strequ(temp[i], "bot"))
+			result |= UI_TEXT_ALIGN_BOT;
+		else if (ft_strequ(temp[i], "left"))
+			result |= UI_TEXT_ALIGN_LEFT;
+		else if (ft_strequ(temp[i], "right"))
+			result |= UI_TEXT_ALIGN_RIGHT;
+	}
+	return (result);
+}
+
 void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, int result_arr_len)
 {
 	char	*trimmed;
@@ -548,6 +573,12 @@ void	ui_label_get(t_ui_get *get)
 			get->recipe->font_color = strtoul(get->kv[i].value, NULL, 16);
 			get->recipe->font_color_set = 1;
 		}
+		else if (ft_strequ(get->kv[i].key, "text_align"))
+		{
+			get->recipe->text_align = text_align_getter(get->kv[i].value);
+			get->recipe->text_align_set = 1;
+		}
+
 	}
 }
 
@@ -583,7 +614,7 @@ void	ui_button_get(t_ui_get *get)
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
 			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
-			//get->recipe->bg_image_set = 1;
+			get->recipe->bg_image_set = 1;
 
 			ft_printf("bg_image : %s %s %s\n",
 				get->recipe->bg_image[UI_STATE_DEFAULT],
@@ -783,6 +814,8 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_label_color_set(elem, recipe->font_color);
 	if (recipe->font_path_set)
 		ui_label_font_set(elem, recipe->font_path);
+	if (recipe->text_align_set)
+		ui_label_text_align(elem, recipe->text_align);
 }
 
 void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)

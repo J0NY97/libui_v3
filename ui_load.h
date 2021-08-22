@@ -40,6 +40,9 @@ typedef struct s_ui_recipe
 	Uint32				font_color;
 	bool				font_color_set;
 
+	int					text_align;
+	bool				text_align_set;
+
 	Uint32				bg_color[UI_STATE_AMOUNT];
 	bool				bg_color_set;
 
