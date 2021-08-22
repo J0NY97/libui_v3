@@ -9,6 +9,7 @@ SRCS = \
 	./ui_button.c \
 	./ui_menu.c \
 	./ui_dropdown.c \
+	./ui_input.c \
 	./ui_load.c \
 	./ui_layout.c \
 	./vec.c \

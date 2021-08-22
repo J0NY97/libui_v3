@@ -137,9 +137,17 @@ typedef struct s_ui_button
 typedef struct s_ui_dropdown
 {
 	t_ui_element		*elem;
-	t_ui_element		button;	
-	t_ui_element		menu;	
+	t_ui_element		button;
+	t_ui_element		menu;
 }						t_ui_dropdown;
+
+typedef struct s_ui_input
+{
+	t_ui_element		*elem;
+	t_ui_element		label;
+	int					cursor_on_char_num;
+	int					cursor_from_char_num;
+}						t_ui_input;
 
 /*
  * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
@@ -231,6 +239,13 @@ void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 void					ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_get(t_ui_get *get);
 void					ui_dropdown_free(void *drop);
+
+// Input
+void					ui_input_new(t_ui_window *win, t_ui_element *elem);
+void					ui_input_event(t_ui_element *elem, SDL_Event e);
+void					ui_input_render(t_ui_element *elem);
+void					ui_input_get(t_ui_get *get);
+void					ui_input_free(void *elem);
 
 // Load
 void					ui_print_accepted(void);

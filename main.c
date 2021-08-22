@@ -114,6 +114,10 @@ int	main(void)
 	ui_dropdown_new(&win, &dropdown);
 	ui_element_pos_set(&dropdown, vec4i(10, 190, 50, 20));
 
+	// Input
+	t_ui_element	input;
+	ui_input_new(&win, &input);
+
 	ft_putstr("Inits done!\n");
 
 	SDL_Event	e;
@@ -136,6 +140,7 @@ int	main(void)
 			ui_button_event(&button3, e);
 			ui_menu_event(&menu, e);
 			ui_dropdown_event(&dropdown, e);
+			ui_input_event(&input, e);
 
 			// Layout
 			/*
@@ -170,6 +175,8 @@ int	main(void)
 		ui_element_render(&elem1);
 		ui_menu_render(&menu);
 		ui_dropdown_render(&dropdown);
+		ui_input_render(&input);
+
 		SDL_RenderPresent(win.renderer);
 
 		// Layout
