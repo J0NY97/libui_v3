@@ -147,6 +147,8 @@ typedef struct s_ui_input
 	t_ui_element		label;
 	int					cursor_on_char_num;
 	int					cursor_from_char_num;
+	int					cursor_on_char_x;
+	int					cursor_from_char_x;
 }						t_ui_input;
 
 /*
@@ -197,10 +199,12 @@ void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 co
 SDL_Surface				*ui_create_surface(t_vec4i size);
 
 // Help
-t_vec4i					vec4i(int x, int y, int w, int h);
 int						point_in_rect(t_vec2i point, t_vec4i rect);
 t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
+char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
+int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
+int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);

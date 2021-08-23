@@ -41,4 +41,7 @@ typedef struct s_vec4i
 	};
 }					t_vec4i;
 
+t_vec2i				vec2i(int x, int y);
+t_vec4i				vec4i(int x, int y, int w, int h);
+
 #endif

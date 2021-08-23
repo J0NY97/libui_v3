@@ -117,6 +117,7 @@ int	main(void)
 	// Input
 	t_ui_element	input;
 	ui_input_new(&win, &input);
+	ui_element_pos_set(&input, vec4i(150, 50, 50, 20));
 
 	ft_putstr("Inits done!\n");
 

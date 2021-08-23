@@ -10,12 +10,61 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = input;
 	elem->element_type = UI_TYPE_INPUT;
 	ui_label_new(win, &input->label);
+	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT, &elem->show);
 }
+
+void	remove_str_from_n_to_m(char **dest, int n, int m)
+{
+	char *temp0;
+	char *temp1;
+	int len;
+	
+	len = ft_strlen(*dest);
+	temp0 = ft_strsub(*dest, 0, n);
+	temp1 = ft_strsub(*dest, m, len);
+	ft_strdel(dest);
+	*dest = ft_strjoin(temp0, temp1);
+	ft_strdel(&temp0);
+	ft_strdel(&temp1);
+}
+
+void	remove_char_after_nth_char(char **dest, int n)
+{
+	char *temp0;
+	char *temp1;
+	int len;
+	
+	len = ft_strlen(*dest);
+	temp0 = ft_strsub(*dest, 0, n - 1);
+	temp1 = ft_strsub(*dest, n, len);
+	ft_strdel(dest);
+	*dest = ft_strjoin(temp0, temp1);
+	ft_strdel(&temp0);
+	ft_strdel(&temp1);
+}
+
+void	insert_str_after_nth_char(char **dest, char *src, int n)
+{
+	char *temp0;
+	char *temp1;
+	int len;
+	
+	len = ft_strlen(*dest);
+	temp0 = ft_strsub(*dest, 0, n);
+	temp1 = ft_strsub(*dest, n, len);
+	ft_stradd(&temp0, src);
+	ft_stradd(&temp0, temp1);
+	ft_strdel(dest);
+	*dest = ft_strdup(temp0);
+	ft_strdel(&temp0);
+	ft_strdel(&temp1);
+}
+
 
 void	ui_input_event(t_ui_element *elem, SDL_Event e)
 {
 	t_ui_input	*input;
-	t_ui_label	label;
+	t_ui_label	*label;
 	int			len;
 
 	input = elem->element;
@@ -26,13 +75,13 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 		elem->is_hover = 1;
 	else if (elem->is_click == 0)
 		return ;
-	len = ft_strlen(label.text);
+	len = ft_strlen(label->text);
 	if (elem->is_hover == 1 && e.type == SDL_MOUSEBUTTONDOWN)
 	{
 		if (elem->is_click == 0)
 		{
 			SDL_StartTextInput();
-			input->cursor_on_char_num = ft_strlen(label.text);
+			input->cursor_on_char_num = ft_strlen(label->text);
 			input->cursor_from_char_num = input->cursor_on_char_num;
 		}
 		elem->is_click = 1;
@@ -41,7 +90,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	{
 		if (e.type == SDL_TEXTINPUT)
 		{
-			insert_str_after_nth_char(&label.text, e.text.text, input->cursor_on_char_num);
+			insert_str_after_nth_char(&label->text, e.text.text, input->cursor_on_char_num);
 			input->cursor_on_char_num++;
 		}
 		else if (e.type == SDL_KEYDOWN)
@@ -55,7 +104,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				{
 					char *clipboard;
 
-					clipboard = ft_strsub(label.text, small, big - small);
+					clipboard = ft_strsub(label->text, small, big - small);
 					SDL_SetClipboardText(clipboard);
 					ft_strdel(&clipboard);
 				}
@@ -67,11 +116,11 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 					// This needs to gtfo
 					if (big - small > 0)
 					{
-						remove_str_from_n_to_m(&label.text, small, big);
+						remove_str_from_n_to_m(&label->text, small, big);
 						input->cursor_on_char_num = small;
 					}
 
-					insert_str_after_nth_char(&label.text, clipboard, input->cursor_on_char_num);
+					insert_str_after_nth_char(&label->text, clipboard, input->cursor_on_char_num);
 					input->cursor_on_char_num += ft_strlen(clipboard);
 					SDL_free(clipboard);
 					input->cursor_from_char_num = input->cursor_on_char_num;
@@ -85,13 +134,13 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				{
 					char *clipboard;
 
-					clipboard = ft_strsub(label.text, small, big - small);
+					clipboard = ft_strsub(label->text, small, big - small);
 					SDL_SetClipboardText(clipboard);
 					ft_strdel(&clipboard);
 					// This needs to gtfo
 					if (big - small > 0)
 					{
-						remove_str_from_n_to_m(&label.text, small, big);
+						remove_str_from_n_to_m(&label->text, small, big);
 						input->cursor_on_char_num = small;
 						input->cursor_from_char_num = small;
 					}
@@ -129,19 +178,19 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 					{
 						if (len - 1 >= 0 && input->cursor_on_char_num - 1 >= 0)
 						{
-							remove_str_from_n_to_m(&label.text, input->cursor_on_char_num - 1, input->cursor_on_char_num);
+							remove_str_from_n_to_m(&label->text, input->cursor_on_char_num - 1, input->cursor_on_char_num);
 							input->cursor_on_char_num--;
 						}
 					}
 					else
 					{
 						if (input->cursor_on_char_num < len)
-							remove_char_after_nth_char(&label.text, input->cursor_on_char_num + 1);
+							remove_char_after_nth_char(&label->text, input->cursor_on_char_num + 1);
 					}
 				}
 				else
 				{
-					remove_str_from_n_to_m(&label.text, small, big);
+					remove_str_from_n_to_m(&label->text, small, big);
 					input->cursor_on_char_num = small;
 				}
 			}
@@ -152,7 +201,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				int big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
 				if (big - small > 0)
 				{
-					remove_str_from_n_to_m(&label.text, small, big);
+					remove_str_from_n_to_m(&label->text, small, big);
 					input->cursor_on_char_num = small;
 				}
 			}
@@ -174,21 +223,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				if (elem->is_hover == 1)
 				{
 					// Dont need y because that doesnt matter. only needed if the text can stack on top of eachother, think about it, hard to explain.
-					int real_x = e.button.x - input->label.pos.x;
-					int total_w = 0;
-					int w = 0;
-					int h = 0;
-					int i = 0;
-					char *str = ft_strnew(1);
-					while (total_w < real_x) // figure out how tarkka this should be.
-					{
-						str[0] = label.text[i];
-						TTF_SizeText(label.font, str, &w, &h);
-						total_w += w;
-						i++;
-					}
-					ft_strdel(&str);
-					input->cursor_on_char_num = i;
+					input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, e.button.x - input->label.screen_pos.x, label->font);
 				}
 				input->cursor_from_char_num = input->cursor_on_char_num; // IMPORTANT:make this is in hover != 1 
 			}
@@ -197,11 +232,11 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				if (elem->is_hover == 1)
 				{
 					int i = input->cursor_on_char_num - 1;
-					while (label.text[i] && !ft_isspace(label.text[i]))
+					while (label->text[i] && !ft_isspace(label->text[i]))
 						i--;
 					i++;
 					input->cursor_from_char_num = ft_clamp(i, 0, len);
-					while (label.text[i] && !ft_isspace(label.text[i]))
+					while (label->text[i] && !ft_isspace(label->text[i]))
 						i++;
 					input->cursor_on_char_num = ft_clamp(i, 0, len);
 				}
@@ -221,24 +256,10 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 			{
 				if (e.button.state == SDL_PRESSED)
 					input->cursor_from_char_num = input->cursor_on_char_num;
-				int real_x = e.button.x - input->label.pos.x;
-				int total_w = 0;
-				int w = 0;
-				int h = 0;
-				int i = 0;
-				char *str = ft_strnew(1);
-				while (total_w < real_x) // figure out how tarkka this should be.
-				{
-					str[0] = label.text[i];
-					TTF_SizeText(label.font, str, &w, &h);
-					total_w += w;
-					i++;
-				}
-				ft_strdel(&str);
-				input->cursor_on_char_num = i;
+				input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, e.button.x - input->label.screen_pos.x, label->font);
 			}
 		}
-		len = ft_strlen(label.text);
+		len = ft_strlen(label->text);
 		input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
 		input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 		// Rethink this trash
@@ -250,8 +271,9 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 		{
 			input->cursor_from_char_num = input->cursor_on_char_num;
 		}
+		label->texture_recreate = 1;
 	}
-	len = ft_strlen(label.text);
+	len = ft_strlen(label->text);
 	input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
 	input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 }
@@ -259,9 +281,32 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 void	ui_input_render(t_ui_element *elem)
 {
 	t_ui_input	*input;
+	t_ui_label	*label;
+	t_vec2i		pos_on;
+	t_vec2i		pos_from;
 
 	input = elem->element;
+	label = input->label.element;
 	ui_element_render(elem);
+
+	input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font);
+	input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font);
+	pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x, elem->screen_pos.y);
+	pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x, elem->screen_pos.y);
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
+	SDL_RenderDrawLine(elem->win->renderer, pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->pos.h);
+	SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
+	SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y, pos_from.x, pos_from.y + elem->pos.h);
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 255, 255);
+	int wmax = ft_max(pos_from.x, pos_on.x);
+	int wmin = ft_min(pos_from.x, pos_on.x);
+	SDL_RenderFillRect(elem->win->renderer, &(SDL_Rect){wmin, pos_from.y, wmax - wmin, elem->pos.h});
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+
 	ui_label_render(&input->label);
 }
 
