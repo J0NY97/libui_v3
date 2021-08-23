@@ -97,9 +97,34 @@ Menu brush_buttons_menu
 	pipette_button;
 }
 
+// Brush Modifier Menu
+Dropdown sticker_drop
+{
+	pos : 10, 10, 50, 20;
+}
+
+Dropdown font_drop
+{
+	pos : 10, 10, 50, 20;
+}
+
+Menu brush_modifier_menu
+{
+	pos : 10, 120, 200, 200;
+	//rslider;
+	//gslider;
+	//bslider;
+	//aslider;
+	//sizeslider;
+	//colorshower;
+	sticker_drop;
+	font_drop;
+}
+
 // Toolbox window
 Window toolbox_window
 {
 	pos : 0, 25, 300, 1055;
 	brush_buttons_menu;
+	brush_modifier_menu;
 }

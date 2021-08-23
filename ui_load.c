@@ -470,7 +470,6 @@ void	ui_dropdown_get(t_ui_get *get)
 		if (ft_strequ(get->kv[i].key, "pos"))
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 			get->recipe->pos_set = 1;
 			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
@@ -836,12 +835,7 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 					if (child_recipe->type == UI_TYPE_ELEMENT)
 						ui_layout_element_edit(elem, child_recipe);
 					else if (g_acceptable[i].editor)
-					{
-						if (recipe->type == UI_TYPE_MENU)
-							g_acceptable[i].editor(elem, child_recipe, recipes);
-						else
-							g_acceptable[i].editor(elem, child_recipe, NULL);
-					}
+						g_acceptable[i].editor(elem, child_recipe, recipes);
 					else
 						ft_printf("[ui_layout_element_new] No editor made for element type %d.\n", recipe->type);
 				}
