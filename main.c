@@ -90,7 +90,7 @@ int	main(void)
 	ui_label_color_set(&((t_ui_button *)menu_button1.element)->label, 0xffff0000);
 
 	ui_dropdown_new(&win, &menu_dropdown0);
-	ui_element_pos_set(&menu_dropdown0, vec4i(10, 100, 50, 20));
+	ui_element_pos_set(&((t_ui_dropdown *)menu_dropdown0.element)->button, vec4i(10, 100, 85, 20));
 
 	t_ui_element	menu0_label;
 	ui_label_new(&win, &menu0_label);

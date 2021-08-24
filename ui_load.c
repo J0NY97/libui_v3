@@ -1,146 +1,6 @@
 #include "libui_v3.h"
 #include "ui_load.h"
 
-void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
-void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
-void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
-void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args);
-void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
-void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
-void	ui_element_get(t_ui_get *get);
-
-/*
- * Fun fact: you can only have flexible array in the end of a struct.
- * 	which actually makes sense if you think about it.
-*/
-typedef struct s_ui_acceptable
-{
-	char		*name;
-	int			type;
-	void		(*freer)(void *args);
-	void		(*getter)(t_ui_get *get);
-	void		(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, void *args);
-	void		(*maker)(t_ui_window *win, t_ui_element *elem);
-	void		(*renderer)(t_ui_element *elem);
-	const char	**values;
-}				t_ui_acceptable;
-
-static const char *g_accepted_button[] = {
-	"pos",
-	"bg_color",
-	"bg_image",
-	NULL
-};
-
-static const char *g_accepted_window[] = {
-	"pos",
-	"bg_color",
-	"title",
-	NULL
-};
-
-static const char *g_accepted_menu[] = {
-	"pos",
-	NULL
-};
-
-static const char *g_accepted_label[] = {
-	"pos",
-	"font_path",
-	"font_size",
-	"font_color",
-	NULL
-};
-
-static const char *g_accepted_dropdown[] = {
-	"pos",
-	NULL
-};
-
-static const t_ui_acceptable	g_acceptable_element =
-{
-	.name = "Element",
-	.type = UI_TYPE_ELEMENT,
-	.freer = NULL,
-	.getter = &ui_element_get,
-	.editor = NULL,
-	.maker = NULL,
-	.renderer = NULL,
-	.values = NULL 
-};
-
-static const t_ui_acceptable	g_acceptable_button =
-{
-	.name = "Button",
-	.type = UI_TYPE_BUTTON,
-	.freer = &ui_button_free,
-	.getter = &ui_button_get,
-	.editor = &ui_button_editor,
-	.maker = &ui_button_new,
-	.renderer = &ui_button_render,
-	.values = g_accepted_button
-};
-
-static const t_ui_acceptable	g_acceptable_label =
-{
-	.name = "Label",
-	.type = UI_TYPE_LABEL,
-	.freer = &ui_label_free,
-	.getter = &ui_label_get,
-	.maker = &ui_label_new,
-	.editor = &ui_label_editor,
-	.renderer = &ui_label_render,
-	.values = g_accepted_label
-};
-
-static const t_ui_acceptable	g_acceptable_menu =
-{
-	.name = "Menu",
-	.type = UI_TYPE_MENU,
-	.freer = &ui_menu_free,
-	.getter = &ui_menu_get,
-	.maker = &ui_menu_new,
-	.editor = &ui_menu_editor,
-	.renderer = &ui_menu_render,
-	.values = g_accepted_menu
-};
-
-static const t_ui_acceptable	g_acceptable_dropdown =
-{
-	.name = "Dropdown",
-	.type = UI_TYPE_DROPDOWN,
-	.freer = &ui_dropdown_free,
-	.getter = &ui_dropdown_get,
-	.maker = &ui_dropdown_new,
-	.editor = &ui_dropdown_editor,
-	.renderer = &ui_dropdown_render,
-	.values = g_accepted_dropdown
-};
-
-static const t_ui_acceptable	g_acceptable_window =
-{
-	.name = "Window",
-	.type = UI_TYPE_WINDOW,
-	.freer = &ui_window_free,
-	.getter = &ui_window_get,
-	.maker = &ui_window_new,
-	.editor = NULL,
-	.renderer = &ui_window_render,
-	.values = g_accepted_menu
-};
-
-# define UI_ACCEPT_AMOUNT 6
-static const t_ui_acceptable	g_acceptable[] =
-{
-	g_acceptable_element,
-	g_acceptable_button,
-	g_acceptable_label,
-	g_acceptable_menu,
-	g_acceptable_window,
-	g_acceptable_dropdown,
-	NULL
-};
-
 /*
  * Everything in Menu/Window that are not in the accepted,
  * are considered as already made elements in the ui file,
@@ -722,41 +582,48 @@ t_ui_recipe	*get_recipe_by_id(t_list *list, char *id)
 // Editors
 ////////////////////
 
-void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
+void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
 	(void)elem;
 	(void)recipe;
-	(void)args;
+	(void)layout;
 }
 
-void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
+void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
-	(void)args;
+	t_ui_button	*button;
+
+	button = elem->element;
+	(void)layout;
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_element_edit(&((t_ui_button *)elem->element)->label, recipe);
+		ui_layout_element_edit(&button->label, recipe);
 }
 
-void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
+void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
 	t_ui_menu	*menu;
 	t_list		*recipes;
 
-	recipes = args;
+	recipes = layout->recipes;
 	menu = elem->element;
-	ui_layout_element_new(&menu->children, elem->win, recipe, recipes);
-	ui_element_parent_set(menu->children->content, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_layout_element_new(layout, elem->win, recipe, recipes);
+	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT, &elem->show);
 }
 
-void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, void *args)
+void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
 	t_ui_dropdown	*drop;
+	t_ui_button		*button;
 
 	drop = elem->element;
-	if (recipe->type == UI_TYPE_BUTTON)
+	button = drop->button.element;
+	if (recipe->type == UI_TYPE_LABEL)
+		ui_layout_element_edit(&button->label, recipe);
+	else if (recipe->type == UI_TYPE_BUTTON)
 		ui_layout_element_edit(&drop->button, recipe);
 	else if (recipe->type == UI_TYPE_MENU)
 		ui_layout_element_edit(&drop->menu, recipe);
-	(void)args;
+	(void)layout;
 }
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
@@ -809,7 +676,7 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_label_text_align(elem, recipe->text_align);
 }
 
-void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
 {
 	t_ui_element	*elem;	
 	t_ui_recipe		*child_recipe;
@@ -835,7 +702,7 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 					if (child_recipe->type == UI_TYPE_ELEMENT)
 						ui_layout_element_edit(elem, child_recipe);
 					else if (g_acceptable[i].editor)
-						g_acceptable[i].editor(elem, child_recipe, recipes);
+						g_acceptable[i].editor(elem, child_recipe, layout);
 					else
 						ft_printf("[ui_layout_element_new] No editor made for element type %d.\n", recipe->type);
 				}
@@ -843,7 +710,7 @@ void	ui_layout_element_new(t_list **list, t_ui_window *win, t_ui_recipe *recipe,
 					ft_printf("[ui_layout_element_new] When searching for child, Couldnt find recipe with id : %s\n", recipe->children_ids[j]);
 			}
 			ui_layout_element_edit(elem, recipe);
-			add_to_list(list, elem, UI_TYPE_ELEMENT);
+			add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
 			ft_printf("[ui_layout_element_new] Successful make of %s.\n", recipe->id);
 			return ;
 		}
@@ -872,7 +739,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 		if (child_recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);
-			ui_layout_element_new(&layout->elements, window, child_recipe, layout->recipes);
+			ui_layout_element_new(layout, window, child_recipe, layout->recipes);
 			ft_printf("[ui_layout_window_new] Was succesful to make: %s\n", child_recipe->id);
 		}
 		else

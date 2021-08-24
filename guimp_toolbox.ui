@@ -98,14 +98,39 @@ Menu brush_buttons_menu
 }
 
 // Brush Modifier Menu
+Menu modifier_menu
+{
+	pos : 0, 20, 85, 50;
+	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
+}
+
+Label modifier_label
+{
+	font_color : 0xff72e26c;
+	font_path : "fonts/ShareTechMono-Regular.ttf";
+	text_align : center;
+}
+
+Button modifier_button
+{
+	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
+	bg_image : "images/button.png", "images/button_hover.png", "images/button_click.png";
+}
+
 Dropdown sticker_drop
 {
-	pos : 10, 10, 50, 20;
+	pos : 10, 10, 85, 20;
+	modifier_button;
+	modifier_label;
+	modifier_menu;
 }
 
 Dropdown font_drop
 {
-	pos : 10, 10, 50, 20;
+	pos : 105, 10, 85, 20;
+	modifier_button;
+	modifier_label;
+	modifier_menu;
 }
 
 Menu brush_modifier_menu
