@@ -99,25 +99,59 @@ Menu brush_buttons_menu
 
 // Brush Modifier Menu
 // Sliders
+Element slider_elem
+{
+	bg_color : 0xff72e26c, 0xff72e26c, 0xff72e26c;
+}
+
+Label slider_label
+{
+	font_color : 0xff003707;
+	font_path : "fonts/ShareTechMono-Regular.ttf";
+	text_align : center left;
+}
+
+Button slider_button
+{
+	bg_color : 0xff003707, 0xff003707, 0xff003707;
+	font_color : 0xff72e26c;
+	text_align : center;
+}
+
 Slider r_slider
 {
 	pos : 30, 40, 150, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
 }
 Slider g_slider
 {
 	pos : 30, 70, 150, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
 }
 Slider b_slider
 {
 	pos : 30, 100, 150, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
 }
 Slider a_slider
 {
 	pos : 30, 130, 150, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
 }
 Slider size_slider
 {
 	pos : 30, 160, 150, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
 }
 
 

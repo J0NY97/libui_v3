@@ -208,6 +208,7 @@ SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_
 SDL_Texture				*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos);
 void					ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
 void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
+void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color, t_vec4i rect);
 
 // Surface
 SDL_Surface				*ui_create_surface(t_vec4i size);

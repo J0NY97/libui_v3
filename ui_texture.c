@@ -19,6 +19,18 @@ void	ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color)
 	SDL_SetRenderTarget(renderer, NULL);
 }
 
+void	ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color, t_vec4i rect)
+{
+	t_rgba		rgba;
+
+	rgba = hex_to_rgba(color);
+	SDL_SetRenderTarget(renderer, texture);
+	SDL_SetRenderDrawColor(renderer, rgba.r, rgba.g, rgba.b, rgba.a);
+	SDL_RenderFillRect(renderer, &(SDL_Rect){rect.x, rect.y, rect.w, rect.h});
+	SDL_SetRenderTarget(renderer, NULL);
+}
+
+
 void	ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color)
 {
 	t_rgba		rgba;

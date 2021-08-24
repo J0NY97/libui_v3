@@ -116,8 +116,21 @@ void	ui_element_pos_set2(t_ui_element *elem, t_vec2i pos)
 
 void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 {
+	int	j;
+
 	if (state < 0 || state > UI_STATE_AMOUNT)
 		return ;
+	if (state == UI_STATE_AMOUNT)
+	{
+		j = -1;
+		while (++j < UI_STATE_AMOUNT)
+		{
+			if (elem->colors[j] != color)
+				elem->texture_recreate = 1;
+			elem->colors[j] = color;
+		}
+		return ;
+	}
 	if (elem->colors[state] != color)
 		elem->texture_recreate = 1;
 	elem->colors[state] = color;

@@ -22,6 +22,25 @@ int	main(void)
 	ui_load(&toolbox, "toolbox.ui");
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
+	// Edit guimp_toolbox elements in ways that are not possible in the ui file
+	t_ui_element	*slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider");
+	t_ui_slider		*slider_slider = slider_elem->element;
+	slider_slider->max_value = 255;
+
+	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider");
+	slider_slider = slider_elem->element;
+	slider_slider->max_value = 255;
+
+	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider");
+	slider_slider = slider_elem->element;
+	slider_slider->max_value = 255;
+
+	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
+	slider_slider = slider_elem->element;
+	slider_slider->max_value = 255;
+	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
+
+	// Just testing if ui_layout_get_element_by_id works correctly.
 	t_ui_element *test = NULL;
 	test = ui_layout_get_element_by_id(&guimp_toolbox, "draw_button");
 	print_veci(test->pos.v, VEC4_SIZE);

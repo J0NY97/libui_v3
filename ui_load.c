@@ -459,7 +459,17 @@ void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layou
 
 void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
-	(void)elem;
+	t_ui_slider	*slider;
+
+	slider = elem->element;
+	if (recipe->type == UI_TYPE_BUTTON)
+		ui_layout_element_edit(&slider->button, recipe);
+	else if (recipe->type == UI_TYPE_LABEL)
+	{
+		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe);
+		ui_layout_element_edit(&slider->min_label, recipe);
+		ui_layout_element_edit(&slider->max_label, recipe);
+	}
 	(void)recipe;
 	(void)layout;
 }
