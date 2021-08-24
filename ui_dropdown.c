@@ -14,17 +14,16 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	drop = elem->element;
 
 	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xffff0000);
-	ui_element_pos_set(elem, vec4i(0, 0, 0, 0));
+	ui_element_pos_set(elem, vec4i(0, 0, 50, 20));
 
-	ui_button_new(win, &drop->button);
-	ui_label_text_set(&((t_ui_button *)drop->button.element)->label, "Dropdown");
+	ui_label_new(win, &drop->label);
+	ui_label_text_set(&drop->label, "Dropdown");
 
 	ui_menu_new(win, &drop->menu);
-	ui_element_pos_set(&drop->menu,
-		vec4i(0, drop->button.pos.h,
-			drop->menu.pos.w, drop->menu.pos.h));
+	ui_element_pos_set(&drop->menu, vec4i(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	drop->menu.show = 0;
 
-	ui_element_parent_set(&drop->button, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT, &elem->show);
 	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT, &elem->show);
 }
 
@@ -33,11 +32,11 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
-	ui_button_event(&drop->button, e);
-	if (ui_button(&drop->button))
+	ui_button_event(elem, e);
+	if (ui_button(elem))
 		drop->menu.show = drop->menu.show == 0;
 	if (drop->menu.show)
-		drop->button.state = UI_STATE_CLICK;
+		elem->state = UI_STATE_CLICK;
 	ui_menu_event(&drop->menu, e);
 }
 
@@ -46,8 +45,9 @@ void	ui_dropdown_render(t_ui_element *elem)
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
-	ui_element_render(elem);
-	ui_button_render(&drop->button);
+	ui_button_render(elem);
+
+	ui_element_pos_set(&drop->menu, vec4i(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	ui_menu_render(&drop->menu);
 }
 

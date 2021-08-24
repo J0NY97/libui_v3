@@ -134,10 +134,13 @@ typedef struct s_ui_button
 	t_ui_element		label;
 }						t_ui_button;
 
+/*
+ * NOTE: we treat dropdown as button.
+*/
 typedef struct s_ui_dropdown
 {
 	t_ui_element		*elem;
-	t_ui_element		button;
+	t_ui_element		label;
 	t_ui_element		menu;
 }						t_ui_dropdown;
 

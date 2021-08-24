@@ -1,11 +1,11 @@
-Element brush_button_elem
+Element button_elem
 {
 	pos : 10, 10, 50, 20;
 	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
 	bg_image : "images/button.png", "images/button_hover.png", "images/button_click.png";
 }
 
-Label brush_button_label
+Label button_label
 {
 	font_color : 0xff72e26c;
 	font_path : "fonts/ShareTechMono-Regular.ttf";
@@ -17,8 +17,8 @@ Label brush_button_label
 Button draw_button
 {
 	title : "Draw";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Text button
@@ -26,8 +26,8 @@ Button text_button
 {
 	pos.x : 70;
 	title : "Text";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Erase button
@@ -35,8 +35,8 @@ Button erase_button
 {
 	pos.x : 130;
 	title : "Erase";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Flood button
@@ -44,8 +44,8 @@ Button flood_button
 {
 	pos.y : 40;
 	title : "Flood";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Sticker button
@@ -53,8 +53,8 @@ Button sticker_button
 {
 	pos.xy : 70, 40;
 	title : "Sticker";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Move button
@@ -62,8 +62,8 @@ Button move_button
 {
 	pos.xy : 130, 40;
 	title : "Move";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Shape button
@@ -71,8 +71,8 @@ Button shape_button
 {
 	pos.y : 70;
 	title : "Shape";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 // Pipette button
@@ -80,8 +80,8 @@ Button pipette_button
 {
 	pos.xy : 70, 70;
 	title : "Pipette";
-	brush_button_elem;
-	brush_button_label;
+	button_elem;
+	button_label;
 }
 
 Menu brush_buttons_menu
@@ -98,39 +98,42 @@ Menu brush_buttons_menu
 }
 
 // Brush Modifier Menu
-Menu modifier_menu
+Element drop_elem
+{
+	button_elem;
+	bg_image : "images/drop.png", "images/drop_hover.png", "images/drop_click.png";
+}
+
+Menu sticker_menu
 {
 	pos : 0, 20, 85, 50;
 	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
+	modifier_menu_elem;
 }
 
-Label modifier_label
+Menu font_menu
 {
-	font_color : 0xff72e26c;
-	font_path : "fonts/ShareTechMono-Regular.ttf";
-	text_align : center;
-}
-
-Button modifier_button
-{
+	pos : 0, 20, 85, 50;
 	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
-	bg_image : "images/button.png", "images/button_hover.png", "images/button_click.png";
+	modifier_menu_elem;
 }
 
 Dropdown sticker_drop
 {
 	pos : 10, 10, 85, 20;
-	modifier_button;
-	modifier_label;
-	modifier_menu;
+	title : "Stickers";
+	drop_elem;
+	button_label;
+	sticker_menu;
 }
 
 Dropdown font_drop
 {
 	pos : 105, 10, 85, 20;
-	modifier_button;
-	modifier_label;
-	modifier_menu;
+	title : "Fonts";
+	drop_elem;
+	button_label;
+	font_menu;
 }
 
 Menu brush_modifier_menu

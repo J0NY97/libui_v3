@@ -333,6 +333,10 @@ void	ui_dropdown_get(t_ui_get *get)
 			get->recipe->pos_set = 1;
 			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
+		else if (ft_strequ(get->kv[i].key, "title"))
+		{
+			get->recipe->title = trim_string(get->kv[i].value);
+		}
 		else // should be variables, button and menu
 		{
 			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
@@ -460,29 +464,16 @@ void	ui_button_get(t_ui_get *get)
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
 			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
-
-			ft_printf("pos : %d %d %d %d\n", get->recipe->pos.x, get->recipe->pos.y, get->recipe->pos.w, get->recipe->pos.h);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
 			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
 			get->recipe->bg_color_set = 1;
-
-			ft_printf("bg_color : %#.8x %#.8x %#.8x\n",
-				get->recipe->bg_color[UI_STATE_DEFAULT],
-				get->recipe->bg_color[UI_STATE_HOVER],
-				get->recipe->bg_color[UI_STATE_CLICK]);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
 			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
 			get->recipe->bg_image_set = 1;
-
-			ft_printf("bg_image : %s %s %s\n",
-				get->recipe->bg_image[UI_STATE_DEFAULT],
-				get->recipe->bg_image[UI_STATE_HOVER],
-				get->recipe->bg_image[UI_STATE_CLICK]
-				);
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
 		{
@@ -613,14 +604,10 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
 	t_ui_dropdown	*drop;
-	t_ui_button		*button;
 
 	drop = elem->element;
-	button = drop->button.element;
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_element_edit(&button->label, recipe);
-	else if (recipe->type == UI_TYPE_BUTTON)
-		ui_layout_element_edit(&drop->button, recipe);
+		ui_layout_element_edit(&drop->label, recipe);
 	else if (recipe->type == UI_TYPE_MENU)
 		ui_layout_element_edit(&drop->menu, recipe);
 	(void)layout;
@@ -665,6 +652,8 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 			ui_label_text_set(elem, recipe->title);
 		else if (recipe->type == UI_TYPE_BUTTON)
 			ui_label_text_set(&((t_ui_button *)elem->element)->label, recipe->title);
+		else if (recipe->type == UI_TYPE_DROPDOWN)
+			ui_label_text_set(&((t_ui_dropdown *)elem->element)->label, recipe->title);
 	}
 	if (recipe->font_size_set)
 		ui_label_size_set(elem, recipe->font_size);
