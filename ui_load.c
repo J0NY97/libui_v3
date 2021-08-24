@@ -272,15 +272,15 @@ void	str_arr_arg_to_str_arr(char *str, char **result_arr, int result_arr_len)
 	ft_arraydel(arr);
 }
 
-void	ui_element_get(t_ui_get *get)
+void	ui_global_get(t_ui_get *get)
 {
-	int	i;
+	int		i;
 
-	get->recipe->type = UI_TYPE_ELEMENT;
+	get->recipe->type = get->type;
 	i = -1;
 	while (++i < *get->len)
 	{
-		if (ft_strequ(get->kv[i].key, "pos"))
+		if (ft_strstr(get->kv[i].key, "pos"))
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
@@ -295,122 +295,6 @@ void	ui_element_get(t_ui_get *get)
 		{
 			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
 			get->recipe->bg_image_set = 1;
-		}
-		else
-			ft_printf("[ui_element_get] %s arg is not supported.\n", get->kv[i].key);
-	}
-}
-
-void	ui_dropdown_get(t_ui_get *get)
-{
-	int	i;
-
-	get->recipe->type = UI_TYPE_DROPDOWN;
-	i = -1;
-	while (++i < *get->len)
-	{
-		if (ft_strequ(get->kv[i].key, "pos"))
-		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			get->recipe->pos_set = 1;
-			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
-		}
-		else if (ft_strequ(get->kv[i].key, "title"))
-		{
-			get->recipe->title = trim_string(get->kv[i].value);
-		}
-		else // should be variables, button and menu
-		{
-			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
-			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
-		}
-	}
-}
-
-void	ui_slider_get(t_ui_get *get)
-{
-	(void)get;
-}
-
-void	ui_input_get(t_ui_get *get)
-{
-	(void)get;
-}
-
-void	ui_menu_get(t_ui_get *get)
-{
-	int	i;
-
-	get->recipe->type = UI_TYPE_MENU;
-	i = -1;
-	while (++i < *get->len)
-	{
-		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
-		if (ft_strequ(get->kv[i].key, "pos"))
-		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			get->recipe->pos_set = 1;
-			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
-		}
-		else if (ft_strequ(get->kv[i].key, "bg_color"))
-		{
-			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
-			get->recipe->bg_color_set = 1;
-		}
-		else // should be variables
-		{
-			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
-			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
-		}
-	}
-}
-
-void	ui_window_get(t_ui_get *get)
-{
-	int	i;
-
-	get->recipe->type = UI_TYPE_WINDOW;
-	i = -1;
-	get->recipe->title = NULL;
-	while (++i < *get->len)
-	{
-		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
-		if (ft_strequ(get->kv[i].key, "pos"))
-		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			get->recipe->pos_set = 1;
-		}
-		else if (ft_strequ(get->kv[i].key, "title"))
-		{
-			get->recipe->title = trim_string(get->kv[i].value);
-		}
-		else if (ft_strequ(get->kv[i].key, "bg_color"))
-		{
-			get->recipe->bg_color[UI_STATE_DEFAULT] = strtoul(get->kv[i].value, NULL, 16);
-			get->recipe->bg_color_set = 1;
-		}
-		else // should be variables
-		{
-			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
-			get->recipe->children_ids[get->recipe->child_amount - 1] = ft_strdup(get->kv[i].key);
-		}
-	}
-}
-
-void	ui_label_get(t_ui_get *get)
-{
-	int	i;
-
-	get->recipe->type = UI_TYPE_LABEL;
-	i = -1;
-	while (++i < *get->len)
-	{
-		ft_printf("%s : %s\n", get->kv[i].key, get->kv[i].value);
-		if (ft_strequ(get->kv[i].key, "pos"))
-		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			get->recipe->pos_set = 1;
-			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "title"))
 		{
@@ -437,40 +321,6 @@ void	ui_label_get(t_ui_get *get)
 			get->recipe->text_align_set = 1;
 		}
 
-	}
-}
-
-void	ui_button_get(t_ui_get *get)
-{
-	int		i;
-	int		pos_info;
-	char	**temp_arr;
-
-	get->recipe->type = UI_TYPE_BUTTON;
-	i = -1;
-	pos_info = 0;
-	while (++i < *get->len)
-	{
-		if (ft_strstr(get->kv[i].key, "pos"))
-		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
-			get->recipe->pos_set = 1;
-			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
-		}
-		else if (ft_strequ(get->kv[i].key, "bg_color"))
-		{
-			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
-			get->recipe->bg_color_set = 1;
-		}
-		else if (ft_strequ(get->kv[i].key, "bg_image"))
-		{
-			str_arr_arg_to_str_arr(get->kv[i].value, get->recipe->bg_image, 3);
-			get->recipe->bg_image_set = 1;
-		}
-		else if (ft_strequ(get->kv[i].key, "title"))
-		{
-			get->recipe->title = trim_string(get->kv[i].value);
-		}
 		else // should be variables
 		{
 			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
@@ -534,13 +384,8 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 		t_ui_recipe		*recipe = ft_memalloc(sizeof(t_ui_recipe));
 		recipe->id = ft_strdup(var_name);
 		ft_printf("Getting ID : %s\n", recipe->id);
-		if (!g_acceptable[i].getter)
-			ft_printf("[decide] No getter for %s made.\n", g_acceptable[i].name);
-		else
-		{
-			g_acceptable[i].getter(&(t_ui_get){&len, kv, recipe});
-			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
-		}
+		ui_global_get(&(t_ui_get){g_acceptable[i].type, &len, kv, recipe});
+		add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 		free_key_value(kv, len);
 		ft_strdel(&inside);
 		ft_arraydel(values);
@@ -651,24 +496,29 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_element_image_set_from_path(elem, UI_STATE_HOVER, recipe->bg_image[UI_STATE_HOVER]);
 		ui_element_image_set_from_path(elem, UI_STATE_CLICK, recipe->bg_image[UI_STATE_CLICK]);
 	}
+
 	// Label Stuff
-	if (recipe->title)
+	t_ui_label	*label = NULL;
+
+	if (recipe->type == UI_TYPE_LABEL)
+		label = elem;
+	else if (recipe->type == UI_TYPE_BUTTON)
+		label = &((t_ui_button *)elem->element)->label;
+	else if (recipe->type == UI_TYPE_DROPDOWN)
+		label = &((t_ui_dropdown *)elem->element)->label;
+	if (label)
 	{
-		if (recipe->type == UI_TYPE_LABEL)
-			ui_label_text_set(elem, recipe->title);
-		else if (recipe->type == UI_TYPE_BUTTON)
-			ui_label_text_set(&((t_ui_button *)elem->element)->label, recipe->title);
-		else if (recipe->type == UI_TYPE_DROPDOWN)
-			ui_label_text_set(&((t_ui_dropdown *)elem->element)->label, recipe->title);
+		if (recipe->title)
+			ui_label_text_set(label, recipe->title);
+		if (recipe->font_size_set)
+			ui_label_size_set(label, recipe->font_size);
+		if (recipe->font_color_set)
+			ui_label_color_set(label, recipe->font_color);
+		if (recipe->font_path_set)
+			ui_label_font_set(label, recipe->font_path);
+		if (recipe->text_align_set)
+			ui_label_text_align(label, recipe->text_align);
 	}
-	if (recipe->font_size_set)
-		ui_label_size_set(elem, recipe->font_size);
-	if (recipe->font_color_set)
-		ui_label_color_set(elem, recipe->font_color);
-	if (recipe->font_path_set)
-		ui_label_font_set(elem, recipe->font_path);
-	if (recipe->text_align_set)
-		ui_label_text_align(elem, recipe->text_align);
 }
 
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)

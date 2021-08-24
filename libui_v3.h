@@ -190,7 +190,6 @@ void					print_veci(int *vec, size_t size);
 void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
-void					ui_window_get(t_ui_get *get);
 void					ui_window_free(void *win);
 
 // Element
@@ -232,7 +231,6 @@ void					ui_label_color_set(t_ui_element *label, Uint32 color);
 void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 // end edit
-void					ui_label_get(t_ui_get *get);
 void					ui_label_free(void *label);
 
 // Button
@@ -240,7 +238,6 @@ void					ui_button_new(t_ui_window *win, t_ui_element *button);
 void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
-void					ui_button_get(t_ui_get *get);
 void					ui_button_free(void *button);
 
 // Menu
@@ -248,28 +245,24 @@ void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
 void					ui_menu_child_add(t_ui_element *menu, void *child, int type);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
-void					ui_menu_get(t_ui_get *get);
 void					ui_menu_free(void *menu);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
-void					ui_dropdown_get(t_ui_get *get);
 void					ui_dropdown_free(void *drop);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
-void					ui_input_get(t_ui_get *get);
 void					ui_input_free(void *elem);
 
 // Slider
 void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
-void					ui_slider_get(t_ui_get *get);
 void					ui_slider_free(void *elem);
 
 // Load
