@@ -22,16 +22,18 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			elem = curr->content;
-			if (elem->element_type == UI_TYPE_BUTTON)
-				ui_button_event(elem, e);
-			else if (elem->element_type == UI_TYPE_MENU)
-				ui_menu_event(elem, e);
-			else if (elem->element_type == UI_TYPE_DROPDOWN)
-				ui_dropdown_event(elem, e);
-			else if (elem->element_type == UI_TYPE_LABEL)
-				(void)curr;
-			else
-				ft_printf("[ui_layout_event] Eventing of type %d %d not supported.\n", curr->content_size, elem->element_type);
+			int	j = -1;
+			while (++j < UI_ACCEPT_AMOUNT)
+			{
+				if (g_acceptable[j].type == elem->element_type
+					&& g_acceptable[j].eventer)
+				{
+					g_acceptable[j].eventer(elem, e);
+					break ;
+				}
+			}
+			if (j == UI_ACCEPT_AMOUNT)
+				ft_printf("[%s] Eventing of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
 		}
 		else
 			ft_printf("[ui_layout_event] Eventing of type %d not supported.\n", curr->content_size);
@@ -65,7 +67,8 @@ int	ui_layout_render(t_ui_layout *layout)
 			int	j = -1;
 			while (++j < UI_ACCEPT_AMOUNT)
 			{
-				if (g_acceptable[j].type == elem->element_type)
+				if (g_acceptable[j].type == elem->element_type
+					&& g_acceptable[j].renderer)
 				{
 					g_acceptable[j].renderer(elem);
 					break ;

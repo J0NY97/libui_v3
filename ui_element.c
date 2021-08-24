@@ -107,6 +107,13 @@ void	ui_element_pos_set(t_ui_element *elem, t_vec4i pos)
 	elem->pos = pos;
 }
 
+void	ui_element_pos_set2(t_ui_element *elem, t_vec2i pos)
+{
+	elem->pos.x = pos.x;
+	elem->pos.y = pos.y;
+}
+
+
 void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 {
 	if (state < 0 || state > UI_STATE_AMOUNT)

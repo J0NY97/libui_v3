@@ -357,7 +357,7 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 		open_parentheses = 0;
 		line = NULL;
 		nread = getline(&line, &len, fd);
-		while (1)
+		while (nread != -1)
 		{
 			if (ft_strchr(line, '}'))
 				open_parentheses--;
@@ -498,7 +498,7 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	}
 
 	// Label Stuff
-	t_ui_label	*label = NULL;
+	t_ui_element	*label = NULL;
 
 	if (recipe->type == UI_TYPE_LABEL)
 		label = elem;

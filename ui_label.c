@@ -67,6 +67,17 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 		ft_printf("[ui_label_text_align] Align type [%d] not supported.\n", label->text_align);
 }
 
+/*
+ * We are only making blank event handler for label,
+ * because the ui_layout event handler doesnt like when
+ * an element doesnt have one.
+*/
+void	ui_label_event(t_ui_element *elem, SDL_Event e)
+{
+	(void)elem;
+	(void)e;
+}
+
 int	ui_label_render(t_ui_element *elem)
 {
 	t_ui_label	*label;

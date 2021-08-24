@@ -3,7 +3,6 @@
 int	main(void)
 {
 	ft_putstr("Hello world!\n");
-	t_ui_layout		layout;
 	t_ui_layout		toolbox;
 	t_ui_layout		guimp_toolbox;
 	t_ui_window		win;
@@ -20,9 +19,6 @@ int	main(void)
 
 	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 
-	/*
-	ui_load(&layout, "layout.ui");
-	*/
 	ui_load(&toolbox, "toolbox.ui");
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
@@ -67,6 +63,7 @@ int	main(void)
 	t_ui_element	menu_button1;
 	t_ui_element	menu_menu0;
 	t_ui_element	menu_dropdown0;
+	t_ui_element	menu_slider0;
 	ui_menu_new(&win, &menu);
 	ui_element_pos_set(&menu, vec4i(150, 100, 500, 500));
 	ui_element_image_set_from_path(&menu, UI_STATE_DEFAULT, "images/grass_hill.jpg");
@@ -91,6 +88,9 @@ int	main(void)
 	ui_dropdown_new(&win, &menu_dropdown0);
 	ui_element_pos_set(&menu_dropdown0, vec4i(10, 100, 85, 20));
 
+	ui_slider_new(&win, &menu_slider0);
+	ui_element_pos_set(&menu_slider0, vec4i(10, 150, 85, 20));
+
 	t_ui_element	menu0_label;
 	ui_label_new(&win, &menu0_label);
 	ui_label_text_set(&menu0_label, "Menu0 Label");
@@ -106,6 +106,7 @@ int	main(void)
 	ui_menu_child_add(&menu, &menu_button1, UI_TYPE_ELEMENT);
 	ui_menu_child_add(&menu, &menu_menu0, UI_TYPE_ELEMENT);
 	ui_menu_child_add(&menu, &menu_dropdown0, UI_TYPE_ELEMENT);
+	ui_menu_child_add(&menu, &menu_slider0, UI_TYPE_ELEMENT);
 
 	// Dropdown
 	t_ui_element	dropdown;
@@ -117,6 +118,11 @@ int	main(void)
 	t_ui_element	input;
 	ui_input_new(&win, &input);
 	ui_element_pos_set(&input, vec4i(150, 50, 50, 20));
+
+	// Slider
+	t_ui_element	slider;
+	ui_slider_new(&win, &slider);
+	ui_element_pos_set(&slider, vec4i(150, 10, 50, 20));
 
 	ft_putstr("Inits done!\n");
 
@@ -141,11 +147,9 @@ int	main(void)
 			ui_menu_event(&menu, e);
 			ui_dropdown_event(&dropdown, e);
 			ui_input_event(&input, e);
+			ui_slider_event(&slider, e);
 
 			// Layout
-			/*
-			ui_layout_event(&layout, e);
-			*/
 			ui_layout_event(&toolbox, e);
 			ui_layout_event(&guimp_toolbox, e);
 		}
@@ -176,13 +180,11 @@ int	main(void)
 		ui_menu_render(&menu);
 		ui_dropdown_render(&dropdown);
 		ui_input_render(&input);
+		ui_slider_render(&slider);
 
 		SDL_RenderPresent(win.renderer);
 
 		// Layout
-		/*
-		ui_layout_render(&layout);
-		*/
 		ui_layout_render(&toolbox);
 		ui_layout_render(&guimp_toolbox);
 	}

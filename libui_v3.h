@@ -197,6 +197,7 @@ void					ui_element_new(t_ui_window *win, t_ui_element *elem);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
 void					ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
+void					ui_element_pos_set2(t_ui_element *elem, t_vec2i pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
@@ -222,6 +223,7 @@ int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
 void					ui_label_texture_redo(t_ui_element *label);
+void					ui_label_event(t_ui_element *elem, SDL_Event e);
 int						ui_label_render(t_ui_element *label);
 // edit
 void					ui_label_text_set(t_ui_element *label, char *text);

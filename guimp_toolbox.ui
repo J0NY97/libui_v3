@@ -98,6 +98,30 @@ Menu brush_buttons_menu
 }
 
 // Brush Modifier Menu
+// Sliders
+Slider r_slider
+{
+	pos : 30, 40, 150, 20;
+}
+Slider g_slider
+{
+	pos : 30, 70, 150, 20;
+}
+Slider b_slider
+{
+	pos : 30, 100, 150, 20;
+}
+Slider a_slider
+{
+	pos : 30, 130, 150, 20;
+}
+Slider size_slider
+{
+	pos : 30, 160, 150, 20;
+}
+
+
+// Dropdowns
 Element drop_elem
 {
 	button_elem;
@@ -139,11 +163,11 @@ Dropdown font_drop
 Menu brush_modifier_menu
 {
 	pos : 10, 120, 200, 200;
-	//rslider;
-	//gslider;
-	//bslider;
-	//aslider;
-	//sizeslider;
+	r_slider;
+	g_slider;
+	b_slider;
+	a_slider;
+	size_slider;
 	//colorshower;
 	sticker_drop;
 	font_drop;

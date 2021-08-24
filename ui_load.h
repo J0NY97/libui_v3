@@ -23,31 +23,37 @@ void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args
 void	ui_button_free(void *button);
 void	ui_button_new(t_ui_window *win, t_ui_element *button);
 int		ui_button_render(t_ui_element *button);
+void	ui_button_event(t_ui_element *elem, SDL_Event e);
 
 void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 void	ui_label_free(void *label);
 void	ui_label_new(t_ui_window *win, t_ui_element *label);
+void	ui_label_event(t_ui_element *elem, SDL_Event e);
 int		ui_label_render(t_ui_element *label);
 
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 void	ui_menu_new(t_ui_window *win, t_ui_element *menu);
 void	ui_menu_free(void *menu);
 int		ui_menu_render(t_ui_element *menu);
+void	ui_menu_event(t_ui_element *elem, SDL_Event e);
 
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 int		ui_dropdown_render(t_ui_element *drop);
 void	ui_dropdown_free(void *drop);
 void	ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
+void	ui_dropdown_event(t_ui_element *elem, SDL_Event e);
 
 void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 int		ui_input_render(t_ui_element *elem);
 void	ui_input_free(void *drop);
 void	ui_input_new(t_ui_window *win, t_ui_element *elem);
+void	ui_input_event(t_ui_element *elem, SDL_Event e);
 
 void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 int		ui_slider_render(t_ui_element *elem);
 void	ui_slider_free(void *drop);
 void	ui_slider_new(t_ui_window *win, t_ui_element *elem);
+void	ui_slider_event(t_ui_element *elem, SDL_Event e);
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
@@ -74,6 +80,7 @@ typedef struct s_ui_acceptable
 	void		(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, t_ui_layout *args);
 	void		(*maker)(t_ui_window *win, t_ui_element *elem);
 	int			(*renderer)(t_ui_element *elem);
+	void		(*eventer)(t_ui_element *elem, SDL_Event e);
 }				t_ui_acceptable;
 
 static const t_ui_acceptable	g_acceptable_element =
@@ -83,7 +90,8 @@ static const t_ui_acceptable	g_acceptable_element =
 	.freer = NULL,
 	.editor = NULL,
 	.maker = NULL,
-	.renderer = &ui_element_render
+	.renderer = &ui_element_render,
+	.eventer = NULL 
 };
 
 static const t_ui_acceptable	g_acceptable_button =
@@ -93,7 +101,8 @@ static const t_ui_acceptable	g_acceptable_button =
 	.freer = &ui_button_free,
 	.editor = &ui_button_editor,
 	.maker = &ui_button_new,
-	.renderer = &ui_button_render
+	.renderer = &ui_button_render,
+	.eventer = &ui_button_event
 };
 
 static const t_ui_acceptable	g_acceptable_label =
@@ -103,7 +112,8 @@ static const t_ui_acceptable	g_acceptable_label =
 	.freer = &ui_label_free,
 	.maker = &ui_label_new,
 	.editor = &ui_label_editor,
-	.renderer = &ui_label_render
+	.renderer = &ui_label_render,
+	.eventer = &ui_label_event
 };
 
 static const t_ui_acceptable	g_acceptable_menu =
@@ -113,7 +123,8 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.freer = &ui_menu_free,
 	.maker = &ui_menu_new,
 	.editor = &ui_menu_editor,
-	.renderer = &ui_menu_render
+	.renderer = &ui_menu_render,
+	.eventer = &ui_menu_event
 };
 
 static const t_ui_acceptable	g_acceptable_dropdown =
@@ -123,7 +134,8 @@ static const t_ui_acceptable	g_acceptable_dropdown =
 	.freer = &ui_dropdown_free,
 	.maker = &ui_dropdown_new,
 	.editor = &ui_dropdown_editor,
-	.renderer = &ui_dropdown_render
+	.renderer = &ui_dropdown_render,
+	.eventer = &ui_dropdown_event
 };
 
 static const t_ui_acceptable	g_acceptable_input =
@@ -133,7 +145,8 @@ static const t_ui_acceptable	g_acceptable_input =
 	.freer = &ui_input_free,
 	.maker = &ui_input_new,
 	.editor = &ui_input_editor,
-	.renderer = &ui_input_render
+	.renderer = &ui_input_render,
+	.eventer = &ui_input_event
 };
 
 static const t_ui_acceptable	g_acceptable_slider =
@@ -143,17 +156,19 @@ static const t_ui_acceptable	g_acceptable_slider =
 	.freer = &ui_slider_free,
 	.maker = &ui_slider_new,
 	.editor = &ui_slider_editor,
-	.renderer = &ui_slider_render
+	.renderer = &ui_slider_render,
+	.eventer = &ui_slider_event
 };
 
 static const t_ui_acceptable	g_acceptable_window =
 {
 	.name = "Window",
 	.type = UI_TYPE_WINDOW,
-	.freer = &ui_window_free,
-	.maker = &ui_window_new,
+	.freer = NULL,
+	.maker = NULL,
 	.editor = NULL,
-	.renderer = &ui_window_render
+	.renderer = NULL,
+	.eventer = NULL
 };
 
 # define UI_ACCEPT_AMOUNT 8
