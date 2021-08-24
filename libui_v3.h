@@ -154,6 +154,17 @@ typedef struct s_ui_input
 	int					cursor_from_char_x;
 }						t_ui_input;
 
+typedef struct s_ui_slider
+{
+	t_ui_element		*elem;
+	t_ui_element		button;
+	t_ui_element		min_label;
+	t_ui_element		max_label;
+	int					value;
+	int					min_value;
+	int					max_value;
+}						t_ui_slider;
+
 /*
  * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
  * t_list		*element; list of t_ui_element /button/label/menu/...
@@ -168,7 +179,7 @@ typedef struct s_ui_layout
 
 // Layout
 void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
-void					ui_layout_render(t_ui_layout *layout);
+int						ui_layout_render(t_ui_layout *layout);
 t_ui_element			*ui_layout_get_element_by_id(t_ui_layout *layout, char *id);
 
 // Vec
@@ -178,7 +189,7 @@ void					print_veci(int *vec, size_t size);
 // Window
 void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
-void					ui_window_render(t_ui_window *win);
+int						ui_window_render(t_ui_window *win);
 void					ui_window_get(t_ui_get *get);
 void					ui_window_free(void *win);
 
@@ -212,7 +223,7 @@ int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
 void					ui_label_texture_redo(t_ui_element *label);
-void					ui_label_render(t_ui_element *label);
+int						ui_label_render(t_ui_element *label);
 // edit
 void					ui_label_text_set(t_ui_element *label, char *text);
 void					ui_label_font_set(t_ui_element *label, char *font_path);
@@ -228,14 +239,14 @@ void					ui_label_free(void *label);
 void					ui_button_new(t_ui_window *win, t_ui_element *button);
 void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
-void					ui_button_render(t_ui_element *button);
+int						ui_button_render(t_ui_element *button);
 void					ui_button_get(t_ui_get *get);
 void					ui_button_free(void *button);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
 void					ui_menu_child_add(t_ui_element *menu, void *child, int type);
-void					ui_menu_render(t_ui_element *menu);
+int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_get(t_ui_get *get);
 void					ui_menu_free(void *menu);
@@ -243,16 +254,23 @@ void					ui_menu_free(void *menu);
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
-void					ui_dropdown_render(t_ui_element *drop);
+int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_get(t_ui_get *get);
 void					ui_dropdown_free(void *drop);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
-void					ui_input_render(t_ui_element *elem);
+int						ui_input_render(t_ui_element *elem);
 void					ui_input_get(t_ui_get *get);
 void					ui_input_free(void *elem);
+
+// Slider
+void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
+void					ui_slider_event(t_ui_element *elem, SDL_Event e);
+int						ui_slider_render(t_ui_element *elem);
+void					ui_slider_get(t_ui_get *get);
+void					ui_slider_free(void *elem);
 
 // Load
 void					ui_print_accepted(void);

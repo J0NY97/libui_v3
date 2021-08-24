@@ -278,7 +278,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 }
 
-void	ui_input_render(t_ui_element *elem)
+int	ui_input_render(t_ui_element *elem)
 {
 	t_ui_input	*input;
 	t_ui_label	*label;
@@ -287,7 +287,8 @@ void	ui_input_render(t_ui_element *elem)
 
 	input = elem->element;
 	label = input->label.element;
-	ui_element_render(elem);
+	if (!ui_element_render(elem))
+		return (0);
 
 	input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font);
 	input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font);
@@ -308,14 +309,10 @@ void	ui_input_render(t_ui_element *elem)
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 
 	ui_label_render(&input->label);
+	return (1);
 }
 
 void	ui_input_free(void *elem)
 {
 	(void)elem;
-}
-
-void	ui_input_get(t_ui_get *get)
-{
-	(void)get;
 }

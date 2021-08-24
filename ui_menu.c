@@ -51,14 +51,14 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 	}
 }
 
-void	ui_menu_render(t_ui_element *elem)
+int	ui_menu_render(t_ui_element *elem)
 {
 	t_list			*curr;
 	t_ui_menu		*menu;
 	t_ui_element	*child;
 
 	if (!*elem->parent_show || !elem->show)
-		return ;
+		return (0);
 	ui_element_render(elem);
 	menu = elem->element;
 	curr = menu->children;
@@ -67,21 +67,23 @@ void	ui_menu_render(t_ui_element *elem)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			child = curr->content;
-			if (child->element_type == UI_TYPE_BUTTON)
-				ui_button_render(child);
-			else if (child->element_type == UI_TYPE_LABEL)
-				ui_label_render(curr->content);
-			else if (child->element_type == UI_TYPE_MENU)
-				ui_menu_render(child);
-			else if (child->element_type == UI_TYPE_DROPDOWN)
-				ui_dropdown_render(child);
-			else
-				ft_printf("[ui_menu_render] Element [%s] @ [%d, %d] of type %d %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size, child->element_type);
+			int	j = -1;
+			while (++j < UI_ACCEPT_AMOUNT)
+			{
+				if (g_acceptable[j].type == child->element_type)
+				{
+					g_acceptable[j].renderer(child);
+					break ;
+				}
+			}
+			if (j == UI_ACCEPT_AMOUNT)
+				ft_printf("[%s] Rendering of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
 		}
 		else
 			ft_printf("[ui_menu_render] Element isnt UI_TYPE_ELEMENT ... HOW? ... [%s] @ [%d, %d] of type %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
 		curr = curr->next;
 	}
+	return (1);
 }
 
 void	ui_menu_free(void *menu)

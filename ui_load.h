@@ -16,7 +16,7 @@ typedef struct s_ui_element		t_ui_element;
 typedef struct s_ui_layout		t_ui_layout;
 
 void	ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
-void	ui_window_render(t_ui_window *win);
+int		ui_window_render(t_ui_window *win);
 void	ui_window_get(t_ui_get *get);
 void	ui_window_free(void *win);
 
@@ -24,25 +24,37 @@ void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args
 void	ui_button_free(void *button);
 void	ui_button_get(t_ui_get *get);
 void	ui_button_new(t_ui_window *win, t_ui_element *button);
-void	ui_button_render(t_ui_element *button);
+int		ui_button_render(t_ui_element *button);
 
 void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 void	ui_label_free(void *label);
 void	ui_label_get(t_ui_get *get);
 void	ui_label_new(t_ui_window *win, t_ui_element *label);
-void	ui_label_render(t_ui_element *label);
+int		ui_label_render(t_ui_element *label);
 
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 void	ui_menu_new(t_ui_window *win, t_ui_element *menu);
 void	ui_menu_get(t_ui_get *get);
 void	ui_menu_free(void *menu);
-void	ui_menu_render(t_ui_element *menu);
+int		ui_menu_render(t_ui_element *menu);
 
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_dropdown_render(t_ui_element *drop);
+int		ui_dropdown_render(t_ui_element *drop);
 void	ui_dropdown_get(t_ui_get *get);
 void	ui_dropdown_free(void *drop);
 void	ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
+
+void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
+int		ui_input_render(t_ui_element *elem);
+void	ui_input_get(t_ui_get *get);
+void	ui_input_free(void *drop);
+void	ui_input_new(t_ui_window *win, t_ui_element *elem);
+
+void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
+int		ui_slider_render(t_ui_element *elem);
+void	ui_slider_get(t_ui_get *get);
+void	ui_slider_free(void *drop);
+void	ui_slider_new(t_ui_window *win, t_ui_element *elem);
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
@@ -69,41 +81,8 @@ typedef struct s_ui_acceptable
 	void		(*getter)(t_ui_get *get);
 	void		(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, t_ui_layout *args);
 	void		(*maker)(t_ui_window *win, t_ui_element *elem);
-	void		(*renderer)(t_ui_element *elem);
-	const char	**values;
+	int			(*renderer)(t_ui_element *elem);
 }				t_ui_acceptable;
-
-static const char *g_accepted_button[] = {
-	"pos",
-	"bg_color",
-	"bg_image",
-	NULL
-};
-
-static const char *g_accepted_window[] = {
-	"pos",
-	"bg_color",
-	"title",
-	NULL
-};
-
-static const char *g_accepted_menu[] = {
-	"pos",
-	NULL
-};
-
-static const char *g_accepted_label[] = {
-	"pos",
-	"font_path",
-	"font_size",
-	"font_color",
-	NULL
-};
-
-static const char *g_accepted_dropdown[] = {
-	"pos",
-	NULL
-};
 
 static const t_ui_acceptable	g_acceptable_element =
 {
@@ -113,8 +92,7 @@ static const t_ui_acceptable	g_acceptable_element =
 	.getter = &ui_element_get,
 	.editor = NULL,
 	.maker = NULL,
-	.renderer = &ui_element_render,
-	.values = NULL 
+	.renderer = &ui_element_render
 };
 
 static const t_ui_acceptable	g_acceptable_button =
@@ -125,8 +103,7 @@ static const t_ui_acceptable	g_acceptable_button =
 	.getter = &ui_button_get,
 	.editor = &ui_button_editor,
 	.maker = &ui_button_new,
-	.renderer = &ui_button_render,
-	.values = g_accepted_button
+	.renderer = &ui_button_render
 };
 
 static const t_ui_acceptable	g_acceptable_label =
@@ -137,8 +114,7 @@ static const t_ui_acceptable	g_acceptable_label =
 	.getter = &ui_label_get,
 	.maker = &ui_label_new,
 	.editor = &ui_label_editor,
-	.renderer = &ui_label_render,
-	.values = g_accepted_label
+	.renderer = &ui_label_render
 };
 
 static const t_ui_acceptable	g_acceptable_menu =
@@ -149,8 +125,7 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.getter = &ui_menu_get,
 	.maker = &ui_menu_new,
 	.editor = &ui_menu_editor,
-	.renderer = &ui_menu_render,
-	.values = g_accepted_menu
+	.renderer = &ui_menu_render
 };
 
 static const t_ui_acceptable	g_acceptable_dropdown =
@@ -161,8 +136,29 @@ static const t_ui_acceptable	g_acceptable_dropdown =
 	.getter = &ui_dropdown_get,
 	.maker = &ui_dropdown_new,
 	.editor = &ui_dropdown_editor,
-	.renderer = &ui_dropdown_render,
-	.values = g_accepted_dropdown
+	.renderer = &ui_dropdown_render
+};
+
+static const t_ui_acceptable	g_acceptable_input =
+{
+	.name = "Input",
+	.type = UI_TYPE_INPUT,
+	.freer = &ui_input_free,
+	.getter = &ui_input_get,
+	.maker = &ui_input_new,
+	.editor = &ui_input_editor,
+	.renderer = &ui_input_render
+};
+
+static const t_ui_acceptable	g_acceptable_slider =
+{
+	.name = "Slider",
+	.type = UI_TYPE_SLIDER,
+	.freer = &ui_slider_free,
+	.getter = &ui_slider_get,
+	.maker = &ui_slider_new,
+	.editor = &ui_slider_editor,
+	.renderer = &ui_slider_render
 };
 
 static const t_ui_acceptable	g_acceptable_window =
@@ -173,11 +169,10 @@ static const t_ui_acceptable	g_acceptable_window =
 	.getter = &ui_window_get,
 	.maker = &ui_window_new,
 	.editor = NULL,
-	.renderer = &ui_window_render,
-	.values = g_accepted_menu
+	.renderer = &ui_window_render
 };
 
-# define UI_ACCEPT_AMOUNT 6
+# define UI_ACCEPT_AMOUNT 8
 static const t_ui_acceptable	g_acceptable[] =
 {
 	g_acceptable_element,
@@ -186,10 +181,10 @@ static const t_ui_acceptable	g_acceptable[] =
 	g_acceptable_menu,
 	g_acceptable_window,
 	g_acceptable_dropdown,
+	g_acceptable_input,
+	g_acceptable_slider,
 	NULL
 };
-
-
 
 enum e_pos_info
 {

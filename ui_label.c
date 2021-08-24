@@ -67,30 +67,18 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 		ft_printf("[ui_label_text_align] Align type [%d] not supported.\n", label->text_align);
 }
 
-void	ui_label_render(t_ui_element *elem)
+int	ui_label_render(t_ui_element *elem)
 {
-	t_vec4i		parent_pos;
 	t_ui_label	*label;
 
 	label = elem->element;
-	if (elem->parent_type == UI_TYPE_WINDOW)
-		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
-	else
-		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
-	if (!*elem->parent_show || !elem->show)
-		return ;
-	elem->screen_pos.x = parent_pos.x + elem->pos.x;
-	elem->screen_pos.y = parent_pos.y + elem->pos.y;
-
+	if (!ui_element_render(elem))
+		return (0);
 	if (label->texture_recreate)
 		ui_label_texture_redo(elem);
-	
 	// fix this so we dont do it everytime?
 	ui_label_text_align(elem, label->text_align);
-
-	SDL_SetRenderTarget(elem->win->renderer, NULL);
-	SDL_RenderCopy(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], NULL,
-		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->pos.w, elem->pos.h});
+	return (1);
 }
 
 /*

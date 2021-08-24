@@ -47,15 +47,12 @@ bool	ui_button(t_ui_element *elem)
 	return (0);
 }
 
-void	ui_button_render(t_ui_element *elem)
+int	ui_button_render(t_ui_element *elem)
 {
 	if (!ui_element_render(elem))
-		return ;
+		return (0);
 	ui_label_render(&((t_ui_button *)elem->element)->label);
-	/*
-	SDL_RenderTarget(button->elem.win->renderer, NULL);
-	SDL_RenderCopy(button->elem.win->renderer, button->NULL, NULL);
-	*/
+	return (1);
 }
 
 /*

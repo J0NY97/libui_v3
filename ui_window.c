@@ -24,10 +24,11 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 		win->mouse_down = 0;
 }
 
-void	ui_window_render(t_ui_window *win)
+int	ui_window_render(t_ui_window *win)
 {
 	SDL_SetRenderTarget(win->renderer, NULL);
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
+	return (1);
 }
 
 void	ui_window_free(void *win)

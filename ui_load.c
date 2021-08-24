@@ -11,24 +11,6 @@
  * from the list of elements.
 */
 
-void	ui_print_accepted(void)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	while (++i < UI_ACCEPT_AMOUNT)
-	{
-		j = -1;
-		ft_printf("\n[%s]\n{\n", g_acceptable[i].name);
-		while (g_acceptable[i].values && g_acceptable[i].values[++j])
-		{
-			ft_printf(" %s\n", g_acceptable[i].values[j]);
-		}
-		ft_printf("}\n");
-	}
-}
-
 char	**ft_strsplitfirstoccurence(char *str, char c)
 {
 	char	**arr;
@@ -345,6 +327,16 @@ void	ui_dropdown_get(t_ui_get *get)
 	}
 }
 
+void	ui_slider_get(t_ui_get *get)
+{
+	(void)get;
+}
+
+void	ui_input_get(t_ui_get *get)
+{
+	(void)get;
+}
+
 void	ui_menu_get(t_ui_get *get)
 {
 	int	i;
@@ -610,6 +602,20 @@ void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 		ui_layout_element_edit(&drop->label, recipe);
 	else if (recipe->type == UI_TYPE_MENU)
 		ui_layout_element_edit(&drop->menu, recipe);
+	(void)layout;
+}
+
+void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
+{
+	(void)elem;
+	(void)recipe;
+	(void)layout;
+}
+
+void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
+{
+	(void)elem;
+	(void)recipe;
 	(void)layout;
 }
 

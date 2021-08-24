@@ -39,7 +39,7 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 	}
 }
 
-void	ui_layout_render(t_ui_layout *layout)
+int	ui_layout_render(t_ui_layout *layout)
 {
 	t_list			*curr;
 	t_ui_window		*win;
@@ -88,6 +88,7 @@ void	ui_layout_render(t_ui_layout *layout)
 		SDL_RenderPresent(win->renderer);
 		curr = curr->next;
 	}
+	return (1);
 }
 
 t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)

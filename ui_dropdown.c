@@ -40,15 +40,17 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	ui_menu_event(&drop->menu, e);
 }
 
-void	ui_dropdown_render(t_ui_element *elem)
+int	ui_dropdown_render(t_ui_element *elem)
 {
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
-	ui_button_render(elem);
+	if (!ui_button_render(elem))
+		return (0);
 
 	ui_element_pos_set(&drop->menu, vec4i(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	ui_menu_render(&drop->menu);
+	return (1);
 }
 
 void	ui_dropdown_free(void *drop)
