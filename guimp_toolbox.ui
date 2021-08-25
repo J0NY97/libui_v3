@@ -108,7 +108,7 @@ Label slider_label
 {
 	font_color : 0xff003707;
 	font_path : "fonts/ShareTechMono-Regular.ttf";
-	text_align : center left;
+//text_align : center left;
 }
 
 Button slider_button
@@ -118,42 +118,76 @@ Button slider_button
 	text_align : center;
 }
 
+Label r_text
+{
+	pos : 10, 10, 50, 20;
+	title : "R";
+}
 Slider r_slider
 {
-	pos : 30, 40, 150, 20;
-	slider_elem;
-	slider_label;
-	slider_button;
-}
-Slider g_slider
-{
-	pos : 30, 70, 150, 20;
-	slider_elem;
-	slider_label;
-	slider_button;
-}
-Slider b_slider
-{
-	pos : 30, 100, 150, 20;
-	slider_elem;
-	slider_label;
-	slider_button;
-}
-Slider a_slider
-{
-	pos : 30, 130, 150, 20;
-	slider_elem;
-	slider_label;
-	slider_button;
-}
-Slider size_slider
-{
-	pos : 30, 160, 150, 20;
+	pos : 40, 10, 130, 20;
 	slider_elem;
 	slider_label;
 	slider_button;
 }
 
+Label g_text
+{
+	pos : 10, 40, 50, 20;
+	title : "G";
+}
+Slider g_slider
+{
+	pos : 40, 40, 130, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
+}
+
+Label b_text
+{
+	pos : 10, 70, 50, 20;
+	title : "B";
+}
+Slider b_slider
+{
+	pos : 40, 70, 130, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
+}
+
+Label a_text
+{
+	pos : 10, 100, 50, 20;
+	title : "A";
+}
+Slider a_slider
+{
+	pos : 40, 100, 130, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
+}
+
+Menu color_shower
+{
+	pos : 40, 130, 130, 20;
+	bg_color : 0xffff0000;
+}
+
+Label size_text
+{
+	pos : 10, 160, 50, 20;
+	title : "Size";
+}
+Slider size_slider
+{
+	pos : 40, 160, 130, 20;
+	slider_elem;
+	slider_label;
+	slider_button;
+}
 
 // Dropdowns
 Element drop_elem
@@ -178,7 +212,7 @@ Menu font_menu
 
 Dropdown sticker_drop
 {
-	pos : 10, 10, 85, 20;
+	pos : 10, 190, 85, 20;
 	title : "Stickers";
 	drop_elem;
 	button_label;
@@ -187,7 +221,7 @@ Dropdown sticker_drop
 
 Dropdown font_drop
 {
-	pos : 105, 10, 85, 20;
+	pos : 105, 190, 85, 20;
 	title : "Fonts";
 	drop_elem;
 	button_label;
@@ -196,15 +230,101 @@ Dropdown font_drop
 
 Menu brush_modifier_menu
 {
-	pos : 10, 120, 200, 200;
+	pos : 10, 120, 200, 220;
+
+	r_text;
 	r_slider;
+
+	g_text;
 	g_slider;
+
+	b_text;
 	b_slider;
+
+	a_text;
 	a_slider;
+
+	size_text;
 	size_slider;
-	//colorshower;
+
+	color_shower;
+
 	sticker_drop;
 	font_drop;
+}
+
+// Brush Shape Menu
+Button circle_button
+{
+	pos : 10, 10, 50, 20;
+	title : "Circle";
+	button_elem;
+	button_label;
+}
+Button square_button
+{
+	pos : 70, 10, 50, 20;
+	title : "Square";
+	button_elem;
+	button_label;
+}
+Button line_button
+{
+	pos : 130, 10, 50, 20;
+	title : "Line";
+	button_elem;
+	button_label;
+}
+
+Menu brush_shape_menu
+{
+	pos : 10, 350, 200, 40;
+	circle_button;
+	square_button;
+	line_button;
+}
+
+// Other tools menu
+Label input_label
+{
+	title : "Text Input";
+	font_color : 0xff72e26c;
+	font_path : "fonts/ShareTechMono-Regular.ttf";
+	text_align : center;
+}
+Input text_input
+{
+	pos : 10, 10, 180, 20;
+	bg_image : "images/button_hover.png", "NULL", "NULL";
+	input_label;
+	button_elem;
+}
+Menu other_tool_menu
+{
+	pos : 10, 400, 200, 40;
+	text_input;
+}
+
+// The rest of the buttons menu
+Button clear_button
+{
+	pos : 10, 10, 50, 20;
+	title : "Clear";
+	button_elem;
+	button_label;
+}
+Button open_button
+{
+	pos : 70, 10, 50, 20;
+	title : "Open";
+	button_elem;
+	button_label;
+}
+Menu yet_another_menu
+{
+	pos : 10, 450, 200, 40;
+	clear_button;
+	open_button;
 }
 
 // Toolbox window
@@ -213,4 +333,7 @@ Window toolbox_window
 	pos : 0, 25, 300, 1055;
 	brush_buttons_menu;
 	brush_modifier_menu;
+	brush_shape_menu;
+	other_tool_menu;
+	yet_another_menu;
 }

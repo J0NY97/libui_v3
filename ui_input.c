@@ -290,22 +290,22 @@ int	ui_input_render(t_ui_element *elem)
 	if (!ui_element_render(elem))
 		return (0);
 
-	input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font);
-	input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font);
-	pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x, elem->screen_pos.y);
-	pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x, elem->screen_pos.y);
+	input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font) + input->label.pos.x;
+	input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font) + input->label.pos.x;
+	pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
+	pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
-	SDL_RenderDrawLine(elem->win->renderer, pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->pos.h);
+	SDL_RenderDrawLine(elem->win->renderer, pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->pos.h - 4);
 	SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
-	SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y, pos_from.x, pos_from.y + elem->pos.h);
+	SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y, pos_from.x, pos_from.y + elem->pos.h - 4);
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 255, 255);
 	int wmax = ft_max(pos_from.x, pos_on.x);
 	int wmin = ft_min(pos_from.x, pos_on.x);
-	SDL_RenderFillRect(elem->win->renderer, &(SDL_Rect){wmin, pos_from.y, wmax - wmin, elem->pos.h});
+	SDL_RenderFillRect(elem->win->renderer, &(SDL_Rect){wmin, pos_from.y, wmax - wmin, elem->pos.h - 4});
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 
 	ui_label_render(&input->label);

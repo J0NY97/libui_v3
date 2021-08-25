@@ -23,17 +23,31 @@ int	main(void)
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
+	//
+	// Getting the color shower menu for later use.
+	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
+	t_ui_slider		*color_r_slider = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider")->element;
+	t_ui_slider		*color_g_slider = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider")->element;
+	t_ui_slider		*color_b_slider = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider")->element;
+	t_ui_slider		*color_a_slider = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider")->element;
+
 	t_ui_element	*slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider");
 	t_ui_slider		*slider_slider = slider_elem->element;
 	slider_slider->max_value = 255;
+	ui_slider_render(slider_elem);
+	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xffff0000, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider");
 	slider_slider = slider_elem->element;
 	slider_slider->max_value = 255;
+	ui_slider_render(slider_elem);
+	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff00ff00, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider");
 	slider_slider = slider_elem->element;
 	slider_slider->max_value = 255;
+	ui_slider_render(slider_elem);
+	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
 	slider_slider = slider_elem->element;
@@ -187,6 +201,10 @@ int	main(void)
 			menu_menu0.show = menu_menu0.show == 0;
 		ft_b_itoa(SDL_GetTicks(), temp);
 		ui_label_text_set(&label, temp);
+
+		// Layout user code
+		Uint32 combined_slider_color = rgba_to_hex((t_rgba){.r = color_r_slider->value, .g = color_g_slider->value, .b = color_b_slider->value, .a = color_a_slider->value});
+		ui_element_color_set(color_shower, UI_STATE_DEFAULT, combined_slider_color);
 
 		// Render
 		SDL_RenderClear(win.renderer);

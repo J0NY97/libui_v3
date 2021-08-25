@@ -452,8 +452,11 @@ void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 
 void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
-	(void)elem;
-	(void)recipe;
+	t_ui_input	*input;
+
+	input = elem->element;
+	if (recipe->type == UI_TYPE_LABEL)
+		ui_layout_element_edit(&input->label, recipe);
 	(void)layout;
 }
 
@@ -470,7 +473,6 @@ void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 		ui_layout_element_edit(&slider->min_label, recipe);
 		ui_layout_element_edit(&slider->max_label, recipe);
 	}
-	(void)recipe;
 	(void)layout;
 }
 
