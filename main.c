@@ -26,6 +26,7 @@ int	main(void)
 	//
 	// Getting the color shower menu for later use.
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
+	t_ui_element	*hex_label = ui_layout_get_element_by_id(&guimp_toolbox, "hex_label");
 	t_ui_slider		*color_r_slider = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider")->element;
 	t_ui_slider		*color_g_slider = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider")->element;
 	t_ui_slider		*color_b_slider = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider")->element;
@@ -205,6 +206,9 @@ int	main(void)
 		// Layout user code
 		Uint32 combined_slider_color = rgba_to_hex((t_rgba){.r = color_r_slider->value, .g = color_g_slider->value, .b = color_b_slider->value, .a = color_a_slider->value});
 		ui_element_color_set(color_shower, UI_STATE_DEFAULT, combined_slider_color);
+		char temp[20];
+		itoa(combined_slider_color, temp, 16);
+		ui_label_text_set(hex_label, temp);
 
 		// Render
 		SDL_RenderClear(win.renderer);
