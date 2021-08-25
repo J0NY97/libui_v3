@@ -5,6 +5,7 @@ int	main(void)
 	ft_putstr("Hello world!\n");
 	t_ui_layout		toolbox;
 	t_ui_layout		guimp_toolbox;
+	t_ui_layout		test_layout;
 	t_ui_window		win;
 	t_ui_element	elem1;
 	t_ui_element	label;

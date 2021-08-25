@@ -320,7 +320,11 @@ void	ui_global_get(t_ui_get *get)
 			get->recipe->text_align = text_align_getter(get->kv[i].value);
 			get->recipe->text_align_set = 1;
 		}
-
+		else if (ft_strequ(get->kv[i].key, "value"))
+		{
+			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->values, 3);
+			get->recipe->value_set = 1;
+		}
 		else // should be variables
 		{
 			get->recipe->children_ids = realloc(get->recipe->children_ids, sizeof(char *) * (++get->recipe->child_amount + 1));
@@ -507,6 +511,17 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_element_image_set_from_path(elem, UI_STATE_DEFAULT, recipe->bg_image[UI_STATE_DEFAULT]);
 		ui_element_image_set_from_path(elem, UI_STATE_HOVER, recipe->bg_image[UI_STATE_HOVER]);
 		ui_element_image_set_from_path(elem, UI_STATE_CLICK, recipe->bg_image[UI_STATE_CLICK]);
+	}
+
+	// Slider stuff
+	if (recipe->type == UI_TYPE_SLIDER)
+	{
+		if (recipe->value_set)
+		{
+			((t_ui_slider *)elem->element)->value = recipe->values[0];
+			((t_ui_slider *)elem->element)->min_value = recipe->values[1];
+			((t_ui_slider *)elem->element)->max_value = recipe->values[2];
+		}
 	}
 
 	// Label Stuff

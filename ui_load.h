@@ -208,6 +208,17 @@ struct s_ui_recipe
 	bool				pos_set;
 	int					pos_info;
 
+	Uint32				bg_color[UI_STATE_AMOUNT];
+	bool				bg_color_set;
+
+	char				*bg_image[UI_STATE_AMOUNT];
+	bool				bg_image_set;
+
+	char				**children_ids;
+	int					child_amount;
+	t_list				*recipes;
+
+	// Label Specific
 	char				*title;
 
 	char				*font_path;
@@ -222,15 +233,9 @@ struct s_ui_recipe
 	int					text_align;
 	bool				text_align_set;
 
-	Uint32				bg_color[UI_STATE_AMOUNT];
-	bool				bg_color_set;
-
-	char				*bg_image[UI_STATE_AMOUNT];
-	bool				bg_image_set;
-
-	char				**children_ids;
-	int					child_amount;
-	t_list				*recipes;
+	// Slider Specific
+	int					values[3];
+	bool				value_set;
 };
 
 typedef struct s_ui_key_value
