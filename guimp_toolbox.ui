@@ -175,7 +175,7 @@ Label hex_label
 	title : "0xff123456";
 	text_align : center;
 }
-Menu color_shower
+Input color_shower
 {
 	pos : 40, 130, 130, 20;
 	bg_color : 0xffff0000;
