@@ -128,6 +128,24 @@ void	int_arr_arg_to_int_arr(char *str, int *result_arr, int result_arr_len)
 	ft_arraydel(arr);
 }
 
+void	float_arr_arg_to_float_arr(char *str, float *result_arr, int result_arr_len)
+{
+	char	*trimmed;
+	char	**arr;
+	int		i;
+
+	trimmed = ft_strtrim(str);
+	arr = ft_strsplit(trimmed, ',');
+	i = -1;
+	while (arr[++i] && i < result_arr_len)
+	{
+		if (ft_strequ(arr[i], "NULL"))
+			continue ;
+		result_arr[i] = atof(arr[i]);
+	}
+	ft_arraydel(arr);
+}
+
 int	pos_info_getter(char *str)
 {
 	char	**temp;
@@ -286,6 +304,12 @@ void	ui_global_get(t_ui_get *get)
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
+			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
+		}
+		else if (ft_strstr(get->kv[i].key, "relative"))
+		{
+			float_arr_arg_to_float_arr(get->kv[i].value, get->recipe->relative_pos.v, 4);
+			get->recipe->pos_relative_set = 1;
 			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
@@ -476,13 +500,8 @@ void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 	else if (recipe->type == UI_TYPE_LABEL)
 	{
 		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe);
-		/*
 		ui_layout_element_edit(&slider->min_label, recipe);
 		ui_layout_element_edit(&slider->max_label, recipe);
-		*/
-
-		ui_label_text_align(&slider->min_label, UI_TEXT_ALIGN_CENTER);
-		ui_label_text_align(&slider->max_label, UI_TEXT_ALIGN_CENTER);
 	}
 	(void)layout;
 }
@@ -497,7 +516,11 @@ void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	// All stuff
-	if (recipe->pos_set)
+	if (recipe->pos_relative_set)
+	{
+		ui_element_pos_relative_set(elem, recipe->relative_pos);
+	}
+	else if (recipe->pos_set)
 	{
 		t_vec4i new_pos;
 		int		i;

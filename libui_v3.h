@@ -59,7 +59,9 @@ typedef struct s_ui_window
 typedef struct s_ui_element
 {
 	t_vec4i			pos;
+	t_vec4			relative_pos;
 	t_vec4i			screen_pos;
+	bool			use_relative_pos;
 	SDL_Texture		*textures[UI_STATE_AMOUNT];
 	SDL_Texture		*images[UI_STATE_AMOUNT];
 	bool			use_images;
@@ -190,6 +192,7 @@ typedef struct s_ui_layout
 void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
 int						ui_layout_render(t_ui_layout *layout);
 t_ui_element			*ui_layout_get_element_by_id(t_ui_layout *layout, char *id);
+t_ui_window				*ui_layout_get_window_by_id(t_ui_layout *layout, char *id);
 
 // Vec
 void					print_vec(float *vec, size_t size);
@@ -207,6 +210,7 @@ void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
 void					ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
 void					ui_element_pos_set2(t_ui_element *elem, t_vec2i pos);
+void					ui_element_pos_relative_set(t_ui_element *elem, t_vec4 pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
@@ -214,7 +218,7 @@ void					ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int typ
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_label *recipe);
-SDL_Texture				*ui_create_texture(SDL_Renderer *renderer, t_vec4i pos);
+SDL_Texture				*ui_create_texture(SDL_Renderer *renderer, t_vec2i pos);
 void					ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
 void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
 void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color, t_vec4i rect);

@@ -25,10 +25,10 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 			int	j = -1;
 			while (++j < UI_ACCEPT_AMOUNT)
 			{
-				if (g_acceptable[j].type == elem->element_type
-					&& g_acceptable[j].eventer)
+				if (g_acceptable[j].type == elem->element_type)
 				{
-					g_acceptable[j].eventer(elem, e);
+					if (g_acceptable[j].eventer)
+						g_acceptable[j].eventer(elem, e);
 					break ;
 				}
 			}
@@ -67,10 +67,10 @@ int	ui_layout_render(t_ui_layout *layout)
 			int	j = -1;
 			while (++j < UI_ACCEPT_AMOUNT)
 			{
-				if (g_acceptable[j].type == elem->element_type
-					&& g_acceptable[j].renderer)
+				if (g_acceptable[j].type == elem->element_type)
 				{
-					g_acceptable[j].renderer(elem);
+					if (g_acceptable[j].renderer)
+						g_acceptable[j].renderer(elem);
 					break ;
 				}
 			}
@@ -100,7 +100,7 @@ t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
 	t_ui_element	*elem;
 
 	curr = list;
-	while (list)
+	while (curr)
 	{
 		elem = curr->content;
 		if (ft_strequ(elem->id, id))
@@ -113,4 +113,20 @@ t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
 t_ui_element	*ui_layout_get_element_by_id(t_ui_layout *layout, char *id)
 {
 	return (ui_list_get_element_by_id(layout->elements, id));
+}
+
+t_ui_window	*ui_layout_get_window_by_id(t_ui_layout *layout, char *id)
+{
+	t_list		*curr;
+	t_ui_window	*win;
+
+	curr = layout->windows;
+	while (curr)
+	{
+		win = curr->content;
+		if (ft_strequ(win->id, id))
+			return (win);
+		curr = curr->next;
+	}
+	return (NULL);
 }

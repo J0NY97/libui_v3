@@ -426,3 +426,14 @@ Window toolbox_window
 	yet_another_menu;
 	layer_menu;
 }
+
+// Delete
+Menu menu0
+{
+	relative : 0.5, 0.5, 0.1, 0.1;
+}
+Window testing
+{
+	pos : 225, 25, 220, 1030;
+	menu0;
+}

@@ -15,6 +15,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->pos.y = 0;
 	elem->pos.w = 60;
 	elem->pos.h = 20;
+	elem->use_relative_pos = 0;
 	elem->state = UI_STATE_DEFAULT;
 	elem->colors[UI_STATE_DEFAULT] = 0xff95D7AE;
 	elem->colors[UI_STATE_HOVER] = 0xff7BAE7F;
@@ -46,9 +47,9 @@ void	ui_element_textures_redo(t_ui_element *elem)
 		if (elem->textures[i])
 			SDL_DestroyTexture(elem->textures[i]);
 	}
-	elem->textures[UI_STATE_DEFAULT] = ui_create_texture(elem->win->renderer, elem->pos);
-	elem->textures[UI_STATE_HOVER] = ui_create_texture(elem->win->renderer, elem->pos);
-	elem->textures[UI_STATE_CLICK] = ui_create_texture(elem->win->renderer, elem->pos);
+	elem->textures[UI_STATE_DEFAULT] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
+	elem->textures[UI_STATE_HOVER] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
+	elem->textures[UI_STATE_CLICK] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
 	elem->texture_recreate = 0;
 	if (elem->use_images)
 	{
@@ -73,16 +74,31 @@ void	ui_element_textures_redo(t_ui_element *elem)
 int	ui_element_render(t_ui_element *elem)
 {
 	t_vec4i parent_pos;
+	t_vec4i new_pos;
+
+	if (!*elem->parent_show || !elem->show)
+		return (0);
 
 	if (elem->parent_type == UI_TYPE_WINDOW)
 		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
 	else
 		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
-	if (!*elem->parent_show || !elem->show)
-		return (0);
-	elem->screen_pos = elem->pos;
-	elem->screen_pos.x = parent_pos.x + elem->pos.x;
-	elem->screen_pos.y = parent_pos.y + elem->pos.y;
+
+	if (elem->use_relative_pos)
+	{
+		new_pos.x = parent_pos.w * elem->relative_pos.x;
+		new_pos.y = parent_pos.h * elem->relative_pos.y;
+		new_pos.w = parent_pos.w * elem->relative_pos.w;
+		new_pos.h = parent_pos.h * elem->relative_pos.h;
+		print_veci(new_pos.v, 4);
+	}
+	else
+		new_pos = elem->pos;
+	if (elem->pos.w != new_pos.w || elem->pos.h != new_pos.h)
+		elem->texture_recreate = 1;
+	elem->screen_pos = new_pos;
+	elem->screen_pos.x = parent_pos.x + new_pos.x;
+	elem->screen_pos.y = parent_pos.y + new_pos.y;
 
 	if (elem->texture_recreate)
 		ui_element_textures_redo(elem);
@@ -104,6 +120,7 @@ void	ui_element_pos_set(t_ui_element *elem, t_vec4i pos)
 {
 	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
 		elem->texture_recreate = 1;
+	elem->use_relative_pos = 0;
 	elem->pos = pos;
 }
 
@@ -113,6 +130,11 @@ void	ui_element_pos_set2(t_ui_element *elem, t_vec2i pos)
 	elem->pos.y = pos.y;
 }
 
+void	ui_element_pos_relative_set(t_ui_element *elem, t_vec4 pos)
+{
+	elem->use_relative_pos = 1;
+	elem->relative_pos = pos;
+}
 
 void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 {

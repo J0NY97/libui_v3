@@ -9,6 +9,17 @@ t_vec2i	vec2i(int x, int y)
 	return (v);
 }
 
+t_vec4	vec4(float x, float y, float w, float h)
+{
+	t_vec4	v;
+
+	v.x = x;
+	v.y = y;
+	v.w = w;
+	v.h = h;
+	return (v);
+}
+
 t_vec4i	vec4i(int x, int y, int w, int h)
 {
 	t_vec4i	v;

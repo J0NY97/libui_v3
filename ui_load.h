@@ -224,6 +224,8 @@ struct s_ui_recipe
 
 	t_vec4i				pos;	
 	bool				pos_set;
+	t_vec4				relative_pos;	
+	bool				pos_relative_set;
 	int					pos_info;
 
 	Uint32				bg_color[UI_STATE_AMOUNT];

@@ -24,6 +24,14 @@ int	main(void)
 
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
 	//
+	//	testing
+	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
+	t_ui_element	*test_elem = ft_memalloc(sizeof(t_ui_element));
+	ui_element_new(test_window, test_elem);
+	ui_element_pos_relative_set(test_elem, vec4(0.5, 0.5, 0.1, 0.1));
+	print_veci(test_elem->pos.v, 4);
+//	add_to_list(&guimp_toolbox.elements, test_elem, UI_TYPE_ELEMENT);
+	//
 	// Getting the color shower menu for later use.
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
 	t_ui_element	*hex_label = &((t_ui_input *)color_shower->element)->label;
@@ -33,26 +41,18 @@ int	main(void)
 	t_ui_slider		*color_a_slider = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider")->element;
 
 	t_ui_element	*slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider");
-	t_ui_slider		*slider_slider = slider_elem->element;
-	//slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xffff0000, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider");
-	slider_slider = slider_elem->element;
-	//slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff00ff00, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider");
-	slider_slider = slider_elem->element;
-//	slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
-	slider_slider = slider_elem->element;
-//	slider_slider->max_value = 255;
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Just testing if ui_layout_get_element_by_id works correctly.
@@ -132,6 +132,7 @@ int	main(void)
 
 	ui_menu_new(&win, &menu_menu0);
 	ui_element_pos_set(&menu_menu0, vec4i(100, 10, 100, 100));
+	ui_element_pos_relative_set(&menu_menu0, vec4(0.5, 0.5, 0.1, 0.1));
 
 	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_ELEMENT);
 
@@ -219,6 +220,8 @@ int	main(void)
 			itoa(combined_slider_color, temp, 16);
 			ui_label_text_set(hex_label, temp);
 		}
+//		test user code
+		print_veci(test_elem->pos.v, 4);
 
 		// Render
 		SDL_RenderClear(win.renderer);
