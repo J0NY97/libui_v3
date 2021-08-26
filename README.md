@@ -5,7 +5,7 @@ Only works with SDL
 
 ## UI File
 ### HOW TO
-```
+```c
 t_ui_layout   layout;
 SDL_Event     e;
 
