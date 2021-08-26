@@ -55,6 +55,12 @@ void	ui_slider_free(void *drop);
 void	ui_slider_new(t_ui_window *win, t_ui_element *elem);
 void	ui_slider_event(t_ui_element *elem, SDL_Event e);
 
+void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
+void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
+void	ui_checkbox_event(t_ui_element *elem, SDL_Event e);
+int		ui_checkbox_render(t_ui_element *elem);
+void	ui_checkbox_free(void *elem);
+
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
 
@@ -160,6 +166,17 @@ static const t_ui_acceptable	g_acceptable_slider =
 	.eventer = &ui_slider_event
 };
 
+static const t_ui_acceptable	g_acceptable_checkbox =
+{
+	.name = "Checkbox",
+	.type = UI_TYPE_CHECKBOX,
+	.freer = &ui_checkbox_free,
+	.maker = &ui_checkbox_new,
+	.editor = &ui_checkbox_editor,
+	.renderer = &ui_checkbox_render,
+	.eventer = &ui_checkbox_event
+};
+
 static const t_ui_acceptable	g_acceptable_window =
 {
 	.name = "Window",
@@ -171,7 +188,7 @@ static const t_ui_acceptable	g_acceptable_window =
 	.eventer = NULL
 };
 
-# define UI_ACCEPT_AMOUNT 8
+# define UI_ACCEPT_AMOUNT 9
 static const t_ui_acceptable	g_acceptable[] =
 {
 	g_acceptable_element,
@@ -182,6 +199,7 @@ static const t_ui_acceptable	g_acceptable[] =
 	g_acceptable_dropdown,
 	g_acceptable_input,
 	g_acceptable_slider,
+	g_acceptable_checkbox,
 	NULL
 };
 

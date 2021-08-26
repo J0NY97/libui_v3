@@ -108,7 +108,7 @@ Label slider_label
 {
 	font_color : 0xff003707;
 	font_path : "fonts/ShareTechMono-Regular.ttf";
-//text_align : center left;
+	text_align : none;
 }
 
 Button slider_button
@@ -126,6 +126,7 @@ Label r_text
 Slider r_slider
 {
 	pos : 40, 10, 130, 20;
+	value : 50, 0, 255;
 	slider_elem;
 	slider_label;
 	slider_button;
@@ -139,6 +140,7 @@ Label g_text
 Slider g_slider
 {
 	pos : 40, 40, 130, 20;
+	value : 50, 0, 255;
 	slider_elem;
 	slider_label;
 	slider_button;
@@ -152,6 +154,7 @@ Label b_text
 Slider b_slider
 {
 	pos : 40, 70, 130, 20;
+	value : 50, 0, 255;
 	slider_elem;
 	slider_label;
 	slider_button;
@@ -165,6 +168,7 @@ Label a_text
 Slider a_slider
 {
 	pos : 40, 100, 130, 20;
+	value : 50, 0, 255;
 	slider_elem;
 	slider_label;
 	slider_button;
@@ -366,12 +370,14 @@ Button button_down_layer
 	button_label;
 }
 
-Button layer_show_button
+Checkbox layer_select_checkbox
+{
+	pos : 25, -5, 160, 30;	
+}
+Checkbox layer_show_checkbox
 {
 	pos : 0, 0, 20, 20;
-	title : "Show";
-	button_elem;
-	button_label;
+	bg_image : "images/checkbox.png", "images/checkbox_hover.png", "images/checkbox_click.png";
 }
 Button layer_layer
 {
@@ -385,14 +391,16 @@ Button layer_layer
 Menu layer1
 {
 	pos : 10, 60, 0, 0;
-	layer_show_button;
+	layer_show_checkbox;
 	layer_layer;
+	layer_select_checkbox;
 }
 Menu layer2
 {
 	pos : 10, 90, 0, 0;
-	layer_show_button;
+	layer_show_checkbox;
 	layer_layer;
+	layer_select_checkbox;
 }
 
 Menu layer_menu

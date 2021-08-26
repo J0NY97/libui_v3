@@ -5,7 +5,6 @@ int	main(void)
 	ft_putstr("Hello world!\n");
 	t_ui_layout		toolbox;
 	t_ui_layout		guimp_toolbox;
-	t_ui_layout		test_layout;
 	t_ui_window		win;
 	t_ui_element	elem1;
 	t_ui_element	label;
@@ -35,25 +34,25 @@ int	main(void)
 
 	t_ui_element	*slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider");
 	t_ui_slider		*slider_slider = slider_elem->element;
-	slider_slider->max_value = 255;
+	//slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xffff0000, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider");
 	slider_slider = slider_elem->element;
-	slider_slider->max_value = 255;
+	//slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff00ff00, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider");
 	slider_slider = slider_elem->element;
-	slider_slider->max_value = 255;
+//	slider_slider->max_value = 255;
 	ui_slider_render(slider_elem);
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
 	slider_slider = slider_elem->element;
-	slider_slider->max_value = 255;
+//	slider_slider->max_value = 255;
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Just testing if ui_layout_get_element_by_id works correctly.
@@ -159,6 +158,11 @@ int	main(void)
 	ui_slider_new(&win, &slider);
 	ui_element_pos_set(&slider, vec4i(150, 10, 50, 20));
 
+	// Checkbox
+	t_ui_element	checkbox0;
+	ui_checkbox_new(&win, &checkbox0);
+	ui_element_pos_set(&checkbox0, vec4i(100, 10, 20, 20));
+
 	ft_putstr("Inits done!\n");
 
 	SDL_Event	e;
@@ -183,6 +187,7 @@ int	main(void)
 			ui_dropdown_event(&dropdown, e);
 			ui_input_event(&input, e);
 			ui_slider_event(&slider, e);
+			ui_checkbox_event(&checkbox0, e);
 
 			// Layout
 			ui_layout_event(&toolbox, e);
@@ -227,6 +232,7 @@ int	main(void)
 		ui_dropdown_render(&dropdown);
 		ui_input_render(&input);
 		ui_slider_render(&slider);
+		ui_checkbox_render(&checkbox0);
 
 		SDL_RenderPresent(win.renderer);
 

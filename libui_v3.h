@@ -126,7 +126,7 @@ typedef struct s_ui_label
 }						t_ui_label;
 
 /*
- * t_ui_element		elem;		actual elem, dont free.
+ * t_ui_element		*elem;		actual elem, dont free.
 */
 typedef struct s_ui_button
 {
@@ -164,6 +164,15 @@ typedef struct s_ui_slider
 	int					min_value;
 	int					max_value;
 }						t_ui_slider;
+
+/*
+ * Basically a button that is toggle:able
+*/
+typedef struct s_ui_checkbox
+{
+	t_ui_element		*elem;
+}						t_ui_checkbox;
+
 
 /*
  * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
@@ -267,6 +276,12 @@ void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);
+
+// Checkbox
+void					ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
+void					ui_checkbox_event(t_ui_element *elem, SDL_Event e);
+int						ui_checkbox_render(t_ui_element *elem);
+void					ui_checkbox_free(void *elem);
 
 // Load
 void					ui_print_accepted(void);

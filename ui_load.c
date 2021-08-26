@@ -210,6 +210,8 @@ int	text_align_getter(char *str)
 			result |= UI_TEXT_ALIGN_LEFT;
 		else if (ft_strequ(temp[i], "right"))
 			result |= UI_TEXT_ALIGN_RIGHT;
+		else if (ft_strequ(temp[i], "none"))
+			result = UI_TEXT_ALIGN_NONE;
 	}
 	return (result);
 }
@@ -474,9 +476,21 @@ void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 	else if (recipe->type == UI_TYPE_LABEL)
 	{
 		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe);
+		/*
 		ui_layout_element_edit(&slider->min_label, recipe);
 		ui_layout_element_edit(&slider->max_label, recipe);
+		*/
+
+		ui_label_text_align(&slider->min_label, UI_TEXT_ALIGN_CENTER);
+		ui_label_text_align(&slider->max_label, UI_TEXT_ALIGN_CENTER);
 	}
+	(void)layout;
+}
+
+void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
+{
+	(void)elem;
+	(void)recipe;
 	(void)layout;
 }
 

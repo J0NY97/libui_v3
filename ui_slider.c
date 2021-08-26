@@ -84,7 +84,6 @@ int	ui_slider_render(t_ui_element *elem)
 	if (!ui_element_render(elem))
 		return (0);
 
-//	if (slider->update)
 	ft_b_itoa(slider->min_value, temp);
 	ui_label_text_set(&slider->min_label, temp);
 	ft_b_itoa(slider->max_value, temp);
