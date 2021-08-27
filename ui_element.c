@@ -96,24 +96,10 @@ int	ui_element_render(t_ui_element *elem)
 	if (elem->pos.h < 1.0f)
 		new_pos.h = parent_pos.h * elem->pos.h;
 
-	/* TODO: i dont like that you have to have an element specific 'if' in hiya. */
-	/*
-	if (elem->element_type != UI_TYPE_LABEL)
-		if (elem->screen_pos.w != new_pos.w || elem->screen_pos.h != new_pos.h)
-			elem->texture_recreate = 1;
-			*/
 	elem->screen_pos.w = new_pos.w;
 	elem->screen_pos.h = new_pos.h;
 	elem->screen_pos.x = parent_pos.x + new_pos.x;
 	elem->screen_pos.y = parent_pos.y + new_pos.y;
-
-	//ft_printf("elem->screen_pos after : %d %d %d %d\n", elem->screen_pos.v[0], elem->screen_pos.v[1], elem->screen_pos.v[2], elem->screen_pos.v[3]);
-
-
-	/*
-	if (elem->texture_recreate)
-		ui_element_textures_redo(elem);
-		*/
 
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,

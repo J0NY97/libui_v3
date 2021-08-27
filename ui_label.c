@@ -17,7 +17,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab->font = NULL;
 	lab->font_recreate = 1;
 	lab->texture_recreate = 1;
-	ui_label_texture_redo(label);
+//	ui_label_texture_redo(label); // you dont need this i think, because you have it in the render.
 }
 
 void	ui_label_texture_redo(t_ui_element *elem)

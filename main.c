@@ -93,16 +93,12 @@ int	main(void)
 	test_button_button = test_button.element;
 	test_button_label = test_button_button->label.element;
 
-	ui_label_print(test_button_label);
-
 	ui_element_pos_set2(&test_button, vec2(10, 400));
 	ui_label_text_set(&((t_ui_button *)test_button.element)->label, "Test Button");
 	ui_label_size_set(&((t_ui_button *)test_button.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
 
-	ui_button_render(&test_button);
-
-	exit(0);
+	ui_label_print(test_button_label);
 
 	// Menu
 	t_ui_element	menu_label0;
