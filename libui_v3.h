@@ -41,10 +41,11 @@ enum e_window_flags
 };
 
 /*
- * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns.
- * t_vec2i		mouse_pos;			x, y for mouse on window texture.	
- * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size.
- * t_vec2i		actual_window_size;	size of win->win (SDL_Window *) (w and h)
+ * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
+ * t_vec2i		mouse_pos;			x, y for mouse on window texture;
+ * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size;
+ * t_vec2i		actual_window_size;	size of win->win (SDL_Window *) (w and h);
+ * float		texture_scale;		the ratio between the window size and the window texture size (.x = w, .y = h);
 */
 typedef struct s_ui_window
 {
@@ -53,6 +54,7 @@ typedef struct s_ui_window
 	t_vec4			pos;
 	t_vec4i			screen_pos;
 	t_vec2i			actual_window_size;
+	t_vec2			texture_scale;
 	SDL_Window		*win;
 	SDL_Renderer	*renderer;
 	SDL_Texture		*texture;
@@ -132,7 +134,7 @@ enum e_ui_text_align
 /*
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
  * bool	texture_recreate;	set this to 1 if you edit something of the texture like.. anything.. will be set to 0 after creation.
- * t_vec2i	text_wh;		w and h of the whole text.
+ * t_vec2i	text_wh;		w and h of the whole text. (actual text not the element)
  * int		text_align;		one of enum e_ui_text_align.
 */
 typedef struct s_ui_label
@@ -238,6 +240,7 @@ void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 void					ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show);
+void					ui_element_id_set(t_ui_element *elem, char *id);
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_label *recipe);
@@ -271,6 +274,7 @@ void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 // end edit
 void					ui_label_free(void *label);
+void					ui_label_print(t_ui_label *label);
 
 // Button
 void					ui_button_new(t_ui_window *win, t_ui_element *button);

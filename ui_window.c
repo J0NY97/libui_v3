@@ -8,12 +8,18 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	else
 		win->title = ft_strdup(title);
 	win->pos = pos;
-	SDL_GetWindowSize(win->win, &win->actual_window_size.x, &win->actual_window_size.y);
 	win->win = SDL_CreateWindow(win->title, win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
 	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
 	win->show = 1;
+
 	win->window_id = SDL_GetWindowID(win->win);
+
+	SDL_GetWindowSize(win->win, &win->actual_window_size.x, &win->actual_window_size.y);
+	win->texture_scale = vec2(win->pos.w / win->actual_window_size.x, win->pos.h / win->actual_window_size.y);
+	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
+	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
+	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y; 
 }
 
 void	ui_window_event(t_ui_window *win, SDL_Event e)
@@ -25,14 +31,14 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
 				SDL_GetWindowSize(win->win, &win->actual_window_size.x, &win->actual_window_size.y);
-				ft_printf("Window Resized : %d %d\n", win->actual_window_size.x, win->actual_window_size.y);
+				win->texture_scale = vec2(win->pos.w / win->actual_window_size.x, win->pos.h / win->actual_window_size.y);
 			}
 		}
 		else if (e.type == SDL_MOUSEMOTION)
 		{
 			SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
-			win->mouse_pos.x = win->window_mouse_pos.x * (win->pos.w / win->actual_window_size.x);
-			win->mouse_pos.y = win->window_mouse_pos.y * (win->pos.h / win->actual_window_size.y);
+			win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
+			win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 		}
 	}
 	if (e.button.type == SDL_MOUSEBUTTONDOWN)
@@ -43,9 +49,12 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 
 int	ui_window_render(t_ui_window *win)
 {
-	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
 	SDL_SetRenderTarget(win->renderer, NULL);
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
+
+	SDL_SetRenderTarget(win->renderer, win->texture);
+	SDL_RenderClear(win->renderer);
+	SDL_SetRenderTarget(win->renderer, NULL);
 	return (1);
 }
 

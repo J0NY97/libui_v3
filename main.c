@@ -19,15 +19,18 @@ int	main(void)
 
 	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 
+	/*
 	ui_load(&toolbox, "toolbox.ui");
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
+	*/
 
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
 	//
 	//	testing
-	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
+//	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
 	//
 	// Getting the color shower menu for later use.
+	/*
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
 	t_ui_element	*hex_label = &((t_ui_input *)color_shower->element)->label;
 	t_ui_slider		*color_r_slider = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider")->element;
@@ -48,6 +51,7 @@ int	main(void)
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
+	*/
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Window
@@ -63,10 +67,11 @@ int	main(void)
 
 	// Label
 	ui_label_new(&win, &label);
+	ui_element_id_set(&label, "tick_label");
 
 	// Button
 	ui_button_new(&win, &button);
-	ui_element_pos_set(&button, vec4(10, 100, button.pos.w, button.pos.h));
+	ui_element_pos_set2(&button, vec2(10, 100));
 	ui_label_text_set(&((t_ui_button *)button.element)->label, "Toggle Menu");
 	ui_label_size_set(&((t_ui_button *)button.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
@@ -78,7 +83,26 @@ int	main(void)
 	ui_label_color_set(&((t_ui_button *)button2.element)->label, 0xff00ff00);
 
 	ui_button_new(&win, &button3);
-	ui_element_pos_set(&button3, vec4(10, 300, button.pos.w, button.pos.h));
+	ui_element_pos_set2(&button3, vec2(10, 300));
+
+	t_ui_element	test_button;
+	t_ui_button		*test_button_button;
+	t_ui_label		*test_button_label;
+
+	ui_button_new(&win, &test_button);
+	test_button_button = test_button.element;
+	test_button_label = test_button_button->label.element;
+
+	ui_label_print(test_button_label);
+
+	ui_element_pos_set2(&test_button, vec2(10, 400));
+	ui_label_text_set(&((t_ui_button *)test_button.element)->label, "Test Button");
+	ui_label_size_set(&((t_ui_button *)test_button.element)->label, 32);
+	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
+
+	ui_button_render(&test_button);
+
+	exit(0);
 
 	// Menu
 	t_ui_element	menu_label0;
@@ -163,9 +187,16 @@ int	main(void)
 		while (SDL_PollEvent(&e))
 		{
 			if (e.key.type == SDL_KEYDOWN)
+			{
 				if (e.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
 					run = 0;
-			if (e.window.type == SDL_WINDOWEVENT)
+				else if (e.key.keysym.scancode == SDL_SCANCODE_P)
+				{
+					ft_printf("Mouse Pos : ");
+					print_veci(win.mouse_pos.v, 2);
+				}
+			}
+			else if (e.window.type == SDL_WINDOWEVENT)
 				if (e.window.event == SDL_WINDOWEVENT_CLOSE)
 					run = 0;
 			ui_window_event(&win, e);
@@ -177,10 +208,13 @@ int	main(void)
 			ui_input_event(&input, e);
 			ui_slider_event(&slider, e);
 			ui_checkbox_event(&checkbox0, e);
+			ui_button_event(&test_button, e);
 
 			// Layout
+			/*
 			ui_layout_event(&toolbox, e);
 			ui_layout_event(&guimp_toolbox, e);
+			*/
 		}
 
 		// User Code
@@ -200,6 +234,7 @@ int	main(void)
 
 		// Layout user code
 		// NOTE: only change label text of input if input state != 1
+		/*
 		Uint32 combined_slider_color = rgba_to_hex((t_rgba){.r = color_r_slider->value, .g = color_g_slider->value, .b = color_b_slider->value, .a = color_a_slider->value});
 		ui_element_color_set(color_shower, UI_STATE_DEFAULT, combined_slider_color);
 		if (!color_shower->is_click)
@@ -208,9 +243,15 @@ int	main(void)
 			itoa(combined_slider_color, temp, 16);
 			ui_label_text_set(hex_label, temp);
 		}
+		*/
 
 		// Render
-		SDL_RenderClear(win.renderer);
+		{ // This is basically where you would put your game rendering, or whatever you want to show in the background.
+			SDL_SetRenderTarget(win.renderer, NULL);
+			SDL_SetRenderDrawColor(win.renderer, 125, 125, 125, 255);
+			SDL_RenderFillRect(win.renderer, NULL);
+		}
+
 		ui_label_render(&label);
 		ui_button_render(&button);
 		ui_button_render(&button2);
@@ -221,13 +262,18 @@ int	main(void)
 		ui_input_render(&input);
 		ui_slider_render(&slider);
 		ui_checkbox_render(&checkbox0);
+		ui_button_render(&test_button);
 
 		ui_window_render(&win);
+
 		SDL_RenderPresent(win.renderer);
+		//ui_window_render(&win);
 
 		// Layout
+		/*
 		ui_layout_render(&toolbox);
 		ui_layout_render(&guimp_toolbox);
+		*/
 	}
 	return (0);
 }

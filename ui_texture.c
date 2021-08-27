@@ -68,6 +68,7 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 			TTF_CloseFont(recipe->font);
 		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
 		recipe->font_recreate = 0;
+		ft_printf("[%s] Font recretead.\n", __FUNCTION__);
 	}
 	if (!recipe->font)
 	{

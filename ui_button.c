@@ -49,9 +49,12 @@ bool	ui_button(t_ui_element *elem)
 
 int	ui_button_render(t_ui_element *elem)
 {
+	t_ui_button	*button;
+
 	if (!ui_element_render(elem))
 		return (0);
-	ui_label_render(&((t_ui_button *)elem->element)->label);
+	button = elem->element;
+	ui_label_render(&button->label);
 	return (1);
 }
 

@@ -22,16 +22,20 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 
 void	ui_label_texture_redo(t_ui_element *elem)
 {
-	int	w;
-	int	h;
+	t_ui_label	*label;
+	int			w;
+	int			h;
 
+	label = elem->element;
 	if (elem->textures[UI_STATE_DEFAULT])
 		SDL_DestroyTexture(elem->textures[UI_STATE_DEFAULT]);
 	elem->textures[UI_STATE_DEFAULT] = ui_texture_create_from_text_recipe(elem->win->renderer, elem->element);	
+	label->texture_recreate = 0;
 	SDL_QueryTexture(elem->textures[UI_STATE_DEFAULT], NULL, NULL, &w, &h);
 	elem->pos.w = w;
 	elem->pos.h = h;
-	((t_ui_label *)elem->element)->texture_recreate = 0;
+	if (elem->id && !ft_strequ(elem->id, "tick_label"))
+		ft_printf("label pos set to : w: %.2f, w: %.2f\n", elem->pos.w, elem->pos.h);
 }
 
 /*
@@ -43,17 +47,20 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 	t_vec4		parent_pos;
 
 	label = elem->element;
+	/*
 	if ((align | UI_TEXT_ALIGN_TOP)
 		|| (align | UI_TEXT_ALIGN_BOT)
 		|| (align | UI_TEXT_ALIGN_LEFT)
 		|| (align | UI_TEXT_ALIGN_RIGHT)
 		|| (align | UI_TEXT_ALIGN_CENTER))
+		*/
+	label->text_align = align;
+	if (align && !(align & UI_TEXT_ALIGN_NONE))
 	{
 		if (elem->parent_type == UI_TYPE_WINDOW)
 			parent_pos = ((t_ui_window *)elem->parent)->pos;
 		else
 			parent_pos = ((t_ui_element *)elem->parent)->pos;
-		label->text_align = align;
 		if (align & UI_TEXT_ALIGN_CENTER)
 		{
 			elem->pos.x = (parent_pos.w / 2) - (label->text_wh.x / 2);
@@ -68,8 +75,6 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 		if (align & UI_TEXT_ALIGN_RIGHT)
 			elem->pos.x = parent_pos.w - label->text_wh.x;
 	}
-	else
-		ft_printf("[ui_label_text_align] Align type [%d] not supported.\n", label->text_align);
 }
 
 /*
@@ -181,4 +186,19 @@ void	ui_label_text_center(t_ui_element *elem)
 void	ui_label_free(void *label)
 {
 	(void)label;
+}
+
+void	ui_label_print(t_ui_label *label)
+{
+	ft_printf("[%s]\n", __FUNCTION__);
+	ft_printf("\ttext : %s\n", label->text);
+	ft_printf("\twh : %d %d\n", label->text_wh.x, label->text_wh.y);
+	ft_printf("\tfont_path : %s\n", label->font_path);
+	ft_printf("\tfont_size : %d\n", label->font_size);
+	ft_printf("\tfont_color : %#x\n", label->font_color);
+	ft_printf("\tmax_w : %d\n", label->max_w);
+	ft_printf("\tfont ? : %d\n", label->font ? 1 : 0);
+	ft_printf("\tfont_recreate : %d\n", label->font_recreate);
+	ft_printf("\ttexture_recreate : %d\n", label->texture_recreate);
+	ft_printf("\ttext_align : %d\n", label->text_align);
 }

@@ -10,6 +10,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = input;
 	elem->element_type = UI_TYPE_INPUT;
 	ui_label_new(win, &input->label);
+	ui_label_text_set(&input->label, "Input Text");
 	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT, &elem->show);
 }
 
@@ -296,7 +297,7 @@ int	ui_input_render(t_ui_element *elem)
 		input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font) + input->label.pos.x;
 		pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
 		pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
-		SDL_SetRenderTarget(elem->win->renderer, NULL);
+		SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 		SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
 		SDL_RenderDrawLine(elem->win->renderer, pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->pos.h - 4);
 		SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);

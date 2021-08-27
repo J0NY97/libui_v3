@@ -95,18 +95,13 @@ int	ui_element_render(t_ui_element *elem)
 		new_pos.w = parent_pos.w * elem->pos.w;
 	if (elem->pos.h < 1.0f)
 		new_pos.h = parent_pos.h * elem->pos.h;
-/*
-	ft_printf("elem->id : %s / parent : %s\n", elem->id, elem->parent_type == UI_TYPE_ELEMENT ? ((t_ui_element *)elem->parent)->id : "window");
-	ft_printf("elem->parent_pos : %d %d %d %d\n", parent_pos.v[0], parent_pos.v[1], parent_pos.v[2], parent_pos.v[3]);
-	ft_printf("elem->pos : %.2f %.2f %.2f %.2f\n", elem->pos.v[0], elem->pos.v[1], elem->pos.v[2], elem->pos.v[3]);
-	ft_printf("elem->screen_pos before : %d %d %d %d\n", elem->screen_pos.v[0], elem->screen_pos.v[1], elem->screen_pos.v[2], elem->screen_pos.v[3]);
-	ft_printf("new_pos : %.2f %.2f %.2f %.2f\n", new_pos.v[0], new_pos.v[1], new_pos.v[2], new_pos.v[3]);
-	*/
 
 	/* TODO: i dont like that you have to have an element specific 'if' in hiya. */
+	/*
 	if (elem->element_type != UI_TYPE_LABEL)
 		if (elem->screen_pos.w != new_pos.w || elem->screen_pos.h != new_pos.h)
 			elem->texture_recreate = 1;
+			*/
 	elem->screen_pos.w = new_pos.w;
 	elem->screen_pos.h = new_pos.h;
 	elem->screen_pos.x = parent_pos.x + new_pos.x;
@@ -115,8 +110,10 @@ int	ui_element_render(t_ui_element *elem)
 	//ft_printf("elem->screen_pos after : %d %d %d %d\n", elem->screen_pos.v[0], elem->screen_pos.v[1], elem->screen_pos.v[2], elem->screen_pos.v[3]);
 
 
+	/*
 	if (elem->texture_recreate)
 		ui_element_textures_redo(elem);
+		*/
 
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,
@@ -129,6 +126,8 @@ int	ui_element_render(t_ui_element *elem)
 */
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
+	if (elem->screen_pos.w != pos.w || elem->screen_pos.h != pos.h)
+		ui_element_textures_redo(elem);
 	elem->pos = pos;
 }
 
@@ -187,4 +186,11 @@ void	ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, b
 	elem->parent = parent;
 	elem->parent_type = type;
 	elem->parent_show = show;
+}
+
+void	ui_element_id_set(t_ui_element *elem, char *id)
+{
+	if (elem->id)
+		ft_strdel(&elem->id);
+	elem->id = ft_strdup(id);
 }

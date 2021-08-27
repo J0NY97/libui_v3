@@ -55,21 +55,17 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 	t_ui_slider	*slider;
 	t_ui_button	*button;
 
-	if (!(SDL_GetWindowFlags(elem->win->win) & SDL_WINDOW_MOUSE_FOCUS))
+	if (!elem->show)
 		return ;
 	slider = elem->element;
 	button = slider->button.element;
-
-	if (e.type == SDL_MOUSEBUTTONDOWN)
-	{
-		if (point_in_rect(vec2i(e.button.x, e.button.y), elem->screen_pos))
-			ui_element_pos_set2(&slider->button, vec2(e.button.x - elem->screen_pos.x - (slider->button.pos.w / 2), 0));
-	}
+	if (e.type == SDL_MOUSEBUTTONDOWN
+		&& point_in_rect(elem->win->mouse_pos, elem->screen_pos))
+		ui_element_pos_set2(&slider->button, vec2(elem->win->mouse_pos.x - elem->screen_pos.x - (slider->button.pos.w / 2), 0));
 	else
 		return ;
 	slider->button.pos.x = ft_clamp(slider->button.pos.x, 0, elem->pos.w - slider->button.pos.w);
 	slider->value = ui_get_slider_value(slider->min_value, slider->max_value, slider->button.pos.x, elem->pos.w - slider->button.pos.w);
-	// slider->update = 1;
 }
 
 int	ui_slider_render(t_ui_element *elem)
