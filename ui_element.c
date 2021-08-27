@@ -90,15 +90,15 @@ int	ui_element_render(t_ui_element *elem)
 		new_pos.y = parent_pos.h * elem->relative_pos.y;
 		new_pos.w = parent_pos.w * elem->relative_pos.w;
 		new_pos.h = parent_pos.h * elem->relative_pos.h;
-		print_veci(new_pos.v, 4);
 	}
 	else
 		new_pos = elem->pos;
 	if (elem->pos.w != new_pos.w || elem->pos.h != new_pos.h)
 		elem->texture_recreate = 1;
-	elem->screen_pos = new_pos;
-	elem->screen_pos.x = parent_pos.x + new_pos.x;
-	elem->screen_pos.y = parent_pos.y + new_pos.y;
+	elem->pos = new_pos;
+	elem->screen_pos = elem->pos;
+	elem->screen_pos.x = parent_pos.x + elem->pos.x;
+	elem->screen_pos.y = parent_pos.y + elem->pos.y;
 
 	if (elem->texture_recreate)
 		ui_element_textures_redo(elem);
@@ -112,14 +112,8 @@ int	ui_element_render(t_ui_element *elem)
 /*
  * Editing functions after this.
 */
-/*
- * When changing position we need to recreate the textures,
- * if the user has decided to change the w and/or h.
-*/
 void	ui_element_pos_set(t_ui_element *elem, t_vec4i pos)
 {
-	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
-		elem->texture_recreate = 1;
 	elem->use_relative_pos = 0;
 	elem->pos = pos;
 }
@@ -177,6 +171,7 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 		SDL_DestroyTexture(elem->images[state]);
 	elem->images[state] = SDL_CreateTextureFromSurface(elem->win->renderer, image);
 	elem->use_images = 1;
+	elem->texture_recreate = 1;
 }
 
 void	ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show)

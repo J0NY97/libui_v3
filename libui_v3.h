@@ -25,6 +25,21 @@ typedef struct s_rgba
 	};
 }					t_rgba;
 
+/*
+ * These are flags, for a window, that can be changed after the fact.
+*/
+enum e_window_flags
+{
+	UI_WINDOW_HIDE					= 0x00000001,
+	UI_WINDOW_SHOW					= 0x00000010,
+	UI_WINDOW_MAXIMIZE				= 0x00000100,
+	UI_WINDOW_MINIMIZE				= 0x00001000,
+	UI_WINDOW_FULLSCREEN			= 0x00010000,
+	UI_WINDOW_FULLSCREEN_WINDOWED	= 0x00100000,
+	UI_WINDOW_GRAB					= 0x01000000,
+	UI_WINDOW_RESIZEABLE			= 0x10000000
+};
+
 typedef struct s_ui_window
 {
 	char			*id;
@@ -203,6 +218,8 @@ void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
 void					ui_window_free(void *win);
+
+void					ui_window_flag_set(t_ui_window *win, int flags);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);

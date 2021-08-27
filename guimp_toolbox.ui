@@ -428,9 +428,15 @@ Window toolbox_window
 }
 
 // Delete
+Button button0
+{
+	relative : 0.1, 0.1, 0.5, 0.5;
+	bg_color : 0xffF4D35E, 0xffEE964B, 0xffF95738;
+}
 Menu menu0
 {
-	relative : 0.5, 0.5, 0.1, 0.1;
+	relative : 0.1, 0.1, 0.5, 0.5;
+	button0;
 }
 Window testing
 {

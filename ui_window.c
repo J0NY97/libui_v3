@@ -26,6 +26,7 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 
 int	ui_window_render(t_ui_window *win)
 {
+	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
 	SDL_SetRenderTarget(win->renderer, NULL);
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
 	return (1);
@@ -34,4 +35,28 @@ int	ui_window_render(t_ui_window *win)
 void	ui_window_free(void *win)
 {
 	(void)win;
+}
+
+/*
+ * Window edititing functions down from here.
+*/
+
+void	ui_window_flag_set(t_ui_window *win, int flags)
+{
+	if (flags & UI_WINDOW_HIDE)
+		SDL_HideWindow(win->win);
+	if (flags & UI_WINDOW_SHOW)
+		SDL_ShowWindow(win->win);
+	if (flags & UI_WINDOW_MAXIMIZE)
+		SDL_MaximizeWindow(win->win);
+	if (flags & UI_WINDOW_MINIMIZE)
+		SDL_MinimizeWindow(win->win);
+	if (flags & UI_WINDOW_FULLSCREEN)
+		SDL_SetWindowFullscreen(win->win, SDL_WINDOW_FULLSCREEN);
+	if (flags & UI_WINDOW_FULLSCREEN_WINDOWED)
+		SDL_SetWindowFullscreen(win->win, SDL_WINDOW_FULLSCREEN_DESKTOP);
+	if (flags & UI_WINDOW_GRAB)
+		SDL_SetWindowGrab(win->win, SDL_TRUE);
+	if (flags & UI_WINDOW_RESIZEABLE)
+		SDL_SetWindowResizable(win->win, SDL_TRUE);
 }

@@ -26,11 +26,7 @@ int	main(void)
 	//
 	//	testing
 	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
-	t_ui_element	*test_elem = ft_memalloc(sizeof(t_ui_element));
-	ui_element_new(test_window, test_elem);
-	ui_element_pos_relative_set(test_elem, vec4(0.5, 0.5, 0.1, 0.1));
-	print_veci(test_elem->pos.v, 4);
-//	add_to_list(&guimp_toolbox.elements, test_elem, UI_TYPE_ELEMENT);
+	ui_window_flag_set(test_window, UI_WINDOW_RESIZEABLE);
 	//
 	// Getting the color shower menu for later use.
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
@@ -54,13 +50,6 @@ int	main(void)
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
-
-	// Just testing if ui_layout_get_element_by_id works correctly.
-	t_ui_element *test = NULL;
-	test = ui_layout_get_element_by_id(&guimp_toolbox, "draw_button");
-	print_veci(test->pos.v, VEC4_SIZE);
-	test = ui_layout_get_element_by_id(&guimp_toolbox, "text_button");
-	print_veci(test->pos.v, VEC4_SIZE);
 
 	// Window
 	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));
@@ -220,8 +209,6 @@ int	main(void)
 			itoa(combined_slider_color, temp, 16);
 			ui_label_text_set(hex_label, temp);
 		}
-//		test user code
-		print_veci(test_elem->pos.v, 4);
 
 		// Render
 		SDL_RenderClear(win.renderer);
