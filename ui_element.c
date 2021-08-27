@@ -15,7 +15,6 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->pos.y = 0;
 	elem->pos.w = 60;
 	elem->pos.h = 20;
-	elem->use_relative_pos = 0;
 	elem->state = UI_STATE_DEFAULT;
 	elem->colors[UI_STATE_DEFAULT] = 0xff95D7AE;
 	elem->colors[UI_STATE_HOVER] = 0xff7BAE7F;
@@ -74,7 +73,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 int	ui_element_render(t_ui_element *elem)
 {
 	t_vec4i parent_pos;
-	t_vec4i new_pos;
+	t_vec4 new_pos;
 
 	if (!*elem->parent_show || !elem->show)
 		return (0);
@@ -84,50 +83,59 @@ int	ui_element_render(t_ui_element *elem)
 	else
 		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
 
-	if (elem->use_relative_pos)
-	{
-		new_pos.x = parent_pos.w * elem->relative_pos.x;
-		new_pos.y = parent_pos.h * elem->relative_pos.y;
-		new_pos.w = parent_pos.w * elem->relative_pos.w;
-		new_pos.h = parent_pos.h * elem->relative_pos.h;
-	}
-	else
-		new_pos = elem->pos;
-	if (elem->pos.w != new_pos.w || elem->pos.h != new_pos.h)
-		elem->texture_recreate = 1;
-	elem->pos = new_pos;
-	elem->screen_pos = elem->pos;
-	elem->screen_pos.x = parent_pos.x + elem->pos.x;
-	elem->screen_pos.y = parent_pos.y + elem->pos.y;
+	new_pos.x = elem->pos.x;
+	new_pos.y = elem->pos.y;
+	new_pos.w = elem->pos.w;
+	new_pos.h = elem->pos.h;
+	if (elem->pos.x < 1.0f)
+		new_pos.x = parent_pos.w * elem->pos.x;
+	if (elem->pos.y < 1.0f)
+		new_pos.y = parent_pos.h * elem->pos.y;
+	if (elem->pos.w < 1.0f)
+		new_pos.w = parent_pos.w * elem->pos.w;
+	if (elem->pos.h < 1.0f)
+		new_pos.h = parent_pos.h * elem->pos.h;
+/*
+	ft_printf("elem->id : %s / parent : %s\n", elem->id, elem->parent_type == UI_TYPE_ELEMENT ? ((t_ui_element *)elem->parent)->id : "window");
+	ft_printf("elem->parent_pos : %d %d %d %d\n", parent_pos.v[0], parent_pos.v[1], parent_pos.v[2], parent_pos.v[3]);
+	ft_printf("elem->pos : %.2f %.2f %.2f %.2f\n", elem->pos.v[0], elem->pos.v[1], elem->pos.v[2], elem->pos.v[3]);
+	ft_printf("elem->screen_pos before : %d %d %d %d\n", elem->screen_pos.v[0], elem->screen_pos.v[1], elem->screen_pos.v[2], elem->screen_pos.v[3]);
+	ft_printf("new_pos : %.2f %.2f %.2f %.2f\n", new_pos.v[0], new_pos.v[1], new_pos.v[2], new_pos.v[3]);
+	*/
+
+	/* TODO: i dont like that you have to have an element specific 'if' in hiya. */
+	if (elem->element_type != UI_TYPE_LABEL)
+		if (elem->screen_pos.w != new_pos.w || elem->screen_pos.h != new_pos.h)
+			elem->texture_recreate = 1;
+	elem->screen_pos.w = new_pos.w;
+	elem->screen_pos.h = new_pos.h;
+	elem->screen_pos.x = parent_pos.x + new_pos.x;
+	elem->screen_pos.y = parent_pos.y + new_pos.y;
+
+	//ft_printf("elem->screen_pos after : %d %d %d %d\n", elem->screen_pos.v[0], elem->screen_pos.v[1], elem->screen_pos.v[2], elem->screen_pos.v[3]);
+
 
 	if (elem->texture_recreate)
 		ui_element_textures_redo(elem);
 
-	SDL_SetRenderTarget(elem->win->renderer, NULL);
+	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,
-		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->pos.w, elem->pos.h});
+		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
 	return (1);
 }
 
 /*
  * Editing functions after this.
 */
-void	ui_element_pos_set(t_ui_element *elem, t_vec4i pos)
+void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
-	elem->use_relative_pos = 0;
 	elem->pos = pos;
 }
 
-void	ui_element_pos_set2(t_ui_element *elem, t_vec2i pos)
+void	ui_element_pos_set2(t_ui_element *elem, t_vec2 pos)
 {
 	elem->pos.x = pos.x;
 	elem->pos.y = pos.y;
-}
-
-void	ui_element_pos_relative_set(t_ui_element *elem, t_vec4 pos)
-{
-	elem->use_relative_pos = 1;
-	elem->relative_pos = pos;
 }
 
 void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)

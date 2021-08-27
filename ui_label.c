@@ -20,13 +20,18 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	ui_label_texture_redo(label);
 }
 
-void	ui_label_texture_redo(t_ui_element *label)
+void	ui_label_texture_redo(t_ui_element *elem)
 {
-	if (label->textures[UI_STATE_DEFAULT])
-		SDL_DestroyTexture(label->textures[UI_STATE_DEFAULT]);
-	label->textures[UI_STATE_DEFAULT] = ui_texture_create_from_text_recipe(label->win->renderer, label->element);	
-	SDL_QueryTexture(label->textures[UI_STATE_DEFAULT], NULL, NULL, &label->pos.w, &label->pos.h);
-	((t_ui_label *)label->element)->texture_recreate = 0;
+	int	w;
+	int	h;
+
+	if (elem->textures[UI_STATE_DEFAULT])
+		SDL_DestroyTexture(elem->textures[UI_STATE_DEFAULT]);
+	elem->textures[UI_STATE_DEFAULT] = ui_texture_create_from_text_recipe(elem->win->renderer, elem->element);	
+	SDL_QueryTexture(elem->textures[UI_STATE_DEFAULT], NULL, NULL, &w, &h);
+	elem->pos.w = w;
+	elem->pos.h = h;
+	((t_ui_label *)elem->element)->texture_recreate = 0;
 }
 
 /*
@@ -35,7 +40,7 @@ void	ui_label_texture_redo(t_ui_element *label)
 void	ui_label_text_align(t_ui_element *elem, int align)
 {
 	t_ui_label	*label;
-	t_vec4i		parent_pos;
+	t_vec4		parent_pos;
 
 	label = elem->element;
 	if ((align | UI_TEXT_ALIGN_TOP)
@@ -83,12 +88,14 @@ int	ui_label_render(t_ui_element *elem)
 	t_ui_label	*label;
 
 	label = elem->element;
-	if (!ui_element_render(elem))
-		return (0);
 	if (label->texture_recreate)
 		ui_label_texture_redo(elem);
 	// fix this so we dont do it everytime?
 	ui_label_text_align(elem, label->text_align);
+
+	if (!ui_element_render(elem))
+		return (0);
+
 	return (1);
 }
 

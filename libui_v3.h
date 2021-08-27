@@ -40,16 +40,25 @@ enum e_window_flags
 	UI_WINDOW_RESIZEABLE			= 0x10000000
 };
 
+/*
+ * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns.
+ * t_vec2i		mouse_pos;			x, y for mouse on window texture.	
+ * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size.
+ * t_vec2i		actual_window_size;	size of win->win (SDL_Window *) (w and h)
+*/
 typedef struct s_ui_window
 {
 	char			*id;
-	t_vec4i			pos;
+	Uint32			window_id;
+	t_vec4			pos;
 	t_vec4i			screen_pos;
+	t_vec2i			actual_window_size;
 	SDL_Window		*win;
 	SDL_Renderer	*renderer;
 	SDL_Texture		*texture;
 	char			*title;
 	t_vec2i			mouse_pos;
+	t_vec2i			window_mouse_pos;
 	bool			mouse_down;
 	bool			show;
 }					t_ui_window;
@@ -73,10 +82,8 @@ typedef struct s_ui_window
 */
 typedef struct s_ui_element
 {
-	t_vec4i			pos;
-	t_vec4			relative_pos;
+	t_vec4			pos;
 	t_vec4i			screen_pos;
-	bool			use_relative_pos;
 	SDL_Texture		*textures[UI_STATE_AMOUNT];
 	SDL_Texture		*images[UI_STATE_AMOUNT];
 	bool			use_images;
@@ -214,7 +221,7 @@ void					print_vec(float *vec, size_t size);
 void					print_veci(int *vec, size_t size);
 
 // Window
-void					ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
+void					ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
 void					ui_window_free(void *win);
@@ -225,9 +232,8 @@ void					ui_window_flag_set(t_ui_window *win, int flags);
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
-void					ui_element_pos_set(t_ui_element *elem, t_vec4i pos);
-void					ui_element_pos_set2(t_ui_element *elem, t_vec2i pos);
-void					ui_element_pos_relative_set(t_ui_element *elem, t_vec4 pos);
+void					ui_element_pos_set(t_ui_element *elem, t_vec4 pos);
+void					ui_element_pos_set2(t_ui_element *elem, t_vec2 pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);

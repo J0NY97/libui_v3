@@ -1,5 +1,14 @@
 #include "libui_v3.h"
 
+t_vec2	vec2(float x, float y)
+{
+	t_vec2	v;
+
+	v.x = x;
+	v.y = y;
+	return (v);
+}
+
 t_vec2i	vec2i(int x, int y)
 {
 	t_vec2i	v;

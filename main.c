@@ -26,7 +26,6 @@ int	main(void)
 	//
 	//	testing
 	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
-	ui_window_flag_set(test_window, UI_WINDOW_RESIZEABLE);
 	//
 	// Getting the color shower menu for later use.
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
@@ -52,13 +51,14 @@ int	main(void)
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Window
-	ui_window_new(&win, "test window", vec4i(1920 - 800, 25, 800, 720));
+	ui_window_new(&win, "test window", vec4(1920 - 800, 25, 800, 720));
+	ui_window_flag_set(&win, UI_WINDOW_RESIZEABLE);
 	ui_texture_fill(win.renderer, win.texture, 0xff404040);
 	ui_texture_draw_border(win.renderer, win.texture, 2, 0xffff0000);
 
 	// Element
 	ui_element_new(&win, &elem1);
-	ui_element_pos_set(&elem1, vec4i(10, 50, 50, 20));
+	ui_element_pos_set(&elem1, vec4(10, 50, 50, 20));
 	ui_texture_fill(elem1.win->renderer, elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
 
 	// Label
@@ -66,19 +66,19 @@ int	main(void)
 
 	// Button
 	ui_button_new(&win, &button);
-	ui_element_pos_set(&button, vec4i(10, 100, button.pos.w, button.pos.h));
+	ui_element_pos_set(&button, vec4(10, 100, button.pos.w, button.pos.h));
 	ui_label_text_set(&((t_ui_button *)button.element)->label, "Toggle Menu");
 	ui_label_size_set(&((t_ui_button *)button.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
 
 	ui_button_new(&win, &button2);
-	ui_element_pos_set(&button2, vec4i(10, 150, button.pos.w, button.pos.h));
+	ui_element_pos_set(&button2, vec4(10, 150, button.pos.w, button.pos.h));
 	ui_label_text_set(&((t_ui_button *)button2.element)->label, "Toggle Button");
 	ui_label_size_set(&((t_ui_button *)button2.element)->label, 32);
 	ui_label_color_set(&((t_ui_button *)button2.element)->label, 0xff00ff00);
 
 	ui_button_new(&win, &button3);
-	ui_element_pos_set(&button3, vec4i(10, 300, button.pos.w, button.pos.h));
+	ui_element_pos_set(&button3, vec4(10, 300, button.pos.w, button.pos.h));
 
 	// Menu
 	t_ui_element	menu_label0;
@@ -88,31 +88,31 @@ int	main(void)
 	t_ui_element	menu_dropdown0;
 	t_ui_element	menu_slider0;
 	ui_menu_new(&win, &menu);
-	ui_element_pos_set(&menu, vec4i(150, 100, 500, 500));
+	ui_element_pos_set(&menu, vec4(150, 100, 500, 500));
 	ui_element_image_set_from_path(&menu, UI_STATE_DEFAULT, "images/grass_hill.jpg");
 
 	ui_label_new(&win, &menu_label0);
 	ui_label_text_set(&menu_label0, "Menu Label");
 	ui_label_color_set(&menu_label0, 0xffff0000);
-	ui_element_pos_set(&menu_label0, vec4i(10, 10, 50, 20));
+	ui_element_pos_set(&menu_label0, vec4(10, 10, 50, 20));
 
 	ui_button_new(&win, &menu_button0);
-	ui_element_pos_set(&menu_button0, vec4i(10, 40, 50, 20));
+	ui_element_pos_set(&menu_button0, vec4(10, 40, 50, 20));
 	ui_element_color_set(&menu_button0, UI_STATE_DEFAULT, 0xffBF6900);
 	ui_label_text_set(&((t_ui_button *)menu_button0.element)->label, "menu button");
 	ui_label_color_set(&((t_ui_button *)menu_button0.element)->label, 0xffff0000);
 
 	ui_button_new(&win, &menu_button1);
-	ui_element_pos_set(&menu_button1, vec4i(10, 70, 50, 20));
+	ui_element_pos_set(&menu_button1, vec4(10, 70, 50, 20));
 	ui_element_color_set(&menu_button1, UI_STATE_DEFAULT, 0xffBF6900);
 	ui_label_text_set(&((t_ui_button *)menu_button1.element)->label, "Toggle menu0");
 	ui_label_color_set(&((t_ui_button *)menu_button1.element)->label, 0xffff0000);
 
 	ui_dropdown_new(&win, &menu_dropdown0);
-	ui_element_pos_set(&menu_dropdown0, vec4i(10, 100, 85, 20));
+	ui_element_pos_set(&menu_dropdown0, vec4(10, 100, 85, 20));
 
 	ui_slider_new(&win, &menu_slider0);
-	ui_element_pos_set(&menu_slider0, vec4i(10, 150, 85, 20));
+	ui_element_pos_set(&menu_slider0, vec4(10, 150, 85, 20));
 
 	t_ui_element	menu0_label;
 	ui_label_new(&win, &menu0_label);
@@ -120,8 +120,7 @@ int	main(void)
 	ui_label_color_set(&menu0_label, 0xffff0000);
 
 	ui_menu_new(&win, &menu_menu0);
-	ui_element_pos_set(&menu_menu0, vec4i(100, 10, 100, 100));
-	ui_element_pos_relative_set(&menu_menu0, vec4(0.5, 0.5, 0.1, 0.1));
+	ui_element_pos_set(&menu_menu0, vec4(0.5, 0.5, 0.1, 100));
 
 	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_ELEMENT);
 
@@ -136,22 +135,22 @@ int	main(void)
 	t_ui_element	dropdown;
 
 	ui_dropdown_new(&win, &dropdown);
-	ui_element_pos_set(&dropdown, vec4i(10, 190, 50, 20));
+	ui_element_pos_set(&dropdown, vec4(10, 190, 50, 20));
 
 	// Input
 	t_ui_element	input;
 	ui_input_new(&win, &input);
-	ui_element_pos_set(&input, vec4i(150, 50, 50, 20));
+	ui_element_pos_set(&input, vec4(150, 50, 50, 20));
 
 	// Slider
 	t_ui_element	slider;
 	ui_slider_new(&win, &slider);
-	ui_element_pos_set(&slider, vec4i(150, 10, 50, 20));
+	ui_element_pos_set(&slider, vec4(150, 10, 50, 20));
 
 	// Checkbox
 	t_ui_element	checkbox0;
 	ui_checkbox_new(&win, &checkbox0);
-	ui_element_pos_set(&checkbox0, vec4i(100, 10, 20, 20));
+	ui_element_pos_set(&checkbox0, vec4(100, 10, 20, 20));
 
 	ft_putstr("Inits done!\n");
 
@@ -212,7 +211,6 @@ int	main(void)
 
 		// Render
 		SDL_RenderClear(win.renderer);
-		ui_window_render(&win);
 		ui_label_render(&label);
 		ui_button_render(&button);
 		ui_button_render(&button2);
@@ -224,6 +222,7 @@ int	main(void)
 		ui_slider_render(&slider);
 		ui_checkbox_render(&checkbox0);
 
+		ui_window_render(&win);
 		SDL_RenderPresent(win.renderer);
 
 		// Layout

@@ -207,6 +207,37 @@ void	pos_arr_getter(char *str, int *result_arr, int pos_info)
 	ft_arraydel(arr);
 }
 
+int	flag_getter(char *str)
+{
+	char	**temp;
+	int		result;
+	int		i;
+
+	temp = ft_strsplit(str, ' ');
+	result = 0;
+	i = -1;
+	while (temp[++i])
+	{
+		if (ft_strequ(temp[i], "hide"))
+			result |= UI_WINDOW_HIDE;
+		else if (ft_strequ(temp[i], "show"))
+			result |= UI_WINDOW_SHOW;
+		else if (ft_strequ(temp[i], "maximize"))
+			result |= UI_WINDOW_MAXIMIZE;
+		else if (ft_strequ(temp[i], "minimize"))
+			result |= UI_WINDOW_MINIMIZE;
+		else if (ft_strequ(temp[i], "fullscreen"))
+			result |= UI_WINDOW_FULLSCREEN;
+		else if (ft_strequ(temp[i], "fullscreen_windowed"))
+			result |= UI_WINDOW_FULLSCREEN_WINDOWED;
+		else if (ft_strequ(temp[i], "grab"))
+			result |= UI_WINDOW_GRAB;
+		else if (ft_strequ(temp[i], "resizeable"))
+			result |= UI_WINDOW_RESIZEABLE;
+	}
+	return (result);
+}
+
 int	text_align_getter(char *str)
 {
 	char	**temp;
@@ -302,14 +333,8 @@ void	ui_global_get(t_ui_get *get)
 	{
 		if (ft_strstr(get->kv[i].key, "pos"))
 		{
-			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->pos.v, 4);
+			float_arr_arg_to_float_arr(get->kv[i].value, get->recipe->pos.v, 4);
 			get->recipe->pos_set = 1;
-			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
-		}
-		else if (ft_strstr(get->kv[i].key, "relative"))
-		{
-			float_arr_arg_to_float_arr(get->kv[i].value, get->recipe->relative_pos.v, 4);
-			get->recipe->pos_relative_set = 1;
 			get->recipe->pos_info = pos_info_getter(get->kv[i].key);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
@@ -350,6 +375,11 @@ void	ui_global_get(t_ui_get *get)
 		{
 			int_arr_arg_to_int_arr(get->kv[i].value, get->recipe->values, 3);
 			get->recipe->value_set = 1;
+		}
+		else if (ft_strequ(get->kv[i].key, "flag"))
+		{
+			get->recipe->flag = flag_getter(get->kv[i].value);
+			get->recipe->flag_set = 1;
 		}
 		else // should be variables
 		{
@@ -516,13 +546,9 @@ void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	// All stuff
-	if (recipe->pos_relative_set)
+	if (recipe->pos_set)
 	{
-		ui_element_pos_relative_set(elem, recipe->relative_pos);
-	}
-	else if (recipe->pos_set)
-	{
-		t_vec4i new_pos;
+		t_vec4 new_pos;
 		int		i;
 	
 		i = -1;
@@ -633,11 +659,14 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 	t_ui_recipe	*child_recipe;
 	int			i;
 
+	// Edit
 	window = malloc(sizeof(t_ui_window));
 	ui_window_new(window, recipe->title, recipe->pos);
+	ui_window_flag_set(window, recipe->flag);
 	window->id = ft_strdup(recipe->id);
 	ui_texture_fill(window->renderer, window->texture, recipe->bg_color[UI_STATE_DEFAULT]);
 	add_to_list(&layout->windows, window, UI_TYPE_WINDOW);
+	// END Edit
 
 	i = -1;
 	ft_printf("Child Amount : %d\n", recipe->child_amount);

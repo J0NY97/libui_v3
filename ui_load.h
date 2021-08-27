@@ -15,7 +15,7 @@ typedef struct s_ui_dropdown	t_ui_dropdown;
 typedef struct s_ui_element		t_ui_element;
 typedef struct s_ui_layout		t_ui_layout;
 
-void	ui_window_new(t_ui_window *win, char *title, t_vec4i pos);
+void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
 int		ui_window_render(t_ui_window *win);
 void	ui_window_free(void *win);
 
@@ -222,10 +222,8 @@ struct s_ui_recipe
 	char				*id;
 	int					type;
 
-	t_vec4i				pos;	
+	t_vec4				pos;	
 	bool				pos_set;
-	t_vec4				relative_pos;	
-	bool				pos_relative_set;
 	int					pos_info;
 
 	Uint32				bg_color[UI_STATE_AMOUNT];
@@ -233,6 +231,9 @@ struct s_ui_recipe
 
 	char				*bg_image[UI_STATE_AMOUNT];
 	bool				bg_image_set;
+
+	int					flag;
+	bool				flag_set;
 
 	char				**children_ids;
 	int					child_amount;
@@ -245,7 +246,8 @@ struct s_ui_recipe
 	bool				font_path_set;
 
 	Uint32				font_size;
-	bool				font_size_set;
+	float				font_size_relative;
+	int					font_size_set; // 1 == absolute, 2 == relative
 
 	Uint32				font_color;
 	bool				font_color_set;

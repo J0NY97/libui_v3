@@ -12,7 +12,7 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	slider->elem = elem;
 
 	ui_button_new(win, &slider->button);
-	ui_element_pos_set(&slider->button, vec4i(0, 0, elem->pos.h, elem->pos.h));
+	ui_element_pos_set(&slider->button, vec4(0, 0, elem->pos.h, elem->pos.h));
 	ui_element_color_set(&slider->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&slider->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
 	ui_element_color_set(&slider->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
@@ -24,8 +24,8 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	slider->max_value = 100;
 	ui_label_new(win, &slider->min_label);
 	ui_label_new(win, &slider->max_label);
-	ui_element_pos_set(&slider->min_label, vec4i(-10, 0, elem->pos.h, elem->pos.h));
-	ui_element_pos_set(&slider->max_label, vec4i(elem->pos.w, 0, elem->pos.h, elem->pos.h));
+	ui_element_pos_set(&slider->min_label, vec4(-10, 0, elem->pos.h, elem->pos.h));
+	ui_element_pos_set(&slider->max_label, vec4(elem->pos.w, 0, elem->pos.h, elem->pos.h));
 	ui_element_parent_set(&slider->min_label, elem, UI_TYPE_ELEMENT, &elem->show);
 	ui_element_parent_set(&slider->max_label, elem, UI_TYPE_ELEMENT, &elem->show);
 }
@@ -63,7 +63,7 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 	if (e.type == SDL_MOUSEBUTTONDOWN)
 	{
 		if (point_in_rect(vec2i(e.button.x, e.button.y), elem->screen_pos))
-			ui_element_pos_set2(&slider->button, vec2i(e.button.x - elem->screen_pos.x - (slider->button.pos.w / 2), 0));
+			ui_element_pos_set2(&slider->button, vec2(e.button.x - elem->screen_pos.x - (slider->button.pos.w / 2), 0));
 	}
 	else
 		return ;
@@ -91,8 +91,8 @@ int	ui_slider_render(t_ui_element *elem)
 	ft_b_itoa(slider->value, temp);
 	ui_label_text_set(&button->label, temp);
 
-	ui_element_pos_set2(&slider->min_label, vec2i(-10, 0));
-	ui_element_pos_set2(&slider->max_label, vec2i(elem->pos.w, 0));
+	ui_element_pos_set2(&slider->min_label, vec2(-10, 0));
+	ui_element_pos_set2(&slider->max_label, vec2(elem->pos.w, 0));
 
 	ui_button_render(&slider->button);
 	ui_label_render(&slider->min_label);

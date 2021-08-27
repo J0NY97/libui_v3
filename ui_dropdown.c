@@ -14,13 +14,13 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	drop = elem->element;
 
 	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xffff0000);
-	ui_element_pos_set(elem, vec4i(0, 0, 50, 20));
+	ui_element_pos_set(elem, vec4(0, 0, 50, 20));
 
 	ui_label_new(win, &drop->label);
 	ui_label_text_set(&drop->label, "Dropdown");
 
 	ui_menu_new(win, &drop->menu);
-	ui_element_pos_set(&drop->menu, vec4i(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
 
 	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT, &elem->show);
@@ -48,7 +48,7 @@ int	ui_dropdown_render(t_ui_element *elem)
 	if (!ui_button_render(elem))
 		return (0);
 
-	ui_element_pos_set(&drop->menu, vec4i(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	ui_menu_render(&drop->menu);
 	return (1);
 }
