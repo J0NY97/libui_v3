@@ -25,9 +25,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->use_images = 0;
 	elem->texture_recreate = 1;
 	ui_element_textures_redo(elem);
-	elem->parent = win;
-	elem->parent_type = UI_TYPE_WINDOW;
-	elem->parent_show = &win->show;
+	ui_element_parent_set(elem, win, UI_TYPE_WINDOW);
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_NONE;
 	elem->show = 1;
@@ -72,20 +70,13 @@ void	ui_element_textures_redo(t_ui_element *elem)
 */
 int	ui_element_render(t_ui_element *elem)
 {
-	t_vec4i parent_pos;
-
 	if (!*elem->parent_show || !elem->show)
 		return (0);
 
-	if (elem->parent_type == UI_TYPE_WINDOW)
-		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
-	else
-		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
-
 	elem->screen_pos.w = elem->pos.w;
 	elem->screen_pos.h = elem->pos.h;
-	elem->screen_pos.x = parent_pos.x + elem->pos.x;
-	elem->screen_pos.y = parent_pos.y + elem->pos.y;
+	elem->screen_pos.x = elem->parent_screen_pos->x + elem->pos.x;
+	elem->screen_pos.y = elem->parent_screen_pos->y + elem->pos.y;
 
 	if (elem->texture_recreate || elem->win->textures_recreate)
 		ui_element_textures_redo(elem);
@@ -120,20 +111,14 @@ int	ui_element_is_click(t_ui_element *elem)
 */
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
-	t_vec4i	parent_pos;
-
-	if (elem->parent_type == UI_TYPE_WINDOW)
-		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
-	else
-		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
 	if (pos.x < 1.0f && pos.x > 0.0f)
-		pos.x = parent_pos.w * pos.x;
+		pos.x = elem->parent_screen_pos->w * pos.x;
 	if (pos.y < 1.0f && pos.y > 0.0f)
-		pos.y = parent_pos.h * pos.y;
+		pos.y = elem->parent_screen_pos->h * pos.y;
 	if (pos.w < 1.0f && pos.w > 0.0f)
-		pos.w = parent_pos.w * pos.w;
+		pos.w = elem->parent_screen_pos->w * pos.w;
 	if (pos.h < 1.0f && pos.h > 0.0f)
-		pos.h = parent_pos.h * pos.h;
+		pos.h = elem->parent_screen_pos->h * pos.h;
 	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
 		elem->texture_recreate = 1;
 	elem->pos = pos;
@@ -189,11 +174,29 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	elem->texture_recreate = 1;
 }
 
-void	ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show)
+void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 {
-	elem->parent = parent;
-	elem->parent_type = type;
-	elem->parent_show = show;
+	t_ui_element	*parent_elem;
+	t_ui_window		*parent_win;
+
+	if (type == UI_TYPE_WINDOW)
+	{
+		parent_win = parent;
+		elem->parent = parent;
+		elem->parent_type = type;
+		elem->parent_screen_pos = &parent_win->screen_pos;
+		elem->parent_show = &parent_win->show;
+	}
+	else if (type == UI_TYPE_ELEMENT)
+	{
+		parent_elem = parent;
+		elem->parent = parent;
+		elem->parent_type = type;
+		elem->parent_screen_pos = &parent_elem->screen_pos;
+		elem->parent_show = &parent_elem->show;
+	}
+	else
+		ft_printf("[%s] Element of type %d is not supported.\n", __FUNCTION__, type);
 }
 
 void	ui_element_id_set(t_ui_element *elem, char *id)
@@ -212,10 +215,7 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\tscreen_pos : ");
 	print_veci(elem->screen_pos.v, 4);
 	ft_printf("\tparent_pos : ");
-	if (elem->parent_type == UI_TYPE_WINDOW)
-		print_veci(((t_ui_window *)elem->parent)->screen_pos.v, 4);
-	else
-		print_veci(((t_ui_element *)elem->parent)->screen_pos.v, 4);
+	print_veci(elem->parent_screen_pos->v, 4);
 	ft_printf("\tuse_images : %d\n", elem->use_images);
 	ft_printf("\tcolors : %#x %#x %#x\n", elem->colors[0], elem->colors[1], elem->colors[2]);
 	ft_printf("\tstate : %d\n", elem->state);

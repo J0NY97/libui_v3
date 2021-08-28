@@ -11,7 +11,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_INPUT;
 	ui_label_new(win, &input->label);
 	ui_label_text_set(&input->label, "Input Text");
-	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT);
 }
 
 void	remove_str_from_n_to_m(char **dest, int n, int m)

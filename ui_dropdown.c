@@ -23,8 +23,8 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
 
-	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT, &elem->show);
-	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT);
+	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT);
 }
 
 void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)

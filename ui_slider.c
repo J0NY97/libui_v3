@@ -16,7 +16,7 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(&slider->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&slider->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
 	ui_element_color_set(&slider->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
-	ui_element_parent_set(&slider->button, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&slider->button, elem, UI_TYPE_ELEMENT);
 	button = slider->button.element;
 
 	slider->value = 50;
@@ -26,8 +26,8 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_new(win, &slider->max_label);
 	ui_element_pos_set(&slider->min_label, vec4(-10, 0, elem->pos.h, elem->pos.h));
 	ui_element_pos_set(&slider->max_label, vec4(elem->pos.w, 0, elem->pos.h, elem->pos.h));
-	ui_element_parent_set(&slider->min_label, elem, UI_TYPE_ELEMENT, &elem->show);
-	ui_element_parent_set(&slider->max_label, elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(&slider->min_label, elem, UI_TYPE_ELEMENT);
+	ui_element_parent_set(&slider->max_label, elem, UI_TYPE_ELEMENT);
 
 	slider->update = 1;
 }

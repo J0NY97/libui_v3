@@ -12,10 +12,10 @@ void	ui_menu_new(t_ui_window *win, t_ui_element *elem)
 void	ui_menu_child_add(t_ui_element *elem, void *child, int type)
 {
 	if (type == UI_TYPE_ELEMENT)
-		ui_element_parent_set(child, elem, UI_TYPE_ELEMENT, &elem->show);
+		ui_element_parent_set(child, elem, UI_TYPE_ELEMENT);
 	else
 	{
-		ft_printf("[ui_menu_child_add] child of type %d is not supported.\n", type);
+		ft_printf("[%s] child of type %d is not supported.\n", __FUNCTION__, type);
 		return ;
 	}
 	add_to_list(&((t_ui_menu *)elem->element)->children, child, type);
@@ -48,7 +48,7 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 				ft_printf("[%s] Eventing of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
 		}
 		else
-			ft_printf("[ui_menu_event] Element [%s] @ [%d, %d] of type %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
+			ft_printf("[%s] Element [%s] @ [%d, %d] of type %d is not supported.\n", __FUNCTION__, child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
 		curr = curr->next;
 	}
 }

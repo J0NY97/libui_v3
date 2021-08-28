@@ -44,7 +44,6 @@ void	ui_label_texture_redo(t_ui_element *elem)
 void	ui_label_text_align(t_ui_element *elem, int align)
 {
 	t_ui_label	*label;
-	t_vec4		parent_pos;
 
 	label = elem->element;
 	/*
@@ -57,26 +56,22 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 	label->text_align = align;
 	if (align && !(align & UI_TEXT_ALIGN_NONE))
 	{
-		if (elem->parent_type == UI_TYPE_WINDOW)
-			parent_pos = ((t_ui_window *)elem->parent)->pos;
-		else
-			parent_pos = ((t_ui_element *)elem->parent)->pos;
 		if (align & UI_TEXT_ALIGN_CENTER)
 		{
-			elem->pos.x = (parent_pos.w / 2) - (label->text_wh.x / 2);
-			elem->pos.y = (parent_pos.h / 2) - (label->text_wh.y / 2);
+			elem->pos.x = (elem->parent_screen_pos->w / 2) - (label->text_wh.x / 2);
+			elem->pos.y = (elem->parent_screen_pos->h / 2) - (label->text_wh.y / 2);
 		}
 		if (align & UI_TEXT_ALIGN_TOP)
 			elem->pos.y = 0;
 		if (align & UI_TEXT_ALIGN_BOT)
-			elem->pos.y = parent_pos.h - label->text_wh.y;
+			elem->pos.y = elem->parent_screen_pos->h - label->text_wh.y;
 		if (align & UI_TEXT_ALIGN_LEFT)
 			elem->pos.x = 0;
 		if (align & UI_TEXT_ALIGN_RIGHT)
-			elem->pos.x = parent_pos.w - label->text_wh.x;
+			elem->pos.x = elem->parent_screen_pos->w - label->text_wh.x;
 		ft_printf("%s\n", label->text);
-		ft_printf("elem->pos.x = (%.2f / 2) - (%d / 2); = %.2f\n", parent_pos.w, label->text_wh.x, elem->pos.x);
-		ft_printf("elem->pos.y = (%.2f / 2) - (%d / 2); = %.2f\n", parent_pos.h, label->text_wh.y, elem->pos.y);
+		ft_printf("elem->pos.x = (%.2f / 2) - (%d / 2); = %.2f\n", elem->parent_screen_pos->w, label->text_wh.x, elem->pos.x);
+		ft_printf("elem->pos.y = (%.2f / 2) - (%d / 2); = %.2f\n", elem->parent_screen_pos->h, label->text_wh.y, elem->pos.y);
 	}
 }
 

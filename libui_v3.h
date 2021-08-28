@@ -74,6 +74,7 @@ typedef struct s_ui_window
  * t_ui_window	*win;						the window you want the element on.
  * void			*parent;					the parent, controls show and screen_pos. should always be a t_ui_element
  * int			parent_type;				the type of the parent enum t_element_type.
+ * t_vec4		*parent_screen_pos;			pointer to the actual parent->screen_pos, so we dont have to if it everywhere.
  * void			*element;					the real element.
  * int			element_type;				the type of the real element enum t_element_type.
  * bool			show;						wheather to render or not.
@@ -92,6 +93,7 @@ typedef struct s_ui_element
 	t_ui_window		*win;
 	void			*parent;
 	int				parent_type;
+	t_vec4i			*parent_screen_pos;
 	bool			*parent_show;
 	void			*element;
 	int				element_type;
@@ -242,7 +244,7 @@ void					ui_element_pos_set2(t_ui_element *elem, t_vec2 pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
-void					ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show);
+void					ui_element_parent_set(t_ui_element *elem, void *parent, int type);
 void					ui_element_id_set(t_ui_element *elem, char *id);
 void					ui_element_print(t_ui_element *elem);
 

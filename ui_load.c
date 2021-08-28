@@ -495,7 +495,7 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout
 	recipes = layout->recipes;
 	menu = elem->element;
 	ui_layout_element_new(layout, elem->win, recipe, recipes);
-	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT, &elem->show);
+	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT);
 }
 
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
