@@ -439,7 +439,8 @@ Window toolbox_window
 // Middle Menu
 Menu middle_menu
 {
-	pos : 0.1, 0.1, 0.5, 0.5;
+	pos : 0.1, 0.1, 0.1, 100;
+	bg_color : 0xffff0000;
 }
 Window middle_win
 {

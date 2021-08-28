@@ -96,13 +96,13 @@ int	ui_element_render(t_ui_element *elem)
 	if (elem->pos.h < 1.0f && elem->pos.h > 0.0f)
 		new_pos.h = parent_pos.h * elem->pos.h;
 
-	if (elem->texture_recreate)
-		ui_element_textures_redo(elem);
-
 	elem->screen_pos.w = new_pos.w;
 	elem->screen_pos.h = new_pos.h;
 	elem->screen_pos.x = parent_pos.x + new_pos.x;
 	elem->screen_pos.y = parent_pos.y + new_pos.y;
+
+	if (elem->texture_recreate)
+		ui_element_textures_redo(elem);
 
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,
@@ -115,8 +115,8 @@ int	ui_element_render(t_ui_element *elem)
 */
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
-	if (elem->screen_pos.w != pos.w || elem->screen_pos.h != pos.h)
-		ui_element_textures_redo(elem);
+	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
+		elem->texture_recreate = 1;
 	elem->pos = pos;
 }
 
@@ -192,7 +192,13 @@ void	ui_element_print(t_ui_element *elem)
 	print_vec(elem->pos.v, 4);
 	ft_printf("\tscreen_pos : ");
 	print_veci(elem->screen_pos.v, 4);
+	ft_printf("\tparent_pos : ");
+	if (elem->parent_type == UI_TYPE_WINDOW)
+		print_veci(((t_ui_window *)elem->parent)->screen_pos.v, 4);
+	else
+		print_veci(((t_ui_element *)elem->parent)->screen_pos.v, 4);
 	ft_printf("\tuse_images : %d\n", elem->use_images);
+	ft_printf("\tcolors : %#x %#x %#x\n", elem->colors[0], elem->colors[1], elem->colors[2]);
 	ft_printf("\tstate : %d\n", elem->state);
 	ft_printf("\tparent_type : %d\n", elem->parent_type);
 	ft_printf("\telement_type : %d\n", elem->element_type);

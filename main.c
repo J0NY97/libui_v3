@@ -24,11 +24,10 @@ int	main(void)
 
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
 	//
-	//	testing
-//	t_ui_window		*test_window = ui_layout_get_window_by_id(&guimp_toolbox, "testing");
 	//
 	// Getting the color shower menu for later use.
 	/*
+	*/
 	t_ui_element	*color_shower = ui_layout_get_element_by_id(&guimp_toolbox, "color_shower");
 	t_ui_element	*hex_label = &((t_ui_input *)color_shower->element)->label;
 	t_ui_slider		*color_r_slider = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider")->element;
@@ -49,7 +48,6 @@ int	main(void)
 	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
-	*/
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Window
@@ -233,15 +231,19 @@ int	main(void)
 		// Layout user code
 		// NOTE: only change label text of input if input state != 1
 		/*
-		Uint32 combined_slider_color = rgba_to_hex((t_rgba){.r = color_r_slider->value, .g = color_g_slider->value, .b = color_b_slider->value, .a = color_a_slider->value});
-		ui_element_color_set(color_shower, UI_STATE_DEFAULT, combined_slider_color);
-		if (!color_shower->is_click)
-		{
-			char temp[20];
-			itoa(combined_slider_color, temp, 16);
-			ui_label_text_set(hex_label, temp);
-		}
 		*/
+		Uint32 combined_slider_color = 0;
+		if (color_r_slider->update || color_g_slider->update || color_b_slider->update || color_a_slider->update)
+		{
+			combined_slider_color = rgba_to_hex((t_rgba){.r = color_r_slider->value, .g = color_g_slider->value, .b = color_b_slider->value, .a = color_a_slider->value});
+			ui_element_color_set(color_shower, UI_STATE_DEFAULT, combined_slider_color);
+			if (!color_shower->is_click)
+			{
+				char temp[20];
+				itoa(combined_slider_color, temp, 16);
+				ui_label_text_set(hex_label, temp);
+			}
+		}
 
 		// Render
 		{ // This is basically where you would put your game rendering, or whatever you want to show in the background.
@@ -271,6 +273,9 @@ int	main(void)
 		ui_layout_render(&guimp_toolbox);
 		/*
 		*/
+
+		t_ui_element *middle_menu = ui_layout_get_element_by_id(&guimp_toolbox, "middle_menu");
+		ui_element_print(middle_menu);
 	}
 	return (0);
 }

@@ -15,8 +15,8 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 
 	win->window_id = SDL_GetWindowID(win->win);
 
-	SDL_GetWindowSize(win->win, &win->actual_window_size.x, &win->actual_window_size.y);
-	win->texture_scale = vec2(win->pos.w / win->actual_window_size.x, win->pos.h / win->actual_window_size.y);
+	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
+	win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
 	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
 	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y; 
@@ -30,8 +30,8 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 		{
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
-				SDL_GetWindowSize(win->win, &win->actual_window_size.x, &win->actual_window_size.y);
-				win->texture_scale = vec2(win->pos.w / win->actual_window_size.x, win->pos.h / win->actual_window_size.y);
+				SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
+				win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
 			}
 		}
 		else if (e.type == SDL_MOUSEMOTION)

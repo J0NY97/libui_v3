@@ -44,8 +44,8 @@ enum e_window_flags
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
  * t_vec2i		mouse_pos;			x, y for mouse on window texture;
  * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size;
- * t_vec2i		actual_window_size;	size of win->win (SDL_Window *) (w and h);
  * float		texture_scale;		the ratio between the window size and the window texture size (.x = w, .y = h);
+ * t_vec4i		screen_pos;			this is the ACTUAL size of the window.
 */
 typedef struct s_ui_window
 {
@@ -53,7 +53,6 @@ typedef struct s_ui_window
 	Uint32			window_id;
 	t_vec4			pos;
 	t_vec4i			screen_pos;
-	t_vec2i			actual_window_size;
 	t_vec2			texture_scale;
 	SDL_Window		*win;
 	SDL_Renderer	*renderer;
