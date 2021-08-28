@@ -62,6 +62,7 @@ typedef struct s_ui_window
 	t_vec2i			window_mouse_pos;
 	bool			mouse_down;
 	bool			show;
+	bool			textures_recreate;
 }					t_ui_window;
 
 /*

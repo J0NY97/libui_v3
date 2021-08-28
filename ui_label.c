@@ -96,15 +96,13 @@ int	ui_label_render(t_ui_element *elem)
 	t_ui_label	*label;
 
 	label = elem->element;
-	if (label->texture_recreate)
+	if (!ui_element_render(elem))
+		return (0);
+	if (label->texture_recreate || elem->win->textures_recreate)
 	{
 		ui_label_texture_redo(elem);
 		ui_label_text_align(elem, label->text_align);
-		elem->texture_recreate = 0; // if you dont do this, it will reset the texture in ui_element_render
 	}
-	if (!ui_element_render(elem))
-		return (0);
-
 	return (1);
 }
 

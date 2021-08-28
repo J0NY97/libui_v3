@@ -101,7 +101,7 @@ int	ui_element_render(t_ui_element *elem)
 	elem->screen_pos.x = parent_pos.x + new_pos.x;
 	elem->screen_pos.y = parent_pos.y + new_pos.y;
 
-	if (elem->texture_recreate)
+	if (elem->texture_recreate || elem->win->textures_recreate)
 		ui_element_textures_redo(elem);
 
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);

@@ -32,6 +32,7 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			{
 				SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
 				win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
+				win->textures_recreate = 1;
 			}
 		}
 		else if (e.type == SDL_MOUSEMOTION)
@@ -55,6 +56,7 @@ int	ui_window_render(t_ui_window *win)
 	SDL_SetRenderTarget(win->renderer, win->texture);
 	SDL_RenderClear(win->renderer);
 	SDL_SetRenderTarget(win->renderer, NULL);
+	win->textures_recreate = 0;
 	return (1);
 }
 

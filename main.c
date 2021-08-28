@@ -248,8 +248,11 @@ int	main(void)
 		// Render
 		{ // This is basically where you would put your game rendering, or whatever you want to show in the background.
 			SDL_SetRenderTarget(win.renderer, NULL);
+			SDL_RenderClear(win.renderer);
+			/*
 			SDL_SetRenderDrawColor(win.renderer, 125, 125, 125, 255);
 			SDL_RenderFillRect(win.renderer, NULL);
+			*/
 		}
 
 		ui_label_render(&label);
@@ -272,10 +275,12 @@ int	main(void)
 		ui_layout_render(&toolbox);
 		ui_layout_render(&guimp_toolbox);
 		/*
-		*/
-
 		t_ui_element *middle_menu = ui_layout_get_element_by_id(&guimp_toolbox, "middle_menu");
 		ui_element_print(middle_menu);
+		t_ui_element *something = ui_layout_get_element_by_id(&guimp_toolbox, "draw_button");
+		ui_element_print(something);
+		something->texture_recreate = 1;
+		*/
 	}
 	return (0);
 }
