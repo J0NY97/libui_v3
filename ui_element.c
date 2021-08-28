@@ -73,7 +73,6 @@ void	ui_element_textures_redo(t_ui_element *elem)
 int	ui_element_render(t_ui_element *elem)
 {
 	t_vec4i parent_pos;
-	t_vec4 new_pos;
 
 	if (!*elem->parent_show || !elem->show)
 		return (0);
@@ -83,23 +82,10 @@ int	ui_element_render(t_ui_element *elem)
 	else
 		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
 
-	new_pos.x = elem->pos.x;
-	new_pos.y = elem->pos.y;
-	new_pos.w = elem->pos.w;
-	new_pos.h = elem->pos.h;
-	if (elem->pos.x < 1.0f && elem->pos.x > 0.0f)
-		new_pos.x = parent_pos.w * elem->pos.x;
-	if (elem->pos.y < 1.0f && elem->pos.y > 0.0f)
-		new_pos.y = parent_pos.h * elem->pos.y;
-	if (elem->pos.w < 1.0f && elem->pos.w > 0.0f)
-		new_pos.w = parent_pos.w * elem->pos.w;
-	if (elem->pos.h < 1.0f && elem->pos.h > 0.0f)
-		new_pos.h = parent_pos.h * elem->pos.h;
-
-	elem->screen_pos.w = new_pos.w;
-	elem->screen_pos.h = new_pos.h;
-	elem->screen_pos.x = parent_pos.x + new_pos.x;
-	elem->screen_pos.y = parent_pos.y + new_pos.y;
+	elem->screen_pos.w = elem->pos.w;
+	elem->screen_pos.h = elem->pos.h;
+	elem->screen_pos.x = parent_pos.x + elem->pos.x;
+	elem->screen_pos.y = parent_pos.y + elem->pos.y;
 
 	if (elem->texture_recreate || elem->win->textures_recreate)
 		ui_element_textures_redo(elem);
@@ -126,8 +112,28 @@ int	ui_element_is_click(t_ui_element *elem)
 /*
  * Editing functions after this.
 */
+
+/*
+ * You can either give in absolute values,
+ * or give a value between 0.0 and 1.0
+ * to set relative to the parent of the element.
+*/
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
+	t_vec4i	parent_pos;
+
+	if (elem->parent_type == UI_TYPE_WINDOW)
+		parent_pos = ((t_ui_window *)elem->parent)->screen_pos;
+	else
+		parent_pos = ((t_ui_element *)elem->parent)->screen_pos;
+	if (pos.x < 1.0f && pos.x > 0.0f)
+		pos.x = parent_pos.w * pos.x;
+	if (pos.y < 1.0f && pos.y > 0.0f)
+		pos.y = parent_pos.h * pos.y;
+	if (pos.w < 1.0f && pos.w > 0.0f)
+		pos.w = parent_pos.w * pos.w;
+	if (pos.h < 1.0f && pos.h > 0.0f)
+		pos.h = parent_pos.h * pos.h;
 	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
 		elem->texture_recreate = 1;
 	elem->pos = pos;
