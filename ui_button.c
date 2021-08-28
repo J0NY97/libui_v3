@@ -22,9 +22,7 @@ void	ui_button_event(t_ui_element *elem, SDL_Event e)
 {
 	if (!elem->show)
 		return ;
-	elem->is_hover = 0;
-	if (point_in_rect(elem->win->mouse_pos, elem->screen_pos))
-		elem->is_hover = 1;
+	elem->is_hover = ui_element_is_hover(elem);
 	if (elem->is_hover && e.type == SDL_MOUSEBUTTONDOWN)
 		elem->is_click = 1;
 	if (elem->is_click && e.type == SDL_MOUSEBUTTONUP)

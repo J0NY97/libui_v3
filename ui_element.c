@@ -110,6 +110,19 @@ int	ui_element_render(t_ui_element *elem)
 	return (1);
 }
 
+int	ui_element_is_hover(t_ui_element *elem)
+{
+	if (point_in_rect(elem->win->mouse_pos, elem->screen_pos))
+		return (1);
+	return (0);
+}
+int	ui_element_is_click(t_ui_element *elem)
+{
+	if (ui_element_is_hover(elem) && elem->win->mouse_down)
+		return (1);
+	return (0);
+}
+
 /*
  * Editing functions after this.
 */

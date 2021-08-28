@@ -71,12 +71,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	input = elem->element;
 	label = input->label.element;
 
-	elem->is_hover = 0;
-	if (point_in_rect(elem->win->mouse_pos, elem->screen_pos))
-		elem->is_hover = 1;
-	else if (elem->is_click == 0)
-		return ;
-	len = ft_strlen(label->text);
+	elem->is_hover = ui_element_is_hover(elem);
 	if (elem->is_hover == 1 && e.type == SDL_MOUSEBUTTONDOWN)
 	{
 		if (elem->is_click == 0)
@@ -89,6 +84,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	}
 	if (elem->is_click == 1)
 	{
+		len = ft_strlen(label->text);
 		if (e.type == SDL_TEXTINPUT)
 		{
 			insert_str_after_nth_char(&label->text, e.text.text, input->cursor_on_char_num);
@@ -224,7 +220,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				if (elem->is_hover == 1)
 				{
 					// Dont need y because that doesnt matter. only needed if the text can stack on top of eachother, think about it, hard to explain.
-					input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, e.button.x - input->label.screen_pos.x, label->font);
+					input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
 				}
 				input->cursor_from_char_num = input->cursor_on_char_num; // IMPORTANT:make this is in hover != 1 
 			}
@@ -257,7 +253,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 			{
 				if (e.button.state == SDL_PRESSED)
 					input->cursor_from_char_num = input->cursor_on_char_num;
-				input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, e.button.x - input->label.screen_pos.x, label->font);
+				input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
 			}
 		}
 		len = ft_strlen(label->text);
@@ -273,10 +269,10 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 			input->cursor_from_char_num = input->cursor_on_char_num;
 		}
 		label->texture_recreate = 1;
+		len = ft_strlen(label->text);
+		input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
+		input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 	}
-	len = ft_strlen(label->text);
-	input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
-	input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 }
 
 int	ui_input_render(t_ui_element *elem)

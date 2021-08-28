@@ -235,6 +235,8 @@ void					ui_window_flag_set(t_ui_window *win, int flags);
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
+int						ui_element_is_hover(t_ui_element *elem);
+int						ui_element_is_click(t_ui_element *elem);
 void					ui_element_pos_set(t_ui_element *elem, t_vec4 pos);
 void					ui_element_pos_set2(t_ui_element *elem, t_vec2 pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
