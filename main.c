@@ -249,9 +249,9 @@ int	main(void)
 		{ // This is basically where you would put your game rendering, or whatever you want to show in the background.
 			SDL_SetRenderTarget(win.renderer, NULL);
 			SDL_RenderClear(win.renderer);
-			/*
 			SDL_SetRenderDrawColor(win.renderer, 125, 125, 125, 255);
 			SDL_RenderFillRect(win.renderer, NULL);
+			/*
 			*/
 		}
 
