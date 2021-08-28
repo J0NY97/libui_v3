@@ -74,6 +74,9 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 			elem->pos.x = 0;
 		if (align & UI_TEXT_ALIGN_RIGHT)
 			elem->pos.x = parent_pos.w - label->text_wh.x;
+		ft_printf("%s\n", label->text);
+		ft_printf("elem->pos.x = (%.2f / 2) - (%d / 2); = %.2f\n", parent_pos.w, label->text_wh.x, elem->pos.x);
+		ft_printf("elem->pos.y = (%.2f / 2) - (%d / 2); = %.2f\n", parent_pos.h, label->text_wh.y, elem->pos.y);
 	}
 }
 
@@ -94,10 +97,10 @@ int	ui_label_render(t_ui_element *elem)
 
 	label = elem->element;
 	if (label->texture_recreate)
+	{
 		ui_label_texture_redo(elem);
-	// fix this so we dont do it everytime?
-	ui_label_text_align(elem, label->text_align);
-
+		ui_label_text_align(elem, label->text_align);
+	}
 	if (!ui_element_render(elem))
 		return (0);
 

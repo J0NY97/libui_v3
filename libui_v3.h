@@ -189,6 +189,7 @@ typedef struct s_ui_slider
 	int					value;
 	int					min_value;
 	int					max_value;
+	bool				update;
 }						t_ui_slider;
 
 /*

@@ -28,6 +28,8 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_pos_set(&slider->max_label, vec4(elem->pos.w, 0, elem->pos.h, elem->pos.h));
 	ui_element_parent_set(&slider->min_label, elem, UI_TYPE_ELEMENT, &elem->show);
 	ui_element_parent_set(&slider->max_label, elem, UI_TYPE_ELEMENT, &elem->show);
+
+	slider->update = 1;
 }
 
 int	ui_get_slider_value(int min, int max, int pos_x, int w)
@@ -66,6 +68,7 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 		return ;
 	slider->button.pos.x = ft_clamp(slider->button.pos.x, 0, elem->pos.w - slider->button.pos.w);
 	slider->value = ui_get_slider_value(slider->min_value, slider->max_value, slider->button.pos.x, elem->pos.w - slider->button.pos.w);
+	slider->update = 1;
 }
 
 int	ui_slider_render(t_ui_element *elem)
@@ -80,15 +83,19 @@ int	ui_slider_render(t_ui_element *elem)
 	if (!ui_element_render(elem))
 		return (0);
 
-	ft_b_itoa(slider->min_value, temp);
-	ui_label_text_set(&slider->min_label, temp);
-	ft_b_itoa(slider->max_value, temp);
-	ui_label_text_set(&slider->max_label, temp);
-	ft_b_itoa(slider->value, temp);
-	ui_label_text_set(&button->label, temp);
+	if (slider->update)
+	{
+		ft_b_itoa(slider->min_value, temp);
+		ui_label_text_set(&slider->min_label, temp);
+		ft_b_itoa(slider->max_value, temp);
+		ui_label_text_set(&slider->max_label, temp);
+		ft_b_itoa(slider->value, temp);
+		ui_label_text_set(&button->label, temp);
 
-	ui_element_pos_set2(&slider->min_label, vec2(-10, 0));
-	ui_element_pos_set2(&slider->max_label, vec2(elem->pos.w, 0));
+		ui_element_pos_set2(&slider->min_label, vec2(-10, 0));
+		ui_element_pos_set2(&slider->max_label, vec2(elem->pos.w, 0));
+		slider->update = 0;
+	}
 
 	ui_button_render(&slider->button);
 	ui_label_render(&slider->min_label);
