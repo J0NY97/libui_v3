@@ -427,6 +427,7 @@ Menu layer_menu
 Window toolbox_window
 {
 	pos : 0, 25, 220, 1030;
+	flag : resizeable;
 	brush_buttons_menu;
 	brush_modifier_menu;
 	brush_shape_menu;

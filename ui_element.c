@@ -87,13 +87,13 @@ int	ui_element_render(t_ui_element *elem)
 	new_pos.y = elem->pos.y;
 	new_pos.w = elem->pos.w;
 	new_pos.h = elem->pos.h;
-	if (elem->pos.x < 1.0f)
+	if (elem->pos.x < 1.0f && elem->pos.x > 0.0f)
 		new_pos.x = parent_pos.w * elem->pos.x;
-	if (elem->pos.y < 1.0f)
+	if (elem->pos.y < 1.0f && elem->pos.y > 0.0f)
 		new_pos.y = parent_pos.h * elem->pos.y;
-	if (elem->pos.w < 1.0f)
+	if (elem->pos.w < 1.0f && elem->pos.w > 0.0f)
 		new_pos.w = parent_pos.w * elem->pos.w;
-	if (elem->pos.h < 1.0f)
+	if (elem->pos.h < 1.0f && elem->pos.h > 0.0f)
 		new_pos.h = parent_pos.h * elem->pos.h;
 
 	if (elem->texture_recreate)

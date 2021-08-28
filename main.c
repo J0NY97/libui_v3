@@ -19,10 +19,8 @@ int	main(void)
 
 	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 
-	/*
 	ui_load(&toolbox, "toolbox.ui");
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
-	*/
 
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
 	//
@@ -213,10 +211,8 @@ int	main(void)
 			ui_button_event(&test_button, e);
 
 			// Layout
-			/*
 			ui_layout_event(&toolbox, e);
 			ui_layout_event(&guimp_toolbox, e);
-			*/
 		}
 
 		// User Code
@@ -269,12 +265,11 @@ int	main(void)
 		ui_window_render(&win);
 
 		SDL_RenderPresent(win.renderer);
-		//ui_window_render(&win);
 
 		// Layout
-		/*
 		ui_layout_render(&toolbox);
 		ui_layout_render(&guimp_toolbox);
+		/*
 		*/
 	}
 	return (0);

@@ -47,14 +47,6 @@ int	ui_layout_render(t_ui_layout *layout)
 	t_ui_window		*win;
 	t_ui_element	*elem;
 
-	curr = layout->windows;
-	while (curr)
-	{
-		win = curr->content;
-		SDL_RenderClear(win->renderer);
-		ui_window_render(win);
-		curr = curr->next;
-	}
 	/////////////////////////////
 	// Render all the elements
 	/////////////////////////////
@@ -88,6 +80,7 @@ int	ui_layout_render(t_ui_layout *layout)
 	while (curr)
 	{
 		win = curr->content;
+		ui_window_render(win);
 		SDL_RenderPresent(win->renderer);
 		curr = curr->next;
 	}
