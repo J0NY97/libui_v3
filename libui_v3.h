@@ -173,6 +173,27 @@ typedef struct s_ui_checkbox
 	t_ui_element		*elem;
 }						t_ui_checkbox;
 
+/*
+ * A collection of buttons where only one button can
+ * be toggled at a time.
+ *
+ * Could probably use checkbox event on them.
+ * But you have to untoggle all the other ones.
+*/
+// Could probably be used in the tab buttons.
+typedef struct s_ui_radio
+{
+	t_ui_element		*elem;
+}						t_ui_radio;
+/*
+ * If you click one of the buttons it will get toggled,
+ * and its corresponding menu will be shown.
+ * Only one button can be toggled at a time.
+*/
+typedef struct s_ui_tab
+{
+	t_ui_element		*elem;
+}						t_ui_tab;
 
 /*
  * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
