@@ -26,21 +26,6 @@ typedef struct s_rgba
 }					t_rgba;
 
 /*
- * These are flags, for a window, that can be changed after the fact.
-*/
-enum e_window_flags
-{
-	UI_WINDOW_HIDE					= 0x00000001,
-	UI_WINDOW_SHOW					= 0x00000010,
-	UI_WINDOW_MAXIMIZE				= 0x00000100,
-	UI_WINDOW_MINIMIZE				= 0x00001000,
-	UI_WINDOW_FULLSCREEN			= 0x00010000,
-	UI_WINDOW_FULLSCREEN_WINDOWED	= 0x00100000,
-	UI_WINDOW_GRAB					= 0x01000000,
-	UI_WINDOW_RESIZEABLE			= 0x10000000
-};
-
-/*
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
  * t_vec2i		mouse_pos;			x, y for mouse on window texture;
  * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size;
@@ -118,20 +103,6 @@ typedef struct s_ui_menu
 	t_ui_element		*elem;
 	t_list				*children;
 }						t_ui_menu;
-
-/*
- * NOTE:
- * LEFT/RIGHT can be combined with TOP/BOT
-*/
-enum e_ui_text_align
-{
-	UI_TEXT_ALIGN_NONE		= 0x00000000,
-	UI_TEXT_ALIGN_LEFT		= 0x00000001,
-	UI_TEXT_ALIGN_RIGHT		= 0x00000010,
-	UI_TEXT_ALIGN_TOP		= 0x00000100,
-	UI_TEXT_ALIGN_BOT		= 0x00001000,
-	UI_TEXT_ALIGN_CENTER	= 0x00010000
-};
 
 /*
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.

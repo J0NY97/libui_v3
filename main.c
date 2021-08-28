@@ -53,7 +53,7 @@ int	main(void)
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
 
 	// Window
-	ui_window_new(&win, "test window", vec4(1920 - 800, 25, 800, 720));
+	ui_window_new(&win, "test window", vec4(1920 - 1280, 25, 1280, 720));
 	ui_window_flag_set(&win, UI_WINDOW_RESIZEABLE);
 	ui_texture_fill(win.renderer, win.texture, 0xff404040);
 	ui_texture_draw_border(win.renderer, win.texture, 2, 0xffff0000);

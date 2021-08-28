@@ -35,4 +35,36 @@ enum	e_element_types
 	UI_TYPE_AMOUNT
 };
 
+/*
+ * NOTE:
+ * LEFT/RIGHT can be combined with TOP/BOT
+*/
+enum e_ui_text_align
+{
+	UI_TEXT_ALIGN_NONE		= 0x00000000,
+	UI_TEXT_ALIGN_LEFT		= 0x00000001,
+	UI_TEXT_ALIGN_RIGHT		= 0x00000010,
+	UI_TEXT_ALIGN_TOP		= 0x00000100,
+	UI_TEXT_ALIGN_BOT		= 0x00001000,
+	UI_TEXT_ALIGN_CENTER	= 0x00010000
+};
+
+/*
+ * These are flags, for a window, that can be changed after the fact.
+ *
+ * NOTE:
+ * FULLSCREEN toggles when set (if SDL_FALSE makes SDL_TRUE and vice versa)
+*/
+enum e_window_flags
+{
+	UI_WINDOW_HIDE					= 0x00000001,
+	UI_WINDOW_SHOW					= 0x00000010,
+	UI_WINDOW_MAXIMIZE				= 0x00000100,
+	UI_WINDOW_MINIMIZE				= 0x00001000,
+	UI_WINDOW_FULLSCREEN			= 0x00010000,
+	UI_WINDOW_FULLSCREEN_WINDOWED	= 0x00100000,
+	UI_WINDOW_GRAB					= 0x01000000,
+	UI_WINDOW_RESIZEABLE			= 0x10000000
+};
+
 #endif

@@ -41,6 +41,23 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 			win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 		}
+		else if (e.type == SDL_KEYDOWN)
+		{
+			int modkey = SDL_GetModState();
+			if (modkey & KMOD_LALT) // LALT mods
+			{
+				if (e.key.keysym.scancode == SDL_SCANCODE_RETURN) // make fullscreen
+				{
+					ui_window_flag_set(win, UI_WINDOW_FULLSCREEN);
+					win->textures_recreate = 1;
+				}
+			}
+			else if (modkey & KMOD_LCTRL) // LCTRL mods
+			{
+				if (e.key.keysym.scancode == SDL_SCANCODE_R) // force texture recreate
+					win->textures_recreate = 1;
+			}
+		}
 	}
 	if (e.button.type == SDL_MOUSEBUTTONDOWN)
 		win->mouse_down = 1;
@@ -71,6 +88,9 @@ void	ui_window_free(void *win)
 
 void	ui_window_flag_set(t_ui_window *win, int flags)
 {
+	int	curr_flags;
+
+	curr_flags = SDL_GetWindowFlags(win->win);
 	if (flags & UI_WINDOW_HIDE)
 		SDL_HideWindow(win->win);
 	if (flags & UI_WINDOW_SHOW)
@@ -80,7 +100,12 @@ void	ui_window_flag_set(t_ui_window *win, int flags)
 	if (flags & UI_WINDOW_MINIMIZE)
 		SDL_MinimizeWindow(win->win);
 	if (flags & UI_WINDOW_FULLSCREEN)
-		SDL_SetWindowFullscreen(win->win, SDL_WINDOW_FULLSCREEN);
+	{
+		if (curr_flags & SDL_WINDOW_FULLSCREEN)
+			SDL_SetWindowFullscreen(win->win, 0);
+		else
+			SDL_SetWindowFullscreen(win->win, SDL_WINDOW_FULLSCREEN);
+	}
 	if (flags & UI_WINDOW_FULLSCREEN_WINDOWED)
 		SDL_SetWindowFullscreen(win->win, SDL_WINDOW_FULLSCREEN_DESKTOP);
 	if (flags & UI_WINDOW_GRAB)
