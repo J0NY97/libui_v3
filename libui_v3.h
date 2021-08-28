@@ -80,7 +80,6 @@ typedef struct s_ui_window
  * char			*id;						id of the element, so we can write a get_element_by_id();
  * bool			is_hover;					1 if the mouse is hovering over the element.
  * bool			is_click;					1 if you have mouse button down on the element. basically if hover && mouse_down.
- * bool			is_click_repeat;			1 if you have had mouse down on element for more than 1 frame.
 */
 typedef struct s_ui_element
 {
@@ -124,13 +123,14 @@ typedef struct s_ui_menu
 */
 enum e_ui_text_align
 {
-	UI_TEXT_ALIGN_NONE = 0x00000000,
-	UI_TEXT_ALIGN_LEFT = 0x00000001,
-	UI_TEXT_ALIGN_RIGHT = 0x00000010,
-	UI_TEXT_ALIGN_TOP = 0x00000100,
-	UI_TEXT_ALIGN_BOT = 0x00001000,
-	UI_TEXT_ALIGN_CENTER = 0x00010000,
+	UI_TEXT_ALIGN_NONE		= 0x00000000,
+	UI_TEXT_ALIGN_LEFT		= 0x00000001,
+	UI_TEXT_ALIGN_RIGHT		= 0x00000010,
+	UI_TEXT_ALIGN_TOP		= 0x00000100,
+	UI_TEXT_ALIGN_BOT		= 0x00001000,
+	UI_TEXT_ALIGN_CENTER	= 0x00010000
 };
+
 /*
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
  * bool	texture_recreate;	set this to 1 if you edit something of the texture like.. anything.. will be set to 0 after creation.
@@ -241,6 +241,7 @@ void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 void					ui_element_parent_set(t_ui_element *elem, t_ui_element *parent, int type, bool *show);
 void					ui_element_id_set(t_ui_element *elem, char *id);
+void					ui_element_print(t_ui_element *elem);
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_label *recipe);

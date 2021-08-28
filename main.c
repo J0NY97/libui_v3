@@ -95,8 +95,8 @@ int	main(void)
 
 	ui_element_pos_set2(&test_button, vec2(10, 400));
 	ui_label_text_set(&((t_ui_button *)test_button.element)->label, "Test Button");
-	ui_label_size_set(&((t_ui_button *)test_button.element)->label, 32);
-	ui_label_color_set(&((t_ui_button *)button.element)->label, 0xff00ff00);
+	ui_label_color_set(&((t_ui_button *)test_button.element)->label, 0xff00ff00);
+	ui_label_size_set(&((t_ui_button *)test_button.element)->label, 5);
 
 	ui_label_print(test_button_label);
 
@@ -175,8 +175,8 @@ int	main(void)
 	ft_putstr("Inits done!\n");
 
 	SDL_Event	e;
-	int	run = 1;
-	char temp[20];
+	int			run = 1;
+	char		temp[20];
 	while (run)
 	{
 		// Input
@@ -190,6 +190,12 @@ int	main(void)
 				{
 					ft_printf("Mouse Pos : ");
 					print_veci(win.mouse_pos.v, 2);
+				}
+				else if (e.key.keysym.scancode == SDL_SCANCODE_I)
+				{
+					ui_element_print(&test_button);
+					ui_label_print(test_button_label);
+					ui_label_size_set(&((t_ui_button *)test_button.element)->label, test_button_label->font_size + 1);
 				}
 			}
 			else if (e.window.type == SDL_WINDOWEVENT)

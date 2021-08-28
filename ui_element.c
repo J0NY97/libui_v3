@@ -96,6 +96,9 @@ int	ui_element_render(t_ui_element *elem)
 	if (elem->pos.h < 1.0f)
 		new_pos.h = parent_pos.h * elem->pos.h;
 
+	if (elem->texture_recreate)
+		ui_element_textures_redo(elem);
+
 	elem->screen_pos.w = new_pos.w;
 	elem->screen_pos.h = new_pos.h;
 	elem->screen_pos.x = parent_pos.x + new_pos.x;
@@ -179,4 +182,22 @@ void	ui_element_id_set(t_ui_element *elem, char *id)
 	if (elem->id)
 		ft_strdel(&elem->id);
 	elem->id = ft_strdup(id);
+}
+
+void	ui_element_print(t_ui_element *elem)
+{
+	ft_printf("[%s]\n", __FUNCTION__);
+	ft_printf("\tid : %s\n", elem->id);
+	ft_printf("\tpos : ");
+	print_vec(elem->pos.v, 4);
+	ft_printf("\tscreen_pos : ");
+	print_veci(elem->screen_pos.v, 4);
+	ft_printf("\tuse_images : %d\n", elem->use_images);
+	ft_printf("\tstate : %d\n", elem->state);
+	ft_printf("\tparent_type : %d\n", elem->parent_type);
+	ft_printf("\telement_type : %d\n", elem->element_type);
+	ft_printf("\tshow : %d\n", elem->show);
+	ft_printf("\tis_hover : %d\n", elem->is_hover);
+	ft_printf("\tis_click : %d\n", elem->is_click);
+	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
 }
