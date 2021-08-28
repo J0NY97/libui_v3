@@ -22,6 +22,8 @@ int	main(void)
 	ui_load(&toolbox, "toolbox.ui");
 	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
 
+	t_ui_window	*guimp_toolbox_window = ui_layout_get_window_by_id(&guimp_toolbox, "toolbox_window");
+
 	// Edit guimp_toolbox elements in ways that are not possible in the ui file
 	//
 	//
@@ -247,12 +249,24 @@ int	main(void)
 
 		// Render
 		{ // This is basically where you would put your game rendering, or whatever you want to show in the background.
+			// Clear Render
 			SDL_SetRenderTarget(win.renderer, NULL);
 			SDL_RenderClear(win.renderer);
+			// Fill Window Texture with whatever you want
+			SDL_SetRenderTarget(win.renderer, win.texture);
 			SDL_SetRenderDrawColor(win.renderer, 125, 125, 125, 255);
 			SDL_RenderFillRect(win.renderer, NULL);
+			SDL_SetRenderTarget(win.renderer, NULL);
 			/*
 			*/
+			// Clearing toolbox window window
+			SDL_SetRenderTarget(guimp_toolbox_window->renderer, NULL);
+			SDL_RenderClear(guimp_toolbox_window->renderer);
+			// Filling with color so we dont get random
+			SDL_SetRenderTarget(guimp_toolbox_window->renderer, guimp_toolbox_window->texture);
+			SDL_SetRenderDrawColor(guimp_toolbox_window->renderer, 125, 125, 125, 255);
+			SDL_RenderFillRect(guimp_toolbox_window->renderer, NULL);
+			SDL_SetRenderTarget(guimp_toolbox_window->renderer, NULL);
 		}
 
 		ui_label_render(&label);
