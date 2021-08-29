@@ -9,6 +9,8 @@ void	ui_radio_new(t_ui_window *win, t_ui_element *elem)
 	radio->elem = elem;
 	elem->element = radio;
 	elem->element_type = UI_TYPE_RADIO;
+	radio->buttons = NULL;
+	radio->active = NULL;
 }
 
 void	ui_radio_event(t_ui_element *elem, SDL_Event e)
@@ -24,15 +26,13 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 	while (curr)
 	{
 		child = curr->content;
-		ui_checkbox_event(child, e);
-		/*
-		if (child->is_click && child != radio->active)
+		ui_button_event(child, e);
+		if (child->is_click)
 			radio->active = child;
-		else
-			child->is_click = 0;
-			*/
 		curr = curr->next;
 	}
+	if (radio->active)
+		radio->active->state = UI_STATE_CLICK;
 }
 
 int	ui_radio_render(t_ui_element *elem)
