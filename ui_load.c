@@ -550,6 +550,13 @@ void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layou
 	(void)layout;
 }
 
+void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
+{
+	(void)elem;
+	(void)recipe;
+	(void)layout;
+}
+
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	// All stuff

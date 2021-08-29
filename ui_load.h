@@ -153,6 +153,17 @@ static const t_ui_acceptable	g_acceptable_radio =
 	.eventer = &ui_radio_event
 };
 
+static const t_ui_acceptable	g_acceptable_tab =
+{
+	.name = "Tab",
+	.type = UI_TYPE_TAB,
+	.freer = &ui_tab_free,
+	.maker = &ui_tab_new,
+	.editor = &ui_tab_editor,
+	.renderer = &ui_tab_render,
+	.eventer = &ui_tab_event
+};
+
 static const t_ui_acceptable	g_acceptable_window =
 {
 	.name = "Window",
@@ -177,6 +188,7 @@ static const t_ui_acceptable	g_acceptable[] =
 	g_acceptable_slider,
 	g_acceptable_checkbox,
 	g_acceptable_radio,
+	g_acceptable_tab,
 	NULL
 };
 
