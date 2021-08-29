@@ -193,10 +193,18 @@ typedef struct s_ui_radio
  * If you click one of the buttons it will get toggled,
  * and its corresponding menu will be shown.
  * Only one button can be toggled at a time.
+ *
+ * t_ui_element	*active;		currently clicked button;
+ * t_list		*buttons;		list of t_ui_element with ->element = t_ui_button;
+ * t_list		*menus;			list of t_ui_element with ->element = t_ui_menu;
 */
 typedef struct s_ui_tab
 {
 	t_ui_element		*elem;
+	t_ui_element		*active;
+	t_ui_element		*active_menu;
+	t_list				*buttons;
+	t_list				*menus;
 }						t_ui_tab;
 
 /*
@@ -324,6 +332,15 @@ int						ui_radio_render(t_ui_element *elem);
 void					ui_radio_free(void *elem);
 // Other radio functions
 void					ui_radio_add(t_ui_element *elem, t_ui_element *child);
+
+// Tab
+void					ui_tab_new(t_ui_window *win, t_ui_element *elem);
+void					ui_tab_event(t_ui_element *elem, SDL_Event e);
+int						ui_tab_render(t_ui_element *elem);
+void					ui_tab_free(void *elem);
+// Other tab functions
+void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
+
 
 // Load
 void					ui_print_accepted(void);

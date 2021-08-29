@@ -190,6 +190,34 @@ int	main(void)
 	ui_radio_add(&radio0, &rad_button0);
 	ui_radio_add(&radio0, &rad_button1);
 
+	// Tab
+	t_ui_element	tab0;
+	ui_tab_new(&win, &tab0);
+	ui_element_pos_set(&tab0, vec4(10, 650, 20, 20));
+	ui_element_color_set(&tab0, UI_STATE_DEFAULT, 0xff00ff00);
+
+		// Tabs
+	t_ui_element	tab_button0;
+	ui_button_new(&win, &tab_button0);
+	ui_element_pos_set(&tab_button0, vec4(40, 650, 50, 20));
+	ui_element_color_set(&tab_button0, UI_STATE_DEFAULT, 0xffff00ff);
+	t_ui_element	tab_menu0;
+	ui_menu_new(&win, &tab_menu0);
+	ui_element_pos_set(&tab_menu0, vec4(40, 670, 50, 50));
+	ui_element_color_set(&tab_menu0, UI_STATE_DEFAULT, 0xffff00ff);
+
+	t_ui_element	tab_button1;
+	ui_button_new(&win, &tab_button1);
+	ui_element_pos_set(&tab_button1, vec4(100, 650, 50, 20));
+	ui_element_color_set(&tab_button1, UI_STATE_DEFAULT, 0xff00ffff);
+	t_ui_element	tab_menu1;
+	ui_menu_new(&win, &tab_menu1);
+	ui_element_pos_set(&tab_menu1, vec4(100, 670, 50, 50));
+	ui_element_color_set(&tab_menu1, UI_STATE_DEFAULT, 0xff00ffff);
+
+	ui_tab_add(&tab0, &tab_button0, &tab_menu0);
+	ui_tab_add(&tab0, &tab_button1, &tab_menu1);
+
 	ft_putstr("Inits done!\n");
 
 	SDL_Event	e;
@@ -230,6 +258,7 @@ int	main(void)
 			ui_checkbox_event(&checkbox0, e);
 			ui_button_event(&test_button, e);
 			ui_radio_event(&radio0, e);
+			ui_tab_event(&tab0, e);
 
 			// Layout
 			ui_layout_event(&toolbox, e);
@@ -302,6 +331,7 @@ int	main(void)
 		ui_checkbox_render(&checkbox0);
 		ui_button_render(&test_button);
 		ui_radio_render(&radio0);
+		ui_tab_render(&tab0);
 
 		ui_window_render(&win);
 

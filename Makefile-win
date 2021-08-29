@@ -13,6 +13,7 @@ SRCS = \
 	./ui_slider.c \
 	./ui_checkbox.c \
 	./ui_radio.c \
+	./ui_tab.c \
 	./ui_load.c \
 	./ui_layout.c \
 	./vec.c \
