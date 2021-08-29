@@ -1,6 +1,7 @@
 #ifndef UI_LOAD_H
 # define UI_LOAD_H
 # include "libui_v3.h"
+# include "ui_elements.h"
 # include "ui_enum.h"
 # include "ui_vec.h"
 
@@ -15,57 +16,15 @@ typedef struct s_ui_dropdown	t_ui_dropdown;
 typedef struct s_ui_element		t_ui_element;
 typedef struct s_ui_layout		t_ui_layout;
 
-void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
-int		ui_window_render(t_ui_window *win);
-void	ui_window_free(void *win);
-
 void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_button_free(void *button);
-void	ui_button_new(t_ui_window *win, t_ui_element *button);
-int		ui_button_render(t_ui_element *button);
-void	ui_button_event(t_ui_element *elem, SDL_Event e);
-
 void	ui_label_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_label_free(void *label);
-void	ui_label_new(t_ui_window *win, t_ui_element *label);
-void	ui_label_event(t_ui_element *elem, SDL_Event e);
-int		ui_label_render(t_ui_element *label);
-
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_menu_new(t_ui_window *win, t_ui_element *menu);
-void	ui_menu_free(void *menu);
-int		ui_menu_render(t_ui_element *menu);
-void	ui_menu_event(t_ui_element *elem, SDL_Event e);
-
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-int		ui_dropdown_render(t_ui_element *drop);
-void	ui_dropdown_free(void *drop);
-void	ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
-void	ui_dropdown_event(t_ui_element *elem, SDL_Event e);
-
 void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-int		ui_input_render(t_ui_element *elem);
-void	ui_input_free(void *drop);
-void	ui_input_new(t_ui_window *win, t_ui_element *elem);
-void	ui_input_event(t_ui_element *elem, SDL_Event e);
-
 void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-int		ui_slider_render(t_ui_element *elem);
-void	ui_slider_free(void *drop);
-void	ui_slider_new(t_ui_window *win, t_ui_element *elem);
-void	ui_slider_event(t_ui_element *elem, SDL_Event e);
-
 void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
-void	ui_checkbox_event(t_ui_element *elem, SDL_Event e);
-int		ui_checkbox_render(t_ui_element *elem);
-void	ui_checkbox_free(void *elem);
-
 void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
-void	ui_radio_new(t_ui_window *win, t_ui_element *elem);
-void	ui_radio_event(t_ui_element *elem, SDL_Event e);
-int		ui_radio_render(t_ui_element *elem);
-void	ui_radio_free(void *elem);
+void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
