@@ -170,6 +170,28 @@ int	main(void)
 	ui_checkbox_new(&win, &checkbox0);
 	ui_element_pos_set(&checkbox0, vec4(100, 10, 20, 20));
 
+	// Radio
+	t_ui_element	radio0;
+	ui_checkbox_new(&win, &radio0);
+	ui_element_pos_set(&radio0, vec4(10, 600, 20, 20));
+	ui_element_color_set(&radio0, UI_STATE_DEFAULT, 0xffff0000);
+
+		// Radio buttons
+	t_ui_element	rad_button0;
+	ui_button_new(&win, &rad_button0);
+	ui_element_pos_set(&rad_button0, vec4(40, 600, 50, 20));
+	ui_element_color_set(&rad_button0, UI_STATE_DEFAULT, 0xffffff00);
+
+	t_ui_element	rad_button1;
+	ui_button_new(&win, &rad_button1);
+	ui_element_pos_set(&rad_button1, vec4(100, 600, 50, 20));
+	ui_element_color_set(&rad_button1, UI_STATE_DEFAULT, ui_color_come_up_with_name(0xffff00ff, 0.8f));
+	ui_element_color_set(&rad_button1, UI_STATE_HOVER, ui_color_come_up_with_name(0xffff00ff, 0.0f));
+	ui_element_color_set(&rad_button1, UI_STATE_CLICK, ui_color_come_up_with_name(0xffff00ff, 1.5f));
+
+	ui_radio_add(&radio0, &rad_button0);
+	ui_radio_add(&radio0, &rad_button1);
+
 	ft_putstr("Inits done!\n");
 
 	SDL_Event	e;
@@ -209,6 +231,7 @@ int	main(void)
 			ui_slider_event(&slider, e);
 			ui_checkbox_event(&checkbox0, e);
 			ui_button_event(&test_button, e);
+			ui_radio_event(&radio0, e);
 
 			// Layout
 			ui_layout_event(&toolbox, e);
@@ -280,6 +303,7 @@ int	main(void)
 		ui_slider_render(&slider);
 		ui_checkbox_render(&checkbox0);
 		ui_button_render(&test_button);
+		ui_radio_render(&radio0);
 
 		ui_window_render(&win);
 

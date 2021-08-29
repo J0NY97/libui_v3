@@ -12,6 +12,7 @@ SRCS = \
 	./ui_input.c \
 	./ui_slider.c \
 	./ui_checkbox.c \
+	./ui_radio.c \
 	./ui_load.c \
 	./ui_layout.c \
 	./vec.c \

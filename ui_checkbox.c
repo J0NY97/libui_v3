@@ -10,6 +10,11 @@ void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_CHECKBOX;
 }
 
+/*
+ * NOTE for DEV:
+ * try to keep this element only,
+ * because its used in the radio buttons.
+*/
 void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 {
 	elem->is_hover = 0;

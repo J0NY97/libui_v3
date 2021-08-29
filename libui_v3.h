@@ -179,11 +179,15 @@ typedef struct s_ui_checkbox
  *
  * Could probably use checkbox event on them.
  * But you have to untoggle all the other ones.
+ *
+ * t_list			*buttons;		list of t_ui_element with element = t_ui_button
 */
 // Could probably be used in the tab buttons.
 typedef struct s_ui_radio
 {
 	t_ui_element		*elem;
+	t_list				*buttons;
+	t_ui_element		*active;
 }						t_ui_radio;
 /*
  * If you click one of the buttons it will get toggled,
@@ -254,6 +258,7 @@ SDL_Surface				*ui_create_surface(t_vec4i size);
 int						point_in_rect(t_vec2i point, t_vec4i rect);
 t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
+Uint32					ui_color_come_up_with_name(Uint32 orig_col, float procentage);
 char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
 int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
 int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
@@ -311,6 +316,14 @@ void					ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
 void					ui_checkbox_event(t_ui_element *elem, SDL_Event e);
 int						ui_checkbox_render(t_ui_element *elem);
 void					ui_checkbox_free(void *elem);
+
+// Radio
+void					ui_radio_new(t_ui_window *win, t_ui_element *elem);
+void					ui_radio_event(t_ui_element *elem, SDL_Event e);
+int						ui_radio_render(t_ui_element *elem);
+void					ui_radio_free(void *elem);
+// Other radio functions
+void					ui_radio_add(t_ui_element *elem, t_ui_element *child);
 
 // Load
 void					ui_print_accepted(void);

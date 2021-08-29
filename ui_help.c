@@ -30,6 +30,20 @@ Uint32	rgba_to_hex(t_rgba rgba)
 }
 
 /*
+ * Returns darkened version of the original color by procentage;
+*/
+Uint32	ui_color_come_up_with_name(Uint32 orig_col, float procentage)
+{
+	t_rgba	rgba;	
+
+	rgba = hex_to_rgba(orig_col);
+	rgba.r *= procentage;
+	rgba.g *= procentage;
+	rgba.b *= procentage;
+	return (rgba_to_hex(rgba));
+}
+
+/*
  * Returns text starting from char[0] till the char at pos x (coordinate on the screen)
  * NOTE: remember to remove the offset of the text, this only takes into consideration the full str,
  * starting at x 0 for the first char.
