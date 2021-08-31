@@ -159,6 +159,12 @@ typedef struct s_ui_checkbox
  * t_list			*buttons;		list of t_ui_element with element = t_ui_button
 */
 // Could probably be used in the tab buttons.
+// Should radio just be a list that you call a function on, that will do the event handling on them...?
+/*
+ * Maybe reintroduce the group idea you had, in radio you just have buttons in the list, if youre using it in the
+ * tab you have button and menu, and the only thing you do on the group is event handling and ofc render...,
+ * so they^1 dont have to be even elements. *1 they = tab and radio;
+*/
 typedef struct s_ui_radio
 {
 	t_ui_element		*elem;
