@@ -66,7 +66,7 @@ char	**ft_strsplitthatchecksifcharinsidestring(char *str, char c)
 	return (arr);
 }
 
-t_ui_key_value	*make_key_value(char **orig_arr, int *len)
+t_ui_key_value	*make_key_value(char **orig_arr, char c, int *len)
 {
 	t_ui_key_value	*kv;
 	char			**arr;
@@ -79,7 +79,7 @@ t_ui_key_value	*make_key_value(char **orig_arr, int *len)
 	i = -1;
 	while (orig_arr[++i])
 	{
-		arr = ft_strsplitfirstoccurence(orig_arr[i], ':');
+		arr = ft_strsplitfirstoccurence(orig_arr[i], c);
 		temp = ft_strtrim(arr[0]);
 		kv[i].key = ft_strdup(temp);
 		ft_strdel(&temp);
@@ -265,7 +265,7 @@ int	text_align_getter(char *str)
 	return (result);
 }
 
-void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, int result_arr_len)
+void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, bool *result_set, int result_arr_len)
 {
 	char	*trimmed;
 	char	**arr;
@@ -279,6 +279,7 @@ void	hex_arr_arg_to_uint_arr(char *str, unsigned int *result_arr, int result_arr
 		if (ft_strequ(arr[i], "NULL"))
 			continue ;
 		result_arr[i] = (unsigned int)strtoul(arr[i], NULL, 16);
+		result_set[i] = 1;
 	}
 	ft_arraydel(arr);
 }
@@ -339,8 +340,7 @@ void	ui_global_get(t_ui_get *get)
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_color"))
 		{
-			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, 3);
-			get->recipe->bg_color_set = 1;
+			hex_arr_arg_to_uint_arr(get->kv[i].value, get->recipe->bg_color, get->recipe->bg_color_set, 3);
 		}
 		else if (ft_strequ(get->kv[i].key, "bg_image"))
 		{
@@ -380,6 +380,15 @@ void	ui_global_get(t_ui_get *get)
 		{
 			get->recipe->flag = flag_getter(get->kv[i].value);
 			get->recipe->flag_set = 1;
+		}
+		else if (ft_strequ(get->kv[i].key, "tab"))
+		{
+			char	**temp;
+			temp = ft_strsplitfirstoccurence(get->kv[i].value, ',');
+			get->recipe->tabs[get->recipe->tab_amount].key = ft_strtrim(temp[0]);
+			get->recipe->tabs[get->recipe->tab_amount].value = ft_strtrim(temp[1]);
+			get->recipe->tab_amount++;
+			ft_arraydel(temp);
 		}
 		else // should be variables
 		{
@@ -440,7 +449,7 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 		values = ft_strsplitthatchecksifcharinsidestring(inside, ';');
 		int len;
 
-		t_ui_key_value	*kv = make_key_value(values, &len);
+		t_ui_key_value	*kv = make_key_value(values, ':', &len);
 		t_ui_recipe		*recipe = ft_memalloc(sizeof(t_ui_recipe));
 		recipe->id = ft_strdup(var_name);
 		ft_printf("Getting ID : %s\n", recipe->id);
@@ -482,9 +491,8 @@ void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 	t_ui_button	*button;
 
 	button = elem->element;
-	(void)layout;
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_element_edit(&button->label, recipe);
+		ui_layout_element_edit(&button->label, recipe, layout);
 }
 
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -504,10 +512,9 @@ void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 
 	drop = elem->element;
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_element_edit(&drop->label, recipe);
+		ui_layout_element_edit(&drop->label, recipe, layout);
 	else if (recipe->type == UI_TYPE_MENU)
-		ui_layout_element_edit(&drop->menu, recipe);
-	(void)layout;
+		ui_layout_element_edit(&drop->menu, recipe, layout);
 }
 
 void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -516,8 +523,7 @@ void	ui_input_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layou
 
 	input = elem->element;
 	if (recipe->type == UI_TYPE_LABEL)
-		ui_layout_element_edit(&input->label, recipe);
-	(void)layout;
+		ui_layout_element_edit(&input->label, recipe, layout);
 }
 
 void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -526,14 +532,13 @@ void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 
 	slider = elem->element;
 	if (recipe->type == UI_TYPE_BUTTON)
-		ui_layout_element_edit(&slider->button, recipe);
+		ui_layout_element_edit(&slider->button, recipe, layout);
 	else if (recipe->type == UI_TYPE_LABEL)
 	{
-		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe);
-		ui_layout_element_edit(&slider->min_label, recipe);
-		ui_layout_element_edit(&slider->max_label, recipe);
+		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe, layout);
+		ui_layout_element_edit(&slider->min_label, recipe, layout);
+		ui_layout_element_edit(&slider->max_label, recipe, layout);
 	}
-	(void)layout;
 }
 
 void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -557,8 +562,10 @@ void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 	(void)layout;
 }
 
-void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
+void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
+	int	i;
+
 	// All stuff
 	if (recipe->pos_set)
 	{
@@ -577,12 +584,10 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 			new_pos.h = recipe->pos.v[++i];
 		ui_element_pos_set(elem, new_pos);
 	}
-	if (recipe->bg_color_set)
-	{
-		ui_element_color_set(elem, UI_STATE_DEFAULT, recipe->bg_color[UI_STATE_DEFAULT]);
-		ui_element_color_set(elem, UI_STATE_HOVER, recipe->bg_color[UI_STATE_HOVER]);
-		ui_element_color_set(elem, UI_STATE_CLICK, recipe->bg_color[UI_STATE_CLICK]);
-	}
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+		if (recipe->bg_color_set[i])
+			ui_element_color_set(elem, i, recipe->bg_color[i]);
 	if (recipe->bg_image_set)
 	{
 		ui_element_image_set_from_path(elem, UI_STATE_DEFAULT, recipe->bg_image[UI_STATE_DEFAULT]);
@@ -623,6 +628,56 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		if (recipe->text_align_set)
 			ui_label_text_align(label, recipe->text_align);
 	}
+
+	// Tab stuff
+	if (recipe->type == UI_TYPE_TAB)
+	{
+		t_ui_element	*button;
+		t_ui_element	*menu;
+		t_ui_tab		*tab;
+
+		i = -1;
+		while (++i < recipe->tab_amount)
+		{
+			ft_printf("[%s] We are trying to make tab from button : <%s> and menu : <%s>.\n", __FUNCTION__, recipe->tabs[i].key, recipe->tabs[i].value);
+			button = ui_element_create_from_recipe(elem->win, get_recipe_by_id(layout->recipes, recipe->tabs[i].key), layout);
+			menu = ui_element_create_from_recipe(elem->win, get_recipe_by_id(layout->recipes, recipe->tabs[i].value), layout);
+			ui_tab_add(elem, button, menu);
+			ft_printf("[%s] Tab created with button id : %s, and menu id : %s\n", __FUNCTION__, button->id, menu->id);
+		}
+	}
+}
+
+t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout)
+{
+	t_ui_element	*elem;
+	t_ui_recipe		*child_recipe;
+	int				j;
+
+	if (!recipe)
+		ft_printf("[%s] Recipe is NULL... error btw\n", __FUNCTION__);
+	elem = ft_memalloc(sizeof(t_ui_element));
+	g_acceptable[recipe->type].maker(win, elem);
+	elem->id = ft_strdup(recipe->id);
+	j = -1;
+	while (++j < recipe->child_amount)
+	{
+		child_recipe = get_recipe_by_id(layout->recipes, recipe->children_ids[j]);
+		if (child_recipe)
+		{
+			ft_printf("[%s] We have found child recipe : %s\n", __FUNCTION__, child_recipe->id);
+			if (child_recipe->type == UI_TYPE_ELEMENT)
+				ui_layout_element_edit(elem, child_recipe, layout);
+			else if (g_acceptable[child_recipe->type].editor)
+				g_acceptable[child_recipe->type].editor(elem, child_recipe, layout);
+			else
+				ft_printf("[%s] No editor made for element type %d.\n", __FUNCTION__, recipe->type);
+		}
+		else
+			ft_printf("[%s] When searching for child, Couldnt find recipe with id : %s\n", __FUNCTION__, recipe->children_ids[j]);
+	}
+	ui_layout_element_edit(elem, recipe, layout);
+	return (elem);
 }
 
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
@@ -649,7 +704,7 @@ void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *r
 				{
 					ft_printf("[ui_layout_element_new] We have found child recipe : %s\n", child_recipe->id);
 					if (child_recipe->type == UI_TYPE_ELEMENT)
-						ui_layout_element_edit(elem, child_recipe);
+						ui_layout_element_edit(elem, child_recipe, layout);
 					else if (g_acceptable[i].editor)
 						g_acceptable[i].editor(elem, child_recipe, layout);
 					else
@@ -658,13 +713,13 @@ void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *r
 				else
 					ft_printf("[ui_layout_element_new] When searching for child, Couldnt find recipe with id : %s\n", recipe->children_ids[j]);
 			}
-			ui_layout_element_edit(elem, recipe);
+			ui_layout_element_edit(elem, recipe, layout);
 			add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
 			ft_printf("[ui_layout_element_new] Successful make of %s.\n", recipe->id);
 			return ;
 		}
 	}
-	ft_printf("Failed to make new layout element.\n");
+	ft_printf("[%s] Failed to make new layout element.\n", __FUNCTION__);
 }
 
 void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
@@ -708,23 +763,26 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 */
 void	compile_recipes(t_ui_layout *layout)
 {
-	t_list	*curr;
+	int			win_found;
+	t_list		*curr;
 	t_ui_recipe	*recipe;
 
+	win_found = 0;
 	curr = layout->recipes;
 	recipe = NULL;
 	while (curr)
 	{
-		if (((t_ui_recipe *)curr->content)->type == UI_TYPE_WINDOW)
+		recipe = curr->content;
+		if (recipe->type == UI_TYPE_WINDOW)
 		{
-			recipe = curr->content;
 			ft_printf("Window Found : %s\n", recipe->id);
 			ui_layout_window_new(layout, recipe);
+			win_found = 1;
 		}
 		curr = curr->next;
 	}
-	if (!recipe)
-		ft_printf("[compile_recipes] Window Not Found!\n");
+	if (!win_found)
+		ft_printf("[%s] Window Not Found!\n", __FUNCTION__);
 }
 
 void	ui_load(t_ui_layout *layout, char *ui_file_path)

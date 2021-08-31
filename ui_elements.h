@@ -165,10 +165,19 @@ typedef struct s_ui_radio
 	t_list				*buttons;
 	t_ui_element		*active;
 }						t_ui_radio;
+
 /*
+ * Description:
  * If you click one of the buttons it will get toggled,
  * and its corresponding menu will be shown.
  * Only one button can be toggled at a time.
+ *
+ * NOTE:
+ * By default we are setting the tab button and menu as the parent of the tab elem,
+ * if you want to set the buttons where you want, without the element_render pulling
+ * the button and menu elements back to the tab elem, you can remove the parent from
+ * the button and menu elem (or set the parent to the window).
+ * I hope you understood, 'cause I don't.
  *
  * t_ui_element	*active;		currently clicked button;
  * t_ui_element	*active_menu;	currently clicked button's menu;
@@ -183,6 +192,18 @@ typedef struct s_ui_tab
 	t_list				*buttons;
 	t_list				*menus;
 }						t_ui_tab;
+
+/*
+ * Group is just a group of elements,
+ * nothing special.
+ *
+ * t_list			*element_list;			list of t_ui_element with ->element = UI_TYPE_*;
+*/
+typedef struct s_ui_group
+{
+	t_ui_element		*elem;
+	t_list				*element_list;
+}						t_ui_group;
 
 // Window
 void					ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
@@ -274,5 +295,14 @@ int						ui_tab_render(t_ui_element *elem);
 void					ui_tab_free(void *elem);
 // Other tab
 void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
+
+// Group
+void					ui_group_new(t_ui_window *win, t_ui_element *elem);
+//void					ui_tab_event(t_ui_element *elem, SDL_Event e);
+//int						ui_tab_render(t_ui_element *elem);
+void					ui_group_free(void *elem);
+// Other group
+//void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
+
 
 #endif

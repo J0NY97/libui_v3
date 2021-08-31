@@ -44,11 +44,43 @@ Dropdown drop
 
 Menu menu0
 {
-	pos : 100, 100, 500, 500;
+	pos : 70, 290, 500, 500;
 	menu_label;
 	button0;
 	button1;
 	drop;
+}
+
+// Tab testing
+Button tab_button0
+{
+	pos : 20, 0, 50, 20;
+	bg_color : 0xffffff00, NULL, NULL;
+}
+
+Menu tab_menu0
+{
+	pos : 20, 20, 50, 50;
+	bg_color : 0xffffff00, NULL, NULL;
+}
+
+Button tab_button1
+{
+	pos : 75, 0, 50, 20;
+	bg_color : 0xffff00ff;
+}
+
+Menu tab_menu1
+{
+	pos : 75, 20, 50, 50;
+	bg_color : 0xffff00ff;
+}
+
+Tab tabsystem
+{
+	pos : 580, 10, 20, 20;
+	tab : tab_button0, tab_menu0;
+	tab : tab_button1, tab_menu1;
 }
 
 Window aefaef
@@ -59,4 +91,5 @@ Window aefaef
 	menu0;
 	button0;
 	button1;
+	tabsystem;
 }

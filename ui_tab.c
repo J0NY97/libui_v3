@@ -80,11 +80,17 @@ void	ui_tab_free(void *elem)
 /*
  * Other functions.
 */
+
+/*
+ * NOTE: this function makes the elem the parent of the button and menu.
+*/
 void	ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu)
 {
 	t_ui_tab	*tab;
 
 	tab = elem->element;
+	ui_element_parent_set(button, elem, UI_TYPE_ELEMENT);
+	ui_element_parent_set(menu, elem, UI_TYPE_ELEMENT);
 	add_to_list(&tab->buttons, button, UI_TYPE_ELEMENT);
 	add_to_list(&tab->menus, menu, UI_TYPE_ELEMENT);
 }

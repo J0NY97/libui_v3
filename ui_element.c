@@ -174,6 +174,9 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	elem->texture_recreate = 1;
 }
 
+/*
+ * int	type;		this is the parent type, so we know what to typecast to.
+*/
 void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 {
 	t_ui_element	*parent_elem;

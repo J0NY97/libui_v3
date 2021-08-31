@@ -8,12 +8,6 @@
 typedef struct s_ui_recipe		t_ui_recipe;
 typedef struct s_ui_get			t_ui_get;
 typedef struct s_ui_key_value	t_ui_key_value;
-
-typedef struct s_ui_window		t_ui_window;
-typedef struct s_ui_label		t_ui_label;
-typedef struct s_ui_button		t_ui_button;
-typedef struct s_ui_dropdown	t_ui_dropdown;
-typedef struct s_ui_element		t_ui_element;
 typedef struct s_ui_layout		t_ui_layout;
 
 void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
@@ -26,10 +20,10 @@ void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *ar
 void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 
-void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
+void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout);
 void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
 
-int		ui_element_render(t_ui_element *elem);
+t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout);
 
 struct s_ui_get
 {
@@ -175,20 +169,21 @@ static const t_ui_acceptable	g_acceptable_window =
 	.eventer = NULL
 };
 
-# define UI_ACCEPT_AMOUNT 9
+// NOTE: these must be in the same order as the UI_TYPE_ENUM
+# define UI_ACCEPT_AMOUNT 11
 static const t_ui_acceptable	g_acceptable[] =
 {
 	g_acceptable_element,
-	g_acceptable_button,
 	g_acceptable_label,
+	g_acceptable_button,
 	g_acceptable_menu,
-	g_acceptable_window,
 	g_acceptable_dropdown,
 	g_acceptable_input,
 	g_acceptable_slider,
 	g_acceptable_checkbox,
 	g_acceptable_radio,
 	g_acceptable_tab,
+	g_acceptable_window,
 	NULL
 };
 
@@ -201,6 +196,11 @@ enum e_pos_info
 	UI_POS_H = 0x001000
 };
 
+typedef struct s_ui_key_value
+{
+	char		*key;
+	char		*value;
+}				t_ui_key_value;
 
 /*
  * int		type;		one of enum e_element_type
@@ -216,7 +216,7 @@ struct s_ui_recipe
 	int					pos_info;
 
 	Uint32				bg_color[UI_STATE_AMOUNT];
-	bool				bg_color_set;
+	bool				bg_color_set[UI_STATE_AMOUNT];
 
 	char				*bg_image[UI_STATE_AMOUNT];
 	bool				bg_image_set;
@@ -247,13 +247,11 @@ struct s_ui_recipe
 	// Slider Specific
 	int					values[3];
 	bool				value_set;
-};
 
-typedef struct s_ui_key_value
-{
-	char		*key;
-	char		*value;
-}				t_ui_key_value;
+	// Tab specific stuff
+	t_ui_key_value		tabs[256]; // key = button, value = menu
+	int					tab_amount;
+};
 
 void	ui_layout_add_child(t_list **list, t_list *recipes, t_ui_window *win, t_ui_recipe *recipe);
 #endif
