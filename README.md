@@ -101,6 +101,7 @@ pos.x : 10;
 pos.xy : 10, 10;
 pos.xyw : 10, 10, 50;
 pos.xywh : 10, 10, 50, 20;
+pos : 0.1, 0.1, 0.5, 0.5; // translates to percentage of it's parent's w/h
 ```
 ```
 bg_color : [default], [hover], [click];
