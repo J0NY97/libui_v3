@@ -64,11 +64,13 @@ void	ui_radio_free(void *elem)
 
 /*
  * Adds button to the button list.
+ * Note: we make elem the parent of child.
 */
 void	ui_radio_add(t_ui_element *elem, t_ui_element *child)
 {
 	t_ui_radio	*radio;
 
 	radio = elem->element;
+	ui_element_parent_set(child, elem, UI_TYPE_ELEMENT);
 	add_to_list(&radio->buttons, child, UI_TYPE_ELEMENT);
 }

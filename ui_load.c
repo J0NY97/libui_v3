@@ -551,9 +551,8 @@ void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 
 void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
-	(void)elem;
-	(void)recipe;
-	(void)layout;
+	if (recipe->type == UI_TYPE_BUTTON)
+		ui_radio_add(elem, ui_element_create_from_recipe(elem->win, recipe, layout));
 }
 
 void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -647,6 +646,19 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout
 			ft_printf("[%s] Tab created with button id : %s, and menu id : %s\n", __FUNCTION__, button->id, menu->id);
 		}
 	}
+
+	// Radio stuff
+	/*
+	if (recipe->type == UI_TYPE_RADIO)
+	{
+		t_ui_element	*rad_butt;
+
+		while (++i < recipe->radio_amount)
+		{
+			rad_butt = ui_element_create_from_recipe(elem->win, get_recipe_by_id(layout->recipes, recipe->radios[i]), layout);
+		}
+	}
+	*/
 }
 
 t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -671,7 +683,7 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 			ft_printf("[%s] We have found child recipe : %s\n", __FUNCTION__, child_recipe->id);
 			if (child_recipe->type == UI_TYPE_ELEMENT)
 				ui_layout_element_edit(elem, child_recipe, layout);
-			else if (g_acceptable[child_recipe->type].editor)
+			else if (g_acceptable[recipe->type].editor)
 				g_acceptable[recipe->type].editor(elem, child_recipe, layout);
 			else
 				ft_printf("[%s] No editor made for element type %d.\n", __FUNCTION__, recipe->type);

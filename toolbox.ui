@@ -83,11 +83,50 @@ Tab tabsystem
 	tab : tab_button1, tab_menu1;
 }
 
+Button radio_button0
+{
+	pos : 20, 0, 50, 20;
+	title : "radio button 0";
+}
+Button radio_button1
+{
+	pos : 70, 0, 50, 20;
+	title : "radio button 0";
+}
 Radio radiosystem
 {
-	pos : 580, 100, 20, 20;
+	pos : 580, 80, 20, 20;
 	bg_color : 0xffff0000;
+	radio_button0;
+	radio_button1;
 }
+Radio radiosystem1
+{
+	pos : 200, 80, 20, 20;
+	bg_color : 0xffff0000;
+	radio_button0;
+	radio_button1;
+}
+Tab tabsystem1
+{
+	pos : 200, 50, 20, 20;
+	tab : tab_button0, tab_menu0;
+	tab : tab_button1, tab_menu1;
+}
+
+
+
+Menu menu0
+{
+	pos : 70, 290, 500, 500;
+	menu_label;
+	button0;
+	button1;
+	drop;
+	radiosystem1;
+	tabsystem1;
+}
+
 
 Window aefaef
 {
@@ -98,4 +137,5 @@ Window aefaef
 	button0;
 	button1;
 	tabsystem;
+	radiosystem;
 }
