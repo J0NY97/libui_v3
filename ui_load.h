@@ -21,7 +21,7 @@ void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args)
 void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *args);
 
 void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout);
-void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes);
+void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe);
 
 t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout);
 

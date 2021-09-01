@@ -83,6 +83,12 @@ Tab tabsystem
 	tab : tab_button1, tab_menu1;
 }
 
+Radio radiosystem
+{
+	pos : 580, 100, 20, 20;
+	bg_color : 0xffff0000;
+}
+
 Window aefaef
 {
 	pos : 300, 300, 800, 800;

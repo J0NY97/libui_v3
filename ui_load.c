@@ -497,12 +497,13 @@ void	ui_button_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 
 void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
-	t_ui_menu	*menu;
-	t_list		*recipes;
+	t_ui_menu		*menu;
+	t_ui_element	*temp;
+	t_list			*recipes;
 
-	recipes = layout->recipes;
 	menu = elem->element;
-	ui_layout_element_new(layout, elem->win, recipe, recipes);
+	recipes = layout->recipes;
+	ui_layout_element_new(layout, elem->win, recipe);
 	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT);
 }
 
@@ -656,6 +657,8 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 
 	if (!recipe)
 		ft_printf("[%s] Recipe is NULL... error btw\n", __FUNCTION__);
+	if (recipe->type >= UI_TYPE_AMOUNT || recipe->type < 0)
+		ft_printf("[%s] Recipe type <%d> is not supported.\n", __FUNCTION__, recipe->type);
 	elem = ft_memalloc(sizeof(t_ui_element));
 	g_acceptable[recipe->type].maker(win, elem);
 	elem->id = ft_strdup(recipe->id);
@@ -669,7 +672,7 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 			if (child_recipe->type == UI_TYPE_ELEMENT)
 				ui_layout_element_edit(elem, child_recipe, layout);
 			else if (g_acceptable[child_recipe->type].editor)
-				g_acceptable[child_recipe->type].editor(elem, child_recipe, layout);
+				g_acceptable[recipe->type].editor(elem, child_recipe, layout);
 			else
 				ft_printf("[%s] No editor made for element type %d.\n", __FUNCTION__, recipe->type);
 		}
@@ -680,46 +683,18 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 	return (elem);
 }
 
-void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe, t_list *recipes)
+void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *recipe)
 {
-	t_ui_element	*elem;	
-	t_ui_recipe		*child_recipe;
-	int				i;
-	int				j;
+	t_ui_element	*elem;
 
-	i = -1;
-	while (++i < UI_ACCEPT_AMOUNT)
+	elem = ui_element_create_from_recipe(win, recipe, layout);
+	if (!elem)
 	{
-		if (g_acceptable[i].type == recipe->type)
-		{
-			elem = ft_memalloc(sizeof(t_ui_element));
-			g_acceptable[i].maker(win, elem);
-			elem->id = ft_strdup(recipe->id);
-			j = -1;
-			ft_printf("[ui_layout_element_new] Element has %d children.\n", recipe->child_amount);
-			while (++j < recipe->child_amount)
-			{
-				child_recipe = get_recipe_by_id(recipes, recipe->children_ids[j]);
-				if (child_recipe)
-				{
-					ft_printf("[ui_layout_element_new] We have found child recipe : %s\n", child_recipe->id);
-					if (child_recipe->type == UI_TYPE_ELEMENT)
-						ui_layout_element_edit(elem, child_recipe, layout);
-					else if (g_acceptable[i].editor)
-						g_acceptable[i].editor(elem, child_recipe, layout);
-					else
-						ft_printf("[ui_layout_element_new] No editor made for element type %d.\n", recipe->type);
-				}
-				else
-					ft_printf("[ui_layout_element_new] When searching for child, Couldnt find recipe with id : %s\n", recipe->children_ids[j]);
-			}
-			ui_layout_element_edit(elem, recipe, layout);
-			add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
-			ft_printf("[ui_layout_element_new] Successful make of %s.\n", recipe->id);
-			return ;
-		}
+		ft_printf("[%s] Element couldnt be created from....\n", __FUNCTION__);
+		return ;
 	}
-	ft_printf("[%s] Failed to make new layout element.\n", __FUNCTION__);
+	add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
+	ft_printf("[%s] Successful make of %s.\n", __FUNCTION__, recipe->id);
 }
 
 void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
@@ -746,7 +721,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 		if (child_recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);
-			ui_layout_element_new(layout, window, child_recipe, layout->recipes);
+			ui_layout_element_new(layout, window, child_recipe);
 			ft_printf("[ui_layout_window_new] Was succesful to make: %s\n", child_recipe->id);
 		}
 		else
