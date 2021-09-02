@@ -461,17 +461,18 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 	}
 }
 
-t_ui_recipe	*get_recipe_by_id(t_list *list, char *id)
+t_ui_recipe	*ui_layout_get_recipe_by_id(t_ui_layout *layout, char *id)
 {
 	t_list	*curr;
 
-	curr = list;
+	curr = layout->recipes;
 	while (curr)
 	{
 		if (ft_strequ(((t_ui_recipe *)curr->content)->id, id))
 			return (curr->content);
 		curr = curr->next;
 	}
+	ft_printf("[%s] Couldn\'t find recipe with id : %s\n", __FUNCTION__, id);
 	return (NULL);
 }
 
@@ -505,6 +506,11 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout
 	recipes = layout->recipes;
 	ui_layout_element_new(layout, elem->win, recipe);
 	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT);
+/*
+	temp = ui_element_create_from_recipe(elem->win, recipe, layout);
+	ui_menu_add(elem, temp, UI_TYPE_ELEMENT);
+	add_to_list();
+	*/
 }
 
 void	ui_dropdown_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
@@ -640,8 +646,8 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout
 		while (++i < recipe->tab_amount)
 		{
 			ft_printf("[%s] We are trying to make tab from button : <%s> and menu : <%s>.\n", __FUNCTION__, recipe->tabs[i].key, recipe->tabs[i].value);
-			button = ui_element_create_from_recipe(elem->win, get_recipe_by_id(layout->recipes, recipe->tabs[i].key), layout);
-			menu = ui_element_create_from_recipe(elem->win, get_recipe_by_id(layout->recipes, recipe->tabs[i].value), layout);
+			button = ui_element_create_from_recipe(elem->win, ui_layout_get_recipe_by_id(layout, recipe->tabs[i].key), layout);
+			menu = ui_element_create_from_recipe(elem->win, ui_layout_get_recipe_by_id(layout, recipe->tabs[i].value), layout);
 			ui_tab_add(elem, button, menu);
 			ft_printf("[%s] Tab created with button id : %s, and menu id : %s\n", __FUNCTION__, button->id, menu->id);
 		}
@@ -677,7 +683,7 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 	j = -1;
 	while (++j < recipe->child_amount)
 	{
-		child_recipe = get_recipe_by_id(layout->recipes, recipe->children_ids[j]);
+		child_recipe = ui_layout_get_recipe_by_id(layout, recipe->children_ids[j]);
 		if (child_recipe)
 		{
 			ft_printf("[%s] We have found child recipe : %s\n", __FUNCTION__, child_recipe->id);
@@ -730,7 +736,7 @@ void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)
 	while (++i < recipe->child_amount)
 	{
 		ft_printf("#%d %s\n", i, recipe->children_ids[i]);
-		child_recipe = get_recipe_by_id(layout->recipes, recipe->children_ids[i]);
+		child_recipe = ui_layout_get_recipe_by_id(layout, recipe->children_ids[i]);
 		if (child_recipe)
 		{
 			ft_printf("[ui_layout_window_new] Trying to make: %s\n", child_recipe->id);

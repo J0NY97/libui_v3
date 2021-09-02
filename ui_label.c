@@ -10,7 +10,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab = label->element;
 	lab->text = ft_strdup("label text");
 	lab->text_align = UI_TEXT_ALIGN_NONE;
-	lab->font_path = ft_strdup("fonts/DroidSans.ttf");
+	lab->font_path = ft_strdup(UI_FONT_PATH"DroidSans.ttf");
 	lab->font_size = 12;
 	lab->font_color = 0xff037171;
 	lab->max_w = -1;

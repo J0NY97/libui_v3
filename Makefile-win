@@ -1,6 +1,8 @@
+RESET	:= "\e[0m"
+YELLOW	:= "\e[0;33m"
+
 NAME = libui.a
-SRCS = \
-       ./ui_element.c \
+SRCS = ./ui_element.c \
        ./ui_button.c \
        ./ui_label.c \
        ./ui_menu.c \
@@ -14,6 +16,7 @@ SRCS = \
        ./ui_layout.c \
        ./ui_texture.c \
        ./ui_load.c \
+       ./ui_init.c \
        ./ui_help.c \
        ./ui_vec.c \
 
@@ -25,12 +28,18 @@ LIB_FOLDER	:= ../
 SDL_DIR		:= $(LIB_FOLDER)/SDL
 SDL_INC		:= -I$(SDL_DIR)/include
 
-$(NAME): $(SRCS)
-	@sh ui_path_win.sh
-	@gcc -c $(SRCS) \
+ODIR = .
+CDIR = .
+
+$(ODIR)/%.o: $(CDIR)/%.c
+	@gcc -c $< -o $@ -MMD \
 		-I$(LIB_FOLDER)/libpf \
 		-I$(LIB_FOLDER)/libft \
 		$(SDL_INC)
+	@printf $(YELLOW)"\e[F\e[JCompiling $<\n"$(RESET)
+
+$(NAME): $(OBJS)
+	@sh ui_path_win.sh
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)
 	@echo "$(NAME) was successfully created."

@@ -71,5 +71,10 @@ int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 // Load
 void					ui_print_accepted(void);
 void					ui_layout_load(t_ui_layout *layout, char *ui_file_path);
+t_ui_recipe				*ui_layout_get_recipe_by_id(t_ui_layout *layout, char *id);
+t_ui_element			*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout);
+
+// Other
+void					ui_sdl_init(void);
 
 #endif

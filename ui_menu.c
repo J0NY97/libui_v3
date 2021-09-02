@@ -9,8 +9,11 @@ void	ui_menu_new(t_ui_window *win, t_ui_element *elem)
 	((t_ui_menu *)elem->element)->elem = elem;
 }
 
-void	ui_menu_child_add(t_ui_element *elem, void *child, int type)
+void	ui_menu_add(t_ui_element *elem, void *child, int type)
 {
+	t_ui_menu	*menu;
+
+	menu = elem->element;
 	if (type == UI_TYPE_ELEMENT)
 		ui_element_parent_set(child, elem, UI_TYPE_ELEMENT);
 	else
@@ -18,7 +21,7 @@ void	ui_menu_child_add(t_ui_element *elem, void *child, int type)
 		ft_printf("[%s] child of type %d is not supported.\n", __FUNCTION__, type);
 		return ;
 	}
-	add_to_list(&((t_ui_menu *)elem->element)->children, child, type);
+	add_to_list(&menu->children, child, type);
 }
 
 void	ui_menu_event(t_ui_element *elem, SDL_Event e)
