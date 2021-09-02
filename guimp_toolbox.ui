@@ -427,7 +427,7 @@ Menu layer_menu
 Window toolbox_window
 {
 	pos : 0, 25, 220, 1030;
-	flag : resizeable;
+	bg_color : 0xff909090;
 	brush_buttons_menu;
 	brush_modifier_menu;
 	brush_shape_menu;
@@ -437,14 +437,8 @@ Window toolbox_window
 }
 
 // Middle Menu
-Menu middle_menu
-{
-	pos : 0.1, 0.1, 0.5, 0.5;
-	bg_color : 0xffff0000;
-}
 Window middle_win
 {
-	pos : 250, 25, 220, 1030;
-	flag : resizeable;
-	middle_menu;
+	pos : 220, 25, 1700, 1030;
+	bg_color : 0xff909090;
 }

@@ -1,59 +1,49 @@
-NAME = test
+NAME = libui.a
 SRCS = \
-	./main.c \
-	./ui_window.c \
-	./ui_element.c \
-	./ui_texture.c \
-	./ui_help.c \
-	./ui_label.c \
-	./ui_button.c \
-	./ui_menu.c \
-	./ui_dropdown.c \
-	./ui_input.c \
-	./ui_slider.c \
-	./ui_checkbox.c \
-	./ui_radio.c \
-	./ui_tab.c \
-	./ui_load.c \
-	./ui_layout.c \
-	./vec.c \
+       ./ui_element.c \
+       ./ui_button.c \
+       ./ui_label.c \
+       ./ui_menu.c \
+       ./ui_checkbox.c \
+       ./ui_dropdown.c \
+       ./ui_slider.c \
+       ./ui_input.c \
+       ./ui_tab.c \
+       ./ui_radio.c \
+       ./ui_window.c \
+       ./ui_layout.c \
+       ./ui_texture.c \
+       ./ui_load.c \
+       ./ui_help.c \
+       ./ui_vec.c \
 
 OBJS = $(SRCS:.c=.o)
 
-SDL_DIR		:= ./libs/SDL
-SDL_INC		:= -I$(SDL_DIR)/include
-SDL_LIB_DIR	:= -L$(SDL_DIR)/lib
-SDL_LIB		:= -lSDL2 -lSDL2_ttf -lSDL2_image
-
-INCLUDES = \
-	-I./libs/libft \
-	-I./libs/libpf \
-	$(SDL_INC) \
-	-I./ \
-
-LIB_FOLDERS = \
-	-L./libs/libft \
-	-L./libs/libpf \
-	$(SDL_LIB_DIR) \
-
-LIB = $(SDL_LIB) -lpf -lft
-
-FLAGS = -Wall -Wextra
-
 all: $(NAME)
 
+SDL_DIR		:= libs/SDL
+SDL_INC		:= -I$(SDL_DIR)/include
+
 $(NAME): $(SRCS)
-	@gcc -o $(NAME) $(SRCS) $(INCLUDES) $(LIB_FOLDERS) $(LIB) $(FLAGS)
+	#@sh bui_path_win.sh
+	@gcc -c $(SRCS) \
+		-Ilibs/libpf \
+		-Ilibs/libft \
+		$(SDL_INC)
+	@ar rc $(NAME) $(OBJS)
+	@ranlib $(NAME)
 	@echo "$(NAME) was successfully created."
 
 clean:
 	@rm -f $(OBJS)
 	@echo "$(NAME) was cleaned."
 
-fclean:
+fclean: clean
 	@rm -f $(NAME)
-	@echo "$(NAME) was fcleaned."
 
-re: fclean $(LIBS) all
+re: fclean all
 
 .PHONY: clean, all, re, fclean
+
+
+

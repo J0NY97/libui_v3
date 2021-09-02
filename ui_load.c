@@ -705,8 +705,9 @@ void	ui_layout_element_new(t_ui_layout *layout, t_ui_window *win, t_ui_recipe *r
 		ft_printf("[%s] Element couldnt be created from....\n", __FUNCTION__);
 		return ;
 	}
-	add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
 	ft_printf("[%s] Successful make of %s.\n", __FUNCTION__, recipe->id);
+	add_to_list(&layout->elements, elem, UI_TYPE_ELEMENT);
+	ft_printf("[%s] Successful adding elem to list.\n", __FUNCTION__);
 }
 
 void	ui_layout_window_new(t_ui_layout *layout, t_ui_recipe *recipe)

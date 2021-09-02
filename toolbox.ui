@@ -113,9 +113,6 @@ Tab tabsystem1
 	tab : tab_button0, tab_menu0;
 	tab : tab_button1, tab_menu1;
 }
-
-
-
 Menu menu0
 {
 	pos : 70, 290, 500, 500;
