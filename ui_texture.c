@@ -55,6 +55,12 @@ void	ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t
 	SDL_SetRenderTarget(renderer, NULL);
 }
 
+/*
+ * FIX:
+ * instead of trying and trying to open font,
+ * somehow check if that file exists before trying to open it,
+ * probably faster and smarter.
+*/
 SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_label *recipe)
 {
 	SDL_Texture	*texture;
@@ -62,6 +68,7 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 	t_rgba		rgba;
 	SDL_Color	color;
 
+	// First try to find with absolute path...
 	if (!recipe->font || recipe->font_recreate)
 	{
 		if (recipe->font)
@@ -70,12 +77,29 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 		recipe->font_recreate = 0;
 		ft_printf("[%s] Font recretead.\n", __FUNCTION__);
 	}
+	// ... if not found, try to find from UI_FONT_PATH/"font_name" ...
 	if (!recipe->font)
 	{
-		ft_printf("[ui_texture_create_from_text_recipe] %s, defaulting to fonts/DroidSans.ttf\n", TTF_GetError());
+		char	*temp_font_path;
+		temp_font_path = ft_strdup(recipe->font_path);
+		ft_printf("[ui_texture_create_from_text_recipe] 2nd try : %s, trying to find from libui fonts. %s%s\n", TTF_GetError(), UI_FONT_PATH, recipe->font_path);
 		if (recipe->font_path)
 			ft_strdel(&recipe->font_path);
-		recipe->font_path = ft_strdup("fonts/DroidSans.ttf");
+		recipe->font_path = ft_strjoin(UI_FONT_PATH, temp_font_path);
+		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
+		if (!recipe->font)
+		{
+			ft_printf("[ui_texture_create_from_text_recipe] Well apparently that didn\'t work either.\n");
+			return (NULL);
+		}
+	}
+	// ... if still not found, try to find default font. IF this is not found, its the dev's fault.
+	if (!recipe->font)
+	{
+		ft_printf("[ui_texture_create_from_text_recipe] 3rd try : %s, defaulting to %sDroidSans.ttf\n", TTF_GetError(), UI_FONT_PATH);
+		if (recipe->font_path)
+			ft_strdel(&recipe->font_path);
+		recipe->font_path = ft_strdup(UI_FONT_PATH"DroidSans.ttf");
 		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
 		if (!recipe->font)
 		{

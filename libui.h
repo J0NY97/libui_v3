@@ -4,6 +4,7 @@
 # include "SDL.h"
 # include "SDL_image.h"
 # include "SDL_ttf.h"
+# include "ui_path.h"
 # include "libft.h"
 # include "libpf.h"
 # include "stdio.h"

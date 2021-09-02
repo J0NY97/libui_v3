@@ -82,6 +82,11 @@ typedef struct s_ui_menu
 }						t_ui_menu;
 
 /*
+ * Important Note:
+ * when giving a font_path to the label,
+ * we will try to search from the absolute path of the given str,
+ * if not found, we will try to find the font in the libui fonts/ directory.
+ *
  * bool	font_recreate;		set this to 1 if you edit something of the font like.. size. will be set to 0 after creation.
  * bool	texture_recreate;	set this to 1 if you edit something of the texture like.. anything.. will be set to 0 after creation.
  * t_vec2i	text_wh;		w and h of the whole text. (actual text not the element)
