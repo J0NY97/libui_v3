@@ -1,4 +1,4 @@
-#include "libui_v3.h"
+#include "libui.h"
 
 void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 {
@@ -34,6 +34,8 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 				win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
 				win->textures_recreate = 1;
 			}
+			else if (e.window.event == SDL_WINDOWEVENT_CLOSE)
+				win->wants_to_close = 1;
 		}
 		else if (e.type == SDL_MOUSEMOTION)
 		{

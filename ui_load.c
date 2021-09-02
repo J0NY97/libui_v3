@@ -1,4 +1,4 @@
-#include "libui_v3.h"
+#include "libui.h"
 #include "ui_load.h"
 
 /*
@@ -773,7 +773,7 @@ void	compile_recipes(t_ui_layout *layout)
 		ft_printf("[%s] Window Not Found!\n", __FUNCTION__);
 }
 
-void	ui_load(t_ui_layout *layout, char *ui_file_path)
+void	ui_layout_load(t_ui_layout *layout, char *ui_file_path)
 {
 	FILE	*fd;
 	char	*line;

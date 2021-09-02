@@ -69,6 +69,6 @@ int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 
 // Load
 void					ui_print_accepted(void);
-void					ui_load(t_ui_layout *layout, char *ui_file_path);
+void					ui_layout_load(t_ui_layout *layout, char *ui_file_path);
 
 #endif

@@ -21,14 +21,15 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-SDL_DIR		:= libs/SDL
+LIB_FOLDER	:= ../
+SDL_DIR		:= $(LIB_FOLDER)/SDL
 SDL_INC		:= -I$(SDL_DIR)/include
 
 $(NAME): $(SRCS)
-	#@sh bui_path_win.sh
+	@sh ui_path_win.sh
 	@gcc -c $(SRCS) \
-		-Ilibs/libpf \
-		-Ilibs/libft \
+		-I$(LIB_FOLDER)/libpf \
+		-I$(LIB_FOLDER)/libft \
 		$(SDL_INC)
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)

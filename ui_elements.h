@@ -1,6 +1,6 @@
 #ifndef UI_ELEMENTS_H
 # define UI_ELEMENTS_H
-# include "libui_v3.h"
+# include "libui.h"
 /*
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
  * t_vec2i		mouse_pos;			x, y for mouse on window texture;
@@ -24,6 +24,7 @@ typedef struct s_ui_window
 	bool			mouse_down;
 	bool			show;
 	bool			textures_recreate;
+	bool			wants_to_close;
 }					t_ui_window;
 
 /*

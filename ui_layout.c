@@ -1,4 +1,4 @@
-#include "libui_v3.h"
+#include "libui.h"
 
 void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 {
@@ -100,6 +100,7 @@ t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
 			return (elem);
 		curr = curr->next;
 	}
+	ft_printf("[%s] Couldn\'t find element with id : %s\n",  id);
 	return (NULL);
 }
 
@@ -121,5 +122,6 @@ t_ui_window	*ui_layout_get_window_by_id(t_ui_layout *layout, char *id)
 			return (win);
 		curr = curr->next;
 	}
+	ft_printf("[%s] Couldn\'t find window with id : %s\n",  id);
 	return (NULL);
 }
