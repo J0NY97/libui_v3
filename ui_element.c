@@ -11,10 +11,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 {
 	memset(elem, 0, sizeof(t_ui_element));
 	elem->win = win;
-	elem->pos.x = 0;
-	elem->pos.y = 0;
-	elem->pos.w = 60;
-	elem->pos.h = 20;
+	elem->pos = vec4(0, 0, 50, 20);
 	elem->state = UI_STATE_DEFAULT;
 	elem->colors[UI_STATE_DEFAULT] = 0xff95D7AE;
 	elem->colors[UI_STATE_HOVER] = 0xff7BAE7F;
@@ -130,6 +127,7 @@ void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
 		elem->texture_recreate = 1;
 	elem->pos = pos;
+	elem->screen_pos = ui_element_screen_pos_get(elem);
 }
 
 void	ui_element_pos_set2(t_ui_element *elem, t_vec2 pos)

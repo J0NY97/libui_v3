@@ -505,11 +505,23 @@ void	ui_menu_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout
 	menu = elem->element;
 	recipes = layout->recipes;
 	ui_layout_element_new(layout, elem->win, recipe);
-	ui_element_parent_set(ui_layout_get_element_by_id(layout, recipe->id), elem, UI_TYPE_ELEMENT);
+	temp = ui_layout_get_element_by_id(layout, recipe->id);
+	ui_element_parent_set(temp, elem, UI_TYPE_ELEMENT);
+	/*
+	ui_element_pos_set(temp, recipe->pos);
+	print_vec(recipe->pos.v, 4);
+	if (ft_strequ(temp->id, "draw_button"))
+	{
+		ft_printf("recipe->id : %s\n", recipe->id);
+		ui_element_print(temp);
+	}
+
+	*/
 /*
 	temp = ui_element_create_from_recipe(elem->win, recipe, layout);
 	ui_menu_add(elem, temp, UI_TYPE_ELEMENT);
-	add_to_list();
+	ui_element_pos_set(temp, recipe->pos);
+	add_to_list(&layout->elements, temp, UI_TYPE_ELEMENT);
 	*/
 }
 
@@ -669,16 +681,105 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout
 	*/
 }
 
+void	ui_populate_recipe(t_ui_recipe *result, t_ui_recipe from)
+{
+	int	i;
+
+	if (result->id && from.id)
+	{
+		ft_strdel(&result->id);
+		result->id = ft_strdup(from.id);
+	}
+	result->type = from.type;
+	if	(from.pos_set)
+	{
+		t_vec4 new_pos;
+	
+		i = -1;
+		new_pos = from.pos;
+		if (from.pos_info & UI_POS_X)
+		{
+			result->pos_info |= UI_POS_X;
+			new_pos.x = from.pos.v[++i];
+		}
+		if (from.pos_info & UI_POS_Y)
+		{
+			result->pos_info |= UI_POS_Y;
+			new_pos.y = from.pos.v[++i];
+		}
+		if (from.pos_info & UI_POS_W)
+		{
+			result->pos_info |= UI_POS_W;
+			new_pos.w = from.pos.v[++i];
+		}
+		if (from.pos_info & UI_POS_H)
+		{	
+			result->pos_info |= UI_POS_H;
+			new_pos.h = from.pos.v[++i];
+		}
+		result->pos = new_pos;
+		result->pos_set = 1;
+	}
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+	{
+		if (from.bg_color_set[i])
+		{
+			result->bg_color_set[i] = from.bg_color_set[i];
+			result->bg_color[i] = from.bg_color[i];
+		}
+	}
+	if (from.bg_image_set)
+	{
+		i = -1;
+		result->bg_image_set = from.bg_image_set;
+		while (++i < UI_STATE_AMOUNT)
+			result->bg_image[i] = from.bg_image[i];
+	}
+	if (from.title)
+	{
+		if (result->title)
+			ft_strdel(&result->title);
+		result->title = ft_strdup(from.title);
+	}
+	if (from.font_path_set && from.font_path)
+	{
+		if (result->font_path)
+			ft_strdel(&result->font_path);
+		result->font_path = ft_strdup(from.font_path);
+		result->font_path_set = from.font_path_set;
+	}
+	if (from.font_size_set)
+	{
+		result->font_size = from.font_size;
+		result->font_size_set = from.font_size_set;
+	}
+	if (from.text_align_set)
+	{
+		result->text_align = from.text_align;
+		result->text_align_set = from.text_align_set;
+	}
+	if (from.value_set)
+	{
+		result->value_set = from.value_set;
+		i = -1;
+		while (++i < 3)
+			result->values[i] = from.values[i];
+	}
+}
+
 t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout)
 {
 	t_ui_element	*elem;
 	t_ui_recipe		*child_recipe;
 	int				j;
+	t_ui_recipe		final_recipe;
 
 	if (!recipe)
 		ft_printf("[%s] Recipe is NULL... error btw\n", __FUNCTION__);
 	if (recipe->type >= UI_TYPE_AMOUNT || recipe->type < 0)
 		ft_printf("[%s] Recipe type <%d> is not supported.\n", __FUNCTION__, recipe->type);
+	memset(&final_recipe, 0, sizeof(t_ui_recipe));
 	elem = ft_memalloc(sizeof(t_ui_element));
 	g_acceptable[recipe->type].maker(win, elem);
 	elem->id = ft_strdup(recipe->id);
@@ -690,7 +791,11 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 		{
 			ft_printf("[%s] We have found child recipe : %s\n", __FUNCTION__, child_recipe->id);
 			if (child_recipe->type == UI_TYPE_ELEMENT)
+			{
+//				ui_populate_recipe(&final_recipe, *child_recipe);
+				continue ;
 				ui_layout_element_edit(elem, child_recipe, layout);
+			}
 			else if (g_acceptable[recipe->type].editor)
 				g_acceptable[recipe->type].editor(elem, child_recipe, layout);
 			else
@@ -699,6 +804,24 @@ t_ui_element	*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recip
 		else
 			ft_printf("[%s] When searching for child, Couldnt find recipe with id : %s\n", __FUNCTION__, recipe->children_ids[j]);
 	}
+	/*
+	ui_populate_recipe(&final_recipe, *recipe);
+	ui_populate_recipe(recipe, final_recipe);
+	if (ft_strequ(elem->id, "draw_button"))
+	{
+		ft_printf("draw_button recipe final pos : ");
+		print_vec(final_recipe.pos.v, 4);
+		print_vec(recipe->pos.v, 4);
+	}
+	*/
+	j = -1;
+	while (++j < recipe->child_amount)
+	{
+		child_recipe = ui_layout_get_recipe_by_id(layout, recipe->children_ids[j]);
+		if (child_recipe->type == UI_TYPE_ELEMENT)
+			ui_layout_element_edit(elem, child_recipe, layout);
+	}
+
 	ui_layout_element_edit(elem, recipe, layout);
 	return (elem);
 }

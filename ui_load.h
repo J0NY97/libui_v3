@@ -235,8 +235,7 @@ struct s_ui_recipe
 	bool				font_path_set;
 
 	Uint32				font_size;
-	float				font_size_relative;
-	int					font_size_set; // 1 == absolute, 2 == relative
+	int					font_size_set;
 
 	Uint32				font_color;
 	bool				font_color_set;

@@ -145,3 +145,10 @@ value : 125, 0, 255;
 - [x] checkbox
 - [ ] tab
 - [ ] radio
+
+###IGNORE
+```
+ui_element_set_pos(t_ui_element *, t_vec4);
+```
+NOTE: if you intend on using relative position (0.1 aka 10% of parent.w/h), it will take the relativity from its current parent, so if you change the parent after this it still is taking the pos from the last parent, which means you have call this again.
+
