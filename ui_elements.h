@@ -286,6 +286,12 @@ void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);
+// slider edit
+int						ui_slider_value_get(t_ui_element *elem);
+void					ui_slider_value_set(t_ui_element *elem, int value);
+// Internal
+int						ui_get_slider_value(int min, int max, int pos_x, int w);
+int						ui_set_slider_value(int value, int min, int max, int w);
 
 // Checkbox
 void					ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
