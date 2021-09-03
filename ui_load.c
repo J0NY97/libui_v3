@@ -621,6 +621,8 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout
 		label = &((t_ui_button *)elem->element)->label;
 	else if (recipe->type == UI_TYPE_DROPDOWN)
 		label = &((t_ui_dropdown *)elem->element)->label;
+	else if (recipe->type == UI_TYPE_INPUT)
+		label = &((t_ui_input *)elem->element)->label;
 	if (label)
 	{
 		if (recipe->title)
@@ -779,7 +781,7 @@ void	compile_recipes(t_ui_layout *layout)
 		ft_printf("[%s] Window Not Found!\n", __FUNCTION__);
 }
 
-void	ui_layout_load(t_ui_layout *layout, char *ui_file_path)
+int	ui_layout_load(t_ui_layout *layout, char *ui_file_path)
 {
 	FILE	*fd;
 	char	*line;
@@ -793,7 +795,7 @@ void	ui_layout_load(t_ui_layout *layout, char *ui_file_path)
 	if (!fd)
 	{
 		ft_printf("[ui_load] Couldnt open ui file : %s\n", ui_file_path);
-		return;
+		return (0);
 	}
 	else
 		ft_printf("[ui_load] Could open ui file : %s\n", ui_file_path);
@@ -814,4 +816,5 @@ void	ui_layout_load(t_ui_layout *layout, char *ui_file_path)
 	fclose(fd);
 	compile_recipes(layout);
 	ft_printf("Done reading : %s\n", ui_file_path);
+	return (1);
 }

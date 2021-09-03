@@ -115,3 +115,11 @@ void	ui_window_flag_set(t_ui_window *win, int flags)
 	if (flags & UI_WINDOW_RESIZEABLE)
 		SDL_SetWindowResizable(win->win, SDL_TRUE);
 }
+
+void	ui_window_title_set(t_ui_window *win, const char *title)
+{
+	if (win->title)
+		ft_strdel(&win->title);
+	win->title = ft_strdup(title);
+	SDL_SetWindowTitle(win->win, title);
+}
