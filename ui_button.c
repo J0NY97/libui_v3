@@ -23,9 +23,9 @@ void	ui_button_event(t_ui_element *elem, SDL_Event e)
 	if (!elem->show)
 		return ;
 	elem->is_hover = ui_element_is_hover(elem);
-	if (elem->is_hover && e.type == SDL_MOUSEBUTTONDOWN)
+	if (elem->is_hover && elem->win->mouse_down)
 		elem->is_click = 1;
-	if (elem->is_click && e.type == SDL_MOUSEBUTTONUP)
+	if (elem->is_click && !elem->win->mouse_down)
 		elem->is_click = 0;
 	if (elem->is_click)
 		elem->state = UI_STATE_CLICK;
@@ -40,6 +40,7 @@ bool	ui_button(t_ui_element *elem)
 	if (elem->is_click)
 	{
 		elem->is_click = 0;
+		elem->is_hover = 0;
 		return (1);
 	}
 	return (0);

@@ -60,10 +60,10 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 					win->textures_recreate = 1;
 			}
 		}
+		if (e.button.type == SDL_MOUSEBUTTONDOWN)
+			win->mouse_down = 1;
 	}
-	if (e.button.type == SDL_MOUSEBUTTONDOWN)
-		win->mouse_down = 1;
-	else if (e.button.type == SDL_MOUSEBUTTONUP)
+	if (e.button.type == SDL_MOUSEBUTTONUP)
 		win->mouse_down = 0;
 }
 

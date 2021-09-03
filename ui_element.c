@@ -73,10 +73,7 @@ int	ui_element_render(t_ui_element *elem)
 	if (!*elem->parent_show || !elem->show)
 		return (0);
 
-	elem->screen_pos.w = elem->pos.w;
-	elem->screen_pos.h = elem->pos.h;
-	elem->screen_pos.x = elem->parent_screen_pos->x + elem->pos.x;
-	elem->screen_pos.y = elem->parent_screen_pos->y + elem->pos.y;
+	elem->screen_pos = ui_element_screen_pos_get(elem);
 
 	if (elem->texture_recreate || elem->win->textures_recreate)
 		ui_element_textures_redo(elem);
@@ -103,6 +100,17 @@ int	ui_element_is_click(t_ui_element *elem)
 /*
  * Editing functions after this.
 */
+
+t_vec4i	ui_element_screen_pos_get(t_ui_element *elem)
+{
+	t_vec4i	screen_pos;
+
+	screen_pos.w = elem->pos.w;
+	screen_pos.h = elem->pos.h;
+	screen_pos.x = elem->parent_screen_pos->x + elem->pos.x;
+	screen_pos.y = elem->parent_screen_pos->y + elem->pos.y;
+	return (screen_pos);
+}
 
 /*
  * You can either give in absolute values,
