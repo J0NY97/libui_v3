@@ -69,9 +69,7 @@ int	ui_element_render(t_ui_element *elem)
 {
 	if (!*elem->parent_show || !elem->show)
 		return (0);
-
 	elem->screen_pos = ui_element_screen_pos_get(elem);
-
 	if (elem->texture_recreate || elem->win->textures_recreate)
 		ui_element_textures_redo(elem);
 

@@ -6,6 +6,8 @@
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
  * t_vec2i		mouse_pos;			x, y for mouse on window texture;
  * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size;
+ * t_vec2i		mouse_pos_previous;	last frame mouse pos on window;
+ * int			mouse_down			button- left : 1, right: 3, middle : 2;
  * float		texture_scale;		the ratio between the window size and the window texture size (.x = w, .y = h);
  * t_vec4i		screen_pos;			this is the ACTUAL size of the window.
 */
@@ -22,7 +24,8 @@ typedef struct s_ui_window
 	char			*title;
 	t_vec2i			mouse_pos;
 	t_vec2i			window_mouse_pos;
-	bool			mouse_down;
+	int				scroll;
+	int				mouse_down;
 	bool			show;
 	bool			textures_recreate;
 	bool			wants_to_close;

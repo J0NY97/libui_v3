@@ -43,6 +43,11 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 			win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 		}
+		else if (e.type == SDL_MOUSEWHEEL)
+		{
+			win->scroll = e.wheel.y;
+			ft_printf("[%s] mouse wheeling : %d\n", __FUNCTION__, win->scroll);
+		}
 		else if (e.type == SDL_KEYDOWN)
 		{
 			int modkey = SDL_GetModState();
@@ -61,13 +66,11 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			}
 		}
 		if (e.button.type == SDL_MOUSEBUTTONDOWN)
-		{
 			win->mouse_down = e.button.button;
-			ft_printf("[%s] mouse button : %d clicked\n", __FUNCTION__, e.button.button);
-		}
 	}
 	if (e.button.type == SDL_MOUSEBUTTONUP)
 		win->mouse_down = 0;
+
 }
 
 int	ui_window_render(t_ui_window *win)

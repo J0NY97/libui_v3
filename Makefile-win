@@ -22,8 +22,11 @@ SRCS = ./ui_element.c \
        ./ui_vec.c \
 
 OBJS = $(SRCS:.c=.o)
+JOHNNY = $(SRCS:.c=.d)
 
 all: $(NAME)
+
+-include $(JOHNNY)
 
 LIB_FOLDER	:= ../
 SDL_DIR		:= $(LIB_FOLDER)/SDL
