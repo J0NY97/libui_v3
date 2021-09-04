@@ -267,7 +267,7 @@ void					ui_button_free(void *button);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
-void					ui_menu_add(t_ui_element *menu, void *child, int type);
+void					ui_menu_add(t_ui_element *menu, t_ui_element *child);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_free(void *menu);

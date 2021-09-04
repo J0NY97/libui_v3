@@ -57,7 +57,8 @@ void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 co
 void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color, t_vec4i rect);
 
 // Surface
-SDL_Surface				*ui_create_surface(t_vec4i size);
+SDL_Surface				*ui_surface_new(int w, int h);
+void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
 
 // Help
 int						point_in_rect(t_vec2i point, t_vec4i rect);
@@ -67,6 +68,7 @@ Uint32					ui_color_come_up_with_name(Uint32 orig_col, float procentage);
 char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
 int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
 int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
+t_ui_element			*ui_list_get_element_by_id(t_list *list, char *id);
 
 // Load
 void					ui_print_accepted(void);
