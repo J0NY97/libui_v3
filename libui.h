@@ -39,6 +39,7 @@ typedef struct s_ui_layout
 	t_list				*windows;
 }						t_ui_layout;
 
+
 // Layout
 void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
 int						ui_layout_render(t_ui_layout *layout);
@@ -59,7 +60,9 @@ void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint
 // Surface
 SDL_Surface				*ui_surface_new(int w, int h);
 void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
-void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
+void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // reduced
+void					ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // orig
+void					ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 color); // nik
 
 // Help
 int						point_in_rect(t_vec2i point, t_vec4i rect);
