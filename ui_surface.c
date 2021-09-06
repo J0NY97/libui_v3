@@ -243,3 +243,15 @@ void	ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 
 		}
 	}
 }
+
+/*
+ * t_vec2i		p1;			the top left corner of the rect;
+ * t_vec2i		p2;			the bot right corner of the rect;
+*/
+void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+{
+	ui_surface_line_draw(surface, p1, vec2i(p2.x, p1.y), color);
+	ui_surface_line_draw(surface, p1, vec2i(p1.x, p2.y), color);
+	ui_surface_line_draw(surface, p2, vec2i(p1.x, p2.y), color);
+	ui_surface_line_draw(surface, p2, vec2i(p2.x, p1.y), color);
+}
