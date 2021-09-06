@@ -2,7 +2,28 @@
 
 SDL_Surface	*ui_surface_new(int w, int h)
 {
-	return (SDL_CreateRGBSurface(0, w, h, 32, 0, 0, 0, 0));
+	return (SDL_CreateRGBSurface(0, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000));
+}
+
+void	ui_surface_print(SDL_Surface *surface)
+{
+	ft_printf("[%s] : \n", __FUNCTION__);
+	if (!surface)
+	{
+		ft_printf("surface given doesn\'t exist.\n");
+		return ;
+	}
+	ft_printf("\tw : %d\n", surface->w);
+	ft_printf("\th : %d\n", surface->h);
+	ft_printf("\tpitch : %d\n", surface->pitch);
+	ft_printf("\tformat : \n");
+	ft_printf("\t\tformat : %d %s\n", surface->format->format, SDL_GetPixelFormatName(surface->format->format));
+	ft_printf("\t\tBitsPerPixel : %d\n", surface->format->BitsPerPixel);
+	ft_printf("\t\tBytesPerPixel : %d\n", surface->format->BytesPerPixel);
+	ft_printf("\t\tRmask : %.8x\n", surface->format->Rmask);
+	ft_printf("\t\tGmask : %.8x\n", surface->format->Gmask);
+	ft_printf("\t\tBmask : %.8x\n", surface->format->Bmask);
+	ft_printf("\t\tAmask : %.8x\n", surface->format->Amask);
 }
 
 // TODO: change this name to pixel_draw?

@@ -18,6 +18,15 @@ t_vec2i	vec2i(int x, int y)
 	return (v);
 }
 
+t_vec2i	vec2i_add(t_vec2i v1, t_vec2i v2)
+{
+	t_vec2i	v;
+
+	v.x = v1.x + v2.x;
+	v.y = v1.y + v2.y;
+	return (v);
+}
+
 t_vec4	vec4(float x, float y, float w, float h)
 {
 	t_vec4	v;

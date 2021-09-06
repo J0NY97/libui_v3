@@ -44,10 +44,7 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 		}
 		else if (e.type == SDL_MOUSEWHEEL)
-		{
 			win->scroll = e.wheel.y;
-			ft_printf("[%s] mouse wheeling : %d\n", __FUNCTION__, win->scroll);
-		}
 		else if (e.type == SDL_KEYDOWN)
 		{
 			int modkey = SDL_GetModState();

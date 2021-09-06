@@ -60,6 +60,7 @@ void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint
 
 // Surface
 SDL_Surface				*ui_surface_new(int w, int h);
+void					ui_surface_print(SDL_Surface *surface);
 void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
 void					ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
 void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // reduced

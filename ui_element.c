@@ -54,6 +54,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 				continue ;
 			SDL_SetRenderTarget(elem->win->renderer, elem->textures[i]);
 			SDL_RenderCopy(elem->win->renderer, elem->images[i], NULL, NULL);
+			SDL_SetRenderTarget(elem->win->renderer, NULL);
 		}
 		return ;
 	}

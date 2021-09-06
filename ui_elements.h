@@ -4,6 +4,8 @@
 
 /*
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
+ * t_vec4i		pos;				the texture size of the window;
+ * t_vec4		screen_pos;			the actual size of the window;
  * t_vec2i		mouse_pos;			x, y for mouse on window texture;
  * t_vec2i		window_mouse_pos;	x, y for mouse taking into consideration window size vs. window texture size;
  * t_vec2i		mouse_pos_prev;		last frame mouse pos on window;
