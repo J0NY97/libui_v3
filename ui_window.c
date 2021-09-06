@@ -66,11 +66,13 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 			}
 		}
 		if (e.button.type == SDL_MOUSEBUTTONDOWN)
+		{
 			win->mouse_down = e.button.button;
+			win->mouse_down_last_frame = win->mouse_down;
+		}
 	}
 	if (e.button.type == SDL_MOUSEBUTTONUP)
 		win->mouse_down = 0;
-
 }
 
 int	ui_window_render(t_ui_window *win)
@@ -86,6 +88,7 @@ int	ui_window_render(t_ui_window *win)
 	// Resetting events, becuase sdl wont go inside the event function,if NO events have been done.
 	win->mouse_pos_prev = win->mouse_pos;
 	win->scroll = 0;
+	win->mouse_down_last_frame = 0;
 	return (1);
 }
 

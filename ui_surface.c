@@ -16,6 +16,57 @@ void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 	pixels[y * surface->w + x] = color;
 }
 
+void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+{
+	bool	y_longer;
+	int		increment_val;
+	int		end_val;
+	int		short_len;
+	int		long_len;
+	int		dec_inc;
+	int		j;
+	int		i;
+	int		gap;
+
+	y_longer = false;
+	short_len = p2.y - p1.y;
+	long_len = p2.x - p1.x;
+	j = 0;
+	i = 0;
+	gap = 5;
+	y_longer = abs(short_len) > abs(long_len);
+	if (y_longer)
+		ft_swap(&short_len, &long_len);
+	end_val = long_len;
+	increment_val = 1;
+	if (long_len < 0)
+	{
+		increment_val = -1;
+		long_len = -long_len;
+	}
+	dec_inc = 0;
+	if (long_len != 0)
+		dec_inc = (short_len << 16) / long_len;
+	if (y_longer)
+	{
+		while (i != end_val)
+		{
+			if (i % 5 != 0) // the 5 is the gap
+				ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);	
+			j += dec_inc;
+			i += increment_val;
+		}
+		return ;
+	}
+	while (i != end_val)
+	{
+		if (i % 5 != 0) // the 5 is the gap
+			ui_surface_pixel_set(surface, p1.x + i, p1.y + (j >> 16), color);
+		j += dec_inc;
+		i += increment_val;
+	}
+}
+
 /*
  * Line algorithm yoinked from:
  * http://elynxsdk.free.fr/ext-docs/Rasterization/Lines/Lines%20algorithms.htm

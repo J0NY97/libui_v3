@@ -12,6 +12,7 @@
 # include "ui_vec.h"
 # include "ui_load.h"
 # include "ui_elements.h"
+# include "math.h"
 //# include "path.h"
 
 typedef struct s_rgba
@@ -60,6 +61,7 @@ void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint
 // Surface
 SDL_Surface				*ui_surface_new(int w, int h);
 void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
+void					ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
 void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // reduced
 void					ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // orig
 void					ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 color); // nik
@@ -73,6 +75,8 @@ char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
 int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
 int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 t_ui_element			*ui_list_get_element_by_id(t_list *list, char *id);
+int						dist(t_vec2i p1, t_vec2i p2);
+float					fdist(t_vec2 p1, t_vec2 p2);
 
 // Load
 void					ui_print_accepted(void);

@@ -106,3 +106,14 @@ int	get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font)
 	}
 	return (i);
 }
+
+int	dist(t_vec2i p1, t_vec2i p2)
+{
+	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+}
+
+float	fdist(t_vec2 p1, t_vec2 p2)
+{
+	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+}
+
