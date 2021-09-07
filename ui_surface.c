@@ -258,28 +258,41 @@ void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 
 /*
  * Yoinked from:
- * https://stackoverflow.com/a/1201227
+ * Filled : https://stackoverflow.com/a/1201227
+ * Empty  : https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 */
 void	ui_surface_circle_draw(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
-	int	x;
-	int	y;
-	int hh;
-	int rx;
-	int ph;
-	int r_sqr;
+	int x = 0;
+	int y = r;
+	int d = 3 - 2 * r;
 
-	r_sqr = r * r;
-	x = -r;	
-	while (++x < r)
+	ui_surface_pixel_set(surface, orig.x +x, orig.y +y, color);
+	ui_surface_pixel_set(surface, orig.x -x, orig.y +y, color);
+	ui_surface_pixel_set(surface, orig.x +x, orig.y -y, color);
+	ui_surface_pixel_set(surface, orig.x -x, orig.y -y, color);
+	ui_surface_pixel_set(surface, orig.x +y, orig.y +x, color);
+	ui_surface_pixel_set(surface, orig.x -y, orig.y +x, color);
+	ui_surface_pixel_set(surface, orig.x +y, orig.y -x, color);
+	ui_surface_pixel_set(surface, orig.x -y, orig.y -x, color);
+	while (y >= x)
 	{
-		hh = sqrt(r_sqr - x * x);
-		rx = orig.x + x;
-		ph = orig.y + hh;
-		y = orig.y - hh;
-		while (++y < ph)
-			if (y == r || y == -r || rx == r || rx == -r)
-				ui_surface_pixel_set(surface, rx, y, color);
+		x++;
+		if (d > 0)
+		{
+			y--;
+			d = d + 4 * (x - y) + 10;
+		}
+		else
+			d = d + 4 * x + 6;
+		ui_surface_pixel_set(surface, orig.x +x, orig.y +y, color);
+		ui_surface_pixel_set(surface, orig.x -x, orig.y +y, color);
+		ui_surface_pixel_set(surface, orig.x +x, orig.y -y, color);
+		ui_surface_pixel_set(surface, orig.x -x, orig.y -y, color);
+		ui_surface_pixel_set(surface, orig.x +y, orig.y +x, color);
+		ui_surface_pixel_set(surface, orig.x -y, orig.y +x, color);
+		ui_surface_pixel_set(surface, orig.x +y, orig.y -x, color);
+		ui_surface_pixel_set(surface, orig.x -y, orig.y -x, color);
 	}
 }
 
