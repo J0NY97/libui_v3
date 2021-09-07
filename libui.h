@@ -67,6 +67,8 @@ void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint
 void					ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // orig
 void					ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 color); // nik
 void					ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
+void					ui_surface_circle_draw(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color);
+void					ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color);
 
 // Help
 int						point_in_rect(t_vec2i point, t_vec4i rect);

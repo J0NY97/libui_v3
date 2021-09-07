@@ -255,3 +255,52 @@ void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	ui_surface_line_draw(surface, p2, vec2i(p1.x, p2.y), color);
 	ui_surface_line_draw(surface, p2, vec2i(p2.x, p1.y), color);
 }
+
+/*
+ * Yoinked from:
+ * https://stackoverflow.com/a/1201227
+*/
+void	ui_surface_circle_draw(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
+{
+	int	x;
+	int	y;
+	int hh;
+	int rx;
+	int ph;
+	int r_sqr;
+
+	r_sqr = r * r;
+	x = -r;	
+	while (++x < r)
+	{
+		hh = sqrt(r_sqr - x * x);
+		rx = orig.x + x;
+		ph = orig.y + hh;
+		y = orig.y - hh;
+		while (++y < ph)
+			if (y == r || y == -r || rx == r || rx == -r)
+				ui_surface_pixel_set(surface, rx, y, color);
+	}
+}
+
+void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
+{
+	int	x;
+	int	y;
+	int hh;
+	int rx;
+	int ph;
+	int r_sqr;
+
+	r_sqr = r * r;
+	x = -r;	
+	while (++x < r)
+	{
+		hh = sqrt(r_sqr - x * x);
+		rx = orig.x + x;
+		ph = orig.y + hh;
+		y = orig.y - hh;
+		while (++y < ph)
+			ui_surface_pixel_set(surface, rx, y, color);
+	}
+}
