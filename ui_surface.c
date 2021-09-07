@@ -45,7 +45,6 @@ SDL_Surface	*ui_surface_text_new(char *text, char *font_path, int size, Uint32 f
 	return (surface);
 }
 
-// TODO: change this name to pixel_draw?
 void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 {
 	Uint32 *pixels;
@@ -54,6 +53,16 @@ void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 		return ;
 	pixels = surface->pixels;
 	pixels[y * surface->w + x] = color;
+}
+
+Uint32	ui_surface_pixel_get(SDL_Surface *surface, int x, int y)
+{
+	Uint32 *pixels;
+
+	if (!(x >= 0 && x < surface->w && y >= 0 && y < surface->h))
+		return (-1);
+	pixels = surface->pixels;
+	return (pixels[y * surface->w + x]);
 }
 
 void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
