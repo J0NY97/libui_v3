@@ -26,6 +26,25 @@ void	ui_surface_print(SDL_Surface *surface)
 	ft_printf("\t\tAmask : %.8x\n", surface->format->Amask);
 }
 
+SDL_Surface	*ui_surface_text_new(char *text, char *font_path, int size, Uint32 font_color)
+{
+	SDL_Surface	*surface;
+	TTF_Font	*font;
+	t_rgba		rgba;
+	SDL_Color	color;
+
+	font = TTF_OpenFont(font_path, size);
+	rgba = hex_to_rgba(font_color);
+	color.r = rgba.r;
+	color.g = rgba.g;
+	color.b = rgba.b;
+	color.a = rgba.a;
+	surface = TTF_RenderUTF8_Blended(font, text, color);
+	TTF_CloseFont(font);
+	font = NULL;
+	return (surface);
+}
+
 // TODO: change this name to pixel_draw?
 void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 {
