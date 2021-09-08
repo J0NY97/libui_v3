@@ -36,8 +36,10 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	if (ui_button(elem))
 		drop->menu.show = drop->menu.show == 0;
 	if (drop->menu.show)
+	{
 		elem->state = UI_STATE_CLICK;
-	ui_menu_event(&drop->menu, e);
+		ui_menu_event(&drop->menu, e);
+	}
 }
 
 int	ui_dropdown_render(t_ui_element *elem)

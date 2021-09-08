@@ -31,18 +31,12 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 		child = curr->content;
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
-			int	j = -1;
-			while (++j < UI_ACCEPT_AMOUNT)
-			{
-				if (g_acceptable[j].type == child->element_type
-					&& g_acceptable[j].eventer)
-				{
-					g_acceptable[j].eventer(child, e);
-					break ;
-				}
-			}
-			if (j == UI_ACCEPT_AMOUNT)
-				ft_printf("[%s] Eventing of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
+			if (child->element_type > 0
+				&& child->element_type < UI_ACCEPT_AMOUNT
+				&& g_acceptable[child->element_type].eventer)
+				g_acceptable[child->element_type].eventer(child, e);
+			else
+				ft_printf("[%s] {%s} : Eventing of type %d %d is not supported.\n", __FUNCTION__, elem->id, curr->content_size, elem->element_type);
 		}
 		else
 			ft_printf("[%s] Element [%s] @ [%d, %d] of type %d is not supported.\n", __FUNCTION__, child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
@@ -66,18 +60,12 @@ int	ui_menu_render(t_ui_element *elem)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			child = curr->content;
-			int	j = -1;
-			while (++j < UI_ACCEPT_AMOUNT)
-			{
-				if (g_acceptable[j].type == child->element_type
-					&& g_acceptable[j].renderer)
-				{
-					g_acceptable[j].renderer(child);
-					break ;
-				}
-			}
-			if (j == UI_ACCEPT_AMOUNT)
-				ft_printf("[%s] Rendering of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
+			if (child->element_type > 0
+				&& child->element_type < UI_ACCEPT_AMOUNT
+				&& g_acceptable[child->element_type].renderer)
+				g_acceptable[child->element_type].renderer(child);
+			else
+				ft_printf("[%s] {%s} : Rendering of type %d %d is not supported.\n", __FUNCTION__, elem->id, curr->content_size, elem->element_type);
 		}
 		else
 			ft_printf("[ui_menu_render] Element isnt UI_TYPE_ELEMENT ... HOW? ... [%s] @ [%d, %d] of type %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
