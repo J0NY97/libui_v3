@@ -12,6 +12,8 @@
  * int			mouse_down			button- left : 1, right: 3, middle : 2;
  * float		texture_scale;		the ratio between the window size and the window texture size (.x = w, .y = h);
  * t_vec4i		screen_pos;			this is the ACTUAL size of the window.
+ * bool			wants_to_close;		is true when x on the window was clicked;
+ * bool			user_handled_event;	true, when user has decided to event handle the window themselves; (so we dont do it twice); (used in the layout event handler);
 */
 typedef struct s_ui_window
 {
@@ -33,6 +35,7 @@ typedef struct s_ui_window
 	bool			show;
 	bool			textures_recreate;
 	bool			wants_to_close;
+	bool			user_handled_event;
 }					t_ui_window;
 
 /*

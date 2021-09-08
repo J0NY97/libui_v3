@@ -14,8 +14,8 @@ void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(elem, UI_STATE_CLICK, 0xff73956f);
 
 	ui_label_new(win, &button->label);
-	ui_label_text_align(&button->label, UI_TEXT_ALIGN_CENTER);
 	ui_element_parent_set(&button->label, elem, UI_TYPE_ELEMENT);
+	ui_label_text_align(&button->label, UI_TEXT_ALIGN_CENTER);
 }
 
 void	ui_button_event(t_ui_element *elem, SDL_Event e)

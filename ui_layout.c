@@ -10,7 +10,8 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 	while (curr)
 	{
 		win = curr->content;
-		ui_window_event(win, e);
+		if (!win->user_handled_event)
+			ui_window_event(win, e);
 		curr = curr->next;
 	}
 	//////////////////

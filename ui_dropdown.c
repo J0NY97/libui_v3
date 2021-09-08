@@ -32,9 +32,8 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
-	ui_button_event(elem, e);
-	if (ui_button(elem))
-		drop->menu.show = drop->menu.show == 0;
+	ui_checkbox_event(elem, e);
+	drop->menu.show = elem->state == UI_STATE_CLICK;
 	if (drop->menu.show)
 	{
 		elem->state = UI_STATE_CLICK;

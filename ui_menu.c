@@ -65,7 +65,7 @@ int	ui_menu_render(t_ui_element *elem)
 				&& g_acceptable[child->element_type].renderer)
 				g_acceptable[child->element_type].renderer(child);
 			else
-				ft_printf("[%s] {%s} : Rendering of type %d %d is not supported.\n", __FUNCTION__, elem->id, curr->content_size, elem->element_type);
+				ft_printf("[%s] {%s} : Rendering %s of type %d %d is not supported.\n", __FUNCTION__, elem->id, child->id, curr->content_size, elem->element_type);
 		}
 		else
 			ft_printf("[ui_menu_render] Element isnt UI_TYPE_ELEMENT ... HOW? ... [%s] @ [%d, %d] of type %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
