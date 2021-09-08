@@ -29,7 +29,10 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 		ui_button_event(child, e);
 		if (child->is_click)
 			radio->active = child;
-		child->state = UI_STATE_DEFAULT; // dont remove this, its smart! think hard before you remove!
+		else if (child->is_hover)
+			child->state = UI_STATE_HOVER;
+		else
+			child->state = UI_STATE_DEFAULT;
 		curr = curr->next;
 	}
 	if (radio->active)
