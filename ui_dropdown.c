@@ -39,6 +39,16 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 		elem->state = UI_STATE_CLICK;
 		ui_menu_event(&drop->menu, e);
 	}
+	if(e.type == SDL_MOUSEBUTTONDOWN)
+	{
+		if (elem->is_hover != 1)
+		{
+			elem->is_click = 0;
+			elem->state = UI_STATE_DEFAULT;
+			drop->menu.show = 0;
+			return ;
+		}
+	}
 }
 
 int	ui_dropdown_render(t_ui_element *elem)

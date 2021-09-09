@@ -62,6 +62,7 @@ void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint
 SDL_Surface				*ui_surface_new(int w, int h);
 void					ui_surface_print(SDL_Surface *surface);
 SDL_Surface				*ui_surface_text_new(char *text, char *font_path, int size, Uint32 font_color);
+SDL_Surface				*ui_surface_image_new(char *image_path);
 void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
 Uint32					ui_surface_pixel_get(SDL_Surface *surface, int x, int y);
 void					ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
