@@ -318,6 +318,15 @@ void	ui_input_free(void *elem)
 /*
  * Getters
 */
+t_ui_element	*ui_input_label_element_get(t_ui_element *elem)
+{
+	return (&((t_ui_input *)elem->element)->label);
+}
+
+t_ui_label	*ui_input_label_get(t_ui_element *elem)
+{
+	return (ui_input_label_element_get(elem)->element);
+}
 
 char	*ui_input_text_get(t_ui_element *elem)
 {

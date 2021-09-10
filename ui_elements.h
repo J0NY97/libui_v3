@@ -293,6 +293,8 @@ void					ui_input_new(t_ui_window *win, t_ui_element *elem);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
 void					ui_input_free(void *elem);
+t_ui_element			*ui_input_label_element_get(t_ui_element *elem);
+t_ui_label				*ui_input_label_get(t_ui_element *elem);
 char					*ui_input_text_get(t_ui_element *elem);
 
 // Slider
