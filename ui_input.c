@@ -314,3 +314,17 @@ void	ui_input_free(void *elem)
 {
 	(void)elem;
 }
+
+/*
+ * Getters
+*/
+
+char	*ui_input_text_get(t_ui_element *elem)
+{
+	t_ui_input	*input;	
+	t_ui_label	*label;
+
+	input = elem->element;
+	label = input->label.element;
+	return (label->text);
+}

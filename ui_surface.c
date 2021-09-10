@@ -156,8 +156,8 @@ void	ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uin
 	}
 	else
 		increment_val = 1;
-	if (long_len==0)
-		dec_inc=0;
+	if (long_len == 0)
+		dec_inc = 0;
 	else
 		dec_inc = (short_len << 16) / long_len;
 	j = 0;
@@ -186,7 +186,7 @@ void	ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uin
 /*
  * Reduced version.
 */
-void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+void	ui_surface_line_draw_v2(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	bool	y_longer;
 	int		increment_val;
@@ -228,6 +228,57 @@ void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	while (i != end_val)
 	{
 		ui_surface_pixel_set(surface, p1.x + i, p1.y + (j >> 16), color);
+		j += dec_inc;
+		i += increment_val;
+	}
+}
+
+void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+{
+	bool	y_longer;
+	int		increment_val;
+	int		end_val;
+	float		short_len;
+	float		long_len;
+	float		dec_inc;
+	float		j;
+	int		i;
+
+	y_longer = false;
+	short_len = p2.y - p1.y;
+	long_len = p2.x - p1.x;
+	j = 0;
+	i = 0;
+	y_longer = abs(short_len) > abs(long_len);
+	if (y_longer)
+	{
+		float temp = short_len;
+		short_len = long_len;
+		long_len = temp;
+	}
+	end_val = long_len;
+	increment_val = 1;
+	if (long_len < 0)
+	{
+		increment_val = -1;
+		long_len = -long_len;
+	}
+	dec_inc = 0;
+	if (long_len != 0)
+		dec_inc = short_len / long_len;
+	if (y_longer)
+	{
+		while (i != end_val)
+		{
+			ui_surface_pixel_set(surface, p1.x + (int)j, p1.y + i, color);	
+			j += dec_inc;
+			i += increment_val;
+		}
+		return ;
+	}
+	while (i != end_val)
+	{
+		ui_surface_pixel_set(surface, p1.x + i, p1.y + j, color);
 		j += dec_inc;
 		i += increment_val;
 	}
