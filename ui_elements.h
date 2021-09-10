@@ -282,6 +282,8 @@ void					ui_menu_add(t_ui_element *menu, t_ui_element *child);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_free(void *menu);
+t_ui_element			*ui_menu_get_element_by_id(t_ui_element *elem, char *id);
+t_ui_button				*ui_menu_get_button_by_id(t_ui_element *elem, char *id);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
@@ -323,6 +325,7 @@ int						ui_radio_render(t_ui_element *elem);
 void					ui_radio_free(void *elem);
 // Other radio
 void					ui_radio_add(t_ui_element *elem, t_ui_element *child);
+void					ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this);
 
 // Tab
 void					ui_tab_new(t_ui_window *win, t_ui_element *elem);

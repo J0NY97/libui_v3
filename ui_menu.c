@@ -78,3 +78,23 @@ void	ui_menu_free(void *menu)
 {
 	(void)menu;
 }
+
+// getters
+
+/*
+ * returns element ,from children list, with id;
+*/
+t_ui_element	*ui_menu_get_element_by_id(t_ui_element *elem, char *id)
+{
+	return (ui_list_get_element_by_id(((t_ui_menu *)elem->element)->children, id));
+}
+
+/*
+ * same as the ui_menu_get_element_by_id();
+ * but this assumes the element is button since you get_button_...
+ * so it will typecast it automatically for you;
+*/
+t_ui_button	*ui_menu_get_button_by_id(t_ui_element *elem, char *id)
+{
+	return (ui_list_get_element_by_id(((t_ui_menu *)elem->element)->children, id)->element);
+}
