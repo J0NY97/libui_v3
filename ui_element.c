@@ -234,3 +234,12 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\tis_click : %d\n", elem->is_click);
 	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
 }
+
+void	ui_element_swap(t_ui_element *one, t_ui_element *two)
+{
+	t_ui_element	*temp;
+
+	temp = one;
+	one = two;
+	two = temp;
+}

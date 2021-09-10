@@ -18,6 +18,29 @@ t_vec2i	vec2i(int x, int y)
 	return (v);
 }
 
+void	vec2i_swap(t_vec2i *v1, t_vec2i *v2)
+{
+	t_vec2i	temp;
+
+	temp = *v1;
+	for (int i = 0; i < VEC2_SIZE; i++)
+		v1->v[i] = v2->v[i];
+	for (int i = 0; i < VEC2_SIZE; i++)
+		v2->v[i] = temp.v[i];
+}
+
+void	vec2_swap(t_vec2 *v1, t_vec2 *v2)
+{
+	t_vec2	temp;
+
+	temp = *v1;
+	for (int i = 0; i < VEC2_SIZE; i++)
+		v1->v[i] = v2->v[i];
+	for (int i = 0; i < VEC2_SIZE; i++)
+		v2->v[i] = temp.v[i];
+}
+
+
 t_vec2i	vec2i_add(t_vec2i v1, t_vec2i v2)
 {
 	t_vec2i	v;
@@ -47,6 +70,28 @@ t_vec4i	vec4i(int x, int y, int w, int h)
 	v.w = w;
 	v.h = h;
 	return (v);
+}
+
+void	vec4i_swap(t_vec4i *v1, t_vec4i *v2)
+{
+	t_vec4i	temp;
+
+	temp = *v1;
+	for (int i = 0; i < VEC4_SIZE; i++)
+		v1->v[i] = v2->v[i];
+	for (int i = 0; i < VEC4_SIZE; i++)
+		v2->v[i] = temp.v[i];
+}
+
+void	vec4_swap(t_vec4 *v1, t_vec4 *v2)
+{
+	t_vec4	temp;
+
+	temp = *v1;
+	for (int i = 0; i < VEC4_SIZE; i++)
+		v1->v[i] = v2->v[i];
+	for (int i = 0; i < VEC4_SIZE; i++)
+		v2->v[i] = temp.v[i];
 }
 
 void	print_vec(float *vec, size_t size)
