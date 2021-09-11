@@ -48,6 +48,9 @@ $(NAME): $(OBJS)
 	@ranlib $(NAME)
 	@echo "$(NAME) was successfully created."
 
+test: $(NAME)
+	gcc -o test main.c -I$(LIB_FOLDER)/libpf -L$(LIB_FOLDER)/libpf -lpf -I$(LIB_FOLDER)/libft -L$(LIB_FOLDER)/libft -lft -I$(LIB_FOLDER)/libui -L$(LIB_FOLDER)/libui -lui $(SDL_INC) -L$(LIB_FOLDER)/SDL/lib -lSDL2 -lSDL2_image -lSDL2_TTF
+
 clean:
 	@rm -f $(OBJS)
 	@echo "$(NAME) was cleaned."
@@ -57,7 +60,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: clean, all, re, fclean
-
-
-
+.PHONY: clean, all, re, fclean, test

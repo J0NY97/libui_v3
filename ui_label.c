@@ -17,7 +17,6 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab->font = NULL;
 	lab->font_recreate = 1;
 	lab->texture_recreate = 1;
-//	ui_label_texture_redo(label); // you dont need this i think, because you have it in the render.
 }
 
 void	ui_label_texture_redo(t_ui_element *elem)
@@ -46,13 +45,6 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 	t_ui_label	*label;
 
 	label = elem->element;
-	/*
-	if ((align | UI_TEXT_ALIGN_TOP)
-		|| (align | UI_TEXT_ALIGN_BOT)
-		|| (align | UI_TEXT_ALIGN_LEFT)
-		|| (align | UI_TEXT_ALIGN_RIGHT)
-		|| (align | UI_TEXT_ALIGN_CENTER))
-		*/
 	label->text_align = align;
 	if (align && !(align & UI_TEXT_ALIGN_NONE))
 	{
@@ -69,9 +61,6 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 			elem->pos.x = 0;
 		if (align & UI_TEXT_ALIGN_RIGHT)
 			elem->pos.x = elem->parent_screen_pos->w - label->text_wh.x;
-		ft_printf("%s\n", label->text);
-		ft_printf("elem->pos.x = (%.2f / 2) - (%d / 2); = %.2f\n", elem->parent_screen_pos->w, label->text_wh.x, elem->pos.x);
-		ft_printf("elem->pos.y = (%.2f / 2) - (%d / 2); = %.2f\n", elem->parent_screen_pos->h, label->text_wh.y, elem->pos.y);
 	}
 }
 

@@ -19,8 +19,8 @@ int	main(void)
 
 	SDL_SetHint(SDL_HINT_MOUSE_FOCUS_CLICKTHROUGH, "1");
 
-	ui_load(&toolbox, "toolbox.ui");
-	ui_load(&guimp_toolbox, "guimp_toolbox.ui");
+	ui_layout_load(&toolbox, "toolbox.ui");
+	ui_layout_load(&guimp_toolbox, "guimp_toolbox.ui");
 
 	t_ui_window	*guimp_toolbox_window = ui_layout_get_window_by_id(&guimp_toolbox, "toolbox_window");
 
@@ -140,14 +140,14 @@ int	main(void)
 	ui_menu_new(&win, &menu_menu0);
 	ui_element_pos_set(&menu_menu0, vec4(0.5, 0.5, 0.1, 100));
 
-	ui_menu_child_add(&menu_menu0, &menu0_label, UI_TYPE_ELEMENT);
+	ui_menu_add(&menu_menu0, &menu0_label);
 
-	ui_menu_child_add(&menu, &menu_label0, UI_TYPE_ELEMENT);
-	ui_menu_child_add(&menu, &menu_button0, UI_TYPE_ELEMENT);
-	ui_menu_child_add(&menu, &menu_button1, UI_TYPE_ELEMENT);
-	ui_menu_child_add(&menu, &menu_menu0, UI_TYPE_ELEMENT);
-	ui_menu_child_add(&menu, &menu_dropdown0, UI_TYPE_ELEMENT);
-	ui_menu_child_add(&menu, &menu_slider0, UI_TYPE_ELEMENT);
+	ui_menu_add(&menu, &menu_label0);
+	ui_menu_add(&menu, &menu_button0);
+	ui_menu_add(&menu, &menu_button1);
+	ui_menu_add(&menu, &menu_menu0);
+	ui_menu_add(&menu, &menu_dropdown0);
+	ui_menu_add(&menu, &menu_slider0);
 
 	// Dropdown
 	t_ui_element	dropdown;
