@@ -70,6 +70,8 @@ int	ui_element_render(t_ui_element *elem)
 {
 	if (!*elem->parent_show || !elem->show)
 		return (0);
+	if (!elem->textures[elem->state])
+		return (0);
 	elem->screen_pos = ui_element_screen_pos_get(elem);
 	if (elem->texture_recreate || elem->win->textures_recreate)
 	{
@@ -166,6 +168,8 @@ void	ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_p
 {
 	SDL_Surface	*image;
 
+	if (!image_path)
+		return ;
 	image = IMG_Load(image_path);
 	if (!image)
 		return ;

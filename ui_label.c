@@ -29,6 +29,11 @@ void	ui_label_texture_redo(t_ui_element *elem)
 	if (elem->texture)
 		SDL_DestroyTexture(elem->texture);
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);	
+	if (!elem->textures[UI_STATE_DEFAULT])
+	{
+		ft_printf("[%s] elem->textures[UI_STATE_DEFAULT] no surface.\n", __FUNCTION__);
+		elem->textures[UI_STATE_DEFAULT] = ui_surface_new(1, 1);
+	}
 	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
 	label->texture_recreate = 0;
 	elem->pos.w = elem->textures[UI_STATE_DEFAULT]->w;

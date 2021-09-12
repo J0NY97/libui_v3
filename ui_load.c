@@ -316,11 +316,16 @@ void	str_arr_arg_to_str_arr(char *str, char **result_arr, int result_arr_len)
 	while (arr[++i] && i < result_arr_len)
 	{
 		if (ft_strequ(arr[i], "NULL"))
+		{
+			result_arr[i] = NULL;
 			continue ;
+		}
 		trimtrim = trim_string(arr[i]);
 		result_arr[i] = ft_strdup(trimtrim);
 		ft_strdel(&trimtrim);
 	}
+	while (++i < result_arr_len)
+		result_arr[i] = NULL;
 	ft_arraydel(arr);
 }
 
@@ -608,6 +613,7 @@ void	ui_layout_element_edit(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout
 			ui_element_color_set(elem, i, recipe->bg_color[i]);
 	if (recipe->bg_image_set)
 	{
+		ft_printf("[%s] bg_image : %s %s %s\n", __FUNCTION__, recipe->bg_image[0], recipe->bg_image[1], recipe->bg_image[2]); 
 		ui_element_image_set_from_path(elem, UI_STATE_DEFAULT, recipe->bg_image[UI_STATE_DEFAULT]);
 		ui_element_image_set_from_path(elem, UI_STATE_HOVER, recipe->bg_image[UI_STATE_HOVER]);
 		ui_element_image_set_from_path(elem, UI_STATE_CLICK, recipe->bg_image[UI_STATE_CLICK]);
