@@ -1,0 +1,29 @@
+Button
+{
+	w : 50;
+	h : 20;
+}
+
+button_prefab
+{
+	bg_color_hover : 0xffff0000;
+}
+
+win0
+{
+	xywh : 10, 10, 1280, 720;
+	title : testing window;
+	bg_color : 0xffb0b0b0;
+}
+
+menu0
+{
+	xywh : 10, 10, 100, 100;
+	bg_color : 0xffb0b0b0;
+}
+
+button0 : button_prefab
+{
+	x : 10; 
+	y : 10;
+}

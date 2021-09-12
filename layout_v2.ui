@@ -1,0 +1,12 @@
+style : layout_v2.style;
+
+Window win0
+{
+	Menu menu0
+	{
+		Button button0
+		{
+
+		}
+	}
+}
