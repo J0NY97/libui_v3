@@ -60,6 +60,9 @@ void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint
 
 // Surface
 SDL_Surface				*ui_surface_new(int w, int h);
+void					ui_surface_fill(SDL_Surface *surface, Uint32 color);
+void					ui_surface_fill_rect(SDL_Surface *surface, Uint32 color, t_vec4i rect);
+SDL_Surface				*ui_surface_create_from_text_recipe(t_ui_label *recipe);
 void					ui_surface_print(SDL_Surface *surface);
 SDL_Surface				*ui_surface_text_new(char *text, char *font_path, int size, Uint32 font_color);
 SDL_Surface				*ui_surface_image_new(char *image_path);

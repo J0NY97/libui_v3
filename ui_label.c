@@ -22,19 +22,17 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 void	ui_label_texture_redo(t_ui_element *elem)
 {
 	t_ui_label	*label;
-	int			w;
-	int			h;
 
 	label = elem->element;
 	if (elem->textures[UI_STATE_DEFAULT])
-		SDL_DestroyTexture(elem->textures[UI_STATE_DEFAULT]);
-	elem->textures[UI_STATE_DEFAULT] = ui_texture_create_from_text_recipe(elem->win->renderer, elem->element);	
+		SDL_FreeSurface(elem->textures[UI_STATE_DEFAULT]);
+	if (elem->texture)
+		SDL_DestroyTexture(elem->texture);
+	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);	
+	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
 	label->texture_recreate = 0;
-	SDL_QueryTexture(elem->textures[UI_STATE_DEFAULT], NULL, NULL, &w, &h);
-	elem->pos.w = w;
-	elem->pos.h = h;
-	if (elem->id && !ft_strequ(elem->id, "tick_label"))
-		ft_printf("label pos set to : w: %.2f, w: %.2f\n", elem->pos.w, elem->pos.h);
+	elem->pos.w = elem->textures[UI_STATE_DEFAULT]->w;
+	elem->pos.h = elem->textures[UI_STATE_DEFAULT]->h;
 }
 
 /*

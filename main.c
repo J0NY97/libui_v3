@@ -39,15 +39,15 @@ int	main(void)
 
 	t_ui_element	*slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "r_slider");
 	ui_slider_render(slider_elem);
-	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xffff0000, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
+	ui_surface_fill_rect(slider_elem->textures[UI_STATE_DEFAULT], 0xffff0000, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "g_slider");
 	ui_slider_render(slider_elem);
-	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff00ff00, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
+	ui_surface_fill_rect(slider_elem->textures[UI_STATE_DEFAULT], 0xff00ff00, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "b_slider");
 	ui_slider_render(slider_elem);
-	ui_texture_fill_rect(slider_elem->win->renderer, slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
+	ui_surface_fill_rect(slider_elem->textures[UI_STATE_DEFAULT], 0xff0000ff, vec4i(0, slider_elem->pos.h / 3, slider_elem->pos.w, slider_elem->pos.h / 3));
 
 	slider_elem = ui_layout_get_element_by_id(&guimp_toolbox, "a_slider");
 	// END Edit guimp_toolbox elements in ways that are not possible in the ui file
@@ -61,7 +61,7 @@ int	main(void)
 	// Element
 	ui_element_new(&win, &elem1);
 	ui_element_pos_set(&elem1, vec4(10, 50, 50, 20));
-	ui_texture_fill(elem1.win->renderer, elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
+	ui_surface_fill(elem1.textures[UI_STATE_DEFAULT], 0xffBF6900);
 
 	// Label
 	ui_label_new(&win, &label);

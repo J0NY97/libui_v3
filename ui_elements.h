@@ -59,10 +59,12 @@ typedef struct s_ui_element
 {
 	t_vec4			pos;
 	t_vec4i			screen_pos;
-	SDL_Texture		*textures[UI_STATE_AMOUNT];
-	SDL_Texture		*images[UI_STATE_AMOUNT];
+	SDL_Surface		*textures[UI_STATE_AMOUNT];
+	SDL_Texture		*texture;
+	SDL_Surface		*images[UI_STATE_AMOUNT];
 	bool			use_images;
 	int				state;
+	int				last_state;
 	t_ui_window		*win;
 	void			*parent;
 	int				parent_type;

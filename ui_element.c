@@ -26,6 +26,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_NONE;
 	elem->show = 1;
+	elem->last_state = -999;
 }
 
 /*
@@ -39,11 +40,12 @@ void	ui_element_textures_redo(t_ui_element *elem)
 	while (++i < UI_STATE_AMOUNT)
 	{
 		if (elem->textures[i])
-			SDL_DestroyTexture(elem->textures[i]);
+			SDL_FreeSurface(elem->textures[i]);
 	}
-	elem->textures[UI_STATE_DEFAULT] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
-	elem->textures[UI_STATE_HOVER] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
-	elem->textures[UI_STATE_CLICK] = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
+	elem->textures[UI_STATE_DEFAULT] = ui_surface_new(elem->pos.w, elem->pos.h);
+	elem->textures[UI_STATE_HOVER] = ui_surface_new(elem->pos.w, elem->pos.h);
+	elem->textures[UI_STATE_CLICK] = ui_surface_new(elem->pos.w, elem->pos.h);
+	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[elem->state]);
 	elem->texture_recreate = 0;
 	if (elem->use_images)
 	{
@@ -52,15 +54,13 @@ void	ui_element_textures_redo(t_ui_element *elem)
 		{
 			if (!elem->images[i])
 				continue ;
-			SDL_SetRenderTarget(elem->win->renderer, elem->textures[i]);
-			SDL_RenderCopy(elem->win->renderer, elem->images[i], NULL, NULL);
-			SDL_SetRenderTarget(elem->win->renderer, NULL);
+			SDL_BlitScaled(elem->images[i], NULL, elem->textures[i], NULL);
 		}
 		return ;
 	}
-	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
-	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
-	ui_texture_fill(elem->win->renderer, elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
+	ui_surface_fill(elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
+	ui_surface_fill(elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
+	ui_surface_fill(elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
 }
 
 /*
@@ -72,11 +72,16 @@ int	ui_element_render(t_ui_element *elem)
 		return (0);
 	elem->screen_pos = ui_element_screen_pos_get(elem);
 	if (elem->texture_recreate || elem->win->textures_recreate)
+	{
 		ui_element_textures_redo(elem);
-
+		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
+	}
+	else if (elem->state != elem->last_state)
+		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
-	SDL_RenderCopy(elem->win->renderer, elem->textures[elem->state], NULL,
+	SDL_RenderCopy(elem->win->renderer, elem->texture, NULL,
 		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
+	elem->last_state = elem->state;
 	return (1);
 }
 
@@ -173,8 +178,9 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	if (state < 0 || state > UI_STATE_AMOUNT)
 		return ;
 	if (elem->images[state])
-		SDL_DestroyTexture(elem->images[state]);
-	elem->images[state] = SDL_CreateTextureFromSurface(elem->win->renderer, image);
+		SDL_FreeSurface(elem->images[state]);
+	elem->images[state] = ui_surface_new(image->w, image->h);
+	SDL_BlitSurface(image, NULL, elem->images[state], NULL);
 	elem->use_images = 1;
 	elem->texture_recreate = 1;
 }
