@@ -4,9 +4,12 @@ Window win0
 {
 	Menu menu0
 	{
+		Label label0
+		{
+		};
 		Button button0
 		{
 
-		}
-	}
-}
+		};
+	};
+};

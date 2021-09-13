@@ -170,7 +170,6 @@ static const t_ui_acceptable	g_acceptable_window =
 };
 
 // NOTE: these must be in the same order as the UI_TYPE_ENUM
-# define UI_ACCEPT_AMOUNT 11
 static const t_ui_acceptable	g_acceptable[] =
 {
 	g_acceptable_element,

@@ -117,3 +117,64 @@ float	fdist(t_vec2 p1, t_vec2 p2)
 	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
 }
 
+char	**ft_strsplitwhitespace(char *str)
+{
+	char	**arr;
+	int		i;
+	int		prev_i;
+	int		wc;
+
+	if (!str)
+		return (NULL);
+	i = -1;
+	wc = 0;
+	prev_i = 0;
+	arr = malloc(sizeof(char *) * 1);
+	while (str[++i])
+	{
+		if (ft_isspace(str[i]))
+		{
+			arr = realloc(arr, sizeof(char *) * ++wc);
+			arr[wc - 1] = ft_strsub(str, prev_i, i - prev_i);
+			prev_i = i + 1;
+		}
+	}
+	arr = realloc(arr, sizeof(char *) * ++wc);
+	arr[wc - 1] = ft_strsub(str, prev_i, i - prev_i);
+	arr = realloc(arr, sizeof(char *) * ++wc);
+	arr[wc - 1] = 0;
+	return (arr);
+}
+
+/*
+ * Remove all whitespace at the ends,
+ * replace all whitespace with space,
+ * remove comments.
+*/
+char	*ft_supertrim(char *str)
+{
+	char	*final;
+	char	*trim;
+	char	*tram;
+	char	**arr;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	final = NULL;
+	i = -1;
+	trim = ft_strtrim(str);
+	if (trim[0] && trim[0] == '/'
+		&& trim[1] && trim[1] == '/')
+		return (NULL);
+	arr = ft_strsplitwhitespace(trim);
+	while (arr[++i])
+	{
+		tram = ft_strtrim(arr[i]);
+		ft_stradd(&final, tram);
+		if (arr[i + 1])
+			ft_straddchar(&final, ' ');
+		ft_strdel(&tram);
+	}
+	return (final);
+}

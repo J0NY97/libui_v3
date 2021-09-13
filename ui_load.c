@@ -417,7 +417,7 @@ void	decide(t_ui_layout *layout, char *str, char *var_name, FILE *fd)
 
 	result = -1;
 	i = -1;
-	while (++i < UI_ACCEPT_AMOUNT)
+	while (++i < UI_TYPE_AMOUNT)
 	{
 		if (ft_strequ(str, g_acceptable[i].name))
 		{

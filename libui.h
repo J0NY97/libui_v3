@@ -90,6 +90,8 @@ int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 t_ui_element			*ui_list_get_element_by_id(t_list *list, char *id);
 int						dist(t_vec2i p1, t_vec2i p2);
 float					fdist(t_vec2 p1, t_vec2 p2);
+char					**ft_strsplitwhitespace(char *str);
+char					*ft_supertrim(char *str);
 
 // Load
 void					ui_print_accepted(void);

@@ -32,7 +32,7 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			if (child->element_type > 0
-				&& child->element_type < UI_ACCEPT_AMOUNT
+				&& child->element_type < UI_TYPE_AMOUNT
 				&& g_acceptable[child->element_type].eventer)
 				g_acceptable[child->element_type].eventer(child, e);
 			else
@@ -61,7 +61,7 @@ int	ui_menu_render(t_ui_element *elem)
 		{
 			child = curr->content;
 			if (child->element_type > 0
-				&& child->element_type < UI_ACCEPT_AMOUNT
+				&& child->element_type < UI_TYPE_AMOUNT
 				&& g_acceptable[child->element_type].renderer)
 				g_acceptable[child->element_type].renderer(child);
 			else

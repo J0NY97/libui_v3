@@ -24,7 +24,7 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 		{
 			elem = curr->content;
 			int	j = -1;
-			while (++j < UI_ACCEPT_AMOUNT)
+			while (++j < UI_TYPE_AMOUNT)
 			{
 				if (g_acceptable[j].type == elem->element_type)
 				{
@@ -33,7 +33,7 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 					break ;
 				}
 			}
-			if (j == UI_ACCEPT_AMOUNT)
+			if (j == UI_TYPE_AMOUNT)
 				ft_printf("[%s] Eventing of type %d %d is not supported.\n", __FUNCTION__, curr->content_size, elem->element_type);
 		}
 		else
@@ -58,7 +58,7 @@ int	ui_layout_render(t_ui_layout *layout)
 		{
 			elem = curr->content;
 			int	j = -1;
-			while (++j < UI_ACCEPT_AMOUNT)
+			while (++j < UI_TYPE_AMOUNT)
 			{
 				if (g_acceptable[j].type == elem->element_type)
 				{
@@ -67,7 +67,7 @@ int	ui_layout_render(t_ui_layout *layout)
 					break ;
 				}
 			}
-			if (j == UI_ACCEPT_AMOUNT)
+			if (j == UI_TYPE_AMOUNT)
 				ft_printf("[ui_layout_render] Rendering of type %d %d is not supported.\n", curr->content_size, elem->element_type);
 		}
 		else
