@@ -11,22 +11,6 @@
  * from the list of elements.
 */
 
-char	**ft_strsplitfirstoccurence(char *str, char c)
-{
-	char	**arr;
-	int		i;
-
-	if (!str)
-		return (NULL);
-	arr = ft_memalloc(sizeof(char *) * 3);
-	i = -1;
-	while (str[++i] && str[i] != c);
-	arr[0] = ft_strsub(str, 0, i);
-	if (str[i] == c)
-		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
-	return (arr);
-}
-
 /*
  * Description in function name.
 */

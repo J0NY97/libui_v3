@@ -92,6 +92,8 @@ int						dist(t_vec2i p1, t_vec2i p2);
 float					fdist(t_vec2 p1, t_vec2 p2);
 char					**ft_strsplitwhitespace(char *str);
 char					*ft_supertrim(char *str);
+char					**ft_strsplitfirstoccurence(char *str, char c);
+char					**ft_strsplitfirstoccurenceor(char *str, char b, char c);
 
 // Load
 void					ui_print_accepted(void);

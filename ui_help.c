@@ -178,3 +178,40 @@ char	*ft_supertrim(char *str)
 	}
 	return (final);
 }
+
+char	**ft_strsplitfirstoccurence(char *str, char c)
+{
+	char	**arr;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	arr = ft_memalloc(sizeof(char *) * 3);
+	i = -1;
+	while (str[++i] && str[i] != c);
+	arr[0] = ft_strsub(str, 0, i);
+	if (str[i] == c)
+		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
+	return (arr);
+}
+
+/*
+ * splits at first occurence of either delim 'b' or delim 'c';
+*/
+char	**ft_strsplitfirstoccurenceor(char *str, char b, char c)
+{
+	char	**arr;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	arr = ft_memalloc(sizeof(char *) * 3);
+	i = -1;
+	while (str[++i] && str[i] != c && str[i] != b);
+	arr[0] = ft_strsub(str, 0, i);
+	if (str[i] == c || str[i] == b)
+		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
+	return (arr);
+}
+
+

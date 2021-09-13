@@ -18,6 +18,7 @@ typedef struct s_ui_family
 {
 	char			*parent_id;
 	int				parent_type;
+	char			**children_strings;
 	t_list			*children; // t_list of t_ui_family;
 }					t_ui_family;
 

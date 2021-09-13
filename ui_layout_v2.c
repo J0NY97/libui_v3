@@ -48,33 +48,126 @@ void	layout_read_file(t_ui_layout_v2 *layout, char *file)
 	ft_printf("%s", layout->layout_file_content);
 }
 
-void	layout_split_elements(t_ui_layout_v2 *layout)
+char	**split_string_into_array(char *str)
 {
-	
-}
+	char	**final;
+	int	i;
+	int	j;
+	int	opening;
+	int	closing;
+	int	prev_i;
+	int	elem_count;
 
-/*
-void	ui_element_compile_from_string(t_ui_window *win, char *str)
-{
-	int				i;
-	int				j;
-	int				opening;
-	int				closing;
-	t_ui_element	*elem;
-
-	if (!str)
-		return ;
 	i = -1;
 	j = -1;
 	opening = 0;
 	closing = 0;
+	prev_i = 0;
+	elem_count = 0;
+	final = malloc(sizeof(char *) * 1);
 	while (str[++i])
 	{
-		while (++j < UI_TYPE_AMOUNT)
-			if (ft_strequ())
+		if (str[i] == ';' && opening == closing)
+		{
+			final = realloc(final, sizeof(char *) * ++elem_count);
+			final[elem_count - 1] = ft_strsub(str, prev_i, i - prev_i + 1);
+			prev_i = i + 1;
+		}
+		else if (str[i] == '{')
+			opening++;
+		else if (str[i] == '}')
+			closing++;
 	}
+	final = realloc(final, sizeof(char *) * ++elem_count);
+	final[elem_count - 1] = 0;
+	return (final);
 }
+/*
+ * This splits everything from global scope separated with ';', to separeate strings;
 */
+void	layout_split_elements(t_ui_layout_v2 *layout)
+{
+	int	k;
+
+	layout->layout_element_strings = split_string_into_array(layout->layout_file_content);
+	ft_printf("[%s] Done splitting elems.\n", __FUNCTION__);
+	k = -1;
+	while (layout->layout_element_strings[++k])
+		ft_printf("#%d : \n%s\n", k, layout->layout_element_strings[k]);
+}
+
+/*
+ * Returns a list of families;
+*/
+t_ui_family	*make_family_from_string(char *str)
+{
+	t_list		*families;
+	t_ui_family	*family;
+	t_ui_family	*child;
+	char		**temp;
+	char		**type_n_name; // dont free this, you can just set them inside the family things;
+	int			len;
+	int			rm_amount;
+	char		*children;
+
+	temp = ft_strsplitfirstoccurenceor(str, '{', ';');
+	len = ft_strlen(temp[1]);
+	if (len == 0) // probably some special stuff (like style : "path")
+	{
+		ft_arraydel(temp);
+		return (NULL);
+	}
+	family = ft_memalloc(sizeof(t_ui_family));
+	rm_amount = 0;
+	if (temp[1][len - 1] == ';') // remove '}' and/or ';';
+	{
+		rm_amount++;
+		if (temp[1][len - 2] == '}')
+			rm_amount++;
+		children = ft_strndup(temp[1], len - rm_amount);
+		ft_printf("%s\n", children);
+	}
+	type_n_name = ft_strsplit(temp[0], ' ');
+	ft_printf("%s %s\n{\n%s\n}\n", type_n_name[0], type_n_name[1], children);
+	family->parent_id = type_n_name[1];
+	family->parent_type = ui_element_type_from_string(type_n_name[0]);
+	family->children_strings = split_string_into_array(children);
+	int k = -1;
+	while (family->children_strings[++k])
+	{
+		child = make_family_from_string(family->children_strings[k]);
+		if (!child)
+			break ;
+		add_to_list(&family->children, child, sizeof(t_ui_family));
+	}
+	ft_arraydel(temp);
+	return (family);
+}
+
+void	print_family(t_ui_family *family, int nth)
+{
+	t_list	*curr;
+	int tabs;
+
+	tabs = -1;
+	while (++tabs < nth)
+		ft_putchar('\t');
+	ft_printf("%s\n", family->parent_id);
+	tabs = -1;
+	while (++tabs < nth)
+		ft_putchar('\t');
+	ft_putstr("{\n");
+	curr = family->children;
+	while (curr)
+	{
+		print_family(curr->content, nth + 1);
+		curr = curr->next;
+	}
+	tabs = -1;
+	while (++tabs < nth)
+		ft_putchar('\t');
+	ft_putstr("}\n");
+}
 
 /*
  * Takes the layout_file_content and makes the elements with their children.
@@ -82,17 +175,23 @@ void	ui_element_compile_from_string(t_ui_window *win, char *str)
 */
 void	layout_compile_elements(t_ui_layout_v2 *layout)
 {
-	/*
 	int			i;
+	char		**arr;
+	t_ui_family	*family;
 
-	if (!layout->layout_file_content)
+	arr = layout->layout_element_strings;
+	if (!arr)
 		return ;
 	i = -1;
-	while (layout->layout_file_content[++i])
+	while (arr[++i])
 	{
-		
+		family = make_family_from_string(arr[i]);
+		if (family)
+			add_to_list(&layout->families, family, sizeof(t_ui_family));
 	}
-	*/
+	// printing to make sure that the family is setup correctly;
+	ft_printf("[%s] Print Families\n", __FUNCTION__);
+	print_family(layout->families->content, 0);
 }
 
 void	layout_read_style(t_ui_layout_v2 *layout)

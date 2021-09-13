@@ -253,3 +253,14 @@ void	ui_element_swap(t_ui_element *one, t_ui_element *two)
 	one = two;
 	two = temp;
 }
+
+int	ui_element_type_from_string(char *str)
+{
+	int	k;
+
+	k = -1;
+	while (++k < UI_TYPE_AMOUNT)
+		if (ft_strequ(str, g_acceptable[k].name))
+			return (k);
+	return (UI_TYPE_NONE);
+}
