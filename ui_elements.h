@@ -236,6 +236,8 @@ void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
 void					ui_window_free(void *win);
 // Window other
+void					ui_window_texture_redo(t_ui_window *win);
+void					ui_window_pos_set(t_ui_window *win, t_vec4 pos);
 void					ui_window_flag_set(t_ui_window *win, int flags);
 void					ui_window_title_set(t_ui_window *win, const char *title);
 void					ui_window_id_set(t_ui_window *win, const char *id);

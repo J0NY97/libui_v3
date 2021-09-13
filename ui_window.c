@@ -98,6 +98,20 @@ void	ui_window_free(void *win)
  * Window edititing functions down from here.
 */
 
+void	ui_window_texture_redo(t_ui_window *win)
+{
+	if (win->texture)
+		SDL_DestroyTexture(win->texture);
+	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+}
+
+void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
+{
+	win->pos = pos;
+	SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);
+	ui_window_texture_redo(win);
+}
+
 void	ui_window_flag_set(t_ui_window *win, int flags)
 {
 	int	curr_flags;
