@@ -1,6 +1,6 @@
 style : layout_v2.style;
 
-Window win0
+Window win0			
 {
 	Menu menu0
 	{

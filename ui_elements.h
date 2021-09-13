@@ -238,6 +238,7 @@ void					ui_window_free(void *win);
 // Window other
 void					ui_window_flag_set(t_ui_window *win, int flags);
 void					ui_window_title_set(t_ui_window *win, const char *title);
+void					ui_window_id_set(t_ui_window *win, const char *id);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);

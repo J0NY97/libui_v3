@@ -133,3 +133,12 @@ void	ui_window_title_set(t_ui_window *win, const char *title)
 	win->title = ft_strdup(title);
 	SDL_SetWindowTitle(win->win, title);
 }
+
+void	ui_window_id_set(t_ui_window *win, const char *id)
+{
+	if (!id)
+		return ;
+	if (win->id)
+		ft_strdel(&win->id);
+	win->id = ft_strdup(id);
+}

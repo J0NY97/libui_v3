@@ -4,6 +4,7 @@ void	ui_layout_load_v2(t_ui_layout_v2 *layout, char *file)
 {
 	layout_read_file(layout, file);
 	layout_split_elements(layout);
+	layout_make_family_trees(layout);
 	layout_compile_elements(layout);
 	layout_read_style(layout);
 	layout_apply_style(layout);
@@ -173,7 +174,7 @@ void	print_family(t_ui_family *family, int nth)
  * Takes the layout_file_content and makes the elements with their children.
  * This find window and creates its elements.
 */
-void	layout_compile_elements(t_ui_layout_v2 *layout)
+void	layout_make_family_trees(t_ui_layout_v2 *layout)
 {
 	int			i;
 	char		**arr;
@@ -192,6 +193,67 @@ void	layout_compile_elements(t_ui_layout_v2 *layout)
 	// printing to make sure that the family is setup correctly;
 	ft_printf("[%s] Print Families\n", __FUNCTION__);
 	print_family(layout->families->content, 0);
+}
+
+void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, int parent_type, t_ui_family *family)
+{
+	t_ui_element	*elem;
+	t_list			*rruc;
+
+	elem = ft_memalloc(sizeof(t_ui_element));
+	g_acceptable[family->parent_type].maker(win, elem);
+	ui_element_parent_set(elem, parent, parent_type);
+	ui_element_id_set(elem, family->parent_id);
+	add_to_list(list, elem, UI_TYPE_ELEMENT);
+	rruc = family->children;
+	while (rruc)
+	{
+		make_elements_from_family(list, win, elem, UI_TYPE_ELEMENT, rruc->content);
+		rruc = rruc->next;
+	}
+}
+
+void	print_all_elements_in_list(t_list *list)
+{
+	while (list)
+	{
+		ui_element_print(list->content);
+		list = list->next;
+	}
+}
+
+/*
+ * This goes through family and searches for window as the head parent,
+ * since all elements need a window, to be created.
+*/
+void	layout_compile_elements(t_ui_layout_v2 *layout)
+{
+	t_list		*curr;
+	t_list		*rruc;
+	t_ui_family	*family;
+	t_ui_window	*win;
+
+	curr = layout->families;
+	while (curr)
+	{
+		family = curr->content;
+		if (family->parent_type == UI_TYPE_WINDOW)
+		{
+			ft_printf("[%s] Creating window : %s\n", __FUNCTION__, family->parent_id);
+			win = ft_memalloc(sizeof(t_ui_window));
+			ui_window_new(win, NULL, vec4(0, 0, 0, 0));
+			ui_window_id_set(win, family->parent_id);
+			add_to_list(&layout->windows, win, UI_TYPE_WINDOW);
+			rruc = family->children;
+			while (rruc)
+			{
+				make_elements_from_family(&layout->elements, win, win, UI_TYPE_WINDOW, rruc->content);
+				rruc = rruc->next;
+			}
+		}
+		curr = curr->next;
+	}
+	print_all_elements_in_list(layout->elements);
 }
 
 void	layout_read_style(t_ui_layout_v2 *layout)

@@ -29,5 +29,6 @@ void				ui_layout_load_v2(t_ui_layout_v2 *layout, char *file);
 void				layout_apply_style(t_ui_layout_v2 *layout);
 void				layout_read_style(t_ui_layout_v2 *layout);
 void				layout_compile_elements(t_ui_layout_v2 *layout);
+void				layout_make_family_trees(t_ui_layout_v2 *layout);
 void				layout_split_elements(t_ui_layout_v2 *layout);
 void				layout_read_file(t_ui_layout_v2 *layout, char *file);
