@@ -97,13 +97,15 @@ char					**ft_strsplitfirstoccurence(char *str, char c);
 char					**ft_strsplitfirstoccurenceor(char *str, char b, char c);
 void					ft_strtrimwholearr(char **arr);
 void					ft_putarr(char **arr);
-t_ui_recipe_v2			*ui_list_get_recipe_by_id_v2(t_list *list, char *id);
 
 // Load
 void					ui_print_accepted(void);
 int						ui_layout_load(t_ui_layout *layout, char *ui_file_path);
 t_ui_recipe				*ui_layout_get_recipe_by_id(t_ui_layout *layout, char *id);
+t_ui_recipe_v2			*ui_list_get_recipe_by_id_v2(t_list *list, char *id);
 t_ui_element			*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout);
+int						text_align_getter(char *str);
+const char				*text_align_to_str(int text_align);
 
 // Other
 void					ui_sdl_init(void);

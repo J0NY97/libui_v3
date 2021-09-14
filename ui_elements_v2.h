@@ -36,18 +36,10 @@ typedef struct s_ui_recipe_v2
 	int				text_style;
 	char			*font;
 
-	bool			x_set;
-	bool			y_set;
-	bool			w_set;
-	bool			h_set;
-	bool			bg_color_default_set;
-	bool			bg_color_hover_set;
-	bool			bg_color_click_set;
-	bool			title_set;
+	bool			pos_set[VEC4_SIZE];
+	bool			bg_colors_set[UI_STATE_AMOUNT];
 	bool			text_color_set;
-	bool			text_align_set;
 	bool			text_style_set;
-	bool			font_set;
 }					t_ui_recipe_v2;
 
 ///////////////

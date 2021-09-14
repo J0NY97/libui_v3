@@ -2,11 +2,16 @@ Button
 {
 	w : 50;
 	h : 20;
+	title : Button;
+	text_align : center top;
 };
 
 button_prefab
 {
 	bg_color_hover : 0xffff0000;
+	text_color : 0xff00ff00;
+	font : ShareTechMono-Regular.ttf;
+	text_align : left top;
 };
 
 win0

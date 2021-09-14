@@ -222,6 +222,11 @@ int	flag_getter(char *str)
 	return (result);
 }
 
+const char	*text_align_to_str(int text_align)
+{
+	return ("hello world");
+}
+
 int	text_align_getter(char *str)
 {
 	char	**temp;
