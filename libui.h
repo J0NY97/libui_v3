@@ -88,12 +88,16 @@ char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
 int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
 int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);
 t_ui_element			*ui_list_get_element_by_id(t_list *list, char *id);
+t_ui_window				*ui_list_get_window_by_id(t_list *list, char *id);
 int						dist(t_vec2i p1, t_vec2i p2);
 float					fdist(t_vec2 p1, t_vec2 p2);
 char					**ft_strsplitwhitespace(char *str);
 char					*ft_supertrim(char *str);
 char					**ft_strsplitfirstoccurence(char *str, char c);
 char					**ft_strsplitfirstoccurenceor(char *str, char b, char c);
+void					ft_strtrimwholearr(char **arr);
+void					ft_putarr(char **arr);
+t_ui_recipe_v2			*ui_list_get_recipe_by_id_v2(t_list *list, char *id);
 
 // Load
 void					ui_print_accepted(void);

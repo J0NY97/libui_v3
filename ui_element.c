@@ -264,3 +264,8 @@ int	ui_element_type_from_string(char *str)
 			return (k);
 	return (UI_TYPE_NONE);
 }
+
+const char	*ui_element_type_to_string(int type)
+{
+	return (g_acceptable[type].name);
+}

@@ -214,4 +214,30 @@ char	**ft_strsplitfirstoccurenceor(char *str, char b, char c)
 	return (arr);
 }
 
+void	ft_strtrimwholearr(char **arr)
+{
+	int		i;
+	char	*temp;
 
+	i = -1;
+	while (arr[++i])
+	{
+		temp = ft_strtrim(arr[i]);
+		ft_strdel(&arr[i]);
+		arr[i] = ft_strdup(temp);
+	}
+}
+
+void	ft_putarr(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return;
+	i = -1;
+	while (arr[++i])
+	{
+		ft_putstr(arr[i]);
+		ft_putchar('\n');
+	}
+}

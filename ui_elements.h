@@ -259,6 +259,7 @@ void					ui_element_print(t_ui_element *elem);
 t_vec4i					ui_element_screen_pos_get(t_ui_element *elem);
 void					ui_element_swap(t_ui_element *one, t_ui_element *two);
 int						ui_element_type_from_string(char *str);
+const char				*ui_element_type_to_string(int type);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
