@@ -108,8 +108,11 @@ void	ui_window_texture_redo(t_ui_window *win)
 void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
 {
 	win->pos = pos;
+	SDL_SetWindowPosition(win->win, win->pos.x, win->pos.y);
 	SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);
 	ui_window_texture_redo(win);
+	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
+	win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
 }
 
 void	ui_window_flag_set(t_ui_window *win, int flags)

@@ -37,15 +37,6 @@ enum	e_element_types
 	UI_TYPE_AMOUNT
 };
 
-const char	*g_ui_text_align[] =
-{
-	"NONE",
-	"LEFT",
-	"RIGHT",
-	"TOP",
-	"BOT",
-	"CENTER"
-};
 /*
  * NOTE:
  * LEFT/RIGHT can be combined with TOP/BOT

@@ -30,6 +30,7 @@ typedef struct s_ui_recipe_v2
 	char			*id;
 	t_vec4			pos;
 	Uint32			bg_colors[UI_STATE_AMOUNT];
+	char			*bg_images[UI_STATE_AMOUNT];
 	char			*title;
 	Uint32			text_color;
 	int				text_align;
@@ -38,6 +39,7 @@ typedef struct s_ui_recipe_v2
 
 	bool			pos_set[VEC4_SIZE];
 	bool			bg_colors_set[UI_STATE_AMOUNT];
+	bool			bg_images_set[UI_STATE_AMOUNT];
 	bool			text_color_set;
 	bool			text_style_set;
 }					t_ui_recipe_v2;

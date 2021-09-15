@@ -284,13 +284,13 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	g_acceptable[family->parent_type].maker(win, elem);
 	ui_element_parent_set(elem, parent, parent_type);
 	ui_element_id_set(elem, family->parent_id);
-	add_to_list(list, elem, UI_TYPE_ELEMENT);
 	rruc = family->children;
 	while (rruc)
 	{
 		make_elements_from_family(list, win, elem, UI_TYPE_ELEMENT, rruc->content);
 		rruc = rruc->next;
 	}
+	add_to_list(list, elem, UI_TYPE_ELEMENT); // this should be done here so that in the end, the parent will be rendered before children;
 }
 
 void	print_all_elements_in_list(t_list *list)
@@ -411,6 +411,15 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 			target->bg_colors_set[jj] = 1;
 		}
 	}
+	jj = -1;
+	while (++jj < UI_STATE_AMOUNT)
+	{
+		if (child->bg_images_set[jj])
+		{
+			target->bg_images[jj] = child->bg_images[jj];
+			target->bg_images_set[jj] = 1;
+		}
+	}
 	if (child->title != NULL)
 	{
 		if (target->title)
@@ -506,6 +515,32 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 			recipe->bg_colors[UI_STATE_CLICK] = (unsigned int)strtoul(key_value[1], NULL, 16);
 			recipe->bg_colors_set[UI_STATE_CLICK] = 1;
 		}
+		else if (ft_strequ(key_value[0], "bg_image"))
+		{
+			int	jj;
+
+			jj = -1;
+			while (++jj < UI_STATE_AMOUNT)
+			{
+				recipe->bg_images[jj] = ft_strdup(key_value[1]);
+				recipe->bg_images_set[jj] = 1;
+			}
+		}
+		else if (ft_strequ(key_value[0], "bg_image_default"))
+		{
+			recipe->bg_images[UI_STATE_DEFAULT] = ft_strdup(key_value[1]);
+			recipe->bg_images_set[UI_STATE_DEFAULT] = 1;
+		}
+		else if (ft_strequ(key_value[0], "bg_image_hover"))
+		{
+			recipe->bg_images[UI_STATE_HOVER] = ft_strdup(key_value[1]);
+			recipe->bg_images_set[UI_STATE_HOVER] = 1;
+		}
+		else if (ft_strequ(key_value[0], "bg_image_click"))
+		{
+			recipe->bg_images[UI_STATE_CLICK] = ft_strdup(key_value[1]);
+			recipe->bg_images_set[UI_STATE_CLICK] = 1;
+		}
 		else if (ft_strequ(key_value[0], "title"))
 		{
 			if (recipe->title)
@@ -589,6 +624,9 @@ void	print_recipe(t_ui_recipe_v2 *recipe)
 	ft_printf("bg_color_default : %#x\n", recipe->bg_colors[UI_STATE_DEFAULT]);
 	ft_printf("bg_color_hover : %#x\n", recipe->bg_colors[UI_STATE_HOVER]);
 	ft_printf("bg_color_click : %#x\n", recipe->bg_colors[UI_STATE_CLICK]);
+	ft_printf("bg_image_default : %s\n", recipe->bg_images[UI_STATE_DEFAULT]);
+	ft_printf("bg_image_hover : %s\n", recipe->bg_images[UI_STATE_HOVER]);
+	ft_printf("bg_image_click : %s\n", recipe->bg_images[UI_STATE_CLICK]);
 	ft_printf("\n");
 }
 
@@ -615,6 +653,7 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 		if (recipe)
 			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe_v2));
 	}
+
 	// printing to make sure that the recipe is setup correctly;
 	ft_printf("[%s] Print Recipes\n", __FUNCTION__);
 	t_list *curr = layout->recipes;
@@ -625,7 +664,106 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 	}
 }
 
+void	ui_window_update_from_recipe(t_ui_window *win, t_ui_recipe_v2 *recipe)
+{
+	t_vec4	pos;
+	int		i;
+
+	pos = win->pos;
+	i = -1;
+	while (++i < VEC4_SIZE)
+	{
+		if (recipe->pos_set[i])
+			pos.v[i] = recipe->pos.v[i];
+	}
+	ui_window_pos_set(win, pos);
+	if (recipe->title)
+		ui_window_title_set(win, recipe->title);
+	if (recipe->bg_colors_set[UI_STATE_DEFAULT])
+		ui_texture_fill(win->renderer, win->texture, recipe->bg_colors[UI_STATE_DEFAULT]);
+}
+
+/*
+ * This function will be called recursively for elements that are contained inside
+ * other elements.
+*/
+void	ui_element_update_from_recipe(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+{
+	t_vec4	pos;
+	int		i;
+
+	pos = elem->pos;
+	i = -1;
+	while (++i < VEC4_SIZE)
+	{
+		if (recipe->pos_set[i])
+		{
+			pos.v[i] = recipe->pos.v[i];
+			recipe->pos_set[i] = 0;
+		}
+	}
+	ui_element_pos_set(elem, pos);
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+	{
+		if (recipe->bg_colors_set[i])
+		{
+			ui_element_color_set(elem, i, recipe->bg_colors[i]);
+			recipe->bg_colors_set[i] = 0;
+		}
+	}
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+	{
+		if (recipe->bg_images_set[i])
+		{
+			ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
+			recipe->bg_images_set[i] = 0;
+		}
+	}
+	if (elem->element_type == UI_TYPE_LABEL) // LABEL
+	{
+		if (recipe->title)
+			ui_label_text_set(elem, recipe->title);
+		if (recipe->text_color)
+			ui_label_color_set(elem, recipe->text_color);
+		if (recipe->text_align)
+			ui_label_text_align(elem, recipe->text_align);
+	}
+	if (elem->element_type == UI_TYPE_BUTTON) // BUTTON
+	{
+		ui_element_update_from_recipe(&((t_ui_button *)elem->element)->label, recipe);
+	}
+}
+
+/*
+ * Applies all the recipes to the corresponding elements.
+*/
 void	layout_apply_style(t_ui_layout_v2 *layout)
 {
-	
+	t_list			*curr;
+	t_ui_window		*win;
+	t_ui_element	*elem;
+	t_ui_recipe_v2	*recipe;
+
+	curr = layout->windows;
+	while (curr)
+	{
+		win = curr->content;
+		recipe = ui_list_get_recipe_by_id_v2(layout->recipes, win->id);
+		if (win && recipe)
+			ui_window_update_from_recipe(win, recipe);
+		curr = curr->next;
+	}
+	curr = layout->elements;
+	while (curr)
+	{
+		elem = curr->content;
+		recipe = ui_list_get_recipe_by_id_v2(layout->recipes, elem->id);
+		if (elem && recipe)
+			ui_element_update_from_recipe(elem, recipe);
+		else
+			ft_printf("[%s] Couldn\'t find recipe for element %s.\n", __FUNCTION__, elem->id);
+		curr = curr->next;
+	}
 }

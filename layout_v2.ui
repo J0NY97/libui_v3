@@ -1,20 +1,57 @@
 style : layout_v2.style;
 
-Window win0			
+Window toolbox_window
 {
-	Menu menu0
+	Menu brush_buttons_menu
 	{
-		Label label0 {};
-		Button button0
-		{
-
-		};
+		Button draw_button {};
+		Button text_button {};
+		Button erase_button {};
+		Button flood_button {};
+		Button sticker_button {};
+		Button move_button {};
+		Button shape_button {};
+		Button pipette_button {};
 	};
-	Menu menu1
+	Menu brush_modifier_menu
 	{
-		Button button1
-		{
-
-		};
+		Label r_text {};	
+		Slider r_slider {};
+		Label g_text {};	
+		Slider g_slider {};
+		Label b_text {};	
+		Slider b_slider {};
+		Label a_text {};	
+		Slider a_slider {};
+		Label size_text {};	
+		Slider size_slider {};
+		Input color_swatch {};
+		Dropdown sticker_drop {};
+		Dropdown font_drop {};
+	};
+	Menu brush_shape_menu
+	{
+		Button circle_button {};	
+		Button square_button {};	
+		Button line_button {};	
+	};
+	Menu other_tool_menu
+	{
+		Input text_input {};	
+	};
+	Menu yet_another_menu
+	{
+		Button clear_button {};	
+		Button open_button {};	
+		Button save_button {};	
+		Button edit_image_button {};	
+	};
+	Menu layer_menu
+	{
+		Button button_add_layer {};	
+		Button button_remove_layer {};	
+		Button button_edit_layer {};	
+		Button button_move_layer_up {};	
+		Button button_move_layer_down {};	
 	};
 };

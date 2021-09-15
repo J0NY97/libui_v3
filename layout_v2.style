@@ -1,34 +1,83 @@
-Button
+toolbox_window
 {
-	w : 50;
-	h : 20;
-	title : Button;
-	text_align : center top;
+	xywh : 0, 25, 220, 1030;
+	bg_color : 0xff909090;
 };
 
-button_prefab
+brush_buttons_menu
 {
-	bg_color_hover : 0xffff0000;
-	text_color : 0xff00ff00;
+	xywh : 10, 10, 200, 100;
+};
+
+brush_button_label
+{
+	text_color : 0xff72e26c;
 	font : ShareTechMono-Regular.ttf;
-	text_align : left top;
+	text_align : center;
+	title : no title;
 };
 
-win0
+brush_button_elem
 {
-	xywh : 10, 10, 1280, 720;
-	title : testing window;
-	bg_color : 0xffb0b0b0;
+	xywh : 10, 10, 50, 20;
+	bg_color_default : 0xffF4D35E;
+	bg_color_hover : 0xffEE964B;
+	bg_color_click : 0xffF95738;
+	bg_image_default : images/button.png;
+	bg_image_hover : images/button_hover.png;
+	bg_image_click : images/button_click.png;
 };
 
-menu0
+brush_button : brush_button_elem : brush_button_label
 {
-	xywh : 10, 10, 100, 100;
-	bg_color : 0xffb0b0b0;
 };
 
-button0 : button_prefab
+draw_button : brush_button
 {
-	x : 10; 
-	y : 10;
+	title : Draw;
+};
+
+text_button : brush_button
+{
+	title : Text;
+	x : 70;
+};
+
+erase_button : brush_button
+{
+	title : Erase;
+	x : 130;
+};
+
+flood_button : brush_button
+{
+	title : Flood;
+	y : 40;
+};
+
+sticker_button : brush_button
+{
+	title : Sticker;
+	x : 70;
+	y : 40;
+};
+
+move_button : brush_button
+{
+	title : Move;
+	x : 130;
+	y : 40;
+};
+
+shape_button : brush_button
+{
+	title : Shape;
+	y : 70;
+};
+
+pipette_button : brush_button
+{
+	title : Pipette;
+	x : 70;
+	y : 70;
 };

@@ -5,20 +5,24 @@ int	main(void)
 	int				run;
 	SDL_Event		e;
 	t_ui_layout_v2	layout;
-	t_ui_window		*win;
+	t_ui_window		*win_toolbox;
 	t_ui_window		win2;
 	t_ui_element	menu2;
 
 	ui_sdl_init();
 	ui_layout_load_v2(&layout, "layout_v2.ui");
-	win = ui_list_get_window_by_id(layout.windows, "win0");
+	win_toolbox = ui_list_get_window_by_id(layout.windows, "toolbox_window");
+
 	ui_window_new(&win2, NULL, vec4(1920 - 200, 25, 200, 200));
+	ui_window_pos_set(&win2, vec4(400, 25, 500, 500));
+	ui_window_title_set(&win2, "testing window");
 	ui_texture_fill(win2.renderer, win2.texture, 0xffff0000);
+
 	ui_menu_new(&win2, &menu2);
 	run = 1;
 	while (run)
 	{
-		if (win->wants_to_close)
+		if (win_toolbox->wants_to_close)
 			run = 0;
 		while (SDL_PollEvent(&e))
 		{

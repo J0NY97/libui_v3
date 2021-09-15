@@ -93,6 +93,7 @@ int	ui_element_is_hover(t_ui_element *elem)
 		return (1);
 	return (0);
 }
+
 int	ui_element_is_click(t_ui_element *elem)
 {
 	if (ui_element_is_hover(elem) && elem->win->mouse_down)
@@ -146,7 +147,7 @@ void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 {
 	int	j;
 
-	if (state < 0 || state > UI_STATE_AMOUNT)
+	if (state < 0 || state >= UI_STATE_AMOUNT)
 		return ;
 	if (state == UI_STATE_AMOUNT)
 	{
