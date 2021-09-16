@@ -1,6 +1,7 @@
 #ifndef UI_ELEMENTS_H
 # define UI_ELEMENTS_H
 # include "libui.h"
+//# include "ui_elements_v2.h"
 
 /*
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
@@ -14,6 +15,7 @@
  * t_vec4i		screen_pos;			this is the ACTUAL size of the window.
  * bool			wants_to_close;		is true when x on the window was clicked;
  * bool			user_handled_event;	true, when user has decided to event handle the window themselves; (so we dont do it twice); (used in the layout event handler);
+ * t_ui_layout_v2	*layout;				the layout it is part of, or if NULL it is not part of any layout;
 */
 typedef struct s_ui_window
 {
@@ -36,6 +38,7 @@ typedef struct s_ui_window
 	bool			textures_recreate;
 	bool			wants_to_close;
 	bool			user_handled_event;
+	t_ui_layout_v2	*layout;
 }					t_ui_window;
 
 /*
@@ -249,6 +252,7 @@ void					ui_window_id_set(t_ui_window *win, const char *id);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
+void					ui_element_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
 int						ui_element_is_hover(t_ui_element *elem);
@@ -268,6 +272,7 @@ const char				*ui_element_type_to_string(int type);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
+void					ui_label_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_label_texture_redo(t_ui_element *label);
 void					ui_label_event(t_ui_element *elem, SDL_Event e);
 int						ui_label_render(t_ui_element *label);
@@ -283,6 +288,7 @@ void					ui_label_print(t_ui_label *label);
 
 // Button
 void					ui_button_new(t_ui_window *win, t_ui_element *button);
+void					ui_button_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
@@ -314,6 +320,7 @@ char					*ui_input_text_get(t_ui_element *elem);
 
 // Slider
 void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
+void					ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);

@@ -1,9 +1,12 @@
 #ifndef UI_LOAD_H
 # define UI_LOAD_H
 # include "libui.h"
+/*
 # include "ui_elements.h"
+# include "ui_elements_v2.h"
 # include "ui_enum.h"
 # include "ui_vec.h"
+*/
 
 typedef struct s_ui_recipe		t_ui_recipe;
 typedef struct s_ui_get			t_ui_get;
@@ -46,6 +49,7 @@ typedef struct s_ui_acceptable
 	void		(*maker)(t_ui_window *win, t_ui_element *elem);
 	int			(*renderer)(t_ui_element *elem);
 	void		(*eventer)(t_ui_element *elem, SDL_Event e);
+	void		(*edit)(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 }				t_ui_acceptable;
 
 static const t_ui_acceptable	g_acceptable_element =
@@ -56,7 +60,8 @@ static const t_ui_acceptable	g_acceptable_element =
 	.editor = NULL,
 	.maker = NULL,
 	.renderer = &ui_element_render,
-	.eventer = NULL 
+	.eventer = NULL,
+	.edit = &ui_element_edit
 };
 
 static const t_ui_acceptable	g_acceptable_button =
@@ -67,7 +72,8 @@ static const t_ui_acceptable	g_acceptable_button =
 	.editor = &ui_button_editor,
 	.maker = &ui_button_new,
 	.renderer = &ui_button_render,
-	.eventer = &ui_button_event
+	.eventer = &ui_button_event,
+	.edit = &ui_button_edit
 };
 
 static const t_ui_acceptable	g_acceptable_label =
@@ -78,7 +84,8 @@ static const t_ui_acceptable	g_acceptable_label =
 	.maker = &ui_label_new,
 	.editor = &ui_label_editor,
 	.renderer = &ui_label_render,
-	.eventer = &ui_label_event
+	.eventer = &ui_label_event,
+	.edit = &ui_label_edit
 };
 
 static const t_ui_acceptable	g_acceptable_menu =
@@ -89,7 +96,8 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.maker = &ui_menu_new,
 	.editor = &ui_menu_editor,
 	.renderer = &ui_menu_render,
-	.eventer = &ui_menu_event
+	.eventer = &ui_menu_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_dropdown =
@@ -100,7 +108,8 @@ static const t_ui_acceptable	g_acceptable_dropdown =
 	.maker = &ui_dropdown_new,
 	.editor = &ui_dropdown_editor,
 	.renderer = &ui_dropdown_render,
-	.eventer = &ui_dropdown_event
+	.eventer = &ui_dropdown_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_input =
@@ -111,7 +120,8 @@ static const t_ui_acceptable	g_acceptable_input =
 	.maker = &ui_input_new,
 	.editor = &ui_input_editor,
 	.renderer = &ui_input_render,
-	.eventer = &ui_input_event
+	.eventer = &ui_input_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_slider =
@@ -122,7 +132,8 @@ static const t_ui_acceptable	g_acceptable_slider =
 	.maker = &ui_slider_new,
 	.editor = &ui_slider_editor,
 	.renderer = &ui_slider_render,
-	.eventer = &ui_slider_event
+	.eventer = &ui_slider_event,
+	.edit = &ui_slider_edit
 };
 
 static const t_ui_acceptable	g_acceptable_checkbox =
@@ -133,7 +144,8 @@ static const t_ui_acceptable	g_acceptable_checkbox =
 	.maker = &ui_checkbox_new,
 	.editor = &ui_checkbox_editor,
 	.renderer = &ui_checkbox_render,
-	.eventer = &ui_checkbox_event
+	.eventer = &ui_checkbox_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_radio =
@@ -144,7 +156,8 @@ static const t_ui_acceptable	g_acceptable_radio =
 	.maker = &ui_radio_new,
 	.editor = &ui_radio_editor,
 	.renderer = &ui_radio_render,
-	.eventer = &ui_radio_event
+	.eventer = &ui_radio_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_tab =
@@ -155,7 +168,8 @@ static const t_ui_acceptable	g_acceptable_tab =
 	.maker = &ui_tab_new,
 	.editor = &ui_tab_editor,
 	.renderer = &ui_tab_render,
-	.eventer = &ui_tab_event
+	.eventer = &ui_tab_event,
+	.edit = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_window =
@@ -166,7 +180,8 @@ static const t_ui_acceptable	g_acceptable_window =
 	.maker = NULL,
 	.editor = NULL,
 	.renderer = NULL,
-	.eventer = NULL
+	.eventer = NULL,
+	.edit = NULL
 };
 
 // NOTE: these must be in the same order as the UI_TYPE_ENUM

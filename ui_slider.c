@@ -32,6 +32,25 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	slider->update = 1;
 }
 
+void	ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+{
+	t_ui_slider	*slider;
+	t_ui_window	*win;
+	t_ui_recipe_v2	*button_recipe;
+
+	win = elem->win;
+	slider = elem->element;
+	if (recipe->button_id)
+	{
+		ft_printf("[%s] button id is.\n", __FUNCTION__);
+		button_recipe = ui_list_get_recipe_by_id_v2(win->layout->recipes, recipe->button_id);
+		if (button_recipe)
+			ui_element_edit(&slider->button, button_recipe);
+		else
+			ft_printf("[%s] Slider button [%s] couldn\'t be found orseomthign.\n", __FUNCTION__, recipe->button_id);
+	}
+}
+
 int	ui_slider_value_get(t_ui_element *elem)
 {
 	t_ui_slider	*slider;

@@ -32,9 +32,6 @@ int	main(void)
 			ui_layout_event_v2(&layout, e);
 			ui_window_event(&win2, e);
 			ui_menu_event(&menu2, e);
-		ft_printf("draw_button.. is_click : %d, was_click : %d\n", draw_button->is_click, draw_button->was_click);
-		if (ui_button(draw_button))
-			ft_printf("draw_button.. is_click : %d, was_click : %d\n", draw_button->is_click, draw_button->was_click);
 		}
 		ui_layout_render_v2(&layout);
 		ui_menu_render(&menu2);

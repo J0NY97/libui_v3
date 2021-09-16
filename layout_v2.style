@@ -95,11 +95,17 @@ slider_elem
 	text_align : center;
 };
 
+slider_button
+{
+	bg_color : 0xffff00ff;
+};
+
 r_slider : slider_elem
 {
 	xywh : 40, 10, 130, 20;	
 	value : 255, 0, 255;
 	bg_image : ../../ui_images/red_slider.png;
+	button : slider_button;
 };
 
 g_slider : slider_elem

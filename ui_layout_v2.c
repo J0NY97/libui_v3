@@ -322,6 +322,7 @@ void	layout_compile_elements(t_ui_layout_v2 *layout)
 			ft_printf("[%s] Creating window : %s\n", __FUNCTION__, family->parent_id);
 			win = ft_memalloc(sizeof(t_ui_window));
 			ui_window_new(win, NULL, vec4(0, 25, 100, 100));
+			win->layout = layout;
 			ui_window_id_set(win, family->parent_id);
 			add_to_list(&layout->windows, win, UI_TYPE_WINDOW);
 			rruc = family->children;
@@ -440,6 +441,12 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 	if (child->text_align)
 	{
 		target->text_align = child->text_align;
+	}
+	if (child->button_id)
+	{
+		if (target->button_id)
+			ft_strdel(&target->button_id);
+		target->button_id = ft_strdup(child->button_id);
 	}
 }
 
@@ -561,6 +568,10 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 		else if (ft_strequ(key_value[0], "text_align"))
 		{
 			recipe->text_align = text_align_getter(key_value[1]);
+		}
+		else if (ft_strequ(key_value[0], "button"))
+		{
+			recipe->button_id = ft_strdup(key_value[1]);
 		}
 		ft_arraydel(key_value);
 	}
@@ -687,7 +698,7 @@ void	ui_window_update_from_recipe(t_ui_window *win, t_ui_recipe_v2 *recipe)
  * This function will be called recursively for elements that are contained inside
  * other elements.
 */
-void	ui_element_update_from_recipe(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+void	ui_element_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
 {
 	t_vec4	pos;
 	int		i;
@@ -721,19 +732,10 @@ void	ui_element_update_from_recipe(t_ui_element *elem, t_ui_recipe_v2 *recipe)
 			recipe->bg_images_set[i] = 0;
 		}
 	}
-	if (elem->element_type == UI_TYPE_LABEL) // LABEL
-	{
-		if (recipe->title)
-			ui_label_text_set(elem, recipe->title);
-		if (recipe->text_color)
-			ui_label_color_set(elem, recipe->text_color);
-		if (recipe->text_align)
-			ui_label_text_align(elem, recipe->text_align);
-	}
-	if (elem->element_type == UI_TYPE_BUTTON) // BUTTON
-	{
-		ui_element_update_from_recipe(&((t_ui_button *)elem->element)->label, recipe);
-	}
+	if (g_acceptable[elem->element_type].edit)
+		g_acceptable[elem->element_type].edit(elem, recipe);
+	else
+		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 }
 
 /*
@@ -761,7 +763,7 @@ void	layout_apply_style(t_ui_layout_v2 *layout)
 		elem = curr->content;
 		recipe = ui_list_get_recipe_by_id_v2(layout->recipes, elem->id);
 		if (elem && recipe)
-			ui_element_update_from_recipe(elem, recipe);
+			ui_element_edit(elem, recipe);
 		else
 			ft_printf("[%s] Couldn\'t find recipe for element %s.\n", __FUNCTION__, elem->id);
 		curr = curr->next;

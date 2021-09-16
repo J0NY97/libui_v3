@@ -18,6 +18,14 @@ void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_text_align(&button->label, UI_TEXT_ALIGN_CENTER);
 }
 
+void	ui_button_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+{
+	t_ui_button	*button;
+
+	button = elem->element;
+	ui_element_edit(&button->label, recipe);
+}
+
 void	ui_button_event(t_ui_element *elem, SDL_Event e)
 {
 	if (!elem->show)
