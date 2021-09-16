@@ -53,7 +53,9 @@ typedef struct s_ui_window
  * bool			show;						wheather to render or not.
  * char			*id;						id of the element, so we can write a get_element_by_id();
  * bool			is_hover;					1 if the mouse is hovering over the element.
- * bool			is_click;					1 if you have mouse button down on the element. basically if hover && mouse_down.
+ * bool			is_click;					1 if you have mouse button down on the element. basically if hover && mouse_down;
+ * bool			was_click;					1 if the element was clicked this frame; resets every time you event handle;
+ * t_list		children;					list of t_ui_element;
 */
 typedef struct s_ui_element
 {
@@ -72,10 +74,12 @@ typedef struct s_ui_element
 	bool			*parent_show;
 	void			*element;
 	int				element_type;
+	t_list			*children;
 	bool			show;
 	char			*id;
 	bool			is_hover;
 	bool			is_click;
+	bool			was_click;
 	bool			texture_recreate;
 	Uint32			colors[UI_STATE_AMOUNT];
 }					t_ui_element;
@@ -179,6 +183,7 @@ typedef struct s_ui_checkbox
 */
 // Could probably be used in the tab buttons.
 // Should radio just be a list that you call a function on, that will do the event handling on them...?
+// RADIO SHOULD ONLY BE AN EVENT HANDLE, NOT ANYTHING ELSE!
 /*
  * Maybe reintroduce the group idea you had, in radio you just have buttons in the list, if youre using it in the
  * tab you have button and menu, and the only thing you do on the group is event handling and ofc render...,

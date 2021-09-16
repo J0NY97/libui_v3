@@ -26,9 +26,11 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 	while (curr)
 	{
 		child = curr->content;
-		ui_button_event(child, e);
-		if (child->is_click)
+		if (child->was_click)
+		{
 			radio->active = child;
+			ft_printf("new radio active gotten.\n");
+		}
 		else if (child->is_hover)
 			child->state = UI_STATE_HOVER;
 		else

@@ -4,14 +4,17 @@ Window toolbox_window
 {
 	Menu brush_buttons_menu
 	{
-		Button draw_button {};
-		Button text_button {};
-		Button erase_button {};
-		Button flood_button {};
-		Button sticker_button {};
-		Button move_button {};
-		Button shape_button {};
-		Button pipette_button {};
+		Radio brush_radio
+		{
+			Button draw_button {};
+			Button text_button {};
+			Button erase_button {};
+			Button flood_button {};
+			Button sticker_button {};
+			Button move_button {};
+			Button shape_button {};
+			Button pipette_button {};
+		};
 	};
 	Menu brush_modifier_menu
 	{

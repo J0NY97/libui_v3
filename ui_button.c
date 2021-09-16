@@ -33,6 +33,7 @@ void	ui_button_event(t_ui_element *elem, SDL_Event e)
 		elem->state = UI_STATE_HOVER;
 	else
 		elem->state = UI_STATE_DEFAULT;
+	elem->was_click = elem->is_click;
 }
 
 bool	ui_button(t_ui_element *elem)

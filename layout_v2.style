@@ -81,3 +81,42 @@ pipette_button : brush_button
 	x : 70;
 	y : 70;
 };
+
+brush_modifier_menu
+{
+	xywh : 10, 120, 200, 220;
+};
+
+slider_elem
+{
+	bg_color : 0xff003707;
+	font_color : 0xff72e26c;
+	font_path : "ShareTechMono-Regular.ttf";
+	text_align : center;
+};
+
+r_slider : slider_elem
+{
+	xywh : 40, 10, 130, 20;	
+	value : 255, 0, 255;
+	bg_image : ../../ui_images/red_slider.png;
+};
+
+g_slider : slider_elem
+{
+	xywh : 40, 40, 130, 20;	
+	value : 255, 0, 255;
+	bg_image : ../../ui_images/green_slider.png;
+};
+
+b_slider : slider_elem
+{
+	xywh : 40, 70, 130, 20;	
+	value : 255, 0, 255;
+	bg_image : ../../ui_images/blue_slider.png;
+};
+
+a_slider : slider_elem
+{
+	xywh : 40, 100, 130, 20;
+};
