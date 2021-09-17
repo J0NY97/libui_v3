@@ -109,7 +109,7 @@ static const t_ui_acceptable	g_acceptable_dropdown =
 	.editor = &ui_dropdown_editor,
 	.renderer = &ui_dropdown_render,
 	.eventer = &ui_dropdown_event,
-	.edit = NULL
+	.edit = &ui_dropdown_edit
 };
 
 static const t_ui_acceptable	g_acceptable_input =

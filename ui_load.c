@@ -549,8 +549,6 @@ void	ui_slider_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layo
 	else if (recipe->type == UI_TYPE_LABEL)
 	{
 		ui_layout_element_edit(&((t_ui_button *)slider->button.element)->label, recipe, layout);
-		ui_layout_element_edit(&slider->min_label, recipe, layout);
-		ui_layout_element_edit(&slider->max_label, recipe, layout);
 	}
 }
 

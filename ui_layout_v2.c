@@ -186,7 +186,7 @@ t_ui_family	*make_family_from_string(char *str)
 	t_ui_family	*family;
 	t_ui_family	*child;
 	char		**temp;
-	char		**type_n_name; // dont free this, you can just set them inside the family things;
+	char		**type_n_name;
 	int			len;
 	int			rm_amount;
 	char		*children;
@@ -210,7 +210,7 @@ t_ui_family	*make_family_from_string(char *str)
 	}
 	type_n_name = ft_strsplit(temp[0], ' ');
 	ft_printf("%s %s\n{\n%s\n}\n", type_n_name[0], type_n_name[1], children);
-	family->parent_id = type_n_name[1];
+	family->parent_id = ft_strdup(type_n_name[1]);
 	family->parent_type = ui_element_type_from_string(type_n_name[0]);
 	family->children_strings = split_string_into_array(children);
 	int k = -1;
@@ -222,6 +222,7 @@ t_ui_family	*make_family_from_string(char *str)
 		add_to_list(&family->children, child, sizeof(t_ui_family));
 	}
 	ft_arraydel(temp);
+	ft_arraydel(type_n_name);
 	return (family);
 }
 
@@ -606,13 +607,15 @@ t_ui_recipe_v2	*make_recipe_from_string(t_list *elements, t_list *recipes, char 
 		if (child_recipe)
 			fill_recipe_from_recipe(recipe, child_recipe);
 	}
+	else
+		ft_printf("[%s] No element with recipe id %s found.\n", __FUNCTION__, name_and_prefabs[0]);
 	i = 0; // start at 0 because id is at 0, so we dont want to check that;
 	while (name_and_prefabs[++i])
 	{
 		child_recipe = ui_list_get_recipe_by_id_v2(recipes, name_and_prefabs[i]);
 		if (!child_recipe)
 		{
-			ft_printf("[%s] No recipe with id %s found, couldn\'t copy recipe.\n", name_and_prefabs[i]);
+			ft_printf("[%s] No recipe with id %s found, couldn\'t copy recipe.\n", __FUNCTION__, name_and_prefabs[i]);
 			continue ;
 		}
 		fill_recipe_from_recipe(recipe, child_recipe);
@@ -664,7 +667,6 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 		if (recipe)
 			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe_v2));
 	}
-
 	// printing to make sure that the recipe is setup correctly;
 	ft_printf("[%s] Print Recipes\n", __FUNCTION__);
 	t_list *curr = layout->recipes;

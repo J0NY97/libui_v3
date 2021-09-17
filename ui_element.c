@@ -27,6 +27,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_NONE;
 	elem->show = 1;
 	elem->last_state = -999;
+	elem->children = NULL;
 }
 
 /*
@@ -190,6 +191,60 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	elem->texture_recreate = 1;
 }
 
+void	dummy_free_er(void *dont, size_t care)
+{
+	(void)dont;
+	(void)care;
+}
+
+/*
+ * Goes through parent->children and find "elem" if found,
+ * it removes it from the list.
+*/
+void	ui_element_remove_child_from_parent(t_ui_element *elem)
+{
+	t_list	*curr;
+	t_list	**list;
+
+	if (!elem->parent)
+	{
+		ft_printf("[%s] Element doesnt have a parent.\n", __FUNCTION__);
+		return ;
+	}
+	if (elem->parent_type == UI_TYPE_WINDOW)
+	{
+		if (((t_ui_window *)elem->parent)->children)
+			list = &((t_ui_window *)elem->parent)->children;
+		else
+		{
+			ft_printf("[%s] Parent element didnt have children.\n", __FUNCTION__);
+			return ;
+		}
+	}
+	else if (elem->parent_type == UI_TYPE_ELEMENT)
+	{
+		if (((t_ui_element *)elem->parent)->children)
+			list = &((t_ui_element *)elem->parent)->children;
+		else
+		{
+			ft_printf("[%s] Parent element didnt have children.\n", __FUNCTION__);
+			return ;
+		}
+	}
+	else
+	{
+		ft_printf("[%s] Parent of type [%d] %s not supported.\n", __FUNCTION__, elem->parent_type, ui_element_type_to_string(elem->parent_type));
+		return ;
+	}
+	curr = *list;
+	while (curr)
+	{
+		if (curr->content == elem)
+			ft_lstdelone_nonfree(list, curr);
+		curr = curr->next;
+	}
+}
+
 /*
  * int	type;		this is the parent type, so we know what to typecast to.
 */
@@ -198,6 +253,8 @@ void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 	t_ui_element	*parent_elem;
 	t_ui_window		*parent_win;
 
+	if (elem->parent)
+		ui_element_remove_child_from_parent(elem);
 	if (type == UI_TYPE_WINDOW)
 	{
 		parent_win = parent;
@@ -205,6 +262,7 @@ void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 		elem->parent_type = type;
 		elem->parent_screen_pos = &parent_win->screen_pos;
 		elem->parent_show = &parent_win->show;
+		add_to_list(&parent_win->children, elem, UI_TYPE_ELEMENT);
 	}
 	else if (type == UI_TYPE_ELEMENT)
 	{
@@ -213,6 +271,7 @@ void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 		elem->parent_type = type;
 		elem->parent_screen_pos = &parent_elem->screen_pos;
 		elem->parent_show = &parent_elem->show;
+		add_to_list(&parent_elem->children, elem, UI_TYPE_ELEMENT);
 	}
 	else
 		ft_printf("[%s] Element of type %d is not supported.\n", __FUNCTION__, type);

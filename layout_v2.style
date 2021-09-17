@@ -100,6 +100,35 @@ slider_button
 	bg_color : 0xffff00ff;
 };
 
+slider_label
+{
+	x : -10;
+	y : 0;
+	font_color : 0xff72e26c;
+	font_path : "ShareTechMono-Regular.ttf";
+	text_align : none;
+	title : 0;
+};
+slider_label_max : slider_label
+{
+	x : 140;
+	title : 255;
+};
+slider_text : slider_label
+{
+	x : -30;
+};
+
+r_text : slider_text
+{
+	title : R;
+};
+r_label_min : slider_label
+{
+};
+r_label_max : slider_label_max
+{
+};
 r_slider : slider_elem
 {
 	xywh : 40, 10, 130, 20;	
@@ -108,6 +137,16 @@ r_slider : slider_elem
 	button : slider_button;
 };
 
+g_text : slider_text
+{
+	title : G;
+};
+g_label_min : slider_label
+{
+};
+g_label_max : slider_label_max
+{
+};
 g_slider : slider_elem
 {
 	xywh : 40, 40, 130, 20;	
@@ -115,6 +154,16 @@ g_slider : slider_elem
 	bg_image : ../../ui_images/green_slider.png;
 };
 
+b_text : slider_text
+{
+	title : B;
+};
+b_label_min : slider_label
+{
+};
+b_label_max : slider_label_max
+{
+};
 b_slider : slider_elem
 {
 	xywh : 40, 70, 130, 20;	
@@ -122,7 +171,50 @@ b_slider : slider_elem
 	bg_image : ../../ui_images/blue_slider.png;
 };
 
+a_text : slider_text
+{
+	title : A;
+};
+a_label_min : slider_label
+{
+};
+a_label_max : slider_label_max
+{
+};
 a_slider : slider_elem
 {
 	xywh : 40, 100, 130, 20;
+};
+
+color_swatch
+{
+	xywh : 40, 130, 130, 20;
+};
+
+size_text : slider_text
+{
+	title : A;
+};
+size_label_min : slider_label
+{
+};
+size_label_max : slider_label_max
+{
+};
+size_slider : slider_elem
+{
+	xywh : 40, 160, 130, 20;
+};
+
+sticker_drop
+{
+	xywh : 10, 190, 85, 20;
+	title : Stickers;
+	text_align : center;
+};
+font_drop
+{
+	xywh : 105, 190, 85, 20;
+	title : Fonts;
+	text_align : center;
 };

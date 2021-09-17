@@ -18,21 +18,44 @@ Window toolbox_window
 	};
 	Menu brush_modifier_menu
 	{
-		Label r_text {};	
-		Label r_label_min {};	
-		Label r_label_max {};	
-		Slider r_slider {};
-		Label g_text {};	
-		Slider g_slider {};
-		Label b_text {};	
-		Slider b_slider {};
-		Label a_text {};	
-		Slider a_slider {};
-		Label size_text {};	
-		Slider size_slider {};
-		Input color_swatch {};
-		Dropdown sticker_drop {};
-		Dropdown font_drop {};
+		Slider r_slider
+		{
+			Label r_text {};	
+			Label r_label_min{};	
+			Label r_label_max {};	
+		};
+
+		Slider g_slider
+		{
+			Label g_text {};	
+			Label g_label_min{};	
+			Label g_label_max {};	
+		};
+
+		Slider b_slider
+		{
+			Label b_text {};	
+			Label b_label_min{};	
+			Label b_label_max {};	
+		};
+
+		Slider a_slider
+		{
+			Label a_text {};	
+			Label a_label_min{};	
+			Label a_label_max {};	
+		};
+
+		Slider size_slider
+		{
+			Label size_text {};	
+			Label size_label_min{};	
+			Label size_label_max {};	
+		};
+
+	Input color_swatch {};
+	Dropdown sticker_drop {};
+	Dropdown font_drop {};
 	};
 	Menu brush_shape_menu
 	{
@@ -42,7 +65,7 @@ Window toolbox_window
 	};
 	Menu other_tool_menu
 	{
-		Input text_input {};	
+	Input text_input {};	
 	};
 	Menu yet_another_menu
 	{

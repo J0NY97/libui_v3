@@ -22,15 +22,13 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 	if (!elem->show || !*elem->parent_show)
 		return ;
 	radio = elem->element;
-	curr = radio->buttons;
+	curr = elem->children;
 	while (curr)
 	{
 		child = curr->content;
+		child->is_toggle = 0;
 		if (child->was_click)
-		{
 			radio->active = child;
-			ft_printf("new radio active gotten.\n");
-		}
 		else if (child->is_hover)
 			child->state = UI_STATE_HOVER;
 		else
@@ -38,11 +36,22 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 		curr = curr->next;
 	}
 	if (radio->active)
+	{
 		radio->active->state = UI_STATE_CLICK;
+		radio->active->is_toggle = 1;
+	}
 }
 
+/*
+ * radio will only update its screen position so that
+ * its children render correctly.
+*/
 int	ui_radio_render(t_ui_element *elem)
 {
+	if (elem->parent)
+		elem->screen_pos = *elem->parent_screen_pos;
+	// RADIO SHOULDNT RENDER ANYTHING!!!!!!!!
+	/*
 	t_ui_radio	*radio;
 	t_list		*curr;
 
@@ -55,6 +64,7 @@ int	ui_radio_render(t_ui_element *elem)
 		ui_button_render(curr->content);
 		curr = curr->next;
 	}
+	*/
 	return (1);
 }
 

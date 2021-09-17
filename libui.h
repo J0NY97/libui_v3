@@ -96,6 +96,7 @@ char					**ft_strsplitfirstoccurence(char *str, char c);
 char					**ft_strsplitfirstoccurenceor(char *str, char b, char c);
 void					ft_strtrimwholearr(char **arr);
 void					ft_putarr(char **arr);
+void					dummy_free_er(void *dont, size_t care);
 
 // Load
 void					ui_print_accepted(void);

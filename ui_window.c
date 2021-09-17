@@ -12,6 +12,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
 	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
 	win->show = 1;
+	win->children = NULL;
 
 	win->window_id = SDL_GetWindowID(win->win);
 

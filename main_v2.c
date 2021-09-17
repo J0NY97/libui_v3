@@ -8,6 +8,7 @@ int	main(void)
 	t_ui_window		*win_toolbox;
 	t_ui_window		win2;
 	t_ui_element	menu2;
+	t_ui_element	button0;
 	t_ui_element	*draw_button;
 
 	ui_sdl_init();
@@ -22,10 +23,18 @@ int	main(void)
 	ui_texture_fill(win2.renderer, win2.texture, 0xffff0000);
 
 	ui_menu_new(&win2, &menu2);
+	ui_element_pos_set(&menu2, vec4(10, 10, 200, 200));
+
+	ui_button_new(&win2, &button0);
+	ui_element_parent_set(&button0, &menu2, UI_TYPE_ELEMENT),
+	ui_element_pos_set(&button0, vec4(10, 10, 50, 20));
+
 	run = 1;
 	while (run)
 	{
 		if (win_toolbox->wants_to_close)
+			run = 0;
+		if (win2.wants_to_close)
 			run = 0;
 		while (SDL_PollEvent(&e))
 		{

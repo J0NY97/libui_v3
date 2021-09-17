@@ -38,6 +38,7 @@ typedef struct s_ui_window
 	bool			textures_recreate;
 	bool			wants_to_close;
 	bool			user_handled_event;
+	t_list			*children;
 	t_ui_layout_v2	*layout;
 }					t_ui_window;
 
@@ -82,6 +83,7 @@ typedef struct s_ui_element
 	char			*id;
 	bool			is_hover;
 	bool			is_click;
+	bool			is_toggle;
 	bool			was_click;
 	bool			texture_recreate;
 	Uint32			colors[UI_STATE_AMOUNT];
@@ -159,8 +161,6 @@ typedef struct s_ui_slider
 {
 	t_ui_element		*elem;
 	t_ui_element		button;
-	t_ui_element		min_label;
-	t_ui_element		max_label;
 	int					value;
 	int					min_value;
 	int					max_value;
@@ -305,6 +305,7 @@ t_ui_button				*ui_menu_get_button_by_id(t_ui_element *elem, char *id);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
+void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
