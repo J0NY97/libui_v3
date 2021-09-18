@@ -218,3 +218,45 @@ font_drop
 	title : Fonts;
 	text_align : center;
 };
+
+//////////////////////
+// Brush Shape Menu
+//////////////////////
+brush_shape_menu
+{
+	xywh : 10, 350, 200, 40;
+};
+
+circle_button : brush_button_elem : brush_button_label
+{
+	xywh : 10, 10, 50, 20;
+	title : Circle;
+};
+
+square_button : brush_button_elem : brush_button_label
+{
+	xywh : 70, 10, 50, 20;
+	title : Square;
+};
+
+line_button : brush_button_elem : brush_button_label
+{
+	xywh : 130, 10, 50, 20;
+	title : line;
+};
+
+//////////////////////
+// Other Tool Menu
+//////////////////////
+
+other_tool_menu
+{
+	xywh : 10, 400, 200, 40;
+};
+
+text_input
+{
+	xywh : 10, 10, 200, 20;
+	bg_image_hover : images/button_hover.png;
+};
+

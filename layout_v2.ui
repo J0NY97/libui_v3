@@ -65,7 +65,7 @@ Window toolbox_window
 	};
 	Menu other_tool_menu
 	{
-	Input text_input {};	
+		Input text_input {};	
 	};
 	Menu yet_another_menu
 	{
