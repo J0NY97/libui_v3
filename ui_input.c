@@ -14,6 +14,14 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT);
 }
 
+void	ui_input_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+{
+	t_ui_input	*input;
+
+	input = elem->element;
+	ui_element_edit(&input->label, recipe);	
+}
+
 void	remove_str_from_n_to_m(char **dest, int n, int m)
 {
 	char *temp0;

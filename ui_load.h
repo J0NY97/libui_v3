@@ -121,7 +121,7 @@ static const t_ui_acceptable	g_acceptable_input =
 	.editor = &ui_input_editor,
 	.renderer = &ui_input_render,
 	.eventer = &ui_input_event,
-	.edit = NULL
+	.edit = &ui_input_edit
 };
 
 static const t_ui_acceptable	g_acceptable_slider =

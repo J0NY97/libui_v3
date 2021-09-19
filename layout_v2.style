@@ -102,8 +102,8 @@ slider_button
 
 slider_label
 {
-	x : -10;
-	y : 0;
+	x : -15;
+	y : 2;
 	font_color : 0xff72e26c;
 	font_path : ShareTechMono-Regular.ttf;
 	text_align : none;
@@ -111,7 +111,7 @@ slider_label
 };
 slider_label_max : slider_label
 {
-	x : 140;
+	x : 135;
 	title : 255;
 };
 slider_text : slider_label
@@ -193,17 +193,19 @@ color_swatch
 
 size_text : slider_text
 {
-	title : A;
+	title : Size;
 };
 size_label_min : slider_label
 {
 };
 size_label_max : slider_label_max
 {
+	title : 100;
 };
 size_slider : slider_elem
 {
 	xywh : 40, 160, 130, 20;
+	value : 5, 0, 100;
 };
 
 sticker_drop
@@ -254,10 +256,11 @@ other_tool_menu
 	xywh : 10, 400, 200, 40;
 };
 
-text_input
+text_input : brush_button
 {
-	xywh : 10, 10, 200, 20;
+	xywh : 10, 10, 180, 20;
 	bg_image_hover : images/button_hover.png;
+	title : Text Input;
 };
 
 //////////////////////

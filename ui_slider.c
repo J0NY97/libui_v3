@@ -99,7 +99,7 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 	button = slider->button.element;
 	if (ui_element_is_click(elem))
 	{
-		slider->value = ui_get_slider_value(slider->min_value, slider->max_value, elem->win->mouse_pos.x - elem->screen_pos.x, elem->pos.w);
+		slider->value = ui_get_slider_value(slider->min_value, slider->max_value, elem->win->mouse_pos.x - elem->screen_pos.x, elem->pos.w - (slider->button.pos.w / 2));
 		slider->update = 1;
 	}
 }
