@@ -25,6 +25,9 @@ typedef struct s_ui_family
 	t_list			*children; // t_list of t_ui_family;
 }					t_ui_family;
 
+/*
+ * int		value[3];		0 : value, 1 : min, 2 : max;
+*/
 typedef struct s_ui_recipe_v2
 {
 	char			*id;
@@ -48,6 +51,8 @@ typedef struct s_ui_recipe_v2
 
 	// Slider only
 	char			*button_id;
+	int				value[3];
+	int				value_set[3];
 }					t_ui_recipe_v2;
 
 ///////////////

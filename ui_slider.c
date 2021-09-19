@@ -19,10 +19,9 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_parent_set(&slider->button, elem, UI_TYPE_ELEMENT);
 	button = slider->button.element;
 
-	slider->value = 50;
 	slider->min_value = 0;
 	slider->max_value = 100;
-
+	ui_slider_value_set(elem, 50);
 	slider->update = 1;
 }
 
@@ -43,6 +42,12 @@ void	ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
 		else
 			ft_printf("[%s] Slider button [%s] couldn\'t be found orseomthign.\n", __FUNCTION__, recipe->button_id);
 	}
+	if (recipe->value_set[1])
+		slider->min_value = recipe->value[1];
+	if (recipe->value_set[2])
+		slider->max_value = recipe->value[2];
+	if (recipe->value_set[0])
+		ui_slider_value_set(elem, recipe->value[0]);
 }
 
 int	ui_slider_value_get(t_ui_element *elem)
@@ -92,14 +97,11 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 		return ;
 	slider = elem->element;
 	button = slider->button.element;
-	if (e.type == SDL_MOUSEBUTTONDOWN
-		&& point_in_rect(elem->win->mouse_pos, elem->screen_pos))
-		ui_element_pos_set2(&slider->button, vec2(elem->win->mouse_pos.x - elem->screen_pos.x - (slider->button.pos.w / 2), 0));
-	else
-		return ;
-	slider->button.pos.x = ft_clamp(slider->button.pos.x, 0, elem->pos.w - slider->button.pos.w);
-	slider->value = ui_get_slider_value(slider->min_value, slider->max_value, slider->button.pos.x, elem->pos.w - slider->button.pos.w);
-	slider->update = 1;
+	if (ui_element_is_click(elem))
+	{
+		slider->value = ui_get_slider_value(slider->min_value, slider->max_value, elem->win->mouse_pos.x - elem->screen_pos.x, elem->pos.w);
+		slider->update = 1;
+	}
 }
 
 int	ui_slider_render(t_ui_element *elem)
@@ -115,6 +117,7 @@ int	ui_slider_render(t_ui_element *elem)
 		return (0);
 	if (slider->update)
 	{
+		slider->button.pos.x = ft_clamp(ui_set_slider_value(slider->value, slider->min_value, slider->max_value, elem->pos.w - slider->button.pos.w), 0, elem->pos.w - slider->button.pos.w);
 		ft_b_itoa(slider->value, temp);
 		ui_label_text_set(&button->label, temp);
 		slider->update = 0;

@@ -426,7 +426,7 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 	{
 		if (target->title)
 			ft_strdel(&target->title);
-		target->title = child->title;
+		target->title = ft_strdup(child->title);
 	}
 	if (child->text_color_set)
 	{
@@ -449,12 +449,24 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 			ft_strdel(&target->button_id);
 		target->button_id = ft_strdup(child->button_id);
 	}
+	jj = -1;
+	while (++jj < 3)
+	{
+		if (child->value_set[jj])
+		{
+			target->value[jj] = child->value[jj];
+			target->value_set[jj] = 1;
+		}
+	}
+
 }
 
 void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 {
 	int		i;
 	char	**key_value;
+	int		jj;
+
 
 	if (!args)
 		return ;
@@ -499,8 +511,6 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 		}
 		else if (ft_strequ(key_value[0], "bg_color"))
 		{
-			int	jj;
-
 			jj = -1;
 			while (++jj < UI_STATE_AMOUNT)
 			{
@@ -525,8 +535,6 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 		}
 		else if (ft_strequ(key_value[0], "bg_image"))
 		{
-			int	jj;
-
 			jj = -1;
 			while (++jj < UI_STATE_AMOUNT)
 			{
@@ -573,6 +581,19 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 		else if (ft_strequ(key_value[0], "button"))
 		{
 			recipe->button_id = ft_strdup(key_value[1]);
+		}
+		else if (ft_strequ(key_value[0], "value"))
+		{
+			char	**values;
+
+			jj = -1;
+			values = ft_strsplit(key_value[1], ',');
+			while (++jj < 3)
+			{
+				recipe->value[jj] = ft_atoi(values[jj]);
+				recipe->value_set[jj] = 1;
+			}
+			ft_arraydel(key_value);
 		}
 		ft_arraydel(key_value);
 	}

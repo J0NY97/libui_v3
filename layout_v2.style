@@ -91,7 +91,7 @@ slider_elem
 {
 	bg_color : 0xff003707;
 	font_color : 0xff72e26c;
-	font_path : "ShareTechMono-Regular.ttf";
+	font_path : ShareTechMono-Regular.ttf;
 	text_align : center;
 };
 
@@ -105,7 +105,7 @@ slider_label
 	x : -10;
 	y : 0;
 	font_color : 0xff72e26c;
-	font_path : "ShareTechMono-Regular.ttf";
+	font_path : ShareTechMono-Regular.ttf;
 	text_align : none;
 	title : 0;
 };
@@ -242,7 +242,7 @@ square_button : brush_button_elem : brush_button_label
 line_button : brush_button_elem : brush_button_label
 {
 	xywh : 130, 10, 50, 20;
-	title : line;
+	title : Line;
 };
 
 //////////////////////
@@ -260,3 +260,73 @@ text_input
 	bg_image_hover : images/button_hover.png;
 };
 
+//////////////////////
+// Yet Another Menu
+//////////////////////
+
+yet_another_menu
+{
+	xywh : 10, 450, 200, 70;
+};
+
+clear_button : brush_button
+{
+	xywh : 10, 10, 50, 20;
+	title : Clear;
+};
+
+open_button : brush_button
+{
+	xywh : 70, 10, 50, 20;
+	title : Open;
+};
+
+save_button : brush_button
+{
+	xywh : 130, 10, 50, 20;
+	title : Save;
+};
+
+edit_image_button : brush_button
+{
+	xywh : 10, 40, 50, 20;
+	title : Edit;
+};
+
+//////////////////////
+// Layer Menu
+//////////////////////
+layer_menu
+{
+	xywh : 10, 550, 200, 40;
+};
+
+button_add_layer : brush_button
+{
+	xywh : 10, 10, 20, 20;
+	title : +;
+};
+
+button_remove_layer : brush_button
+{
+	xywh : 40, 10, 20, 20;
+	title : -;
+};
+
+button_edit_layer : brush_button
+{
+	xywh : 70, 10, 20, 20;
+	title : E;
+};
+
+button_move_layer_up : brush_button
+{
+	xywh : 140, 10, 20, 20;
+	title : ^;
+};
+
+button_move_layer_down : brush_button
+{
+	xywh : 170, 10, 20, 20;
+	title : v;
+};
