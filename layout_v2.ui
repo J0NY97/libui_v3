@@ -53,9 +53,15 @@ Window toolbox_window
 			Label size_label_max {};	
 		};
 
-	Input color_swatch {};
-	Dropdown sticker_drop {};
-	Dropdown font_drop {};
+		Input color_swatch {};
+		Dropdown sticker_drop
+		{
+			Radio sticker_radio {};
+		};
+		Dropdown font_drop
+		{
+			Radio font_radio {};
+		};
 	};
 	Menu brush_shape_menu
 	{
@@ -82,4 +88,14 @@ Window toolbox_window
 		Button button_move_layer_up {};	
 		Button button_move_layer_down {};	
 	};
+};
+
+Window main_window
+{
+
+};
+
+Window layer_edit_window
+{
+
 };

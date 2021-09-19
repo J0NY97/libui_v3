@@ -21,7 +21,10 @@ void	ui_layout_event_v2(t_ui_layout_v2 *layout, SDL_Event e)
 	{
 		elem = curr->content;
 		if (elem->element_type > 0 && elem->element_type < UI_TYPE_AMOUNT)
-			g_acceptable[elem->element_type].eventer(elem, e);
+		{
+			if (g_acceptable[elem->element_type].eventer)
+				g_acceptable[elem->element_type].eventer(elem, e);
+		}
 		else
 			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		curr = curr->next;

@@ -100,7 +100,7 @@ typedef struct s_ui_element
 typedef struct s_ui_menu
 {
 	t_ui_element		*elem;
-	t_list				*children;
+	bool				event_and_render_children;
 }						t_ui_menu;
 
 /*
@@ -182,11 +182,8 @@ typedef struct s_ui_checkbox
  * Could probably use checkbox event on them.
  * But you have to untoggle all the other ones.
  *
- * t_list			*buttons;		list of t_ui_element with element = t_ui_button
 */
 // Could probably be used in the tab buttons.
-// Should radio just be a list that you call a function on, that will do the event handling on them...?
-// RADIO SHOULD ONLY BE AN EVENT HANDLE, NOT ANYTHING ELSE!
 /*
  * Maybe reintroduce the group idea you had, in radio you just have buttons in the list, if youre using it in the
  * tab you have button and menu, and the only thing you do on the group is event handling and ofc render...,
@@ -195,7 +192,6 @@ typedef struct s_ui_checkbox
 typedef struct s_ui_radio
 {
 	t_ui_element		*elem;
-	t_list				*buttons;
 	t_ui_element		*active;
 }						t_ui_radio;
 
@@ -296,12 +292,9 @@ void					ui_button_free(void *button);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
-void					ui_menu_add(t_ui_element *menu, t_ui_element *child);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_free(void *menu);
-t_ui_element			*ui_menu_get_element_by_id(t_ui_element *elem, char *id);
-t_ui_button				*ui_menu_get_button_by_id(t_ui_element *elem, char *id);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
@@ -345,7 +338,6 @@ void					ui_radio_event(t_ui_element *elem, SDL_Event e);
 int						ui_radio_render(t_ui_element *elem);
 void					ui_radio_free(void *elem);
 // Other radio
-void					ui_radio_add(t_ui_element *elem, t_ui_element *child);
 void					ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this);
 
 // Tab

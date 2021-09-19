@@ -9,7 +9,6 @@ void	ui_radio_new(t_ui_window *win, t_ui_element *elem)
 	radio->elem = elem;
 	elem->element = radio;
 	elem->element_type = UI_TYPE_RADIO;
-	radio->buttons = NULL;
 	radio->active = NULL;
 }
 
@@ -50,21 +49,6 @@ int	ui_radio_render(t_ui_element *elem)
 {
 	if (elem->parent)
 		elem->screen_pos = *elem->parent_screen_pos;
-	// RADIO SHOULDNT RENDER ANYTHING!!!!!!!!
-	/*
-	t_ui_radio	*radio;
-	t_list		*curr;
-
-	if (!ui_element_render(elem))
-		return (0);
-	radio = elem->element;
-	curr = radio->buttons;
-	while (curr)
-	{
-		ui_button_render(curr->content);
-		curr = curr->next;
-	}
-	*/
 	return (1);
 }
 
@@ -78,19 +62,6 @@ void	ui_radio_free(void *elem)
 */
 
 /*
- * Adds button to the button list.
- * Note: we make elem the parent of child.
-*/
-void	ui_radio_add(t_ui_element *elem, t_ui_element *child)
-{
-	t_ui_radio	*radio;
-
-	radio = elem->element;
-	ui_element_parent_set(child, elem, UI_TYPE_ELEMENT);
-	add_to_list(&radio->buttons, child, UI_TYPE_ELEMENT);
-}
-
-/*
  * if 'toggle_this' is in radio button list it will toggle it on,
  * and untoggle all the other buttons;
 */
@@ -101,7 +72,7 @@ void	ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this)
 	t_list			*curr;
 
 	radio = elem->element;
-	curr = radio->buttons;
+	curr = elem->children;
 	while (curr)
 	{
 		child = curr->content;

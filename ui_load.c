@@ -561,8 +561,10 @@ void	ui_checkbox_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *la
 
 void	ui_radio_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)
 {
+	/*
 	if (recipe->type == UI_TYPE_BUTTON)
 		ui_radio_add(elem, ui_element_create_from_recipe(elem->win, recipe, layout));
+		*/
 }
 
 void	ui_tab_editor(t_ui_element *elem, t_ui_recipe *recipe, t_ui_layout *layout)

@@ -333,3 +333,33 @@ button_move_layer_down : brush_button
 	xywh : 170, 10, 20, 20;
 	title : v;
 };
+
+
+//////////////////////
+// Save Image Window
+//////////////////////
+window_save_image
+{
+	xywh : 320, 270, 200, 100;
+	title : Save Image;
+	bg_color : 0xffb0b0b0;
+	flag : hide;
+};
+
+label_save_image_name
+{
+	xywh : 10, 10, 50, 20;
+	title : Name :;
+};
+
+input_save_image_name
+{
+	xywh : 70, 10, 100, 20;
+	title : image.png;
+};
+
+button_save_image_ok
+{
+	xywh : 50, 50, 50, 20;
+	title : OK;
+};
