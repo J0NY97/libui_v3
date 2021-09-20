@@ -40,6 +40,7 @@ typedef struct s_ui_window
 	bool			user_handled_event;
 	t_list			*children;
 	t_ui_layout_v2	*layout;
+	Uint32			bg_color;
 }					t_ui_window;
 
 /*

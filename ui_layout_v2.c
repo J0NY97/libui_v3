@@ -518,7 +518,7 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 			while (++jj < UI_STATE_AMOUNT)
 			{
 				recipe->bg_colors[jj] = (unsigned int)strtoul(key_value[1], NULL, 16);
-				recipe->bg_colors_set[jj];
+				recipe->bg_colors_set[jj] = 1;
 			}
 		}
 		else if (ft_strequ(key_value[0], "bg_color_default"))
@@ -701,7 +701,7 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 	}
 }
 
-void	ui_window_update_from_recipe(t_ui_window *win, t_ui_recipe_v2 *recipe)
+void	ui_window_edit(t_ui_window *win, t_ui_recipe_v2 *recipe)
 {
 	t_vec4	pos;
 	int		i;
@@ -717,7 +717,7 @@ void	ui_window_update_from_recipe(t_ui_window *win, t_ui_recipe_v2 *recipe)
 	if (recipe->title)
 		ui_window_title_set(win, recipe->title);
 	if (recipe->bg_colors_set[UI_STATE_DEFAULT])
-		ui_texture_fill(win->renderer, win->texture, recipe->bg_colors[UI_STATE_DEFAULT]);
+		win->bg_color = recipe->bg_colors[UI_STATE_DEFAULT];
 }
 
 /*
@@ -780,7 +780,7 @@ void	layout_apply_style(t_ui_layout_v2 *layout)
 		win = curr->content;
 		recipe = ui_list_get_recipe_by_id_v2(layout->recipes, win->id);
 		if (win && recipe)
-			ui_window_update_from_recipe(win, recipe);
+			ui_window_edit(win, recipe);
 		curr = curr->next;
 	}
 	curr = layout->elements;

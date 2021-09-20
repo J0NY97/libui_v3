@@ -21,6 +21,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
 	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y; 
+	win->bg_color = 0xff000000;
 }
 
 void	ui_window_event(t_ui_window *win, SDL_Event e)
@@ -75,13 +76,20 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 
 int	ui_window_render(t_ui_window *win)
 {
+	t_rgba	rgba;
+
 	SDL_SetRenderTarget(win->renderer, NULL);
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
 
 	SDL_SetRenderTarget(win->renderer, win->texture);
 	SDL_RenderClear(win->renderer);
+	rgba = hex_to_rgba(win->bg_color);
+	SDL_SetRenderDrawColor(win->renderer, rgba.r, rgba.g, rgba.b, rgba.a);
+	SDL_RenderFillRect(win->renderer, NULL);
+
 	SDL_SetRenderTarget(win->renderer, NULL);
 	win->textures_recreate = 0;
+
 
 	// Resetting events, becuase sdl wont go inside the event function,if NO events have been done.
 	win->mouse_pos_prev = win->mouse_pos;
