@@ -734,29 +734,20 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
 	while (++i < VEC4_SIZE)
 	{
 		if (recipe->pos_set[i])
-		{
 			pos.v[i] = recipe->pos.v[i];
-			recipe->pos_set[i] = 0;
-		}
 	}
 	ui_element_pos_set(elem, pos);
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
 		if (recipe->bg_colors_set[i])
-		{
 			ui_element_color_set(elem, i, recipe->bg_colors[i]);
-			recipe->bg_colors_set[i] = 0;
-		}
 	}
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
 		if (recipe->bg_images_set[i])
-		{
 			ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
-			recipe->bg_images_set[i] = 0;
-		}
 	}
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
