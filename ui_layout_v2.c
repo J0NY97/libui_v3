@@ -284,10 +284,27 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	t_ui_element	*elem;
 	t_list			*rruc;
 
-	elem = ft_memalloc(sizeof(t_ui_element));
-	g_acceptable[family->parent_type].maker(win, elem);
-	ui_element_parent_set(elem, parent, parent_type);
-	ui_element_id_set(elem, family->parent_id);
+	// if the parent element is of type that has another element contained in it. (button has label, dropdown has menu...)
+	// make that child element the id of whatever you have decided it to be. no need to make new element since we already
+	// have that.
+	if (parent_type == UI_TYPE_ELEMENT)
+	{
+		ft_printf("elem parent type == UI_TYPE_ELEMENT\n");
+		t_ui_element *par = parent;
+		if (par->element_type == UI_TYPE_DROPDOWN)
+		{
+			ft_printf("elem parent element type == UI_TYPE_DROPDOWN\n");
+			if (family->parent_type == UI_TYPE_MENU)
+				ui_element_id_set(&((t_ui_dropdown *)par->element)->menu, family->parent_id);
+		}
+	}
+	else
+	{
+		elem = ft_memalloc(sizeof(t_ui_element));
+		g_acceptable[family->parent_type].maker(win, elem);
+		ui_element_parent_set(elem, parent, parent_type);
+		ui_element_id_set(elem, family->parent_id);
+	}
 	rruc = family->children;
 	while (rruc)
 	{
