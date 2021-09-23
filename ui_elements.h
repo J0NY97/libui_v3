@@ -291,6 +291,9 @@ void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
 void					ui_button_free(void *button);
+// Getters
+t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
+t_ui_label				*ui_button_get_label(t_ui_element *elem);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);

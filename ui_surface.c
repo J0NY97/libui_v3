@@ -47,6 +47,11 @@ SDL_Surface	*ui_surface_text_new(char *text, char *font_path, int size, Uint32 f
 	SDL_Color	color;
 
 	font = TTF_OpenFont(font_path, size);
+	if (!font)
+	{
+		ft_printf("[%s] Font path doesnt exist.\n", __FUNCTION__);
+		return (NULL);
+	}
 	rgba = hex_to_rgba(font_color);
 	color.r = rgba.r;
 	color.g = rgba.g;

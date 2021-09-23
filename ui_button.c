@@ -68,10 +68,26 @@ int	ui_button_render(t_ui_element *elem)
 	return (1);
 }
 
-/*
- * go figure.
-*/
 void	ui_button_free(void *button)
 {
 	(void)button;
 }
+
+/*
+ * Getters
+*/
+t_ui_element	*ui_button_get_label_element(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_BUTTON)
+	{
+		ft_printf("[%s] Element is not of type UI_TYPE_BUTTON.", __FUNCTION__);
+		return (NULL);
+	}
+	return (&((t_ui_button *)elem->element)->label);
+}
+
+t_ui_label	*ui_button_get_label(t_ui_element *elem)
+{
+	return (ui_button_get_label_element(elem)->element);
+}
+
