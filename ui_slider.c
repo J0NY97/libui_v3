@@ -33,15 +33,6 @@ void	ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
 
 	win = elem->win;
 	slider = elem->element;
-	if (recipe->button_id)
-	{
-		ft_printf("[%s] button id is.\n", __FUNCTION__);
-		button_recipe = ui_list_get_recipe_by_id_v2(win->layout->recipes, recipe->button_id);
-		if (button_recipe)
-			ui_element_edit(&slider->button, button_recipe);
-		else
-			ft_printf("[%s] Slider button [%s] couldn\'t be found orseomthign.\n", __FUNCTION__, recipe->button_id);
-	}
 	if (recipe->value_set[1])
 		slider->min_value = recipe->value[1];
 	if (recipe->value_set[2])

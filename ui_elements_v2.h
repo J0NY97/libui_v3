@@ -50,7 +50,6 @@ typedef struct s_ui_recipe_v2
 	bool			text_style_set;
 
 	// Slider only
-	char			*button_id;
 	int				value[3];
 	int				value_set[3];
 }					t_ui_recipe_v2;

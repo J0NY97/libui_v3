@@ -287,16 +287,21 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	// if the parent element is of type that has another element contained in it. (button has label, dropdown has menu...)
 	// make that child element the id of whatever you have decided it to be. no need to make new element since we already
 	// have that.
-	if (parent_type == UI_TYPE_ELEMENT)
+	// TODO: VERY IMPORTANT, THIS NEEDS TO BE REWRITTEN!
+	t_ui_element *par = parent;
+	if (parent_type == UI_TYPE_ELEMENT
+		&& par->element_type == UI_TYPE_DROPDOWN
+		&& family->parent_type == UI_TYPE_MENU)
 	{
-		ft_printf("elem parent type == UI_TYPE_ELEMENT\n");
-		t_ui_element *par = parent;
-		if (par->element_type == UI_TYPE_DROPDOWN)
-		{
-			ft_printf("elem parent element type == UI_TYPE_DROPDOWN\n");
-			if (family->parent_type == UI_TYPE_MENU)
-				ui_element_id_set(&((t_ui_dropdown *)par->element)->menu, family->parent_id);
-		}
+		elem = &((t_ui_dropdown *)par->element)->menu;
+		ui_element_id_set(elem, family->parent_id);
+	}
+	else if (parent_type == UI_TYPE_ELEMENT
+		&& par->element_type == UI_TYPE_SLIDER
+		&& family->parent_type == UI_TYPE_BUTTON)
+	{
+		elem = &((t_ui_slider *)par->element)->button;
+		ui_element_id_set(elem, family->parent_id);
 	}
 	else
 	{
@@ -316,8 +321,12 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 
 void	print_all_elements_in_list(t_list *list)
 {
+	int	i;
+
+	i = -1;
 	while (list)
 	{
+		ft_printf("[%s] #%d", __FUNCTION__, ++i);
 		ui_element_print(list->content);
 		list = list->next;
 	}
@@ -463,12 +472,6 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 	{
 		target->text_align = child->text_align;
 	}
-	if (child->button_id)
-	{
-		if (target->button_id)
-			ft_strdel(&target->button_id);
-		target->button_id = ft_strdup(child->button_id);
-	}
 	jj = -1;
 	while (++jj < 3)
 	{
@@ -597,10 +600,6 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 		else if (ft_strequ(key_value[0], "text_align"))
 		{
 			recipe->text_align = text_align_getter(key_value[1]);
-		}
-		else if (ft_strequ(key_value[0], "button"))
-		{
-			recipe->button_id = ft_strdup(key_value[1]);
 		}
 		else if (ft_strequ(key_value[0], "value"))
 		{
