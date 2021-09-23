@@ -42,6 +42,32 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 }
 
 /*
+ * Assumes everything in list is t_ui_element, and preferably t_ui_button type;
+*/
+void	ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e)
+{
+	t_ui_element	*elem;
+
+	while (list)
+	{
+		elem = list->content;
+		elem->is_toggle = 0;
+		if (elem->was_click)
+			*active = elem;
+		else if (elem->is_hover)
+			elem->state = UI_STATE_HOVER;
+		else
+			elem->state = UI_STATE_DEFAULT;
+		list = list->next;
+	}
+	if (*active)
+	{
+		(*active)->state = UI_STATE_CLICK;
+		(*active)->is_toggle = 1;
+	}
+}
+
+/*
  * radio will only update its screen position so that
  * its children render correctly.
 */

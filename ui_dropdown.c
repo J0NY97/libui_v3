@@ -47,6 +47,9 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	{
 		elem->state = UI_STATE_CLICK;
 		ui_menu_event(&drop->menu, e);
+		ui_list_radio_event(drop->menu.children, &drop->active, e);
+		if (drop->active)
+			ui_element_render(drop->active); // because we want it to update.
 
 		{
 			// This could be changed to the menu in the same wave as you render or event handle the children.
@@ -93,4 +96,16 @@ int	ui_dropdown_render(t_ui_element *elem)
 void	ui_dropdown_free(void *drop)
 {
 	(void)drop;
+}
+
+// Getters
+
+/*
+ * Returns dropdown from element, if the type is dropdown;
+*/
+t_ui_dropdown	*ui_dropdown_get(t_ui_element *elem)
+{
+	if (!elem || !elem->element_type == UI_TYPE_DROPDOWN)
+		return (NULL);
+	return (elem->element);
 }

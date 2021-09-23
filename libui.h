@@ -41,7 +41,6 @@ typedef struct s_ui_layout
 	t_list				*windows;
 }						t_ui_layout;
 
-
 // Layout
 void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
 int						ui_layout_render(t_ui_layout *layout);

@@ -146,6 +146,7 @@ typedef struct s_ui_dropdown
 	t_ui_element		*elem;
 	t_ui_element		label;
 	t_ui_element		menu;
+	t_ui_element		*active;
 }						t_ui_dropdown;
 
 typedef struct s_ui_input
@@ -303,6 +304,8 @@ void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
+// Getters
+t_ui_dropdown			*ui_dropdown_get(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
@@ -340,6 +343,7 @@ int						ui_radio_render(t_ui_element *elem);
 void					ui_radio_free(void *elem);
 // Other radio
 void					ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this);
+void					ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e);
 
 // Tab
 void					ui_tab_new(t_ui_window *win, t_ui_element *elem);
@@ -348,14 +352,5 @@ int						ui_tab_render(t_ui_element *elem);
 void					ui_tab_free(void *elem);
 // Other tab
 void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
-
-// Group
-void					ui_group_new(t_ui_window *win, t_ui_element *elem);
-//void					ui_tab_event(t_ui_element *elem, SDL_Event e);
-//int						ui_tab_render(t_ui_element *elem);
-void					ui_group_free(void *elem);
-// Other group
-//void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
-
 
 #endif
