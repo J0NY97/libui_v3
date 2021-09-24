@@ -241,3 +241,33 @@ void	ft_putarr(char **arr)
 		ft_putchar('\n');
 	}
 }
+
+char	**ft_arrdup(char **src)
+{
+	char	**dest;
+	int		ii;
+
+	if (!src)
+		return (NULL);
+	ii = -1;
+	while (src[++ii]);
+	dest = malloc(sizeof(char *) * ii);
+	ii = -1;
+	while (src[++ii])
+		dest[ii] = ft_strdup(src[ii]);
+	dest[ii] = NULL;
+	return (dest);
+}
+
+int	ft_strinarr(char *str, char **arr)
+{
+	int	ii;
+
+	if (!str || !arr)
+		return (0);
+	ii = -1;
+	while (arr[++ii])
+		if (ft_strequ(str, arr[ii]))
+			return (1);
+	return (0);
+}

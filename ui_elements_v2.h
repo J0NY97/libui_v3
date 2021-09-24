@@ -52,6 +52,9 @@ typedef struct s_ui_recipe_v2
 	// Slider only
 	int				value[3];
 	int				value_set[3];
+
+	// Window only
+	char			**flags;
 }					t_ui_recipe_v2;
 
 ///////////////

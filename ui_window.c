@@ -37,7 +37,12 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 				win->textures_recreate = 1;
 			}
 			else if (e.window.event == SDL_WINDOWEVENT_CLOSE)
-				win->wants_to_close = 1;
+			{
+				if (win->hide_on_x)
+					ui_window_flag_set(win, UI_WINDOW_HIDE);
+				else
+					win->wants_to_close = 1;
+			}
 		}
 		else if (e.type == SDL_MOUSEMOTION)
 		{

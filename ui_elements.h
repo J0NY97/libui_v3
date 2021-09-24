@@ -14,6 +14,7 @@
  * float		texture_scale;		the ratio between the window size and the window texture size (.x = w, .y = h);
  * t_vec4i		screen_pos;			this is the ACTUAL size of the window.
  * bool			wants_to_close;		is true when x on the window was clicked;
+ * bool			hide_on_x;			if true when x is clicked, hide window (this and wants_to_close cant be set at the same time);
  * bool			user_handled_event;	true, when user has decided to event handle the window themselves; (so we dont do it twice); (used in the layout event handler);
  * t_ui_layout_v2	*layout;				the layout it is part of, or if NULL it is not part of any layout;
 */
@@ -37,6 +38,7 @@ typedef struct s_ui_window
 	bool			show;
 	bool			textures_recreate;
 	bool			wants_to_close;
+	bool			hide_on_x;
 	bool			user_handled_event;
 	t_list			*children;
 	t_ui_layout_v2	*layout;

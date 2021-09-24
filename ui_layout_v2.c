@@ -402,6 +402,7 @@ void	layout_read_style(t_ui_layout_v2 *layout)
 {
 	if (!layout->style_file)	
 		return ;
+	ft_printf("[%s] Lets see if you have some style.\n", __FUNCTION__);
 	layout->style_file_content = get_style_content(layout->style_file);
 	ft_printf("%s\n", layout->style_file_content);
 }
@@ -481,7 +482,10 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 			target->value_set[jj] = 1;
 		}
 	}
-
+	if (child->flags)
+	{
+		target->flags = ft_arrdup(child->flags);
+	}
 }
 
 void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
@@ -614,6 +618,10 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 			}
 			ft_arraydel(key_value);
 		}
+		else if (ft_strequ(key_value[0], "flag"))
+		{
+			recipe->flags = ft_strsplit(key_value[1], ' ');
+		}
 		ft_arraydel(key_value);
 	}
 }
@@ -717,11 +725,45 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 	}
 }
 
+int	make_usable_win_flags(char	**flags)
+{
+	int		result;
+	int		i;
+
+	if (!flags)
+		return (0);
+	result = 0;
+	i = -1;
+	while (flags[++i])
+	{
+		ft_printf("Flag #%d\n", i);
+		if (ft_strequ(flags[i], "hide"))
+			result |= UI_WINDOW_HIDE;
+		else if (ft_strequ(flags[i], "show"))
+			result |= UI_WINDOW_SHOW;
+		else if (ft_strequ(flags[i], "maximize"))
+			result |= UI_WINDOW_MAXIMIZE;
+		else if (ft_strequ(flags[i], "minimize"))
+			result |= UI_WINDOW_MINIMIZE;
+		else if (ft_strequ(flags[i], "fullscreen"))
+			result |= UI_WINDOW_FULLSCREEN;
+		else if (ft_strequ(flags[i], "fullscreen_windowed"))
+			result |= UI_WINDOW_FULLSCREEN_WINDOWED;
+		else if (ft_strequ(flags[i], "grab"))
+			result |= UI_WINDOW_GRAB;
+		else if (ft_strequ(flags[i], "resizeable"))
+			result |= UI_WINDOW_RESIZEABLE;
+	}
+	ft_printf("result : %d\n", result);
+	return (result);
+}
+
 void	ui_window_edit(t_ui_window *win, t_ui_recipe_v2 *recipe)
 {
 	t_vec4	pos;
 	int		i;
 
+	ft_printf("Entering [%s]\n", __FUNCTION__);
 	pos = win->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
@@ -734,6 +776,12 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe_v2 *recipe)
 		ui_window_title_set(win, recipe->title);
 	if (recipe->bg_colors_set[UI_STATE_DEFAULT])
 		win->bg_color = recipe->bg_colors[UI_STATE_DEFAULT];
+
+	if (ft_strinarr("xhides", recipe->flags))
+		win->hide_on_x = 1;
+	ft_printf("please just say its that i have one less than you should\n");
+	ui_window_flag_set(win, make_usable_win_flags(recipe->flags));
+	ft_printf("Leaving [%s]\n", __FUNCTION__);
 }
 
 /*
