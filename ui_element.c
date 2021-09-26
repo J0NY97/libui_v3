@@ -327,5 +327,9 @@ int	ui_element_type_from_string(char *str)
 
 const char	*ui_element_type_to_string(int type)
 {
+	if (type < 0)
+		return ("none");
+	if (type > UI_TYPE_AMOUNT)
+		return ("none");
 	return (g_acceptable[type].name);
 }

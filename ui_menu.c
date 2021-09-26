@@ -26,7 +26,7 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 		child = curr->content;
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
-			if (child->element_type > 0
+			if (child->element_type >= 0
 				&& child->element_type < UI_TYPE_AMOUNT
 				&& g_acceptable[child->element_type].eventer)
 				g_acceptable[child->element_type].eventer(child, e);
@@ -56,15 +56,15 @@ int	ui_menu_render(t_ui_element *elem)
 		if (curr->content_size == UI_TYPE_ELEMENT)
 		{
 			child = curr->content;
-			if (child->element_type > 0
+			if (child->element_type >= 0
 				&& child->element_type < UI_TYPE_AMOUNT
 				&& g_acceptable[child->element_type].renderer)
 				g_acceptable[child->element_type].renderer(child);
 			else
-				ft_printf("[%s] {%s} : Rendering %s of type %d %d is not supported.\n", __FUNCTION__, elem->id, child->id, curr->content_size, elem->element_type);
+				ft_printf("[%s] {%s} : Rendering \"%s\" of type ([%d] == 0?) [%d] %s is not supported.\n", __FUNCTION__, elem->id, child->id, curr->content_size, child->element_type, ui_element_type_to_string(child->element_type));
 		}
 		else
-			ft_printf("[ui_menu_render] Element isnt UI_TYPE_ELEMENT ... HOW? ... [%s] @ [%d, %d] of type %d is not supported.\n", child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
+			ft_printf("[%s] Element isnt UI_TYPE_ELEMENT ... HOW? ... [%s] @ [%d, %d] of type %d is not supported.\n", __FUNCTION__, child->screen_pos.x, child->screen_pos.y, child->id, curr->content_size);
 		curr = curr->next;
 	}
 	return (2);

@@ -20,7 +20,7 @@ void	ui_layout_event_v2(t_ui_layout_v2 *layout, SDL_Event e)
 	while (curr)
 	{
 		elem = curr->content;
-		if (elem->element_type > 0 && elem->element_type < UI_TYPE_AMOUNT)
+		if (elem->element_type >= 0 && elem->element_type < UI_TYPE_AMOUNT)
 		{
 			if (g_acceptable[elem->element_type].eventer)
 				g_acceptable[elem->element_type].eventer(elem, e);
@@ -42,7 +42,7 @@ void	ui_layout_render_v2(t_ui_layout_v2 *layout)
 	while (curr)
 	{
 		elem = curr->content;
-		if (elem->element_type > 0 && elem->element_type < UI_TYPE_AMOUNT
+		if (elem->element_type >= 0 && elem->element_type < UI_TYPE_AMOUNT
 			&& g_acceptable[elem->element_type].renderer)
 			g_acceptable[elem->element_type].renderer(elem);
 		else
