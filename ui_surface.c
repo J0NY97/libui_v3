@@ -422,3 +422,33 @@ void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Ui
 			ui_surface_pixel_set(surface, rx, y, color);
 	}
 }
+
+void	ui_surface_line_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
+{ 
+	float	angle = atan2(p2.y - p1.y, p2.x - p1.x);
+
+	/*
+    t_vec2i v0 = vec2i(p1.x + thicc * cos(angle + M_PI / 2), p1.y + thicc * sin(angle + M_PI / 2));
+    t_vec2i v1 = vec2i(p1.x + thicc * cos(angle - M_PI / 2), p1.y + thicc * sin(angle - M_PI / 2));
+    t_vec2i v2 = vec2i(p2.x + thicc * cos(angle - M_PI / 2), p2.y + thicc * sin(angle - M_PI / 2));
+    t_vec2i v3 = vec2i(p2.x + thicc * cos(angle + M_PI / 2), p2.y + thicc * sin(angle + M_PI / 2));
+
+	ui_surface_line_draw(surface, v0, v3, color);
+	ui_surface_line_draw(surface, v1, v2, color);
+
+	ui_surface_line_draw(surface, v0, v1, color);
+	ui_surface_line_draw(surface, v2, v3, color);
+	*/
+	int	i;
+
+	i = -1;
+	while (++i < thicc)
+	{
+		t_vec2i v0 = vec2i(p1.x + i * cos(angle + M_PI / 2), p1.y + i * sin(angle + M_PI / 2));
+		t_vec2i v3 = vec2i(p2.x + i * cos(angle + M_PI / 2), p2.y + i * sin(angle + M_PI / 2));
+		ui_surface_line_draw_nik(surface, v0, v3, color);
+    	t_vec2i v1 = vec2i(p1.x + i * cos(angle - M_PI / 2), p1.y + i * sin(angle - M_PI / 2));
+	    t_vec2i v2 = vec2i(p2.x + i * cos(angle - M_PI / 2), p2.y + i * sin(angle - M_PI / 2));
+		ui_surface_line_draw_nik(surface, v1, v2, color);
+	}
+}
