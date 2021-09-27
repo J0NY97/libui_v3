@@ -293,6 +293,7 @@ void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
 void					ui_button_free(void *button);
+t_ui_element			*ui_button_get(t_ui_element *elem, int ui_type);
 // Getters
 t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_button_get_label(t_ui_element *elem);
@@ -309,8 +310,11 @@ void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
+t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
 // Getters
-t_ui_dropdown			*ui_dropdown_get(t_ui_element *elem);
+t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);
+t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
+t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
@@ -328,6 +332,10 @@ void					ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);
+t_ui_element			*ui_slider_get(t_ui_element *elem, int ui_type);
+// Getters
+t_ui_element			*ui_slider_get_button_element(t_ui_element *elem);
+t_ui_slider				*ui_slider_get_slider(t_ui_element *elem);
 // slider edit
 int						ui_slider_value_get(t_ui_element *elem);
 void					ui_slider_value_set(t_ui_element *elem, int value);

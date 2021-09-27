@@ -42,14 +42,15 @@ struct s_ui_get
 */
 typedef struct s_ui_acceptable
 {
-	char		*name;
-	int			type;
-	void		(*freer)(void *args);
-	void		(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, t_ui_layout *args);
-	void		(*maker)(t_ui_window *win, t_ui_element *elem);
-	int			(*renderer)(t_ui_element *elem);
-	void		(*eventer)(t_ui_element *elem, SDL_Event e);
-	void		(*edit)(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+	char			*name;
+	int				type;
+	void			(*freer)(void *args);
+	void			(*editor)(t_ui_element *elem, t_ui_recipe *child_recipe, t_ui_layout *args);
+	void			(*maker)(t_ui_window *win, t_ui_element *elem);
+	int				(*renderer)(t_ui_element *elem);
+	void			(*eventer)(t_ui_element *elem, SDL_Event e);
+	void			(*edit)(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+	t_ui_element	*(*getter)(t_ui_element *elem, int ui_element_type);
 }				t_ui_acceptable;
 
 static const t_ui_acceptable	g_acceptable_element =
@@ -61,7 +62,8 @@ static const t_ui_acceptable	g_acceptable_element =
 	.maker = NULL,
 	.renderer = &ui_element_render,
 	.eventer = NULL,
-	.edit = &ui_element_edit
+	.edit = &ui_element_edit,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_button =
@@ -73,7 +75,8 @@ static const t_ui_acceptable	g_acceptable_button =
 	.maker = &ui_button_new,
 	.renderer = &ui_button_render,
 	.eventer = &ui_button_event,
-	.edit = &ui_button_edit
+	.edit = &ui_button_edit,
+	.getter = NULL //&ui_button_get , button doesnt need this, you can acess the label stuff anyways.
 };
 
 static const t_ui_acceptable	g_acceptable_label =
@@ -85,7 +88,8 @@ static const t_ui_acceptable	g_acceptable_label =
 	.editor = &ui_label_editor,
 	.renderer = &ui_label_render,
 	.eventer = &ui_label_event,
-	.edit = &ui_label_edit
+	.edit = &ui_label_edit,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_menu =
@@ -97,7 +101,8 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.editor = &ui_menu_editor,
 	.renderer = &ui_menu_render,
 	.eventer = &ui_menu_event,
-	.edit = NULL
+	.edit = NULL,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_dropdown =
@@ -109,7 +114,8 @@ static const t_ui_acceptable	g_acceptable_dropdown =
 	.editor = &ui_dropdown_editor,
 	.renderer = &ui_dropdown_render,
 	.eventer = &ui_dropdown_event,
-	.edit = &ui_dropdown_edit
+	.edit = &ui_dropdown_edit,
+	.getter = &ui_dropdown_get
 };
 
 static const t_ui_acceptable	g_acceptable_input =
@@ -121,7 +127,8 @@ static const t_ui_acceptable	g_acceptable_input =
 	.editor = &ui_input_editor,
 	.renderer = &ui_input_render,
 	.eventer = &ui_input_event,
-	.edit = &ui_input_edit
+	.edit = &ui_input_edit,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_slider =
@@ -133,7 +140,8 @@ static const t_ui_acceptable	g_acceptable_slider =
 	.editor = &ui_slider_editor,
 	.renderer = &ui_slider_render,
 	.eventer = &ui_slider_event,
-	.edit = &ui_slider_edit
+	.edit = &ui_slider_edit,
+	.getter = &ui_slider_get
 };
 
 static const t_ui_acceptable	g_acceptable_checkbox =
@@ -145,7 +153,8 @@ static const t_ui_acceptable	g_acceptable_checkbox =
 	.editor = &ui_checkbox_editor,
 	.renderer = &ui_checkbox_render,
 	.eventer = &ui_checkbox_event,
-	.edit = NULL
+	.edit = NULL,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_radio =
@@ -157,7 +166,8 @@ static const t_ui_acceptable	g_acceptable_radio =
 	.editor = &ui_radio_editor,
 	.renderer = &ui_radio_render,
 	.eventer = &ui_radio_event,
-	.edit = NULL
+	.edit = NULL,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_tab =
@@ -169,7 +179,8 @@ static const t_ui_acceptable	g_acceptable_tab =
 	.editor = &ui_tab_editor,
 	.renderer = &ui_tab_render,
 	.eventer = &ui_tab_event,
-	.edit = NULL
+	.edit = NULL,
+	.getter = NULL
 };
 
 static const t_ui_acceptable	g_acceptable_window =
@@ -181,7 +192,8 @@ static const t_ui_acceptable	g_acceptable_window =
 	.editor = NULL,
 	.renderer = NULL,
 	.eventer = NULL,
-	.edit = NULL
+	.edit = NULL,
+	.getter = NULL
 };
 
 // NOTE: these must be in the same order as the UI_TYPE_ENUM

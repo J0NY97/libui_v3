@@ -287,23 +287,18 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	// if the parent element is of type that has another element contained in it. (button has label, dropdown has menu...)
 	// make that child element the id of whatever you have decided it to be. no need to make new element since we already
 	// have that.
-	// TODO: VERY IMPORTANT, THIS NEEDS TO BE REWRITTEN!
-	t_ui_element *par = parent;
+	elem = NULL;
+	// If the element type has a getter, we try to get the child,
+	// but if the element doesnt have of that type of child,
+	// we make a new elem.
 	if (parent_type == UI_TYPE_ELEMENT
-		&& par->element_type == UI_TYPE_DROPDOWN
-		&& family->parent_type == UI_TYPE_MENU)
+		&& g_acceptable[((t_ui_element *)parent)->element_type].getter)
 	{
-		elem = &((t_ui_dropdown *)par->element)->menu;
-		ui_element_id_set(elem, family->parent_id);
+		elem = g_acceptable[((t_ui_element *)parent)->element_type].getter(parent, family->parent_type);
+		if (elem)
+			ui_element_id_set(elem, family->parent_id);
 	}
-	else if (parent_type == UI_TYPE_ELEMENT
-		&& par->element_type == UI_TYPE_SLIDER
-		&& family->parent_type == UI_TYPE_BUTTON)
-	{
-		elem = &((t_ui_slider *)par->element)->button;
-		ui_element_id_set(elem, family->parent_id);
-	}
-	else
+	if (!elem)
 	{
 		elem = ft_memalloc(sizeof(t_ui_element));
 		g_acceptable[family->parent_type].maker(win, elem);

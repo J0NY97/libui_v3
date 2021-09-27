@@ -68,6 +68,17 @@ int	ui_button_render(t_ui_element *elem)
 	return (1);
 }
 
+/*
+ * Returns from button element its child elements (that are specific to this type of element only);
+*/
+t_ui_element	*ui_button_get(t_ui_element *elem, int ui_type)
+{
+	if (elem->element_type == UI_TYPE_BUTTON
+		&& ui_type == UI_TYPE_LABEL)
+		return (ui_button_get_label_element(elem));
+	return (NULL);
+}
+
 void	ui_button_free(void *button)
 {
 	(void)button;

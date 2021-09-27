@@ -98,12 +98,31 @@ void	ui_dropdown_free(void *drop)
 	(void)drop;
 }
 
+t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)
+{
+	if (elem->element_type == UI_TYPE_DROPDOWN)
+	{
+		if (ui_type == UI_TYPE_MENU)
+			return (ui_dropdown_get_menu_element(elem));
+	}
+	ft_printf("[%s] Something went wrong.\n");
+	return (NULL);
+}
+
 // Getters
+
+t_ui_element	*ui_dropdown_get_menu_element(t_ui_element *elem)
+{
+	if (elem->element_type == UI_TYPE_DROPDOWN)
+		return (&ui_dropdown_get_dropdown(elem)->menu);
+	ft_printf("[%s] Something went wrong.\n");
+	return (NULL);
+}
 
 /*
  * Returns dropdown from element, if the type is dropdown;
 */
-t_ui_dropdown	*ui_dropdown_get(t_ui_element *elem)
+t_ui_dropdown	*ui_dropdown_get_dropdown(t_ui_element *elem)
 {
 	if (!elem || !elem->element_type == UI_TYPE_DROPDOWN)
 		return (NULL);
