@@ -252,6 +252,7 @@ void					ui_window_id_set(t_ui_window *win, const char *id);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
+void					ui_element_event(t_ui_element *elem, SDL_Event e);
 void					ui_element_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
@@ -262,6 +263,7 @@ void					ui_element_pos_set2(t_ui_element *elem, t_vec2 pos);
 void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
+void					ui_element_remove_child_from_parent(t_ui_element *elem);
 void					ui_element_parent_set(t_ui_element *elem, void *parent, int type);
 void					ui_element_id_set(t_ui_element *elem, char *id);
 void					ui_element_print(t_ui_element *elem);
@@ -303,6 +305,8 @@ void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_free(void *menu);
+// getters
+t_ui_menu				*ui_menu_get_menu(t_ui_element *elem);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);

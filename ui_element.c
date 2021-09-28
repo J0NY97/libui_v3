@@ -31,6 +31,15 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 }
 
 /*
+ * We have this only so that we wouldnt have errors spamming the terminal.
+*/
+void	ui_element_event(t_ui_element *elem, SDL_Event e)
+{
+	(void)elem;
+	(void)e;
+}
+
+/*
  * Redos the textures, helpful if you have changed the w and/or h of the element.
 */
 void	ui_element_textures_redo(t_ui_element *elem)
