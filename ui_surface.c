@@ -361,6 +361,45 @@ void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	ui_surface_line_draw(surface, p2, vec2i(p2.x, p1.y), color);
 }
 
+void	ui_surface_rect_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
+{
+	/*
+	ui_surface_line_draw_thicc(surface, p1, vec2i(p2.x, p1.y), thicc, color); // top left - top right
+	ui_surface_line_draw_thicc(surface, p1, vec2i(p1.x, p2.y), thicc, color); // top left, bot left
+	ui_surface_line_draw_thicc(surface, p2, vec2i(p1.x, p2.y), thicc, color); // bot right, bot left
+	ui_surface_line_draw_thicc(surface, p2, vec2i(p2.x, p1.y), thicc, color); // bot right, top right
+
+	ui_surface_rect_draw_filled(surface, vec2i(p1.x - thicc, p1.y - thicc), vec2i(p1.x + thicc, p1.y + thicc), color); // top left
+	ui_surface_rect_draw_filled(surface, vec2i(p1.x - thicc, p2.y - thicc), vec2i(p1.x + thicc, p2.y + thicc), color); // bot left
+	ui_surface_rect_draw_filled(surface, vec2i(p2.x - thicc, p1.y - thicc), vec2i(p2.x + thicc, p1.y + thicc), color); // top right
+	ui_surface_rect_draw_filled(surface, vec2i(p2.x - thicc, p2.y - thicc), vec2i(p2.x + thicc, p2.y + thicc), color); // bot right
+	*/
+	int	i;
+	int	iter;
+	t_vec2i	tl; // top left
+	t_vec2i	br; // bot right
+
+	tl.x = ft_min(p1.x, p2.x);
+	tl.y = ft_min(p1.y, p2.y);
+	br.x = ft_max(p1.x, p2.x);
+	br.y = ft_max(p1.y, p2.y);
+	iter = ft_min(thicc, dist(tl, br));
+	i = -1;
+	while (++i < iter)
+	{
+		ui_surface_line_draw(surface, vec2i(tl.x, tl.y + i), vec2i(br.x, tl.y + i), color); // top left , top right
+		ui_surface_line_draw(surface, vec2i(tl.x, br.y - i), vec2i(br.x, br.y - i), color); // bot left , bot right
+
+		ui_surface_line_draw(surface, vec2i(tl.x + i, tl.y), vec2i(tl.x + i, br.y), color); // top left , bot left
+		ui_surface_line_draw(surface, vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color); // top right , bot right
+	}
+}
+
+void	ui_surface_rect_draw_filled(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+{
+	SDL_FillRect(surface, &(SDL_Rect){p1.x, p1.y, p2.x - p1.x, p2.y - p1.y}, color);
+}
+
 /*
  * Yoinked from:
  * Filled : https://stackoverflow.com/a/1201227
@@ -423,22 +462,20 @@ void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Ui
 	}
 }
 
+void	ui_surface_circle_draw_thicc(SDL_Surface *surface, t_vec2i orig, int r, int thicc, Uint32 color)
+{
+	int	i;
+	int	iter;
+
+	i = -1;
+	iter = ft_min(thicc, r);
+	while (++i < iter)
+		ui_surface_circle_draw(surface, orig, r - i, color);
+}
+
 void	ui_surface_line_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 { 
 	float	angle = atan2(p2.y - p1.y, p2.x - p1.x);
-
-	/*
-    t_vec2i v0 = vec2i(p1.x + thicc * cos(angle + M_PI / 2), p1.y + thicc * sin(angle + M_PI / 2));
-    t_vec2i v1 = vec2i(p1.x + thicc * cos(angle - M_PI / 2), p1.y + thicc * sin(angle - M_PI / 2));
-    t_vec2i v2 = vec2i(p2.x + thicc * cos(angle - M_PI / 2), p2.y + thicc * sin(angle - M_PI / 2));
-    t_vec2i v3 = vec2i(p2.x + thicc * cos(angle + M_PI / 2), p2.y + thicc * sin(angle + M_PI / 2));
-
-	ui_surface_line_draw(surface, v0, v3, color);
-	ui_surface_line_draw(surface, v1, v2, color);
-
-	ui_surface_line_draw(surface, v0, v1, color);
-	ui_surface_line_draw(surface, v2, v3, color);
-	*/
 	int	i;
 
 	i = -1;
