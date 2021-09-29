@@ -24,7 +24,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_textures_redo(elem);
 	ui_element_parent_set(elem, win, UI_TYPE_WINDOW);
 	elem->element = NULL;
-	elem->element_type = UI_TYPE_NONE;
+	elem->element_type = UI_TYPE_ELEMENT;
 	elem->show = 1;
 	elem->last_state = -999;
 	elem->children = NULL;
@@ -306,6 +306,7 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\tuse_images : %d\n", elem->use_images);
 	ft_printf("\tcolors : %#x %#x %#x\n", elem->colors[0], elem->colors[1], elem->colors[2]);
 	ft_printf("\tstate : %d\n", elem->state);
+	ft_printf("\tlast_state : %d\n", elem->last_state);
 	ft_printf("\tparent_type : %d\n", elem->parent_type);
 	ft_printf("\telement_type : %d\n", elem->element_type);
 	ft_printf("\tshow : %d\n", elem->show);

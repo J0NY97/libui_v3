@@ -62,7 +62,7 @@ static const t_ui_acceptable	g_acceptable_element =
 	.maker = NULL,
 	.renderer = &ui_element_render,
 	.eventer = &ui_element_event,
-	.edit = &ui_element_edit,
+	.edit = NULL, //&ui_element_edit,
 	.getter = NULL
 };
 
