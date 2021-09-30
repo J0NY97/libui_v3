@@ -11,7 +11,7 @@ typedef struct s_vec2
 			float x;
 			float y;
 		};
-		int v[VEC2_SIZE];
+		float v[VEC2_SIZE];
 	};
 }					t_vec2;
 
