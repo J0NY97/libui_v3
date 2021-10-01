@@ -413,6 +413,34 @@ void	layout_split_styles(t_ui_layout_v2 *layout)
 		ft_printf("#%d : \n%s\n", k, layout->style_recipe_strings[k]);
 }
 
+char	**ft_arrjoin(char **to_this, char **from_this)
+{
+	char	**arr;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	arr = NULL;
+	if (!to_this && !from_this)
+		return (NULL);
+	while (to_this && to_this[i])
+	{
+		arr = realloc(arr, sizeof(char *) * (i + 1));
+		arr[i] = ft_strdup(to_this[i]);
+		i++;
+	}
+	while (from_this && from_this[j])
+	{
+		arr = realloc(arr, sizeof(char *) * (i + j + 1));
+		arr[i + j] = ft_strdup(from_this[j]);
+		j++;
+	}
+	arr = realloc(arr, sizeof(char *) * (i + j + 1));
+	arr[i + j] = 0;
+	return (arr);
+}
+
 /*
  * both target and child should always be !NULL;
 */
@@ -477,9 +505,12 @@ void	fill_recipe_from_recipe(t_ui_recipe_v2 *target, t_ui_recipe_v2 *child)
 			target->value_set[jj] = 1;
 		}
 	}
-	if (child->flags)
+	if (child->flags != NULL)
 	{
-		target->flags = ft_arrdup(child->flags);
+		ft_putstr("child flags != NULL\n");
+		char	**flags = ft_arrjoin(target->flags, child->flags);
+		ft_arraydel(target->flags);
+		target->flags = flags;
 	}
 }
 
@@ -613,17 +644,22 @@ void	fill_recipe_from_args(t_ui_recipe_v2 *recipe, char **args)
 			}
 			ft_arraydel(key_value);
 		}
-		else if (ft_strequ(key_value[0], "flag"))
+		else if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
 		{
-			recipe->flags = ft_strsplit(key_value[1], ' ');
+			char	**flags = ft_strsplit(key_value[1], ' ');
+			char	**final_flags = ft_arrjoin(recipe->flags, flags);
+			ft_arraydel(flags);
+			ft_arraydel(recipe->flags);
+			recipe->flags = final_flags;
 		}
 		ft_arraydel(key_value);
 	}
 }
 
-t_ui_recipe_v2	*make_recipe_from_string(t_list *elements, t_list *recipes, char *str)
+t_ui_recipe_v2	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *recipes, char *str)
 {
 	t_ui_element	*elem;
+	t_ui_window		*win;
 	t_ui_recipe_v2	*recipe;
 	t_ui_recipe_v2	*child_recipe;
 	char			**temp;
@@ -637,6 +673,7 @@ t_ui_recipe_v2	*make_recipe_from_string(t_list *elements, t_list *recipes, char 
 	name_and_prefabs = ft_strsplit(temp[0], ':');
 	ft_strtrimwholearr(name_and_prefabs);
 	elem = ui_list_get_element_by_id(elements, name_and_prefabs[0]);
+	win = ui_list_get_window_by_id(windows, name_and_prefabs[0]);
 	args = ft_strsplit(temp[1], ';');
 	ft_strtrimwholearr(args);
 	ft_arraydel(temp);
@@ -644,14 +681,22 @@ t_ui_recipe_v2	*make_recipe_from_string(t_list *elements, t_list *recipes, char 
 	ft_putarr(args);
 	recipe = ft_memalloc(sizeof(t_ui_recipe_v2));
 	recipe->id = ft_strdup(name_and_prefabs[0]);
-	if (elem) // if we have found elem with the same id;
+	if (elem || win) // if we have found elem with the same id;
 	{
-		child_recipe = ui_list_get_recipe_by_id_v2(recipes, g_acceptable[elem->element_type].name);// fill the recipe with the type name recipe;
+		if (elem)
+			child_recipe = ui_list_get_recipe_by_id_v2(recipes, g_acceptable[elem->element_type].name);
+		else if (win)
+			child_recipe = ui_list_get_recipe_by_id_v2(recipes, g_acceptable[UI_TYPE_WINDOW].name);
 		if (child_recipe)
+		{
+			ft_printf("child_recipe with id : %s\n", child_recipe->id);
 			fill_recipe_from_recipe(recipe, child_recipe);
+			ft_putstr("recipe was filled by child : \n");
+			ft_putarr(recipe->flags);
+		}
 	}
 	else
-		ft_printf("[%s] No element with recipe id %s found.\n", __FUNCTION__, name_and_prefabs[0]);
+		ft_printf("[%s] No element nor window with recipe id %s found.\n", __FUNCTION__, name_and_prefabs[0]);
 	i = 0; // start at 0 because id is at 0, so we dont want to check that;
 	while (name_and_prefabs[++i])
 	{
@@ -664,6 +709,8 @@ t_ui_recipe_v2	*make_recipe_from_string(t_list *elements, t_list *recipes, char 
 		fill_recipe_from_recipe(recipe, child_recipe);
 	}
 	fill_recipe_from_args(recipe, args);
+	ft_putstr("final : \n");
+	ft_putarr(recipe->flags);
 	ft_arraydel(name_and_prefabs);
 	ft_arraydel(args);
 	return (recipe);
@@ -706,7 +753,7 @@ void	layout_make_recipes(t_ui_layout_v2 *layout)
 	i = -1;
 	while (arr[++i])
 	{
-		recipe = make_recipe_from_string(layout->elements, layout->recipes, arr[i]);
+		recipe = make_recipe_from_string(layout->windows, layout->elements, layout->recipes, arr[i]);
 		if (recipe)
 			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe_v2));
 	}
@@ -774,7 +821,8 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe_v2 *recipe)
 
 	if (ft_strinarr("xhides", recipe->flags))
 		win->hide_on_x = 1;
-	ft_printf("please just say its that i have one less than you should\n");
+	if (ft_strinarr("xdoesnthides", recipe->flags))
+		win->hide_on_x = 0;
 	ui_window_flag_set(win, make_usable_win_flags(recipe->flags));
 	ft_printf("Leaving [%s]\n", __FUNCTION__);
 }
