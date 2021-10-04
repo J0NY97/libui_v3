@@ -29,24 +29,6 @@ typedef struct s_rgba
 	};
 }					t_rgba;
 
-/*
- * t_list		*recipes; list of t_ui_element_recipe /button/label/menu/window...
- * t_list		*element; list of t_ui_element /button/label/menu/...
- * t_list		*window; list of t_ui_window .
-*/
-typedef struct s_ui_layout
-{
-	t_list				*recipes;
-	t_list				*elements;
-	t_list				*windows;
-}						t_ui_layout;
-
-// Layout
-void					ui_layout_event(t_ui_layout *layout, SDL_Event e);
-int						ui_layout_render(t_ui_layout *layout);
-t_ui_element			*ui_layout_get_element_by_id(t_ui_layout *layout, char *id);
-t_ui_window				*ui_layout_get_window_by_id(t_ui_layout *layout, char *id);
-
 // Vec
 void					print_vec(float *vec, size_t size);
 void					print_veci(int *vec, size_t size);
@@ -104,10 +86,7 @@ int						ft_strinarr(char *str, char **arr);
 
 // Load
 void					ui_print_accepted(void);
-int						ui_layout_load(t_ui_layout *layout, char *ui_file_path);
-t_ui_recipe				*ui_layout_get_recipe_by_id(t_ui_layout *layout, char *id);
 t_ui_recipe_v2			*ui_list_get_recipe_by_id_v2(t_list *list, char *id);
-t_ui_element			*ui_element_create_from_recipe(t_ui_window *win, t_ui_recipe *recipe, t_ui_layout *layout);
 int						text_align_getter(char *str);
 const char				*text_align_to_str(int text_align);
 

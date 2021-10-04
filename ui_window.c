@@ -173,3 +173,23 @@ void	ui_window_id_set(t_ui_window *win, const char *id)
 		ft_strdel(&win->id);
 	win->id = ft_strdup(id);
 }
+
+/*
+ * This function should probably be called right after loading the ui,
+ * otherwise you might save the ui_window to a variable that is used somewhere else,
+ * or renderer...
+*/
+void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
+{
+	if (ui_win->win)
+		SDL_DestroyWindow(ui_win->win);
+	ui_win->win = sdl_win;
+	if (ui_win->renderer)
+		SDL_DestroyRenderer(ui_win->renderer);
+	ui_win->renderer = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
+	if (ui_win->texture)
+		SDL_DestroyTexture(ui_win->texture);
+	ui_win->texture = SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET, ui_win->pos.w, ui_win->pos.h);
+	ui_win->window_id = SDL_GetWindowID(sdl_win);
+}
