@@ -19,7 +19,7 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab->texture_recreate = 1;
 }
 
-void	ui_label_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	if (recipe->title)
 		ui_label_text_set(elem, recipe->title);

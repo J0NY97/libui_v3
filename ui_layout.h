@@ -1,8 +1,8 @@
 #include "libui.h"
 
-typedef struct s_ui_layout_v2	t_ui_layout_v2;
+typedef struct s_ui_layout	t_ui_layout;
 
-struct s_ui_layout_v2
+struct s_ui_layout
 {
 	char			*layout_file;
 	char			*layout_file_content;
@@ -28,7 +28,7 @@ typedef struct s_ui_family
 /*
  * int		value[3];		0 : value, 1 : min, 2 : max;
 */
-typedef struct s_ui_recipe_v2
+typedef struct s_ui_recipe
 {
 	char			*id;
 	t_vec4			pos;
@@ -55,19 +55,19 @@ typedef struct s_ui_recipe_v2
 
 	// Window only
 	char			**flags;
-}					t_ui_recipe_v2;
+}					t_ui_recipe;
 
 ///////////////
 // Layout
 ///////////////
-void				ui_layout_event_v2(t_ui_layout_v2 *layout, SDL_Event e);
-void				ui_layout_render_v2(t_ui_layout_v2 *layout);
-void				ui_layout_load_v2(t_ui_layout_v2 *layout, char *file);
-void				layout_apply_style(t_ui_layout_v2 *layout);
-void				layout_make_recipes(t_ui_layout_v2 *layout);
-void				layout_split_styles(t_ui_layout_v2 *layout);
-void				layout_read_style(t_ui_layout_v2 *layout);
-void				layout_compile_elements(t_ui_layout_v2 *layout);
-void				layout_make_family_trees(t_ui_layout_v2 *layout);
-void				layout_split_elements(t_ui_layout_v2 *layout);
-void				layout_read_file(t_ui_layout_v2 *layout, char *file);
+void				ui_layout_event(t_ui_layout *layout, SDL_Event e);
+void				ui_layout_render(t_ui_layout *layout);
+void				ui_layout_load(t_ui_layout *layout, char *file);
+void				layout_apply_style(t_ui_layout *layout);
+void				layout_make_recipes(t_ui_layout *layout);
+void				layout_split_styles(t_ui_layout *layout);
+void				layout_read_style(t_ui_layout *layout);
+void				layout_compile_elements(t_ui_layout *layout);
+void				layout_make_family_trees(t_ui_layout *layout);
+void				layout_split_elements(t_ui_layout *layout);
+void				layout_read_file(t_ui_layout *layout, char *file);

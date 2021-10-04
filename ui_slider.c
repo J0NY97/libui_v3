@@ -25,11 +25,11 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	slider->update = 1;
 }
 
-void	ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+void	ui_slider_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_slider	*slider;
 	t_ui_window	*win;
-	t_ui_recipe_v2	*button_recipe;
+	t_ui_recipe	*button_recipe;
 
 	win = elem->win;
 	slider = elem->element;

@@ -1,7 +1,6 @@
 #ifndef UI_ELEMENTS_H
 # define UI_ELEMENTS_H
 # include "libui.h"
-//# include "ui_elements_v2.h"
 
 /*
  * Uint32		window_id;			the sdl window id that SDL_GetWindowID() returns;
@@ -41,7 +40,7 @@ typedef struct s_ui_window
 	bool			hide_on_x;
 	bool			user_handled_event;
 	t_list			*children;
-	t_ui_layout_v2	*layout;
+	t_ui_layout		*layout;
 	Uint32			bg_color;
 }					t_ui_window;
 
@@ -243,7 +242,7 @@ void					ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
 void					ui_window_free(void *win);
-void					ui_window_edit(t_ui_window *win, t_ui_recipe_v2 *recipe);
+void					ui_window_edit(t_ui_window *win, t_ui_recipe *recipe);
 // Window other
 void					ui_window_texture_redo(t_ui_window *win);
 void					ui_window_pos_set(t_ui_window *win, t_vec4 pos);
@@ -255,7 +254,7 @@ void					ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win);
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
 void					ui_element_event(t_ui_element *elem, SDL_Event e);
-void					ui_element_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
 int						ui_element_is_hover(t_ui_element *elem);
@@ -276,7 +275,7 @@ const char				*ui_element_type_to_string(int type);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
-void					ui_label_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_label_texture_redo(t_ui_element *label);
 void					ui_label_event(t_ui_element *elem, SDL_Event e);
 int						ui_label_render(t_ui_element *label);
@@ -292,7 +291,7 @@ void					ui_label_print(t_ui_label *label);
 
 // Button
 void					ui_button_new(t_ui_window *win, t_ui_element *button);
-void					ui_button_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_button_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
@@ -312,7 +311,7 @@ t_ui_menu				*ui_menu_get_menu(t_ui_element *elem);
 
 // Dropdown
 void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
-void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
@@ -324,7 +323,7 @@ t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
-void					ui_input_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
 void					ui_input_free(void *elem);
@@ -334,7 +333,7 @@ char					*ui_input_text_get(t_ui_element *elem);
 
 // Slider
 void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
-void					ui_slider_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+void					ui_slider_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);

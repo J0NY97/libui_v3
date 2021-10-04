@@ -18,7 +18,7 @@ void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_text_align(&button->label, UI_TEXT_ALIGN_CENTER);
 }
 
-void	ui_button_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+void	ui_button_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_button	*button;
 

@@ -10,7 +10,7 @@
 # include "stdio.h"
 # include "ui_enum.h"
 # include "ui_vec.h"
-# include "ui_elements_v2.h"
+# include "ui_layout.h"
 # include "ui_elements.h"
 # include "ui_load.h"
 # include "math.h"
@@ -86,7 +86,7 @@ int						ft_strinarr(char *str, char **arr);
 
 // Load
 void					ui_print_accepted(void);
-t_ui_recipe_v2			*ui_list_get_recipe_by_id_v2(t_list *list, char *id);
+t_ui_recipe				*ui_list_get_recipe_by_id(t_list *list, char *id);
 int						text_align_getter(char *str);
 const char				*text_align_to_str(int text_align);
 

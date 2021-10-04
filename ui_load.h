@@ -14,7 +14,7 @@ typedef struct s_ui_acceptable
 	void			(*maker)(t_ui_window *win, t_ui_element *elem);
 	int				(*renderer)(t_ui_element *elem);
 	void			(*eventer)(t_ui_element *elem, SDL_Event e);
-	void			(*edit)(t_ui_element *elem, t_ui_recipe_v2 *recipe);
+	void			(*edit)(t_ui_element *elem, t_ui_recipe *recipe);
 	t_ui_element	*(*getter)(t_ui_element *elem, int ui_element_type);
 }				t_ui_acceptable;
 

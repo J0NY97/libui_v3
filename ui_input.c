@@ -14,7 +14,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT);
 }
 
-void	ui_input_edit(t_ui_element *elem, t_ui_recipe_v2 *recipe)
+void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_input	*input;
 

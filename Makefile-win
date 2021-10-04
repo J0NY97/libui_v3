@@ -20,7 +20,6 @@ SRCS = ./ui_element.c \
        ./ui_help.c \
        ./ui_surface.c \
        ./ui_vec.c \
-	   ./ui_layout_v2.c \
 
 OBJS = $(SRCS:.c=.o)
 JOHNNY = $(SRCS:.c=.d)
@@ -54,6 +53,7 @@ test:
 
 clean:
 	@rm -f $(OBJS)
+	@rm -f $(JOHNNY)
 	@echo "$(NAME) was cleaned."
 
 fclean: clean
