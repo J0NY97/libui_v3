@@ -186,7 +186,11 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 	ui_win->win = sdl_win;
 	if (ui_win->renderer)
 		SDL_DestroyRenderer(ui_win->renderer);
-	ui_win->renderer = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
+	ui_win->renderer = SDL_GetRenderer(sdl_win);
+	if (!ui_win->renderer)
+		ui_win->renderer = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
+	else
+		ft_printf("[%s] The new window already had a renderer associated with it.\n", __FUNCTION__);
 	if (ui_win->texture)
 		SDL_DestroyTexture(ui_win->texture);
 	ui_win->texture = SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,
