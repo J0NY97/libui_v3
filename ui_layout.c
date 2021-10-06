@@ -69,6 +69,11 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	layout_make_family_trees(layout);
 	layout_compile_elements(layout);
 
+	if (!layout->style_file)	
+	{
+		ft_printf("[%s] We have no style file given, so lets just then dont do anything.\n", __FUNCTION__);
+		return ;
+	}
 	layout_read_style(layout);
 	layout_split_styles(layout);
 	layout_make_recipes(layout);
@@ -395,8 +400,6 @@ char	*get_style_content(char *file)
 
 void	layout_read_style(t_ui_layout *layout)
 {
-	if (!layout->style_file)	
-		return ;
 	ft_printf("[%s] Lets see if you have some style.\n", __FUNCTION__);
 	layout->style_file_content = get_style_content(layout->style_file);
 	ft_printf("%s\n", layout->style_file_content);
