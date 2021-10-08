@@ -115,3 +115,37 @@ void	print_veci(int *vec, size_t size)
 		ft_printf("%d ", vec[i]);
 	ft_printf("}\n");
 }
+
+int	compare_veci(int *vec1, int *vec2, size_t size)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < size)
+	{
+		if (vec1[i] != vec2[i])
+			return (0);
+	}
+	return (1);
+}
+
+int	compare_vec(float *vec1, float *vec2, size_t size)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < size)
+	{
+		if (vec1[i] != vec2[i])
+			return (0);
+	}
+	return (1);
+}
+
+int	vec2_in_vec4(t_vec2i v2, t_vec4i v4)
+{
+	if (v2.x >= v4.x && v2.y >= v4.y
+		&& v2.x < v4.w && v2.y < v4.h)
+		return (1);
+	return (0);
+}
