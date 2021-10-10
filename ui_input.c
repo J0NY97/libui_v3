@@ -214,6 +214,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 			{
 				SDL_StopTextInput();
 				elem->is_click = 0;
+				input->input_exit = 1;
 				return ;
 			}
 			else if (e.key.keysym.sym == SDLK_LEFT)
@@ -267,6 +268,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 			if (elem->is_hover != 1)
 			{
 				elem->is_click = 0;
+				input->input_exit = 1;
 				//SDL_StopTextInput();
 				return ;
 			}
@@ -345,7 +347,7 @@ int	ui_input_render(t_ui_element *elem)
 	label = input->label.element;
 	if (!ui_element_render(elem))
 		return (0);
-
+	input->input_exit = 0;
 	if (elem->is_click)
 	{
 		input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font) + input->label.pos.x;
@@ -395,4 +397,14 @@ char	*ui_input_text_get(t_ui_element *elem)
 	input = elem->element;
 	label = input->label.element;
 	return (label->text);
+}
+
+char	*ui_input_set_text(t_ui_element *elem, char *str)
+{
+	ui_label_text_set(ui_input_get_label_element(elem), str);
+}
+
+int	ui_input_exit(t_ui_element *elem)
+{
+	return (((t_ui_input *)elem->element)->input_exit);
 }
