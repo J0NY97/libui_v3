@@ -152,6 +152,9 @@ typedef struct s_ui_dropdown
 	t_ui_element		*active;
 }						t_ui_dropdown;
 
+/*
+ * Uint32	input_type;		0 : default/everything, 1: numbers, 2: letters;
+*/
 typedef struct s_ui_input
 {
 	t_ui_element		*elem;
@@ -160,6 +163,7 @@ typedef struct s_ui_input
 	int					cursor_from_char_num;
 	int					cursor_on_char_x;
 	int					cursor_from_char_x;
+	Uint32				input_type;
 }						t_ui_input;
 
 typedef struct s_ui_slider

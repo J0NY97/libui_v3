@@ -20,6 +20,7 @@ void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 	input = elem->element;
 	ui_element_edit(&input->label, recipe);	
+	input->input_type = recipe->input_type;
 }
 
 void	remove_str_from_n_to_m(char **dest, int n, int m)
@@ -69,6 +70,39 @@ void	insert_str_after_nth_char(char **dest, char *src, int n)
 	ft_strdel(&temp1);
 }
 
+char	*str_remove_all_numbers(char *str)
+{
+	char	*final;
+	char	temp[256];
+	int		i;
+	int		j;
+
+	i = -1;
+	j = -1;
+	while (str[++i])
+		if (!ft_isdigit(str[i]))
+			temp[++j] = str[i];
+	temp[++j] = '\0';
+	final = ft_strdup(temp);
+	return (final);
+}
+
+char	*str_remove_all_letters(char *str)
+{
+	char	*final;
+	char	temp[256];
+	int		i;
+	int		j;
+
+	i = -1;
+	j = -1;
+	while (str[++i])
+		if (!ft_isalpha(str[i]))
+			temp[++j] = str[i];
+	temp[++j] = '\0';
+	final = ft_strdup(temp);
+	return (final);
+}
 
 void	ui_input_event(t_ui_element *elem, SDL_Event e)
 {
@@ -95,8 +129,17 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 		len = ft_strlen(label->text);
 		if (e.type == SDL_TEXTINPUT)
 		{
-			insert_str_after_nth_char(&label->text, e.text.text, input->cursor_on_char_num);
+			char	*temp;
+
+			if (input->input_type == 1)
+				temp = str_remove_all_letters(e.text.text);
+			else if (input->input_type == 2)
+				temp = str_remove_all_numbers(e.text.text);
+			else
+				temp = ft_strdup(e.text.text);
+			insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
 			input->cursor_on_char_num++;
+			ft_strdel(&temp);
 		}
 		else if (e.type == SDL_KEYDOWN)
 		{
@@ -124,10 +167,18 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 						remove_str_from_n_to_m(&label->text, small, big);
 						input->cursor_on_char_num = small;
 					}
+					char	*temp;
 
-					insert_str_after_nth_char(&label->text, clipboard, input->cursor_on_char_num);
-					input->cursor_on_char_num += ft_strlen(clipboard);
+					if (input->input_type == 1)
+						temp = str_remove_all_letters(clipboard);
+					else if (input->input_type == 2)
+						temp = str_remove_all_numbers(clipboard);
+					else
+						temp = ft_strdup(clipboard);
+					insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
+					input->cursor_on_char_num += ft_strlen(temp);
 					SDL_free(clipboard);
+					ft_strdel(&temp);
 					input->cursor_from_char_num = input->cursor_on_char_num;
 				}
 				else if (e.key.keysym.sym == SDLK_a)
