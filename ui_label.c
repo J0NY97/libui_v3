@@ -41,7 +41,7 @@ void	ui_label_texture_redo(t_ui_element *elem)
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);	
 	if (!elem->textures[UI_STATE_DEFAULT])
 	{
-		ft_printf("[%s] elem->textures[UI_STATE_DEFAULT] no surface.\n", __FUNCTION__);
+		ft_printf("[%s] (id : %s) elem->textures[UI_STATE_DEFAULT] no surface.\n", __FUNCTION__, elem->id);
 		elem->textures[UI_STATE_DEFAULT] = ui_surface_new(1, 1);
 	}
 	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
@@ -50,9 +50,6 @@ void	ui_label_texture_redo(t_ui_element *elem)
 	elem->pos.h = elem->textures[UI_STATE_DEFAULT]->h;
 }
 
-/*
- * Maybe only realign if you have updated the label.
-*/
 void	ui_label_text_align(t_ui_element *elem, int align)
 {
 	t_ui_label	*label;

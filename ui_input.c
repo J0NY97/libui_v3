@@ -366,7 +366,6 @@ int	ui_input_render(t_ui_element *elem)
 		SDL_RenderFillRect(elem->win->renderer, &(SDL_Rect){wmin, pos_from.y, wmax - wmin, elem->screen_pos.h - 4});
 		SDL_SetRenderTarget(elem->win->renderer, NULL);
 	}
-
 	ui_label_render(&input->label);
 	return (1);
 }
