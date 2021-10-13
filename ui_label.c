@@ -198,3 +198,12 @@ void	ui_label_print(t_ui_label *label)
 	ft_printf("\ttexture_recreate : %d\n", label->texture_recreate);
 	ft_printf("\ttext_align : %d\n", label->text_align);
 }
+
+/*
+ * Get
+*/
+
+t_ui_label	*ui_label_get_label(t_ui_element *elem)
+{
+	return (elem->element);
+}

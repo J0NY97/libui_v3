@@ -296,6 +296,8 @@ void					ui_label_color_set(t_ui_element *label, Uint32 color);
 void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 void					ui_label_print(t_ui_label *label);
+// Getters
+t_ui_label				*ui_label_get_label(t_ui_element *elem);
 
 // Button
 void					ui_button_new(t_ui_window *win, t_ui_element *button);

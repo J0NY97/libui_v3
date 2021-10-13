@@ -14,6 +14,7 @@ void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
  * NOTE for DEV:
  * try to keep this element only,
  * because its used in the radio buttons.
+ * (or atleast should at some point)
 */
 void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 {
@@ -32,7 +33,8 @@ void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 
 int	ui_checkbox_render(t_ui_element *elem)
 {
-	ui_element_render(elem);
+	if (!ui_element_render(elem))
+		return (0);
 }
 
 void	ui_checkbox_free(void *elem)

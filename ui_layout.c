@@ -65,6 +65,8 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	memset(layout, 0, sizeof(t_ui_layout));
 
 	layout_read_file(layout, file);
+	if (layout->layout_file_content == NULL)
+		return ;
 	layout_split_elements(layout);
 	layout_make_family_trees(layout);
 	layout_compile_elements(layout);
@@ -75,6 +77,8 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 		return ;
 	}
 	layout_read_style(layout);
+	if (layout->style_file_content == NULL)
+		return ;
 	layout_split_styles(layout);
 	layout_make_recipes(layout);
 	layout_apply_style(layout);
@@ -110,7 +114,10 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 
 	fd = fopen(file, "r");
 	if (!fd)
+	{
+		ft_printf("[%s] Couldn\'t open file <%s>\n", __FUNCTION__, file);
 		return (NULL);
+	}
 	line = NULL;
 	content = NULL;
 	while (1)
@@ -134,7 +141,7 @@ void	layout_read_file(t_ui_layout *layout, char *file)
 {
 	layout->layout_file = ft_strdup(file);
 	layout->layout_file_content = get_file_content(layout, file);
-	ft_printf("%s", layout->layout_file_content);
+	ft_printf("[%s] %s : \nContent: %s\n", __FUNCTION__, layout->layout_file, layout->layout_file_content);
 }
 
 char	**split_string_into_array(char *str)
