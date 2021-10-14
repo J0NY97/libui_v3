@@ -350,6 +350,8 @@ void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
 void					ui_slider_free(void *elem);
 t_ui_element			*ui_slider_get(t_ui_element *elem, int ui_type);
+// Other
+int						ui_slider_updated(t_ui_element *elem);
 // Getters
 t_ui_element			*ui_slider_get_button_element(t_ui_element *elem);
 t_ui_slider				*ui_slider_get_slider(t_ui_element *elem);

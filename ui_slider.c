@@ -122,6 +122,13 @@ void	ui_slider_free(void *elem)
 	(void)elem;
 }
 
+// Other
+
+int	ui_slider_updated(t_ui_element *elem)
+{
+	return (ui_slider_get_slider(elem)->update);
+}
+
 // Getters
 
 t_ui_element	*ui_slider_get(t_ui_element *elem, int ui_type)
