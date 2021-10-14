@@ -95,7 +95,6 @@ int	ui_window_render(t_ui_window *win)
 	SDL_SetRenderTarget(win->renderer, NULL);
 	win->textures_recreate = 0;
 
-
 	// Resetting events, becuase sdl wont go inside the event function,if NO events have been done.
 	win->mouse_pos_prev = win->mouse_pos;
 	win->scroll = 0;

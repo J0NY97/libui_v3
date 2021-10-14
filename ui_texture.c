@@ -174,3 +174,8 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 	SDL_FreeSurface(surface);
 	return (texture);
 }
+
+SDL_Texture	*ui_texture_create_from_path(SDL_Renderer *renderer, char *path)
+{
+	return (SDL_CreateTextureFromSurface(renderer, ui_surface_image_new(path)));
+}

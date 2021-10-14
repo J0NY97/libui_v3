@@ -35,6 +35,7 @@ SDL_Texture				*ui_create_texture(SDL_Renderer *renderer, t_vec2i pos);
 void					ui_texture_draw_border(SDL_Renderer *renderer, SDL_Texture *texture, size_t thicc, Uint32 color);
 void					ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color);
 void					ui_texture_fill_rect(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color, t_vec4i rect);
+SDL_Texture				*ui_texture_create_from_path(SDL_Renderer *renderer, char *path);
 
 // Surface
 SDL_Surface				*ui_surface_new(int w, int h);
