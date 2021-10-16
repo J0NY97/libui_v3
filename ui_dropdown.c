@@ -43,40 +43,38 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	drop = elem->element;
 	ui_checkbox_event(elem, e);
 	drop->menu.show = elem->state == UI_STATE_CLICK;
-	if (drop->menu.show)
+	if (!drop->menu.show) // if menu isnt shown, no point event handling children;
+		return ;
+	elem->state = UI_STATE_CLICK;
+	ui_menu_event(&drop->menu, e);
+	ui_list_radio_event(drop->menu.children, &drop->active, e);
+	if (drop->active)
 	{
-		elem->state = UI_STATE_CLICK;
-		ui_menu_event(&drop->menu, e);
-		ui_list_radio_event(drop->menu.children, &drop->active, e);
-		if (drop->active)
-			ui_element_render(drop->active); // because we want it to update.
-
-		{
-			// This could be changed to the menu in the same wave as you render or event handle the children.
-			t_list *curr;
-			t_ui_element *child;
-			curr = drop->menu.children;
-			int total_height = 0;
-			while (curr)
-			{
-				child = curr->content;
-				ui_element_pos_set2(child, vec2(child->pos.x, total_height));
-				total_height += child->pos.h;
-				curr = curr->next;
-			};
-			ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y, drop->menu.pos.w, total_height));
-		}
-
+		ui_element_render(drop->active); // because we want it to update.
+		ui_label_text_set(&drop->label, ui_button_get_label(drop->active)->text);
 	}
-	if(e.type == SDL_MOUSEBUTTONDOWN)
 	{
-		if (elem->is_hover != 1)
+		// This could be changed to the menu in the same wave as you render or event handle the children.
+		t_list *curr;
+		t_ui_element *child;
+		curr = drop->menu.children;
+		int total_height = 0;
+		while (curr)
 		{
-			elem->is_click = 0;
-			elem->state = UI_STATE_DEFAULT;
-			drop->menu.show = 0;
-			return ;
-		}
+			child = curr->content;
+			ui_element_pos_set2(child, vec2(child->pos.x, total_height));
+			total_height += child->pos.h;
+			curr = curr->next;
+		};
+		ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y, drop->menu.pos.w, total_height));
+	}
+	if(e.type == SDL_MOUSEBUTTONDOWN // close the menu if you click somewhere else but the menu of dropdown;
+		&& elem->is_hover != 1)
+	{
+		elem->is_click = 0;
+		elem->state = UI_STATE_DEFAULT;
+		drop->menu.show = 0;
+		drop->drop_exit = 1;
 	}
 }
 
@@ -87,7 +85,7 @@ int	ui_dropdown_render(t_ui_element *elem)
 	drop = elem->element;
 	if (!ui_button_render(elem))
 		return (0);
-
+	drop->drop_exit = 0;
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	ui_menu_render(&drop->menu);
 	return (1);
@@ -96,6 +94,16 @@ int	ui_dropdown_render(t_ui_element *elem)
 void	ui_dropdown_free(void *drop)
 {
 	(void)drop;
+}
+
+int	ui_dropdown_exit(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_DROPDOWN)
+	{
+		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		return (-1);
+	}
+	return (((t_ui_dropdown *)elem->element)->drop_exit);
 }
 
 t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)

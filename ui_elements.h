@@ -150,6 +150,7 @@ typedef struct s_ui_dropdown
 	t_ui_element		label;
 	t_ui_element		menu;
 	t_ui_element		*active;
+	bool				drop_exit;
 }						t_ui_dropdown;
 
 /*
@@ -325,6 +326,7 @@ void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
+int						ui_dropdown_exit(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
 // Getters
 t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);

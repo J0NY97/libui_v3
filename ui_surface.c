@@ -68,6 +68,8 @@ SDL_Surface	*ui_surface_image_new(char *image_path)
 	SDL_Surface	*surface;
 
 	surface = IMG_Load(image_path);
+	if (!surface)
+		ft_printf("[%s] Image couldn\'t be loaded from path. <%s>\n", __FUNCTION__, image_path);
 	return (surface);
 }
 

@@ -177,5 +177,18 @@ SDL_Texture	*ui_texture_create_from_text_recipe(SDL_Renderer *renderer, t_ui_lab
 
 SDL_Texture	*ui_texture_create_from_path(SDL_Renderer *renderer, char *path)
 {
-	return (SDL_CreateTextureFromSurface(renderer, ui_surface_image_new(path)));
+	SDL_Surface	*surface;
+	SDL_Texture	*texture;
+
+	surface = ui_surface_image_new(path);
+	if (!surface)
+	{
+		ft_printf("[%s] Surface couldn\'t be created from path. <%s>\n", __FUNCTION__, path);
+		return (NULL);
+	}
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	SDL_FreeSurface(surface);
+	if (!texture)
+		ft_printf("[%s] Texture couldn\'t be created from surface. <%s>\n", __FUNCTION__, path);
+	return (texture);
 }
