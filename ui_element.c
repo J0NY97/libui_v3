@@ -93,11 +93,38 @@ int	ui_element_render(t_ui_element *elem)
 	}
 	else if (elem->state != elem->last_state)
 		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
-	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
-		elem->z = ((t_ui_element *)elem->parent)->z + 1;
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
-	SDL_RenderCopy(elem->win->renderer, elem->texture, NULL,
-		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
+	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
+	{
+		/*
+		 * we need to figure out how much of the elem child we want to render... we can anymore choose NULL since
+		 * if the child goes outside of the parent we dont want to render it whole, only the pixels that share pos with
+		 * the parent;
+		*/
+		SDL_Rect result;
+		result.x = elem->pos.x;
+		result.y = elem->pos.y;
+		result.w = elem->screen_pos.w;
+		result.h = elem->screen_pos.h;
+		if ((int)elem->pos.x < 0)
+			result.x = -(int)elem->pos.x;
+		if ((int)elem->pos.y < 0)
+			result.y = -(int)elem->pos.y;
+		if ((int)elem->pos.x + elem->screen_pos.w > elem->parent_screen_pos->w)
+			result.w = elem->screen_pos.w - (elem->parent_screen_pos->w - ((int)elem->pos.x + elem->screen_pos.w));
+		if ((int)elem->pos.y + elem->screen_pos.h > elem->parent_screen_pos->h)
+			result.h = elem->screen_pos.h - (elem->parent_screen_pos->h - ((int)elem->pos.y + elem->screen_pos.h));
+
+		if (result.w != elem->screen_pos.w || result.h != elem->screen_pos.h)
+			ft_printf("%d %d %d %d\n", (int)elem->pos.x, (int)elem->pos.y, elem->screen_pos.w, elem->screen_pos.h);
+
+		elem->z = ((t_ui_element *)elem->parent)->z + 1;
+		SDL_RenderCopy(elem->win->renderer, elem->texture, &result,
+			&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
+	}
+	else
+		SDL_RenderCopy(elem->win->renderer, elem->texture, NULL,
+			&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
 	elem->last_state = elem->state;
 	elem->was_rendered_last_frame = 1;
 	return (1);
