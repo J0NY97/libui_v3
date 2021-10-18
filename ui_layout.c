@@ -37,6 +37,8 @@ void	ui_layout_render(t_ui_layout *layout)
 	t_ui_element	*elem;
 	t_ui_window		*win;
 
+	ui_layout_sort(layout);
+
 	// Render The Elements
 	curr = layout->elements;
 	while (curr)
@@ -974,4 +976,38 @@ t_ui_window	*ui_list_get_window_by_id(t_list *list, char *id)
 	}
 	ft_printf("[%s] Couldn\'t find window with id : %s\n", __FUNCTION__, id);
 	return (NULL);
+}
+
+/*
+ *	sorts all elements with their z value in ascending order;
+ *	TODO: figure out how often this should be done;
+*/
+void	ui_layout_sort(t_ui_layout *layout)
+{
+	t_list			*curr;
+	t_list			*next;
+	t_ui_element	*temp;
+	int				temp_int;
+
+	curr = layout->elements;
+	while (curr)
+	{
+		next = curr->next;
+		if (!next || !curr->content || !curr->next->content)
+			break ;
+		if (((t_ui_element *)curr->content)->z > ((t_ui_element *)curr->next->content)->z)
+		{
+			temp = curr->content;
+			curr->content = curr->next->content;
+			curr->next->content = temp;
+
+			temp_int = curr->content_size;
+			curr->content_size = curr->next->content_size;
+			curr->next->content_size = temp_int;
+
+			curr = layout->elements;
+		}
+		else
+			curr = curr->next;
+	}
 }

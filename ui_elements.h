@@ -62,6 +62,7 @@ typedef struct s_ui_window
  * bool			is_click;					1 if you have mouse button down on the element. basically if hover && mouse_down;
  * bool			was_click;					1 if the element was clicked this frame; resets every time you event handle;
  * t_list		children;					list of t_ui_element;
+ * int			z;							z value of the elements, aka render order;
 */
 typedef struct s_ui_element
 {
@@ -91,6 +92,8 @@ typedef struct s_ui_element
 	Uint32			colors[UI_STATE_AMOUNT];
 	bool			was_rendered_last_frame;
 	bool			*parent_was_rendered_last_frame;
+	bool			render_me_on_parent;
+	int				z;
 }					t_ui_element;
 
 /*

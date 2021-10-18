@@ -93,6 +93,8 @@ int	ui_element_render(t_ui_element *elem)
 	}
 	else if (elem->state != elem->last_state)
 		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
+	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
+		elem->z = ((t_ui_element *)elem->parent)->z + 1;
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
 	SDL_RenderCopy(elem->win->renderer, elem->texture, NULL,
 		&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
