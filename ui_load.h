@@ -138,6 +138,18 @@ static const t_ui_acceptable	g_acceptable_tab =
 	.getter = NULL
 };
 
+static const t_ui_acceptable	g_acceptable_scrollbar =
+{
+	.name = "Scrollbar",
+	.type = UI_TYPE_SCROLLBAR,
+	.freer = &ui_scrollbar_free,
+	.maker = &ui_scrollbar_new,
+	.renderer = &ui_scrollbar_render,
+	.eventer = &ui_scrollbar_event,
+	.edit = NULL,
+	.getter = NULL
+};
+
 static const t_ui_acceptable	g_acceptable_window =
 {
 	.name = "Window",
@@ -163,6 +175,7 @@ static const t_ui_acceptable	g_acceptable[] =
 	g_acceptable_checkbox,
 	g_acceptable_radio,
 	g_acceptable_tab,
+	g_acceptable_scrollbar,
 	g_acceptable_window,
 	NULL
 };

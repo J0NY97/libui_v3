@@ -11,6 +11,7 @@ SRCS = ./ui_element.c \
        ./ui_slider.c \
        ./ui_input.c \
        ./ui_tab.c \
+       ./ui_scrollbar.c \
        ./ui_radio.c \
        ./ui_window.c \
        ./ui_layout.c \

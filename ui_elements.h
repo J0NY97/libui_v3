@@ -238,16 +238,22 @@ typedef struct s_ui_tab
 }						t_ui_tab;
 
 /*
- * Group is just a group of elements,
- * nothing special.
+ * Slider event:ish but vertical, plus it will move the position of the target children up or down;
  *
- * t_list			*element_list;			list of t_ui_element with ->element = UI_TYPE_*;
+ * void		*target;		the element on which the event will happen on;
+ * int		target_type;	the type of element, either UI_TYPE_ELEMENT OR -_WINDOW;
+ * bool		update;			has been updated this frame;
 */
-typedef struct s_ui_group
+typedef struct s_ui_scrollbar
 {
-	t_ui_element		*elem;
-	t_list				*element_list;
-}						t_ui_group;
+	t_ui_element		button;
+	void				*target;
+	int					target_type;
+	int					value;
+	int					min;
+	int					max;
+	bool				update;
+}						t_ui_scrollbar;
 
 // Window
 void					ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
@@ -389,5 +395,13 @@ int						ui_tab_render(t_ui_element *elem);
 void					ui_tab_free(void *elem);
 // Other tab
 void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
+
+// Scrollbar
+void					ui_scrollbar_new(t_ui_window *win, t_ui_element *elem);
+void					ui_scrollbar_event(t_ui_element *elem, SDL_Event e);
+int						ui_scrollbar_render(t_ui_element *elem);
+void					ui_scrollbar_free(void *args);
+// Other
+void					ui_scroll_value_set(t_ui_element *elem, int value);
 
 #endif

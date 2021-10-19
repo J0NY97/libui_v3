@@ -115,9 +115,6 @@ int	ui_element_render(t_ui_element *elem)
 		if ((int)elem->pos.y + elem->screen_pos.h > elem->parent_screen_pos->h)
 			result.h = elem->screen_pos.h + (elem->parent_screen_pos->h - ((int)elem->pos.y + elem->screen_pos.h));
 
-		if (result.w != elem->screen_pos.w || result.h != elem->screen_pos.h)
-			ft_printf("%d %d %d %d\n", (int)elem->pos.x, (int)elem->pos.y, elem->screen_pos.w, elem->screen_pos.h);
-
 		elem->z = ((t_ui_element *)elem->parent)->z + 1;
 		SDL_RenderCopy(elem->win->renderer, elem->texture, &result,
 			&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, result.w, result.h});
