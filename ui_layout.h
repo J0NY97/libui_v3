@@ -60,6 +60,9 @@ typedef struct s_ui_recipe
 	// Input only
 	bool			input_type_set;
 	Uint32			input_type;
+
+	// Scrollbar only
+	char			*target;
 }					t_ui_recipe;
 
 ///////////////

@@ -15,7 +15,7 @@
  * bool			wants_to_close;		is true when x on the window was clicked;
  * bool			hide_on_x;			if true when x is clicked, hide window (this and wants_to_close cant be set at the same time);
  * bool			user_handled_event;	true, when user has decided to event handle the window themselves; (so we dont do it twice); (used in the layout event handler);
- * t_ui_layout_v2	*layout;				the layout it is part of, or if NULL it is not part of any layout;
+ * t_ui_layout	*layout;			the layout it is part of, or if NULL it is not part of any layout;
 */
 typedef struct s_ui_window
 {
@@ -242,6 +242,7 @@ typedef struct s_ui_tab
  *
  * void		*target;		the element on which the event will happen on;
  * int		target_type;	the type of element, either UI_TYPE_ELEMENT OR -_WINDOW;
+ * int		target_size;	the size of all children elements of target together;
  * bool		update;			has been updated this frame;
 */
 typedef struct s_ui_scrollbar
@@ -249,6 +250,8 @@ typedef struct s_ui_scrollbar
 	t_ui_element		button;
 	void				*target;
 	int					target_type;
+	int					target_size;
+	int					last_value;
 	int					value;
 	int					min;
 	int					max;
@@ -290,6 +293,7 @@ t_vec4i					ui_element_screen_pos_get(t_ui_element *elem);
 void					ui_element_swap(t_ui_element *one, t_ui_element *two);
 int						ui_element_type_from_string(char *str);
 const char				*ui_element_type_to_string(int type);
+void					ui_element_move_list(t_list *list, t_vec2i amount);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
@@ -401,7 +405,9 @@ void					ui_scrollbar_new(t_ui_window *win, t_ui_element *elem);
 void					ui_scrollbar_event(t_ui_element *elem, SDL_Event e);
 int						ui_scrollbar_render(t_ui_element *elem);
 void					ui_scrollbar_free(void *args);
+void					ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe);
 // Other
 void					ui_scroll_value_set(t_ui_element *elem, int value);
+void					ui_scrollbar_recount(t_ui_element *elem);
 
 #endif

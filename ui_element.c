@@ -156,11 +156,6 @@ t_vec4i	ui_element_screen_pos_get(t_ui_element *elem)
 	return (screen_pos);
 }
 
-/*
- * You can either give in absolute values,
- * or give a value between 0.0 and 1.0
- * to set relative to the parent of the element.
-*/
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
 	if (pos.x < 1.0f && pos.x > 0.0f)
@@ -377,4 +372,19 @@ const char	*ui_element_type_to_string(int type)
 	if (type > UI_TYPE_AMOUNT)
 		return ("none");
 	return (g_acceptable[type].name);
+}
+
+/*
+ * Moves all elements in list with t_vec2i amount;
+*/
+void	ui_element_move_list(t_list *list, t_vec2i amount)
+{
+	t_ui_element	*elem;
+
+	while (list)
+	{
+		elem = list->content;
+		ui_element_pos_set2(elem, vec2(elem->pos.x + amount.x, elem->pos.y + amount.y));
+		list = list->next;
+	}
 }

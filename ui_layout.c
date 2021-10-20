@@ -529,6 +529,8 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 		target->input_type = child->input_type;
 		target->input_type_set = 1;
 	}
+	if (child->target)
+		target->target = ft_strdup(child->target);
 }
 
 void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
@@ -648,7 +650,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		{
 			recipe->text_align = text_align_getter(key_value[1]);
 		}
-		else if (ft_strequ(key_value[0], "value"))
+		else if (ft_strequ(key_value[0], "value") || ft_strequ(key_value[0], "values"))
 		{
 			char	**values;
 
@@ -686,6 +688,10 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 				recipe->input_type = 0;
 				recipe->input_type_set = 1;
 			}
+		}
+		else if (ft_strequ(key_value[0], "target"))
+		{
+			recipe->target = ft_strdup(key_value[1]);
 		}
 		ft_arraydel(key_value);
 	}

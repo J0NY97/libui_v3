@@ -14,6 +14,7 @@
 # include "ui_elements.h"
 # include "ui_load.h"
 # include "math.h"
+# include "limits.h"
 //# include "path.h"
 
 typedef struct s_rgba

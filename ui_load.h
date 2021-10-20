@@ -146,7 +146,7 @@ static const t_ui_acceptable	g_acceptable_scrollbar =
 	.maker = &ui_scrollbar_new,
 	.renderer = &ui_scrollbar_render,
 	.eventer = &ui_scrollbar_event,
-	.edit = NULL,
+	.edit = &ui_scrollbar_edit,
 	.getter = NULL
 };
 
