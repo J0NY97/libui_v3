@@ -126,5 +126,7 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 		scroll->max = abs(((t_ui_element *)scroll->target)->pos.h - scroll->target_size);
 	else
 		scroll->max = 0;
-	ft_printf("target_size : %d\n", scroll->target_size);
+	ui_element_pos_set(&scroll->button,
+		vec4(scroll->button.pos.x, scroll->button.pos.y, scroll->button.pos.w,
+			(((t_ui_element *)scroll->target)->pos.h / scroll->target_size) * elem->pos.h));
 }

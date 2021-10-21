@@ -4,7 +4,7 @@ SDL_Texture	*ui_create_texture(SDL_Renderer *renderer, t_vec2i pos)
 {
 	SDL_Texture	*texture;
 
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, pos.x, pos.y);
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, pos.x, pos.y);
 	return (texture);
 }
 

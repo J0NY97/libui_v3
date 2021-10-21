@@ -52,10 +52,17 @@ void	ui_element_textures_redo(t_ui_element *elem)
 		if (elem->textures[i])
 			SDL_FreeSurface(elem->textures[i]);
 	}
+	if (elem->texture)
+	{
+		SDL_DestroyTexture(elem->texture);
+		elem->texture = NULL;
+	}
+	if (!elem->texture)
+		elem->texture = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_HOVER] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_CLICK] = ui_surface_new(elem->pos.w, elem->pos.h);
-	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[elem->state]);
+	//SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
 	elem->texture_recreate = 0;
 	if (elem->use_images)
 	{
@@ -78,6 +85,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 */
 int	ui_element_render(t_ui_element *elem)
 {
+	SDL_Rect	result;
 	elem->was_rendered_last_frame = 0;
 	if (!*elem->parent_was_rendered_last_frame)
 		return (0);
@@ -86,6 +94,7 @@ int	ui_element_render(t_ui_element *elem)
 	if (!elem->textures[elem->state])
 		return (0);
 	elem->screen_pos = ui_element_screen_pos_get(elem);
+	elem->actual_pos = elem->screen_pos;
 	if (elem->texture_recreate || elem->win->textures_recreate)
 	{
 		ui_element_textures_redo(elem);
@@ -93,35 +102,50 @@ int	ui_element_render(t_ui_element *elem)
 	}
 	else if (elem->state != elem->last_state)
 		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
-	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
+	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT)
+		elem->z = ((t_ui_element *)elem->parent)->z + 1;
+	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT && ((t_ui_element *)elem->parent)->render_me_on_parent)
+		elem->render_me_on_parent = 1;
 	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
 	{
-		/*
-		 * we need to figure out how much of the elem child we want to render... we can anymore choose NULL since
-		 * if the child goes outside of the parent we dont want to render it whole, only the pixels that share pos with
-		 * the parent;
-		*/
-		SDL_Rect result;
-		result.x = elem->pos.x;
-		result.y = elem->pos.y;
-		result.w = elem->screen_pos.w;
-		result.h = elem->screen_pos.h;
+		result.x = 0;
+		result.y = 0;
+		result.w = (int)elem->pos.w;
+		result.h = (int)elem->pos.h;
 		if ((int)elem->pos.x < 0)
+		{
 			result.x = -(int)elem->pos.x;
-		if ((int)elem->pos.y < 0)
-			result.y = -(int)elem->pos.y;
-		if ((int)elem->pos.x + elem->screen_pos.w > elem->parent_screen_pos->w)
-			result.w = elem->screen_pos.w + (elem->parent_screen_pos->w - ((int)elem->pos.x + elem->screen_pos.w));
-		if ((int)elem->pos.y + elem->screen_pos.h > elem->parent_screen_pos->h)
-			result.h = elem->screen_pos.h + (elem->parent_screen_pos->h - ((int)elem->pos.y + elem->screen_pos.h));
+			result.w = (int)elem->pos.w - result.x;
+		}
+		else if ((int)elem->pos.x + (int)elem->pos.w > elem->parent_screen_pos->w)
+			result.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - elem->parent_screen_pos->w);
 
-		elem->z = ((t_ui_element *)elem->parent)->z + 1;
-		SDL_RenderCopy(elem->win->renderer, elem->texture, &result,
-			&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, result.w, result.h});
+		if ((int)elem->pos.y < 0)
+		{
+			result.y = -(int)elem->pos.y;
+			result.h = (int)elem->pos.h - result.y;
+		}
+		else if ((int)elem->pos.y + (int)elem->pos.h > elem->parent_screen_pos->h)
+			result.h = (int)elem->pos.h - abs(((int)elem->pos.y + (int)elem->pos.h) - elem->parent_screen_pos->h);
+
+		// This doesnt take into account stretched resolution yet;
+		elem->actual_pos.x += result.x;
+		elem->actual_pos.w = result.w;
+		elem->actual_pos.y += result.y;
+		elem->actual_pos.h = result.h;
+		if (elem->screen_pos.w <= 0 || elem->screen_pos.h <= 0)
+		{
+			ui_element_print(elem);
+			elem->was_rendered_last_frame = 1;
+			elem->last_state = elem->state;
+			return (0);
+		}
 	}
 	else
-		SDL_RenderCopy(elem->win->renderer, elem->texture, NULL,
-			&(SDL_Rect){elem->screen_pos.x, elem->screen_pos.y, elem->screen_pos.w, elem->screen_pos.h});
+		result = create_sdl_rect(0, 0, elem->pos.w, elem->pos.h);
+	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
+	SDL_RenderCopy(elem->win->renderer, elem->texture, &result,
+		&(SDL_Rect){elem->actual_pos.x, elem->actual_pos.y, elem->actual_pos.w, elem->actual_pos.h});
 	elem->last_state = elem->state;
 	elem->was_rendered_last_frame = 1;
 	return (1);

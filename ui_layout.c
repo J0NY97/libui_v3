@@ -897,6 +897,11 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		if (recipe->bg_images_set[i])
 			ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 	}
+	if (recipe->flags)
+	{
+		if (ft_strinarr("render_on_parent", recipe->flags))
+			elem->render_me_on_parent = 1;
+	}
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else

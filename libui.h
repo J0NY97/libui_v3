@@ -62,6 +62,8 @@ void					ui_surface_line_draw_thicc(SDL_Surface *surface, t_vec2i v1, t_vec2i v2
 
 // Help
 int						point_in_rect(t_vec2i point, t_vec4i rect);
+int						rect_in_rect(t_vec4i rect1, t_vec4i rect2);
+SDL_Rect				create_sdl_rect(int x, int y, int w, int h);
 t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
 Uint32					ui_color_come_up_with_name(Uint32 orig_col, float procentage);

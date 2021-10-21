@@ -46,6 +46,7 @@ typedef struct s_ui_window
 
 /*
  * t_vec4i		pos;						the position of the elem relative to its parent.
+ * t_vec4i		actual_pos;					the position of the elem with all the nested parents and children on the screen.
  * t_vec4i		screen_pos;					the position of the elem relative to the screen.
  * SDL_Texture	*states[UI_STATE_AMOUNT];	textures for all the different states there are.
  * SDL_Texture	*images[UI_STATE_AMOUNT];	textures for all the different state images there are.
@@ -67,6 +68,7 @@ typedef struct s_ui_window
 typedef struct s_ui_element
 {
 	t_vec4			pos;
+	t_vec4i			actual_pos;
 	t_vec4i			screen_pos;
 	SDL_Surface		*textures[UI_STATE_AMOUNT];
 	SDL_Texture		*texture;

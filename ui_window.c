@@ -115,7 +115,7 @@ void	ui_window_texture_redo(t_ui_window *win)
 {
 	if (win->texture)
 		SDL_DestroyTexture(win->texture);
-	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
 }
 
 void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)

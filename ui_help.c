@@ -10,6 +10,21 @@ int	point_in_rect(t_vec2i point, t_vec4i rect)
 	return (0);
 }
 
+int	rect_in_rect(t_vec4i rect1, t_vec4i rect2)
+{
+	if (rect1.x < rect2.x + rect2.w &&
+		rect1.x + rect1.w > rect2.x &&
+		rect1.y < rect2.y + rect2.h &&
+		rect1.h + rect1.y > rect2.y)
+		return (1);
+	return (0);
+}
+
+SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
+{
+	return ((SDL_Rect){x, y, w, h});
+};
+
 t_rgba	hex_to_rgba(Uint32 color_hex)
 {
 	t_rgba	rgba;
