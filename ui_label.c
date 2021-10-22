@@ -21,12 +21,32 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 
 void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
+	t_ui_label	*label;
+	t_vec4		pos;
+	int			i;
+
+	if (elem->element_type != UI_TYPE_LABEL)
+		return ;
+	label = elem->element;
 	if (recipe->title)
 		ui_label_text_set(elem, recipe->title);
 	if (recipe->text_color)
 		ui_label_color_set(elem, recipe->text_color);
 	if (recipe->text_align)
 		ui_label_text_align(elem, recipe->text_align);
+	pos = elem->pos;
+	i = -1;
+	while (++i < VEC4_SIZE)
+	{
+		if (recipe->text_pos_set[i])
+		{
+			pos.v[i] = recipe->text_pos.v[i];
+			label->text_align = 0; // at some point only remove text aligns that dont make sense;
+		}
+		if (recipe->text_pos_set[2])
+			label->max_w = recipe->text_pos.v[2];
+	}
+	ui_element_pos_set(elem, pos);
 }
 
 void	ui_label_texture_redo(t_ui_element *elem)

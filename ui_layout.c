@@ -581,6 +581,20 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 			}
 			ft_arraydel(pos);
 		}
+		else if (ft_strequ(key_value[0], "text_pos"))
+		{
+			char	**pos;
+			int		pp;
+
+			pp = -1;
+			pos = ft_strsplit(key_value[1], ',');
+			while (++pp < VEC4_SIZE)
+			{
+				recipe->text_pos.v[pp] = ft_atof(pos[pp]);
+				recipe->text_pos_set[pp] = 1;
+			}
+			ft_arraydel(pos);
+		}
 		else if (ft_strequ(key_value[0], "bg_color"))
 		{
 			jj = -1;

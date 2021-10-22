@@ -35,7 +35,9 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 	button = scroll->button.element;
 	if (ui_element_is_click(elem))
 	{
-		scroll->value = ui_get_slider_value(scroll->min, scroll->max, elem->win->mouse_pos.y - elem->screen_pos.y, elem->pos.h - (scroll->button.pos.h / 2));
+		scroll->value = ui_get_slider_value(scroll->min, scroll->max,
+				(elem->win->mouse_pos.y - elem->screen_pos.y) - scroll->button.pos.h / 2,
+				elem->pos.h - scroll->button.pos.h);
 		scroll->update = 1;
 	}
 }

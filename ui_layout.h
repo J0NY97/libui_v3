@@ -46,9 +46,11 @@ typedef struct s_ui_recipe
 	int				text_align;
 	int				text_style;
 	char			*font;
+	t_vec4			text_pos;
 
 	bool			text_color_set;
 	bool			text_style_set;
+	bool			text_pos_set[VEC4_SIZE];
 
 	// Slider only
 	int				value[3];
