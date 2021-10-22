@@ -68,7 +68,8 @@ typedef struct s_ui_window
 typedef struct s_ui_element
 {
 	t_vec4			pos;
-	t_vec4i			actual_pos;
+	t_vec4i			from_pos;
+	t_vec4i			to_pos;
 	t_vec4i			screen_pos;
 	SDL_Surface		*textures[UI_STATE_AMOUNT];
 	SDL_Texture		*texture;

@@ -545,7 +545,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 	i = -1;
 	while (args[++i])
 	{
-		key_value = ft_strsplit(args[i], ':');
+		key_value = ft_strsplitfirstoccurence(args[i], ':');
 		ft_strtrimwholearr(key_value);
 		if (ft_strequ(key_value[0], "x"))
 		{

@@ -53,6 +53,7 @@ void	ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e)
 /*
  * radio will only update its screen position so that
  * its children render correctly.
+ * and ofc check if the parent of this elem was shown/renderer and other stuff that the renderer checks;
 */
 int	ui_radio_render(t_ui_element *elem)
 {

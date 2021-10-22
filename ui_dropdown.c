@@ -33,7 +33,8 @@ void	ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
-	ui_element_edit(&drop->label, recipe);
+	ui_label_edit(&drop->label, recipe);
+//	ui_element_edit(&drop->label, recipe);
 }
 
 void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)

@@ -85,7 +85,6 @@ void	ui_element_textures_redo(t_ui_element *elem)
 */
 int	ui_element_render(t_ui_element *elem)
 {
-	SDL_Rect	result;
 	elem->was_rendered_last_frame = 0;
 	if (!*elem->parent_was_rendered_last_frame)
 		return (0);
@@ -94,7 +93,8 @@ int	ui_element_render(t_ui_element *elem)
 	if (!elem->textures[elem->state])
 		return (0);
 	elem->screen_pos = ui_element_screen_pos_get(elem);
-	elem->actual_pos = elem->screen_pos;
+	elem->from_pos = vec4i(0, 0, elem->pos.w, elem->pos.h);
+	elem->to_pos = elem->screen_pos;
 	if (elem->texture_recreate || elem->win->textures_recreate)
 	{
 		ui_element_textures_redo(elem);
@@ -108,44 +108,36 @@ int	ui_element_render(t_ui_element *elem)
 		elem->render_me_on_parent = 1;
 	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
 	{
-		result.x = 0;
-		result.y = 0;
-		result.w = (int)elem->pos.w;
-		result.h = (int)elem->pos.h;
-		if ((int)elem->pos.x < 0)
+		int real_pos_y = ((t_ui_element *)elem->parent)->from_pos.y - (int)elem->pos.y;
+		int real_pos_x = ((t_ui_element *)elem->parent)->from_pos.x - (int)elem->pos.x;
+		if ((int)elem->pos.x < ((t_ui_element *)elem->parent)->from_pos.x)
 		{
-			result.x = -(int)elem->pos.x;
-			result.w = (int)elem->pos.w - result.x;
+			elem->from_pos.x = real_pos_x;
+			elem->from_pos.w = (int)elem->pos.w - elem->from_pos.x;
 		}
 		else if ((int)elem->pos.x + (int)elem->pos.w > elem->parent_screen_pos->w)
-			result.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - elem->parent_screen_pos->w);
+			elem->from_pos.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - elem->parent_screen_pos->w);
 
-		if ((int)elem->pos.y < 0)
+		if ((int)elem->pos.y < ((t_ui_element *)elem->parent)->from_pos.y)
 		{
-			result.y = -(int)elem->pos.y;
-			result.h = (int)elem->pos.h - result.y;
+			elem->from_pos.y = real_pos_y;
+			elem->from_pos.h = (int)elem->pos.h - elem->from_pos.y;
 		}
-		else if ((int)elem->pos.y + (int)elem->pos.h > elem->parent_screen_pos->h)
-			result.h = (int)elem->pos.h - abs(((int)elem->pos.y + (int)elem->pos.h) - elem->parent_screen_pos->h);
+		else if ((int)elem->pos.y + (int)elem->pos.h > ((t_ui_element *)elem->parent)->to_pos.h)
+			elem->from_pos.h = (int)elem->pos.h - abs(((int)elem->pos.y + (int)elem->pos.h) - ((t_ui_element *)elem->parent)->to_pos.h);
 
 		// This doesnt take into account stretched resolution yet;
-		elem->actual_pos.x += result.x;
-		elem->actual_pos.w = result.w;
-		elem->actual_pos.y += result.y;
-		elem->actual_pos.h = result.h;
-		if (elem->screen_pos.w <= 0 || elem->screen_pos.h <= 0)
-		{
-			ui_element_print(elem);
-			elem->was_rendered_last_frame = 1;
-			elem->last_state = elem->state;
+		elem->to_pos.x += elem->from_pos.x;
+		elem->to_pos.w = elem->from_pos.w;
+		elem->to_pos.y += elem->from_pos.y;
+		elem->to_pos.h = elem->from_pos.h;
+		if (elem->to_pos.w <= 0 || elem->to_pos.h <= 0)
 			return (0);
-		}
 	}
-	else
-		result = create_sdl_rect(0, 0, elem->pos.w, elem->pos.h);
 	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
-	SDL_RenderCopy(elem->win->renderer, elem->texture, &result,
-		&(SDL_Rect){elem->actual_pos.x, elem->actual_pos.y, elem->actual_pos.w, elem->actual_pos.h});
+	SDL_RenderCopy(elem->win->renderer, elem->texture,
+		&(SDL_Rect){elem->from_pos.x, elem->from_pos.y, elem->from_pos.w, elem->from_pos.h},
+		&(SDL_Rect){elem->to_pos.x, elem->to_pos.y, elem->to_pos.w, elem->to_pos.h});
 	elem->last_state = elem->state;
 	elem->was_rendered_last_frame = 1;
 	return (1);
