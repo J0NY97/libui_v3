@@ -108,11 +108,9 @@ int	ui_element_render(t_ui_element *elem)
 		elem->render_me_on_parent = 1;
 	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
 	{
-		int real_pos_y = ((t_ui_element *)elem->parent)->from_pos.y - (int)elem->pos.y;
-		int real_pos_x = ((t_ui_element *)elem->parent)->from_pos.x - (int)elem->pos.x;
 		if ((int)elem->pos.x < ((t_ui_element *)elem->parent)->from_pos.x)
 		{
-			elem->from_pos.x = real_pos_x;
+			elem->from_pos.x = ((t_ui_element *)elem->parent)->from_pos.x - (int)elem->pos.x;
 			elem->from_pos.w = (int)elem->pos.w - elem->from_pos.x;
 		}
 		else if ((int)elem->pos.x + (int)elem->pos.w > elem->parent_screen_pos->w)
@@ -120,12 +118,11 @@ int	ui_element_render(t_ui_element *elem)
 
 		if ((int)elem->pos.y < ((t_ui_element *)elem->parent)->from_pos.y)
 		{
-			elem->from_pos.y = real_pos_y;
+			elem->from_pos.y = ((t_ui_element *)elem->parent)->from_pos.y - (int)elem->pos.y;
 			elem->from_pos.h = (int)elem->pos.h - elem->from_pos.y;
 		}
 		else if ((int)elem->pos.y + (int)elem->pos.h > ((t_ui_element *)elem->parent)->to_pos.h)
 			elem->from_pos.h = (int)elem->pos.h - abs(((int)elem->pos.y + (int)elem->pos.h) - ((t_ui_element *)elem->parent)->to_pos.h);
-
 		// This doesnt take into account stretched resolution yet;
 		elem->to_pos.x += elem->from_pos.x;
 		elem->to_pos.w = elem->from_pos.w;
@@ -352,7 +349,11 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\tlast_state : %d\n", elem->last_state);
 	ft_printf("\tparent_type : %s\n", ui_element_type_to_string(elem->parent_type));
 	if (elem->parent_type == UI_TYPE_ELEMENT)
+	{
 		ft_printf("\tparent element_type : %s\n", ui_element_type_to_string(((t_ui_element *)elem->parent)->element_type));
+		ft_printf("\tparent z : %d\n", ((t_ui_element *)elem->parent)->z);
+	}
+	ft_printf("\tz : %d\n", elem->z);
 	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
 	ft_printf("\tshow : %d\n", elem->show);
 	ft_printf("\tparent show : %d\n", *elem->parent_show);
@@ -385,10 +386,11 @@ int	ui_element_type_from_string(char *str)
 
 const char	*ui_element_type_to_string(int type)
 {
-	if (type < 0)
+	if (type < 0 || type >= UI_TYPE_AMOUNT)
+	{
+		ft_printf("[%s] Something Went Wrong : For some reason trying to convert type %d to str when that doesnt exist.\n", __FUNCTION__, type);
 		return ("none");
-	if (type > UI_TYPE_AMOUNT)
-		return ("none");
+	}
 	return (g_acceptable[type].name);
 }
 

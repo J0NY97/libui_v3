@@ -47,11 +47,6 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->text_pos_set[2])
 		label->max_w = recipe->text_pos.v[2];
 	ui_element_pos_set(elem, pos);
-	if (ft_strequ(recipe->id, "event_0"))
-	{
-		print_recipe(recipe);
-		ui_element_print(elem);
-	}
 }
 
 void	ui_label_texture_redo(t_ui_element *elem)
