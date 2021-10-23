@@ -32,7 +32,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_label_text_set(elem, recipe->title);
 	if (recipe->text_color)
 		ui_label_color_set(elem, recipe->text_color);
-	if (recipe->text_align)
+	if (recipe->text_align_set)
 		ui_label_text_align(elem, recipe->text_align);
 	pos = elem->pos;
 	i = -1;
@@ -43,10 +43,15 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 			pos.v[i] = recipe->text_pos.v[i];
 			label->text_align = 0; // at some point only remove text aligns that dont make sense;
 		}
-		if (recipe->text_pos_set[2])
-			label->max_w = recipe->text_pos.v[2];
 	}
+	if (recipe->text_pos_set[2])
+		label->max_w = recipe->text_pos.v[2];
 	ui_element_pos_set(elem, pos);
+	if (ft_strequ(recipe->id, "event_0"))
+	{
+		print_recipe(recipe);
+		ui_element_print(elem);
+	}
 }
 
 void	ui_label_texture_redo(t_ui_element *elem)

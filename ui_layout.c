@@ -504,9 +504,10 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			ft_strdel(&target->font);
 		target->font = ft_strdup(child->font);
 	}
-	if (child->text_align)
+	if (child->text_align_set)
 	{
 		target->text_align = child->text_align;
+		target->text_align_set = 1;
 	}
 	jj = -1;
 	while (++jj < 3)
@@ -531,6 +532,15 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 	}
 	if (child->target)
 		target->target = ft_strdup(child->target);
+	jj = -1;
+	while (++jj < 4)
+	{
+		if (child->text_pos_set[jj])
+		{
+			target->text_pos.v[jj] = child->text_pos.v[jj];
+			target->text_pos_set[jj] = 1;
+		}
+	}
 }
 
 void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
@@ -663,6 +673,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		else if (ft_strequ(key_value[0], "text_align"))
 		{
 			recipe->text_align = text_align_getter(key_value[1]);
+			recipe->text_align_set = 1;
 		}
 		else if (ft_strequ(key_value[0], "value") || ft_strequ(key_value[0], "values"))
 		{
@@ -779,6 +790,7 @@ void	print_recipe(t_ui_recipe *recipe)
 	ft_printf("title : %s\n", recipe->title);
 	ft_printf("text_color : %#x\n", recipe->text_color);
 	ft_printf("text_align : [%d] %s\n", recipe->text_align, text_align_to_str(recipe->text_align));
+	ft_printf("text_pos : [%d %d %d %d]\n", recipe->text_pos.x, recipe->text_pos.y, recipe->text_pos.w, recipe->text_pos.h);
 	ft_printf("font : %s\n", recipe->font);
 	ft_printf("bg_color_default : %#x\n", recipe->bg_colors[UI_STATE_DEFAULT]);
 	ft_printf("bg_color_hover : %#x\n", recipe->bg_colors[UI_STATE_HOVER]);

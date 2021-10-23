@@ -50,6 +50,7 @@ typedef struct s_ui_recipe
 
 	bool			text_color_set;
 	bool			text_style_set;
+	bool			text_align_set;
 	bool			text_pos_set[VEC4_SIZE];
 
 	// Slider only
@@ -82,3 +83,4 @@ void				layout_compile_elements(t_ui_layout *layout);
 void				layout_make_family_trees(t_ui_layout *layout);
 void				layout_split_elements(t_ui_layout *layout);
 void				layout_read_file(t_ui_layout *layout, char *file);
+void				print_recipe(t_ui_recipe *recipe);

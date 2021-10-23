@@ -359,6 +359,8 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\tis_hover : %d\n", elem->is_hover);
 	ft_printf("\tis_click : %d\n", elem->is_click);
 	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
+	if (elem->element_type == UI_TYPE_LABEL)
+		ft_printf("\ttext_align : %s\n", text_align_to_str(((t_ui_label *)elem->element)->text_align));
 }
 
 void	ui_element_swap(t_ui_element *one, t_ui_element *two)
