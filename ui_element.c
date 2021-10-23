@@ -354,14 +354,14 @@ void	ui_element_print(t_ui_element *elem)
 		ft_printf("\tparent z : %d\n", ((t_ui_element *)elem->parent)->z);
 	}
 	ft_printf("\tz : %d\n", elem->z);
-	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
 	ft_printf("\tshow : %d\n", elem->show);
 	ft_printf("\tparent show : %d\n", *elem->parent_show);
 	ft_printf("\tis_hover : %d\n", elem->is_hover);
 	ft_printf("\tis_click : %d\n", elem->is_click);
 	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
-	if (elem->element_type == UI_TYPE_LABEL)
-		ft_printf("\ttext_align : %s\n", text_align_to_str(((t_ui_label *)elem->element)->text_align));
+	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
+	if (g_acceptable[elem->element_type].printer)
+		g_acceptable[elem->element_type].printer(elem);
 }
 
 void	ui_element_swap(t_ui_element *one, t_ui_element *two)

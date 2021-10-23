@@ -204,8 +204,13 @@ void	ui_label_free(void *label)
 	(void)label;
 }
 
-void	ui_label_print(t_ui_label *label)
+void	ui_label_print(t_ui_element *elem)
 {
+	t_ui_label	*label;
+
+	if (elem->element_type != UI_TYPE_LABEL)
+		return ;
+	label = elem->element;
 	ft_printf("[%s]\n", __FUNCTION__);
 	ft_printf("\ttext : %s\n", label->text);
 	ft_printf("\twh : %d %d\n", label->text_wh.x, label->text_wh.y);
@@ -216,7 +221,7 @@ void	ui_label_print(t_ui_label *label)
 	ft_printf("\tfont ? : %d\n", label->font ? 1 : 0);
 	ft_printf("\tfont_recreate : %d\n", label->font_recreate);
 	ft_printf("\ttexture_recreate : %d\n", label->texture_recreate);
-	ft_printf("\ttext_align : %d\n", label->text_align);
+	ft_printf("\ttext_align : [%d] %s\n", label->text_align, text_align_to_str(label->text_align));
 }
 
 /*

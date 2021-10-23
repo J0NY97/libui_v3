@@ -304,6 +304,7 @@ void					ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_label_texture_redo(t_ui_element *label);
 void					ui_label_event(t_ui_element *elem, SDL_Event e);
 int						ui_label_render(t_ui_element *label);
+void					ui_label_print(t_ui_element *elem);
 void					ui_label_free(void *label);
 // label other
 void					ui_label_text_set(t_ui_element *label, char *text);
@@ -312,7 +313,6 @@ void					ui_label_size_set(t_ui_element *label, size_t size);
 void					ui_label_color_set(t_ui_element *label, Uint32 color);
 void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
-void					ui_label_print(t_ui_label *label);
 // Getters
 t_ui_label				*ui_label_get_label(t_ui_element *elem);
 
