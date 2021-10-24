@@ -132,4 +132,11 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 	new_h = ft_clamp(elem->pos.h, 20, new_h);
 	ui_element_pos_set(&scroll->button,
 		vec4(scroll->button.pos.x, scroll->button.pos.y, scroll->button.pos.w, new_h));
+	scroll->top_most = vec2i(0, 0);
+	scroll->bot_most = vec2i(0, 0);
+	if (((t_ui_element *)scroll->target)->children)
+	{
+		scroll->top_most = vec2i(0, min);
+		scroll->bot_most = vec2i(0, max);
+	}
 }

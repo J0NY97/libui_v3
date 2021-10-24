@@ -66,7 +66,7 @@ static const t_ui_acceptable	g_acceptable_menu =
 	.maker = &ui_menu_new,
 	.renderer = &ui_menu_render,
 	.eventer = &ui_menu_event,
-	.edit = NULL,
+	.edit = &ui_menu_edit,
 	.printer = NULL,
 	.getter = NULL
 };

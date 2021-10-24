@@ -35,6 +35,21 @@ int	ui_menu_render(t_ui_element *elem)
 	return (2);
 }
 
+void	ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe)
+{
+	t_ui_menu	*menu;
+
+	if (elem->element_type != UI_TYPE_MENU)
+	{
+		ft_printf("[%s] The elem given is not a menu.\n", __FUNCTION__);
+		ui_element_print(elem);
+		return ;
+	}
+	menu = elem->element;
+	if (ft_strinarr("event_and_render_children", recipe->flags))
+		menu->event_and_render_children = 1;
+}
+
 void	ui_menu_free(void *menu)
 {
 	(void)menu;

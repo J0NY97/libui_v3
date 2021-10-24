@@ -493,9 +493,8 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->value_set[jj] = 1;
 		}
 	}
-	if (child->flags != NULL)
+	if (child->flags != NULL) // TODO: this is definitely not correct, i think we should add the flags not replace;
 	{
-		ft_putstr("child flags != NULL\n");
 		char	**flags = ft_arrjoin(target->flags, child->flags);
 		ft_arraydel(target->flags);
 		target->flags = flags;

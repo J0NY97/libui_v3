@@ -46,7 +46,10 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	drop->menu.show = elem->state == UI_STATE_CLICK;
 	if (!drop->menu.show) // if menu isnt shown, no point event handling children;
 		return ;
+		/*
 	elem->state = UI_STATE_CLICK;
+	*/
+	drop->drop_open = elem->win->mouse_down_last_frame && ui_element_is_hover(elem);
 	ui_menu_event(&drop->menu, e);
 	ui_list_radio_event(drop->menu.children, &drop->active, e);
 	if (drop->active)
@@ -97,6 +100,19 @@ void	ui_dropdown_free(void *drop)
 	(void)drop;
 }
 
+/*
+ * This will only return 1 the frame the menu was opened.
+*/
+int	ui_dropdown_open(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_DROPDOWN)
+	{
+		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		return (-1);
+	}
+	return (((t_ui_dropdown *)elem->element)->drop_open);
+}
+
 int	ui_dropdown_exit(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_DROPDOWN)
@@ -136,4 +152,16 @@ t_ui_dropdown	*ui_dropdown_get_dropdown(t_ui_element *elem)
 	if (!elem || !elem->element_type == UI_TYPE_DROPDOWN)
 		return (NULL);
 	return (elem->element);
+}
+
+t_ui_element	*ui_dropdown_active(t_ui_element *elem)
+{
+	t_ui_dropdown	*drop;
+
+	if (elem->element_type != UI_TYPE_DROPDOWN)
+	{
+		ft_printf("[%s] Element given is not dropdown but %d %s.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	return (ui_dropdown_get_dropdown(elem)->active);
 }

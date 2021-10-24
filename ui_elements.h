@@ -46,8 +46,9 @@ typedef struct s_ui_window
 
 /*
  * t_vec4i		pos;						the position of the elem relative to its parent.
- * t_vec4i		actual_pos;					the position of the elem with all the nested parents and children on the screen.
- * t_vec4i		screen_pos;					the position of the elem relative to the screen.
+ * t_vec4i		screen_pos;					the position of the elem with all the nested parents and children on the screen.
+ * t_vec4i		from_pos;					the position of from what coordinates of the elem texture you want to render;
+ * t_vec4i		to_pos;						the position of to what coordinates of the screen you want to render;
  * SDL_Texture	*states[UI_STATE_AMOUNT];	textures for all the different states there are.
  * SDL_Texture	*images[UI_STATE_AMOUNT];	textures for all the different state images there are.
  * int			state;						the state the element is in, enum t_element_states.
@@ -149,6 +150,8 @@ typedef struct s_ui_button
 
 /*
  * NOTE: we treat dropdown as button.
+ * bool			drop_exit;		will only return 1 the frame the menu was closed;
+ * bool			drop_open;		will only return 1 the frame the menu was opened;
 */
 typedef struct s_ui_dropdown
 {
@@ -157,6 +160,7 @@ typedef struct s_ui_dropdown
 	t_ui_element		menu;
 	t_ui_element		*active;
 	bool				drop_exit;
+	bool				drop_open;
 }						t_ui_dropdown;
 
 /*
@@ -259,6 +263,8 @@ typedef struct s_ui_scrollbar
 	int					min;
 	int					max;
 	bool				update;
+	t_vec2i				top_most;
+	t_vec2i				bot_most;
 }						t_ui_scrollbar;
 
 // Window
@@ -332,6 +338,7 @@ t_ui_label				*ui_button_get_label(t_ui_element *elem);
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
+void					ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_menu_free(void *menu);
 // getters
 t_ui_menu				*ui_menu_get_menu(t_ui_element *elem);
@@ -342,12 +349,14 @@ void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
+int						ui_dropdown_open(t_ui_element *elem);
 int						ui_dropdown_exit(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
 // Getters
 t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
 t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
+t_ui_element			*ui_dropdown_active(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);

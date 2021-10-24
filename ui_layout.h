@@ -57,7 +57,7 @@ typedef struct s_ui_recipe
 	int				value[3];
 	int				value_set[3];
 
-	// Window only
+	// Window / Menu only
 	char			**flags;
 
 	// Input only
