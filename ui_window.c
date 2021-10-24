@@ -99,6 +99,8 @@ int	ui_window_render(t_ui_window *win)
 	win->mouse_pos_prev = win->mouse_pos;
 	win->scroll = 0;
 	win->mouse_down_last_frame = 0;
+
+	SDL_RenderPresent(win->renderer); // only do this if not handled
 	return (1);
 }
 

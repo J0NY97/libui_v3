@@ -15,49 +15,23 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 			ui_window_event(win, e);
 		curr = curr->next;
 	}
-	// Event elements
-	curr = layout->elements;
-	while (curr)
-	{
-		elem = curr->content;
-		if (elem->element_type >= 0 && elem->element_type < UI_TYPE_AMOUNT)
-		{
-			if (g_acceptable[elem->element_type].eventer)
-				g_acceptable[elem->element_type].eventer(elem, e);
-		}
-		else
-			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
-		curr = curr->next;
-	}
+	ui_list_event(layout->elements, e);
 }
 
 void	ui_layout_render(t_ui_layout *layout)
 {
 	t_list			*curr;
-	t_ui_element	*elem;
 	t_ui_window		*win;
 
-	ui_layout_sort(layout);
+	ui_list_sort(layout->elements);
+	ui_list_render(layout->elements);
 
-	// Render The Elements
-	curr = layout->elements;
-	while (curr)
-	{
-		elem = curr->content;
-		if (elem->element_type >= 0 && elem->element_type < UI_TYPE_AMOUNT
-			&& g_acceptable[elem->element_type].renderer)
-			g_acceptable[elem->element_type].renderer(elem);
-		else
-			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
-		curr = curr->next;
-	}
 	// Render The Windows
 	curr = layout->windows;
 	while (curr)
 	{
 		win = curr->content;
 		ui_window_render(win);
-		SDL_RenderPresent(win->renderer);
 		curr = curr->next;
 	}
 }
@@ -180,6 +154,7 @@ char	**split_string_into_array(char *str)
 	final[elem_count - 1] = 0;
 	return (final);
 }
+
 /*
  * This splits everything from global scope separated with ';', to separeate strings;
 */
@@ -966,85 +941,3 @@ void	layout_apply_style(t_ui_layout *layout)
 	}
 }
 
-t_ui_recipe	*ui_list_get_recipe_by_id(t_list *list, char *id)
-{
-	t_list		*curr;
-	t_ui_recipe	*recipe;
-
-	curr = list;
-	while (curr)
-	{
-		recipe = curr->content;
-		if (ft_strequ(recipe->id, id))
-			return (recipe);
-		curr = curr->next;
-	}
-	ft_printf("[%s] Couldn\'t find recipe with id : %s\n", __FUNCTION__, id);
-	return (NULL);
-}
-
-t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
-{
-	t_list			*curr;
-	t_ui_element	*elem;
-
-	curr = list;
-	while (curr)
-	{
-		elem = curr->content;
-		if (ft_strequ(elem->id, id))
-			return (elem);
-		curr = curr->next;
-	}
-	ft_printf("[%s] Couldn\'t find element with id : %s\n", __FUNCTION__, id);
-	return (NULL);
-}
-
-t_ui_window	*ui_list_get_window_by_id(t_list *list, char *id)
-{
-	t_ui_window	*win;
-
-	while (list)
-	{
-		win = list->content;
-		if (ft_strequ(win->id, id))
-			return (win);
-		list = list->next;
-	}
-	ft_printf("[%s] Couldn\'t find window with id : %s\n", __FUNCTION__, id);
-	return (NULL);
-}
-
-/*
- *	sorts all elements with their z value in ascending order;
- *	TODO: figure out how often this should be done;
-*/
-void	ui_layout_sort(t_ui_layout *layout)
-{
-	t_list			*curr;
-	t_list			*next;
-	t_ui_element	*temp;
-	int				temp_int;
-
-	curr = layout->elements;
-	while (curr)
-	{
-		next = curr->next;
-		if (!next || !curr->content || !curr->next->content)
-			break ;
-		if (((t_ui_element *)curr->content)->z > ((t_ui_element *)curr->next->content)->z)
-		{
-			temp = curr->content;
-			curr->content = curr->next->content;
-			curr->next->content = temp;
-
-			temp_int = curr->content_size;
-			curr->content_size = curr->next->content_size;
-			curr->next->content_size = temp_int;
-
-			curr = layout->elements;
-		}
-		else
-			curr = curr->next;
-	}
-}

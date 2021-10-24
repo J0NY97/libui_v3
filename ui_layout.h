@@ -74,7 +74,6 @@ typedef struct s_ui_recipe
 void				ui_layout_event(t_ui_layout *layout, SDL_Event e);
 void				ui_layout_render(t_ui_layout *layout);
 void				ui_layout_load(t_ui_layout *layout, char *file);
-void				ui_layout_sort(t_ui_layout *layout);
 void				layout_apply_style(t_ui_layout *layout);
 void				layout_make_recipes(t_ui_layout *layout);
 void				layout_split_styles(t_ui_layout *layout);
