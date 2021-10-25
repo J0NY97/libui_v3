@@ -57,14 +57,21 @@ bool	ui_button(t_ui_element *elem)
 	return (0);
 }
 
+/*
+ * NOTE: !!!!!!!!!!!! Dont do anything that needs the element type to be UI_TYPE_BUTTOn
+ * since our dropdown is using this button_redner for reason.!!!!!!!!!!!!!!!!!!!!!!!!!!
+*/
 int	ui_button_render(t_ui_element *elem)
 {
 	t_ui_button	*button;
+	t_ui_label	*label;
 
 	if (!ui_element_render(elem))
 		return (0);
 	button = elem->element;
+	label = button->label.element;
 	ui_label_render(&button->label);
+	ui_label_text_align(&button->label, label->text_align);
 	return (1);
 }
 
@@ -91,7 +98,7 @@ t_ui_element	*ui_button_get_label_element(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_BUTTON)
 	{
-		ft_printf("[%s] Element is not of type UI_TYPE_BUTTON.", __FUNCTION__);
+		ft_printf("[%s] Element is not of type UI_TYPE_BUTTON. It\'s %d %s.", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (&((t_ui_button *)elem->element)->label);

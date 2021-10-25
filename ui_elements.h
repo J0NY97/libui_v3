@@ -149,9 +149,9 @@ typedef struct s_ui_button
 }						t_ui_button;
 
 /*
- * NOTE: we treat dropdown as button.
  * bool			drop_exit;		will only return 1 the frame the menu was closed;
  * bool			drop_open;		will only return 1 the frame the menu was opened;
+ * int			max_h;			if menu children total height exceeds the max_h a scrollbar will be shown;
 */
 typedef struct s_ui_dropdown
 {
@@ -161,6 +161,8 @@ typedef struct s_ui_dropdown
 	t_ui_element		*active;
 	bool				drop_exit;
 	bool				drop_open;
+	t_ui_element		scrollbar;
+	int					max_h;
 }						t_ui_dropdown;
 
 /*
@@ -421,5 +423,8 @@ void					ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe);
 // Other
 void					ui_scroll_value_set(t_ui_element *elem, int value);
 void					ui_scrollbar_recount(t_ui_element *elem);
+// Get
+t_ui_button				*ui_scrollbar_get_button(t_ui_element *elem);
+t_ui_element			*ui_scrollbar_get_button_element(t_ui_element *elem);
 
 #endif

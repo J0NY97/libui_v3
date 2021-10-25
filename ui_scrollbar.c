@@ -9,14 +9,16 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_SCROLLBAR;
 
 	scroll = elem->element;
+
 	ui_button_new(win, &scroll->button);
 	ui_element_parent_set(&scroll->button, elem, UI_TYPE_ELEMENT);
-
 	ui_element_pos_set(&scroll->button, vec4(0, 0, elem->pos.h, elem->pos.h));
 	ui_element_color_set(&scroll->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&scroll->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
 	ui_element_color_set(&scroll->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
-	ui_element_parent_set(&scroll->button, elem, UI_TYPE_ELEMENT);
+
+	ui_label_size_set(&ui_scrollbar_get_button(elem)->label, 20);
+	ui_label_text_set(&ui_scrollbar_get_button(elem)->label, "=");
 
 	scroll->min = 0;
 	scroll->max = 100;
@@ -44,9 +46,8 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 
 int	ui_scrollbar_render(t_ui_element *elem)
 {
-	char		temp[20];
 	t_ui_scrollbar	*scroll;
-	t_ui_button	*button;
+	t_ui_button		*button;
 
 	scroll = elem->element;
 	button = scroll->button.element;
@@ -57,10 +58,7 @@ int	ui_scrollbar_render(t_ui_element *elem)
 	if (scroll->update)
 	{
 		scroll->button.pos.y = ft_clamp(ui_set_slider_value(scroll->value, scroll->min, scroll->max, elem->pos.h - scroll->button.pos.h), 0, elem->pos.h - scroll->button.pos.h);
-		ft_b_itoa(scroll->value, temp);
-		ui_label_text_set(&button->label, temp);
 		scroll->update = 0;
-
 		ui_element_move_list(((t_ui_element *)scroll->target)->children, vec2i(0, scroll->last_value - scroll->value));
 	}
 	scroll->last_value = scroll->value;
@@ -129,7 +127,7 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 	else
 		scroll->max = 0;
 	int new_h = (((t_ui_element *)scroll->target)->pos.h / scroll->target_size) * elem->pos.h;
-	new_h = ft_clamp(elem->pos.h, 20, new_h);
+	new_h = ft_clamp(elem->pos.h, elem->pos.h * 0.05, new_h);
 	ui_element_pos_set(&scroll->button,
 		vec4(scroll->button.pos.x, scroll->button.pos.y, scroll->button.pos.w, new_h));
 	scroll->top_most = vec2i(0, 0);
@@ -139,4 +137,24 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 		scroll->top_most = vec2i(0, min);
 		scroll->bot_most = vec2i(0, max);
 	}
+}
+
+t_ui_element	*ui_scrollbar_get_button_element(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_SCROLLBAR)
+	{
+		ft_printf("[%s] elem type of %d %s given instead of scrollbar.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	return (&((t_ui_scrollbar *)elem->element)->button);
+}
+
+t_ui_button	*ui_scrollbar_get_button(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_SCROLLBAR)
+	{
+		ft_printf("[%s] elem type of %d %s given instead of scrollbar.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	return (((t_ui_scrollbar *)elem->element)->button.element);
 }
