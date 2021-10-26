@@ -186,3 +186,19 @@ t_ui_element	*ui_dropdown_active(t_ui_element *elem)
 	}
 	return (ui_dropdown_get_dropdown(elem)->active);
 }
+
+char	*ui_dropdown_active_text(t_ui_element *elem)
+{
+	t_ui_element	*active;
+	t_ui_label		*label;
+
+	if (!elem)
+		return (NULL);
+	active = ui_dropdown_get_dropdown(elem)->active;
+	if (!active)
+		return (NULL);
+	label = ui_button_get_label(active);
+	if (!label)
+		return (NULL);
+	return (label->text);
+}

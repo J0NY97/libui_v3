@@ -326,7 +326,7 @@ void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
 		ft_printf("[%s] Element of type %d is not supported.\n", __FUNCTION__, type);
 }
 
-void	ui_element_id_set(t_ui_element *elem, char *id)
+void	ui_element_set_id(t_ui_element *elem, char *id)
 {
 	if (elem->id)
 		ft_strdel(&elem->id);

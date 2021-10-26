@@ -298,7 +298,7 @@ void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 void					ui_element_remove_child_from_parent(t_ui_element *elem);
 void					ui_element_parent_set(t_ui_element *elem, void *parent, int type);
-void					ui_element_id_set(t_ui_element *elem, char *id);
+void					ui_element_set_id(t_ui_element *elem, char *id);
 void					ui_element_print(t_ui_element *elem);
 t_vec4i					ui_element_screen_pos_get(t_ui_element *elem);
 void					ui_element_swap(t_ui_element *one, t_ui_element *two);
@@ -323,6 +323,7 @@ void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 // Getters
 t_ui_label				*ui_label_get_label(t_ui_element *elem);
+char					*ui_label_get_text(t_ui_element *elem);
 
 // Button
 void					ui_button_new(t_ui_window *win, t_ui_element *button);
@@ -359,6 +360,7 @@ t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
 t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
 t_ui_element			*ui_dropdown_active(t_ui_element *elem);
+char					*ui_dropdown_active_text(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
@@ -368,7 +370,7 @@ int						ui_input_render(t_ui_element *elem);
 void					ui_input_free(void *elem);
 t_ui_element			*ui_input_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_input_get_label(t_ui_element *elem);
-char					*ui_input_text_get(t_ui_element *elem);
+char					*ui_input_get_text(t_ui_element *elem);
 char					*ui_input_set_text(t_ui_element *elem, char *str);
 int						ui_input_exit(t_ui_element *elem);
 

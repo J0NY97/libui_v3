@@ -391,13 +391,19 @@ t_ui_label	*ui_input_get_label(t_ui_element *elem)
 	return (ui_input_get_label_element(elem)->element);
 }
 
-char	*ui_input_text_get(t_ui_element *elem)
+char	*ui_input_get_text(t_ui_element *elem)
 {
 	t_ui_input	*input;	
 	t_ui_label	*label;
 
+	if (!elem)
+		return (NULL);
 	input = elem->element;
+	if (!input)
+		return (NULL);
 	label = input->label.element;
+	if (!label)
+		return (NULL);
 	return (label->text);
 }
 

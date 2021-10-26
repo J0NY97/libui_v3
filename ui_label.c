@@ -134,6 +134,25 @@ void	ui_label_text_set(t_ui_element *label, char *text)
 	lab->texture_recreate = 1;
 }
 
+char	*ui_label_get_text(t_ui_element *elem)
+{
+	t_ui_label	*label;
+
+	if (!elem)
+	{
+		ft_printf("[%s] youre giving null elem ...\n", __FUNCTION__);
+		return (NULL);
+	}
+	if (elem->element_type != UI_TYPE_LABEL)
+	{
+		ft_printf("[%s] for some reason youre trying to get a %s\'s text, which it doesnt have...\n", __FUNCTION__, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	label = elem->element;
+	return (label->text);
+}
+
+
 void	ui_label_font_set(t_ui_element *label, char *font_path)
 {
 	t_ui_label	*lab;
