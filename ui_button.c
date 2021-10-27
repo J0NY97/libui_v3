@@ -139,11 +139,11 @@ t_ui_element	*ui_list_get_button_with_text(t_list *list, char *str)
 {
 	while (list)
 	{
-		ft_printf("[%s] %s\n", __FUNCTION__, ui_button_get_text(list->content));
 		if (ft_strequ(ui_button_get_text(list->content), str))
 			return (list->content);
 		list = list->next;
 	}
+	ft_printf("[%s] No button with text %s in list.\n", __FUNCTION__, str);
 	return (NULL);
 }
 
