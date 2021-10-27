@@ -21,22 +21,29 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 	if (!elem->show || !*elem->parent_show)
 		return ;
 	radio = elem->element;
-	ui_list_radio_event(elem->children, &radio->active, e);
+	ui_list_radio_event(elem->children, &radio->active);
 }
 
 /*
  * Assumes everything in list is t_ui_element, and preferably t_ui_button type;
+ * Return: if a new active 1 else 0;
 */
-void	ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e)
+int	ui_list_radio_event(t_list *list, t_ui_element **active)
 {
 	t_ui_element	*elem;
+	int				result;
 
+	result = 0;
 	while (list)
 	{
 		elem = list->content;
 		elem->is_toggle = 0;
 		if (elem->was_click)
+		{
+			if (*active != elem)
+				result = 1;
 			*active = elem;
+		}
 		else if (elem->is_hover)
 			elem->state = UI_STATE_HOVER;
 		else
@@ -48,6 +55,7 @@ void	ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e)
 		(*active)->state = UI_STATE_CLICK;
 		(*active)->is_toggle = 1;
 	}
+	return (result);
 }
 
 /*

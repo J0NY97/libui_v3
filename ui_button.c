@@ -96,16 +96,55 @@ void	ui_button_free(void *button)
 */
 t_ui_element	*ui_button_get_label_element(t_ui_element *elem)
 {
+	t_ui_button	*button;
+
+	if (!elem)
+	{
+		ft_printf("[%s] No element.\n", __FUNCTION__);
+		return (NULL);
+	}
 	if (elem->element_type != UI_TYPE_BUTTON)
 	{
 		ft_printf("[%s] Element is not of type UI_TYPE_BUTTON. It\'s %d %s.", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
-	return (&((t_ui_button *)elem->element)->label);
+	button = elem->element;
+	if (!button)
+		return (NULL);
+	return (&button->label);
 }
 
 t_ui_label	*ui_button_get_label(t_ui_element *elem)
 {
-	return (ui_button_get_label_element(elem)->element);
+	t_ui_element	*label;
+
+	label = ui_button_get_label_element(elem);
+	if (!label)
+		return (NULL);
+	return (label->element);
 }
+
+char	*ui_button_get_text(t_ui_element *elem)
+{
+	t_ui_element		*label;
+
+	label = ui_button_get_label_element(elem);
+	return (ui_label_get_text(label));
+}
+
+/*
+ * From list get the button with str as text;
+*/
+t_ui_element	*ui_list_get_button_with_text(t_list *list, char *str)
+{
+	while (list)
+	{
+		ft_printf("[%s] %s\n", __FUNCTION__, ui_button_get_text(list->content));
+		if (ft_strequ(ui_button_get_text(list->content), str))
+			return (list->content);
+		list = list->next;
+	}
+	return (NULL);
+}
+
 

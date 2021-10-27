@@ -335,6 +335,11 @@ void	ui_element_set_id(t_ui_element *elem, char *id)
 
 void	ui_element_print(t_ui_element *elem)
 {
+	if (!elem)
+	{
+		ft_printf("[%s] No element.\n", __FUNCTION__);
+		return ;
+	}
 	ft_printf("[%s]\n", __FUNCTION__);
 	ft_printf("\tid : %s\n", elem->id);
 	ft_printf("\tpos : ");

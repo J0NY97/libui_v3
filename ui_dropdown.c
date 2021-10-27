@@ -58,7 +58,7 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	}
 	drop->drop_open = elem->win->mouse_down_last_frame && ui_element_is_hover(elem);
 	ui_menu_event(&drop->menu, e);
-	ui_list_radio_event(drop->menu.children, &drop->active, e);
+	ui_list_radio_event(drop->menu.children, &drop->active);
 	if (drop->active)
 	{
 		ui_element_render(drop->active); // because we want it to update.
@@ -121,6 +121,38 @@ void	ui_dropdown_free(void *drop)
 	(void)drop;
 }
 
+void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
+{
+	t_list			*curr;
+	t_ui_dropdown	*d;
+
+	if (!elem)
+	{
+		ft_printf("[%s] No elem.\n", __FUNCTION__);
+		return ;
+	}
+	d = ui_dropdown_get_dropdown(drop);
+	if (!drop || !d)
+	{
+		ft_printf("[%s] No dropdown.\n", __FUNCTION__);
+		return ;
+	}
+	curr = ui_dropdown_get_menu_element(drop)->children;
+	while (curr)
+	{
+		if (elem == curr->content)
+		{
+			d->active = elem;
+
+			// These are yoinked directly from the dropdown event handler; should probably be put in a function like drop_update;
+			ui_element_render(d->active);
+			ui_label_text_set(&d->label, ui_button_get_label(d->active)->text);
+			break ;
+		}
+		curr = curr->next;
+	}
+}
+
 /*
  * This will only return 1 the frame the menu was opened.
 */
@@ -153,6 +185,15 @@ t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)
 	}
 	ft_printf("[%s] Something went wrong.\n");
 	return (NULL);
+}
+
+t_ui_menu	*ui_dropdown_get_menu(t_ui_element *elem)
+{
+	t_ui_dropdown	*drop;
+	t_ui_menu		*menu;
+
+	drop = ui_dropdown_get_dropdown(elem);
+	return (ui_menu_get_menu(&drop->menu));
 }
 
 // Getters

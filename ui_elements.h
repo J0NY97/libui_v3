@@ -336,6 +336,8 @@ t_ui_element			*ui_button_get(t_ui_element *elem, int ui_type);
 // Getters
 t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_button_get_label(t_ui_element *elem);
+char					*ui_button_get_text(t_ui_element *elem);
+t_ui_element			*ui_list_get_button_with_text(t_list *list, char *str);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
@@ -352,6 +354,7 @@ void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
+void					ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem);
 int						ui_dropdown_open(t_ui_element *elem);
 int						ui_dropdown_exit(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
@@ -359,6 +362,7 @@ t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
 t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
 t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
+t_ui_menu				*ui_dropdown_get_menu(t_ui_element *elem);
 t_ui_element			*ui_dropdown_active(t_ui_element *elem);
 char					*ui_dropdown_active_text(t_ui_element *elem);
 
@@ -406,7 +410,7 @@ int						ui_radio_render(t_ui_element *elem);
 void					ui_radio_free(void *elem);
 // Other radio
 void					ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this);
-void					ui_list_radio_event(t_list *list, t_ui_element **active, SDL_Event e);
+int						ui_list_radio_event(t_list *list, t_ui_element **active);
 
 // Tab
 void					ui_tab_new(t_ui_window *win, t_ui_element *elem);

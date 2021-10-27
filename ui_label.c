@@ -149,6 +149,8 @@ char	*ui_label_get_text(t_ui_element *elem)
 		return (NULL);
 	}
 	label = elem->element;
+	if (!label)
+		return (NULL);
 	return (label->text);
 }
 
