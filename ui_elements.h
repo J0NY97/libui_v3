@@ -297,7 +297,7 @@ void					ui_element_color_set(t_ui_element *elem, int state, Uint32 color);
 void					ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image);
 void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path);
 void					ui_element_remove_child_from_parent(t_ui_element *elem);
-void					ui_element_parent_set(t_ui_element *elem, void *parent, int type);
+void					ui_element_set_parent(t_ui_element *elem, void *parent, int type);
 void					ui_element_set_id(t_ui_element *elem, char *id);
 void					ui_element_print(t_ui_element *elem);
 t_vec4i					ui_element_screen_pos_get(t_ui_element *elem);
@@ -338,6 +338,8 @@ t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_button_get_label(t_ui_element *elem);
 char					*ui_button_get_text(t_ui_element *elem);
 t_ui_element			*ui_list_get_button_with_text(t_list *list, const char *str);
+// Setters
+void					ui_button_set_text(t_ui_element *elem, char *str);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);

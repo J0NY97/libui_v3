@@ -11,7 +11,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_INPUT;
 	ui_label_new(win, &input->label);
 	ui_label_text_set(&input->label, "Input Text");
-	ui_element_parent_set(&input->label, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&input->label, elem, UI_TYPE_ELEMENT);
 	input->label.render_me_on_parent = 1;
 }
 

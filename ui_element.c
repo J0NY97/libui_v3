@@ -22,7 +22,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->use_images = 0;
 	elem->texture_recreate = 1;
 	ui_element_textures_redo(elem);
-	ui_element_parent_set(elem, win, UI_TYPE_WINDOW);
+	ui_element_set_parent(elem, win, UI_TYPE_WINDOW);
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_ELEMENT;
 	elem->show = 1;
@@ -295,7 +295,7 @@ void	ui_element_remove_child_from_parent(t_ui_element *elem)
 /*
  * int	type;		this is the parent type, so we know what to typecast to.
 */
-void	ui_element_parent_set(t_ui_element *elem, void *parent, int type)
+void	ui_element_set_parent(t_ui_element *elem, void *parent, int type)
 {
 	t_ui_element	*parent_elem;
 	t_ui_window		*parent_win;

@@ -16,7 +16,7 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(&slider->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&slider->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
 	ui_element_color_set(&slider->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
-	ui_element_parent_set(&slider->button, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&slider->button, elem, UI_TYPE_ELEMENT);
 
 	slider->min_value = 0;
 	slider->max_value = 100;

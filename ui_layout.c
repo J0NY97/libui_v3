@@ -291,7 +291,7 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	{
 		elem = ft_memalloc(sizeof(t_ui_element));
 		g_acceptable[family->parent_type].maker(win, elem);
-		ui_element_parent_set(elem, parent, parent_type);
+		ui_element_set_parent(elem, parent, parent_type);
 		ui_element_set_id(elem, family->parent_id);
 	}
 	rruc = family->children;

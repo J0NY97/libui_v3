@@ -11,7 +11,7 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 	scroll = elem->element;
 
 	ui_button_new(win, &scroll->button);
-	ui_element_parent_set(&scroll->button, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&scroll->button, elem, UI_TYPE_ELEMENT);
 	ui_element_pos_set(&scroll->button, vec4(0, 0, elem->pos.h, elem->pos.h));
 	ui_element_color_set(&scroll->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&scroll->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);

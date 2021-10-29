@@ -24,12 +24,12 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	drop->menu.show = 0;
 	((t_ui_menu *)drop->menu.element)->event_and_render_children = 1;
 
-	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT);
-	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
 
 	drop->max_h = 100; // TODO: change this to -1 by default; maybe;
 	ui_scrollbar_new(win, &drop->scrollbar);
-	ui_element_parent_set(&drop->scrollbar, elem, UI_TYPE_ELEMENT);
+	ui_element_set_parent(&drop->scrollbar, elem, UI_TYPE_ELEMENT);
 	ui_scroll_value_set(&drop->scrollbar, 0);
 	((t_ui_scrollbar *)drop->scrollbar.element)->target = &drop->menu;
 	((t_ui_scrollbar *)drop->scrollbar.element)->top_most = vec2i(0, 0);
