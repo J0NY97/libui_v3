@@ -93,6 +93,15 @@ Uint32	ui_surface_pixel_get(SDL_Surface *surface, int x, int y)
 	return (pixels[y * surface->w + x]);
 }
 
+void	ui_surface_draw_border(SDL_Surface *surface, size_t thiccness, Uint32 color)
+{
+	size_t	i;
+
+	i = -1;
+	while (++i < thiccness)
+		ui_surface_rect_draw(surface, vec2i(i, i), vec2i(surface->w - i - 1, surface->h - i - 1), color);
+}
+
 void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	bool	y_longer;
@@ -355,6 +364,7 @@ void	ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 
  * t_vec2i		p1;			the top left corner of the rect;
  * t_vec2i		p2;			the bot right corner of the rect;
 */
+// TODO: rename to draw_rect;
 void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	ui_surface_line_draw(surface, p1, vec2i(p2.x, p1.y), color);

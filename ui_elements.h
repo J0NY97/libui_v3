@@ -337,7 +337,7 @@ t_ui_element			*ui_button_get(t_ui_element *elem, int ui_type);
 t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_button_get_label(t_ui_element *elem);
 char					*ui_button_get_text(t_ui_element *elem);
-t_ui_element			*ui_list_get_button_with_text(t_list *list, char *str);
+t_ui_element			*ui_list_get_button_with_text(t_list *list, const char *str);
 
 // Menu
 void					ui_menu_new(t_ui_window *win, t_ui_element *menu);

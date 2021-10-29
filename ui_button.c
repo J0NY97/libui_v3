@@ -135,7 +135,7 @@ char	*ui_button_get_text(t_ui_element *elem)
 /*
  * From list get the button with str as text;
 */
-t_ui_element	*ui_list_get_button_with_text(t_list *list, char *str)
+t_ui_element	*ui_list_get_button_with_text(t_list *list, const char *str)
 {
 	while (list)
 	{

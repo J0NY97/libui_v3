@@ -8,6 +8,25 @@ SDL_Texture	*ui_create_texture(SDL_Renderer *renderer, t_vec2i pos)
 	return (texture);
 }
 
+void	ui_texture_print(SDL_Texture *texture)
+{
+	Uint32	format;
+	int		access;
+	int		w;
+	int		h;
+
+	if (!texture)
+	{
+		ft_printf("[%s] Texture given doesn\'t exist.\n", __FUNCTION__);
+		return ;
+	}
+	ft_printf("[%s]\n", __FUNCTION__);
+	SDL_QueryTexture(texture, &format, &access, &w, &h);
+	ft_printf("\tw : %d\n", w);
+	ft_printf("\th : %d\n", h);
+	ft_printf("\tformat : %s\n", SDL_GetPixelFormatName(format));
+}
+
 void	ui_texture_fill(SDL_Renderer *renderer, SDL_Texture *texture, Uint32 color)
 {
 	t_rgba		rgba;

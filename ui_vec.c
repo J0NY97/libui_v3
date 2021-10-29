@@ -145,7 +145,7 @@ int	compare_vec(float *vec1, float *vec2, size_t size)
 int	vec2_in_vec4(t_vec2i v2, t_vec4i v4)
 {
 	if (v2.x >= v4.x && v2.y >= v4.y
-		&& v2.x < v4.w && v2.y < v4.h)
+		&& v2.x < v4.x + v4.w && v2.y < v4.y + v4.h)
 		return (1);
 	return (0);
 }
