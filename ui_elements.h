@@ -285,6 +285,7 @@ void					ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
+void					ui_element_free(t_ui_element *elem);
 void					ui_element_event(t_ui_element *elem, SDL_Event e);
 void					ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
@@ -305,6 +306,7 @@ void					ui_element_swap(t_ui_element *one, t_ui_element *two);
 int						ui_element_type_from_string(char *str);
 const char				*ui_element_type_to_string(int type);
 void					ui_element_move_list(t_list *list, t_vec2i amount);
+void					ui_element_remove_from_list(t_ui_element *elem, t_list **list);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);

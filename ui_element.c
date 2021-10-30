@@ -30,6 +30,31 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->children = NULL;
 }
 
+void	ui_element_free(t_ui_element *elem)
+{
+	int	i;
+
+	if (g_acceptable[elem->element_type].freer)
+		g_acceptable[elem->element_type].freer(elem);
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+	{
+		if (elem->textures[i])
+			SDL_FreeSurface(elem->textures[i]);
+		if (elem->images[i])
+			SDL_FreeSurface(elem->images[i]);
+	}
+	elem->win = NULL; // pointer
+	elem->parent_screen_pos = NULL; // pointer
+	elem->element = NULL; // pointer, make sure you have made a free for the type of element and added that to g_acceptable;
+	elem->children = NULL; // TODO: make sure you remove all the children parents when you delete this elem children;
+	if (elem->id)
+		ft_strdel(&elem->id);
+	elem->parent_was_rendered_last_frame = NULL;
+	ui_element_remove_child_from_parent(elem);
+	// free(elem); // dont free, if the user of this library has malloced its their own responsibility to free; (TODO: in the layout free-er make sure you free all the elements, because there i have malloced the elements);
+}
+
 /*
  * We have this only so that we wouldnt have errors spamming the terminal.
 */
@@ -411,5 +436,21 @@ void	ui_element_move_list(t_list *list, t_vec2i amount)
 		elem = list->content;
 		ui_element_pos_set2(elem, vec2(elem->pos.x + amount.x, elem->pos.y + amount.y));
 		list = list->next;
+	}
+}
+
+/*
+ * NOTE: this doesnt free the element, only removes it from the list;
+*/
+void	ui_element_remove_from_list(t_ui_element *elem, t_list **list)
+{
+	t_list	*curr;
+
+	curr = *list;
+	while (curr)
+	{
+		if (curr->content == elem)
+			ft_lstdelone_nonfree(list, curr);
+		curr = curr->next;
 	}
 }
