@@ -83,3 +83,8 @@ void				layout_make_family_trees(t_ui_layout *layout);
 void				layout_split_elements(t_ui_layout *layout);
 void				layout_read_file(t_ui_layout *layout, char *file);
 void				print_recipe(t_ui_recipe *recipe);
+
+///////////////
+// Recipe
+///////////////
+void				ui_recipe_free(t_ui_recipe *recipe);

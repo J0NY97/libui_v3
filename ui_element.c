@@ -253,12 +253,27 @@ void	ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_p
 
 void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 {
+	int	i;
+	int	amount_to_make;
+	int	made;
+
 	if (state < 0 || state > UI_STATE_AMOUNT)
 		return ;
-	if (elem->images[state])
-		SDL_FreeSurface(elem->images[state]);
-	elem->images[state] = ui_surface_new(image->w, image->h);
-	SDL_BlitSurface(image, NULL, elem->images[state], NULL);
+	i = -1;
+	amount_to_make = 1;
+	made = 0;
+	if (state == UI_STATE_AMOUNT)
+		amount_to_make = UI_STATE_AMOUNT;
+	else
+		i = state - 1;
+	while (++i < UI_STATE_AMOUNT && made < amount_to_make)
+	{
+		if (elem->images[i])
+			SDL_FreeSurface(elem->images[i]);
+		elem->images[state] = ui_surface_new(image->w, image->h);
+		SDL_BlitSurface(image, NULL, elem->images[state], NULL);
+		made++;
+	}
 	elem->use_images = 1;
 	elem->texture_recreate = 1;
 }
