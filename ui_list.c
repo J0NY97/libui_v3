@@ -113,7 +113,8 @@ void	ui_list_render(t_list *list)
 	while (curr)
 	{
 		elem = curr->content;
-		if (elem->element_type >= 0 && elem->element_type < UI_TYPE_AMOUNT
+		if (elem->element_type >= 0
+			&& elem->element_type < UI_TYPE_AMOUNT
 			&& g_acceptable[elem->element_type].renderer)
 			g_acceptable[elem->element_type].renderer(elem);
 		else

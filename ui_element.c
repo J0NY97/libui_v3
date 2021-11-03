@@ -270,8 +270,8 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	{
 		if (elem->images[i])
 			SDL_FreeSurface(elem->images[i]);
-		elem->images[state] = ui_surface_new(image->w, image->h);
-		SDL_BlitSurface(image, NULL, elem->images[state], NULL);
+		elem->images[i] = ui_surface_new(image->w, image->h);
+		SDL_BlitSurface(image, NULL, elem->images[i], NULL);
 		made++;
 	}
 	elem->use_images = 1;
