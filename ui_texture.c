@@ -128,6 +128,8 @@ SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
 		surface = TTF_RenderUTF8_Blended(recipe->font, recipe->text, color);
 	else
 		surface = TTF_RenderUTF8_Blended_Wrapped(recipe->font, recipe->text, color, recipe->max_w);
+	if (!recipe->text || ft_strlen(recipe->text) < 1)
+		return (NULL);
 	if (!surface)
 		ft_printf("[%s] Failed creating surface.\n", __FUNCTION__);
 	return (surface);

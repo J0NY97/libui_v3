@@ -213,7 +213,7 @@ char	**ft_strsplitfirstoccurence(char *str, char c)
 	i = -1;
 	while (str[++i] && str[i] != c);
 	arr[0] = ft_strsub(str, 0, i);
-	if (str[i] == c)
+	if (str[i] == c && str[i + 1])
 		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
 	return (arr);
 }

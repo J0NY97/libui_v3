@@ -47,6 +47,7 @@ typedef struct s_ui_recipe
 	int				text_style;
 	char			*font;
 	t_vec4			text_pos;
+	bool			remove_title;
 
 	bool			text_color_set;
 	bool			text_style_set;

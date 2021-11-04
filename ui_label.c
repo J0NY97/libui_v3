@@ -28,8 +28,10 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (elem->element_type != UI_TYPE_LABEL)
 		return ;
 	label = elem->element;
-	if (recipe->title)
+	if (recipe->title && !recipe->remove_title)
 		ui_label_set_text(elem, recipe->title);
+	if (recipe->remove_title)
+		ft_strdel(&label->text);
 	if (recipe->text_color)
 		ui_label_color_set(elem, recipe->text_color);
 	if (recipe->text_align_set)
@@ -60,10 +62,7 @@ void	ui_label_texture_redo(t_ui_element *elem)
 		SDL_DestroyTexture(elem->texture);
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);	
 	if (!elem->textures[UI_STATE_DEFAULT])
-	{
-		ft_printf("[%s] (id : %s) elem->textures[UI_STATE_DEFAULT] no surface.\n", __FUNCTION__, elem->id);
 		elem->textures[UI_STATE_DEFAULT] = ui_surface_new(1, 1);
-	}
 	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
 	label->texture_recreate = 0;
 	elem->pos.w = elem->textures[UI_STATE_DEFAULT]->w;

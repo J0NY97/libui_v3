@@ -468,6 +468,8 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			ft_strdel(&target->title);
 		target->title = ft_strdup(child->title);
 	}
+	if (child->remove_title)
+		target->remove_title = 1;
 	if (child->placeholder_text != NULL)
 	{
 		if (target->placeholder_text)
@@ -637,7 +639,10 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		{
 			if (recipe->title)
 				ft_strdel(&recipe->title);
-			recipe->title = ft_strdup(key_value[1]);
+			if (!key_value[1])
+				recipe->remove_title = 1;
+			else
+				recipe->title = ft_strdup(key_value[1]);
 		}
 		else if (ft_strequ(key_value[0], "text_color"))
 		{
