@@ -317,7 +317,7 @@ int						ui_label_render(t_ui_element *label);
 void					ui_label_print(t_ui_element *elem);
 void					ui_label_free(void *label);
 // label other
-void					ui_label_text_set(t_ui_element *label, char *text);
+void					ui_label_set_text(t_ui_element *label, char *text);
 void					ui_label_font_set(t_ui_element *label, char *font_path);
 void					ui_label_size_set(t_ui_element *label, size_t size);
 void					ui_label_color_set(t_ui_element *label, Uint32 color);

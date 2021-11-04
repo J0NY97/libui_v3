@@ -111,7 +111,7 @@ int	ui_slider_render(t_ui_element *elem)
 	{
 		slider->button.pos.x = ft_clamp(ui_set_slider_value(slider->value, slider->min_value, slider->max_value, elem->pos.w - slider->button.pos.w), 0, elem->pos.w - slider->button.pos.w);
 		ft_b_itoa(slider->value, temp);
-		ui_label_text_set(&button->label, temp);
+		ui_label_set_text(&button->label, temp);
 		slider->update = 0;
 	}
 	ui_button_render(&slider->button);

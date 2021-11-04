@@ -764,7 +764,8 @@ void	print_recipe(t_ui_recipe *recipe)
 	ft_printf("title : %s\n", recipe->title);
 	ft_printf("text_color : %#x\n", recipe->text_color);
 	ft_printf("text_align : [%d] %s\n", recipe->text_align, text_align_to_str(recipe->text_align));
-	ft_printf("text_pos : [%d %d %d %d]\n", recipe->text_pos.x, recipe->text_pos.y, recipe->text_pos.w, recipe->text_pos.h);
+	ft_printf("text_pos : ");
+	print_vec(recipe->text_pos.v, 4);
 	ft_printf("font : %s\n", recipe->font);
 	ft_printf("bg_color_default : %#x\n", recipe->bg_colors[UI_STATE_DEFAULT]);
 	ft_printf("bg_color_hover : %#x\n", recipe->bg_colors[UI_STATE_HOVER]);
@@ -799,6 +800,7 @@ void	layout_make_recipes(t_ui_layout *layout)
 			add_to_list(&layout->recipes, recipe, sizeof(t_ui_recipe));
 	}
 	// printing to make sure that the recipe is setup correctly;
+	/*
 	ft_printf("[%s] Print Recipes\n", __FUNCTION__);
 	t_list *curr = layout->recipes;
 	while (curr)
@@ -806,6 +808,7 @@ void	layout_make_recipes(t_ui_layout *layout)
 		print_recipe(curr->content);
 		curr = curr->next;
 	}
+	*/
 }
 
 int	make_usable_win_flags(char	**flags)

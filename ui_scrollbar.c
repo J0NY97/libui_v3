@@ -18,7 +18,7 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(&scroll->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
 
 	ui_label_size_set(&ui_scrollbar_get_button(elem)->label, 20);
-	ui_label_text_set(&ui_scrollbar_get_button(elem)->label, "=");
+	ui_label_set_text(&ui_scrollbar_get_button(elem)->label, "=");
 
 	scroll->min = 0;
 	scroll->max = 100;

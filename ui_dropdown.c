@@ -17,7 +17,7 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_pos_set(elem, vec4(0, 0, 50, 20));
 
 	ui_label_new(win, &drop->label);
-	ui_label_text_set(&drop->label, "Dropdown");
+	ui_label_set_text(&drop->label, "Dropdown");
 
 	ui_menu_new(win, &drop->menu);
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
@@ -62,7 +62,7 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	if (drop->active)
 	{
 		ui_element_render(drop->active); // because we want it to update.
-		ui_label_text_set(&drop->label, ui_button_get_label(drop->active)->text);
+		ui_label_set_text(&drop->label, ui_button_get_label(drop->active)->text);
 	}
 	{
 		// This could be changed to the menu in the same wave as you render or event handle the children.
@@ -146,7 +146,7 @@ void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
 
 			// These are yoinked directly from the dropdown event handler; should probably be put in a function like drop_update;
 			ui_element_render(d->active);
-			ui_label_text_set(&d->label, ui_button_get_label(d->active)->text);
+			ui_label_set_text(&d->label, ui_button_get_label(d->active)->text);
 			break ;
 		}
 		curr = curr->next;

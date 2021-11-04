@@ -10,7 +10,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = input;
 	elem->element_type = UI_TYPE_INPUT;
 	ui_label_new(win, &input->label);
-	ui_label_text_set(&input->label, "Input Text");
+	ui_label_set_text(&input->label, "Input Text");
 	ui_element_set_parent(&input->label, elem, UI_TYPE_ELEMENT);
 	input->label.render_me_on_parent = 1;
 }
@@ -409,7 +409,7 @@ char	*ui_input_get_text(t_ui_element *elem)
 
 char	*ui_input_set_text(t_ui_element *elem, char *str)
 {
-	ui_label_text_set(ui_input_get_label_element(elem), str);
+	ui_label_set_text(ui_input_get_label_element(elem), str);
 }
 
 int	ui_input_exit(t_ui_element *elem)

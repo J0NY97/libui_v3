@@ -110,7 +110,10 @@ t_ui_element	*ui_button_get_label_element(t_ui_element *elem)
 	}
 	button = elem->element;
 	if (!button)
+	{
+		ft_printf("[%s] No button.\n", __FUNCTION__);
 		return (NULL);
+	}
 	return (&button->label);
 }
 
@@ -129,7 +132,7 @@ void	ui_button_set_text(t_ui_element *elem, char *str)
 	t_ui_element		*label;
 
 	label = ui_button_get_label_element(elem);
-	ui_label_text_set(label, str);
+	ui_label_set_text(label, str);
 }
 
 char	*ui_button_get_text(t_ui_element *elem)

@@ -29,7 +29,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		return ;
 	label = elem->element;
 	if (recipe->title)
-		ui_label_text_set(elem, recipe->title);
+		ui_label_set_text(elem, recipe->title);
 	if (recipe->text_color)
 		ui_label_color_set(elem, recipe->text_color);
 	if (recipe->text_align_set)
@@ -123,7 +123,7 @@ int	ui_label_render(t_ui_element *elem)
 /*
  * Every function under this is for editing the label.
 */
-void	ui_label_text_set(t_ui_element *label, char *text)
+void	ui_label_set_text(t_ui_element *label, char *text)
 {
 	t_ui_label	*lab;
 
