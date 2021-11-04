@@ -34,6 +34,8 @@ void	ui_element_free(t_ui_element *elem)
 {
 	int	i;
 
+	if (!elem)
+		return ;
 	if (g_acceptable[elem->element_type].freer)
 		g_acceptable[elem->element_type].freer(elem);
 	i = -1;
