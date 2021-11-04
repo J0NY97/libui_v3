@@ -47,11 +47,19 @@ Uint32	rgba_to_hex(t_rgba rgba)
 /*
  * Returns darkened version of the original color by procentage;
 */
-Uint32	ui_color_come_up_with_name(Uint32 orig_col, float procentage)
+Uint32	ui_color_change_brightness(Uint32 orig_col, float procentage)
 {
 	t_rgba	rgba;	
 
 	rgba = hex_to_rgba(orig_col);
+	if (procentage < 0)
+	{
+		rgba.r = (255 - rgba.r) * procentage + rgba.r;
+		rgba.g = (255 - rgba.g) * procentage + rgba.g;
+		rgba.b = (255 - rgba.b) * procentage + rgba.b;
+		return (rgba_to_hex(rgba));
+	}
+	procentage += 1;
 	rgba.r *= procentage;
 	rgba.g *= procentage;
 	rgba.b *= procentage;

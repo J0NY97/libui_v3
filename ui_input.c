@@ -12,6 +12,9 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_new(win, &input->label);
 	ui_label_set_text(&input->label, "Input Text");
 	ui_element_set_parent(&input->label, elem, UI_TYPE_ELEMENT);
+	ui_label_new(win, &input->placeholder);
+	ui_label_set_text(&input->placeholder, "Placeholder");
+	ui_element_set_parent(&input->placeholder, elem, UI_TYPE_ELEMENT);
 	input->label.render_me_on_parent = 1;
 }
 
@@ -21,6 +24,12 @@ void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 	input = elem->element;
 	ui_element_edit(&input->label, recipe);	
+	ui_element_edit(&input->placeholder, recipe);	
+	if (recipe->placeholder_text)
+	{
+		ui_label_set_text(&input->placeholder, recipe->placeholder_text);
+		ui_label_color_set(&input->placeholder, ui_color_change_brightness(ui_label_get(&input->label)->font_color, -0.5));
+	}
 	input->input_type = recipe->input_type;
 }
 
@@ -351,6 +360,10 @@ int	ui_input_render(t_ui_element *elem)
 	if (!ui_element_render(elem))
 		return (0);
 	input->input_exit = 0;
+	if (label->text_wh.x > 0 || elem->is_click)
+		input->placeholder.show = 0;
+	else
+		input->placeholder.show = 1;
 	if (elem->is_click)
 	{
 		input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font) + input->label.pos.x;
@@ -370,6 +383,7 @@ int	ui_input_render(t_ui_element *elem)
 		SDL_SetRenderTarget(elem->win->renderer, NULL);
 	}
 	ui_label_render(&input->label);
+	ui_label_render(&input->placeholder);
 	return (1);
 }
 
@@ -381,6 +395,16 @@ void	ui_input_free(void *elem)
 /*
  * Getters
 */
+t_ui_input	*ui_input_get(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_INPUT)
+	{
+		ft_printf("[%s] Element given is not of type <%d> %s, it\'s of type <%d> %s.\n", __FUNCTION__, UI_TYPE_INPUT, ui_element_type_to_string(UI_TYPE_INPUT), elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	return (elem->element);
+}
+
 t_ui_element	*ui_input_get_label_element(t_ui_element *elem)
 {
 	return (&((t_ui_input *)elem->element)->label);
@@ -410,6 +434,11 @@ char	*ui_input_get_text(t_ui_element *elem)
 char	*ui_input_set_text(t_ui_element *elem, char *str)
 {
 	ui_label_set_text(ui_input_get_label_element(elem), str);
+}
+
+char	*ui_input_set_placeholder_text(t_ui_element *elem, char *str)
+{
+	ui_label_set_text(&ui_input_get(elem)->placeholder, str);
 }
 
 int	ui_input_exit(t_ui_element *elem)

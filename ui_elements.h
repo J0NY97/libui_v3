@@ -173,6 +173,7 @@ typedef struct s_ui_input
 {
 	t_ui_element		*elem;
 	t_ui_element		label;
+	t_ui_element		placeholder;
 	int					cursor_on_char_num;
 	int					cursor_from_char_num;
 	int					cursor_on_char_x;
@@ -324,7 +325,7 @@ void					ui_label_color_set(t_ui_element *label, Uint32 color);
 void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 // Getters
-t_ui_label				*ui_label_get_label(t_ui_element *elem);
+t_ui_label				*ui_label_get(t_ui_element *elem);
 char					*ui_label_get_text(t_ui_element *elem);
 
 // Button
@@ -376,10 +377,12 @@ void					ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
 void					ui_input_free(void *elem);
+t_ui_input				*ui_input_get(t_ui_element *elem);
 t_ui_element			*ui_input_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_input_get_label(t_ui_element *elem);
 char					*ui_input_get_text(t_ui_element *elem);
 char					*ui_input_set_text(t_ui_element *elem, char *str);
+char					*ui_input_set_placeholder_text(t_ui_element *elem, char *str);
 int						ui_input_exit(t_ui_element *elem);
 
 // Slider

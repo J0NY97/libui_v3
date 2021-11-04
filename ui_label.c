@@ -249,7 +249,7 @@ void	ui_label_print(t_ui_element *elem)
  * Get
 */
 
-t_ui_label	*ui_label_get_label(t_ui_element *elem)
+t_ui_label	*ui_label_get(t_ui_element *elem)
 {
 	return (elem->element);
 }

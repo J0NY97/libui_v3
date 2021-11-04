@@ -68,7 +68,7 @@ int						rect_in_rect(t_vec4i rect1, t_vec4i rect2);
 SDL_Rect				create_sdl_rect(int x, int y, int w, int h);
 t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
-Uint32					ui_color_come_up_with_name(Uint32 orig_col, float procentage);
+Uint32					ui_color_change_brightness(Uint32 orig_col, float procentage);
 char					*get_text_to_char_at_x(char *str, int x, TTF_Font *font);
 int						get_x_of_char_in_text(char *str, int nth_char, TTF_Font *font);
 int						get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font);

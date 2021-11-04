@@ -468,6 +468,12 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			ft_strdel(&target->title);
 		target->title = ft_strdup(child->title);
 	}
+	if (child->placeholder_text != NULL)
+	{
+		if (target->placeholder_text)
+			ft_strdel(&target->placeholder_text);
+		target->placeholder_text = ft_strdup(child->placeholder_text);
+	}
 	if (child->text_color_set)
 	{
 		target->text_color = child->text_color;
@@ -691,6 +697,12 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		else if (ft_strequ(key_value[0], "target"))
 		{
 			recipe->target = ft_strdup(key_value[1]);
+		}
+		else if (ft_strequ(key_value[0], "placeholder"))
+		{
+			if (recipe->placeholder_text)
+				ft_strdel(&recipe->placeholder_text);
+			recipe->placeholder_text = ft_strdup(key_value[1]);
 		}
 		ft_arraydel(key_value);
 	}
