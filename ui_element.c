@@ -262,7 +262,7 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	int	amount_to_make;
 	int	made;
 
-	if (state < 0 || state > UI_STATE_AMOUNT)
+	if (!elem || state < 0 || state > UI_STATE_AMOUNT)
 		return ;
 	i = -1;
 	amount_to_make = 1;
@@ -276,7 +276,7 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 		if (elem->images[i])
 			SDL_FreeSurface(elem->images[i]);
 		elem->images[i] = ui_surface_new(image->w, image->h);
-		SDL_BlitSurface(image, NULL, elem->images[i], NULL);
+		SDL_BlitScaled(image, NULL, elem->images[i], NULL);
 		made++;
 	}
 	elem->use_images = 1;

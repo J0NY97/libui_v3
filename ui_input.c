@@ -407,6 +407,8 @@ t_ui_input	*ui_input_get(t_ui_element *elem)
 
 t_ui_element	*ui_input_get_label_element(t_ui_element *elem)
 {
+	if (!elem)
+		return (NULL);
 	return (&((t_ui_input *)elem->element)->label);
 }
 

@@ -122,11 +122,13 @@ int	ui_label_render(t_ui_element *elem)
 /*
  * Every function under this is for editing the label.
 */
-void	ui_label_set_text(t_ui_element *label, char *text)
+void	ui_label_set_text(t_ui_element *elem, char *text)
 {
 	t_ui_label	*lab;
 
-	lab = label->element;
+	if (!elem)
+		return ;
+	lab = elem->element;
 	if (lab->text)
 		ft_strdel(&lab->text);
 	lab->text = ft_strdup(text);
