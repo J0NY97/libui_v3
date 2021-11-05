@@ -170,7 +170,9 @@ int	ui_element_render(t_ui_element *elem)
 int	ui_element_is_hover(t_ui_element *elem)
 {
 	if (elem->show
-		&& point_in_rect(elem->win->mouse_pos, elem->screen_pos))
+		&& elem->was_rendered_last_frame
+		//&& *elem->parent_show
+		&& point_in_rect(elem->win->mouse_pos, elem->to_pos))
 		return (1);
 	return (0);
 }
