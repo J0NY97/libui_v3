@@ -262,8 +262,11 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	int	amount_to_make;
 	int	made;
 
-	if (!elem || state < 0 || state > UI_STATE_AMOUNT)
+	if (!elem || state < 0 || state > UI_STATE_AMOUNT || !image || !image->w || !image->h)
+	{
+		ft_printf("[%s] Couldn\'t set image, could be one of the 50 different reasons. elem ? %d, state ? %d, image ? %d, image->w %d, image->h %d\n", __FUNCTION__, elem ? 1 : 0, state, image ? 1 : 0, image->w, image->h);
 		return ;
+	}
 	i = -1;
 	amount_to_make = 1;
 	made = 0;
@@ -276,7 +279,7 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 		if (elem->images[i])
 			SDL_FreeSurface(elem->images[i]);
 		elem->images[i] = ui_surface_new(image->w, image->h);
-		SDL_BlitScaled(image, NULL, elem->images[i], NULL);
+		SDL_BlitSurface(image, NULL, elem->images[i], NULL);
 		made++;
 	}
 	elem->use_images = 1;
