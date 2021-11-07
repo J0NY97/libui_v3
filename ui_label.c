@@ -31,7 +31,10 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->title && !recipe->remove_title)
 		ui_label_set_text(elem, recipe->title);
 	if (recipe->remove_title)
+	{
 		ft_strdel(&label->text);
+		label->text = ft_strnew(0); // TODO: FIX: This is effing sheit! When you have title without text (you want no text) if you just strdel it, everything breaks if you try to use label->text and its NULL, so we just set an empty string in it instead.
+	}
 	if (recipe->text_color)
 		ui_label_color_set(elem, recipe->text_color);
 	if (recipe->text_align_set)

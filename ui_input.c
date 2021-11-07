@@ -392,6 +392,17 @@ void	ui_input_free(void *elem)
 	(void)elem;
 }
 
+void	ui_input_print(t_ui_element *elem)
+{
+	t_ui_input	*input;
+
+	if (elem->element_type != UI_TYPE_INPUT)
+		return ;
+	input = elem->element;
+	ui_label_print(&input->label);
+	ui_label_print(&input->placeholder);
+}
+
 /*
  * Getters
 */

@@ -93,7 +93,7 @@ static const t_ui_acceptable	g_acceptable_input =
 	.renderer = &ui_input_render,
 	.eventer = &ui_input_event,
 	.edit = &ui_input_edit,
-	.printer = NULL,
+	.printer = &ui_input_print,
 	.getter = NULL
 };
 

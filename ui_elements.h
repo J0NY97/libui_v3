@@ -377,6 +377,7 @@ void					ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
 void					ui_input_free(void *elem);
+void					ui_input_print(t_ui_element *elem);
 t_ui_input				*ui_input_get(t_ui_element *elem);
 t_ui_element			*ui_input_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_input_get_label(t_ui_element *elem);
