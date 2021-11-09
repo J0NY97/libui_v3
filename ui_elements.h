@@ -292,6 +292,7 @@ void					ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
 int						ui_element_render(t_ui_element *elem);
 int						ui_element_is_hover(t_ui_element *elem);
+int						ui_element_was_hover(t_ui_element *elem);
 int						ui_element_is_click(t_ui_element *elem);
 void					ui_element_pos_set(t_ui_element *elem, t_vec4 pos);
 void					ui_element_pos_set2(t_ui_element *elem, t_vec2 pos);

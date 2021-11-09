@@ -177,6 +177,17 @@ int	ui_element_is_hover(t_ui_element *elem)
 	return (0);
 }
 
+/*
+ * Was the element hovered last frame.
+*/
+int	ui_element_was_hover(t_ui_element *elem)
+{
+	if (elem->was_rendered_last_frame
+		&& point_in_rect(elem->win->mouse_pos_prev, elem->to_pos))
+		return (1);
+	return (0);
+}
+
 int	ui_element_is_click(t_ui_element *elem)
 {
 	if (ui_element_is_hover(elem) && elem->win->mouse_down)
