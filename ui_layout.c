@@ -107,9 +107,9 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 			ft_stradd(&content, trim);
 			ft_strdel(&trim);
 		}
-		ft_strdel(&line);
 	}
-	ft_printf("[%s] Content read.\n", __FUNCTION__);
+	ft_strdel(&line);
+	fclose(fd);
 	return (content);
 }
 
@@ -183,8 +183,10 @@ t_ui_family	*make_family_from_string(char *str)
 	int			rm_amount;
 	char		*children;
 
+	ft_printf("[%s] Starting making families.\n", __FUNCTION__);
 	temp = ft_strsplitfirstoccurenceor(str, '{', ';');
 	len = ft_strlen(temp[1]);
+	children = NULL;
 	if (len == 0) // probably some special stuff (like style : "path")
 	{
 		ft_arraydel(temp);
@@ -200,7 +202,10 @@ t_ui_family	*make_family_from_string(char *str)
 		children = ft_strndup(temp[1], len - rm_amount);
 		ft_printf("%s\n", children);
 	}
+	else
+		ft_printf("[%s] We didnt make children.\n", __FUNCTION__);
 	type_n_name = ft_strsplit(temp[0], ' ');
+	ft_putarr(type_n_name);
 	ft_printf("%s %s\n{\n%s\n}\n", type_n_name[0], type_n_name[1], children);
 	family->parent_id = ft_strdup(type_n_name[1]);
 	family->parent_type = ui_element_type_from_string(type_n_name[0]);
@@ -215,6 +220,7 @@ t_ui_family	*make_family_from_string(char *str)
 	}
 	ft_arraydel(temp);
 	ft_arraydel(type_n_name);
+	ft_printf("[%s] Family made.\n", __FUNCTION__);
 	return (family);
 }
 

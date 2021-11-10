@@ -140,6 +140,26 @@ float	fdist(t_vec2 p1, t_vec2 p2)
 	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
 }
 
+int	actual_word_count(char *str)
+{
+	int		count;
+	int		i;
+
+	if (!str)
+		return (0);
+	i = -1;
+	count = 1;
+	while (str[++i])
+	{
+		if (ft_isspace(str[i]))
+		{
+			count++;
+			while (ft_isspace(str[++i]));
+		}
+	}
+	return (count);
+}
+
 char	**ft_strsplitwhitespace(char *str)
 {
 	char	**arr;
@@ -150,22 +170,22 @@ char	**ft_strsplitwhitespace(char *str)
 	if (!str)
 		return (NULL);
 	i = -1;
-	wc = 0;
+	arr = malloc(sizeof(char *) * (actual_word_count(str) + 1));
 	prev_i = 0;
-	arr = malloc(sizeof(char *) * 1);
+	i = -1;
+	wc = -1;
 	while (str[++i])
 	{
 		if (ft_isspace(str[i]))
 		{
-			arr = realloc(arr, sizeof(char *) * ++wc);
-			arr[wc - 1] = ft_strsub(str, prev_i, i - prev_i);
-			prev_i = i + 1;
+			arr[++wc] = ft_strsub(str, prev_i, i - prev_i);
+			while (ft_isspace(str[++i]));
+			prev_i = i;
 		}
 	}
-	arr = realloc(arr, sizeof(char *) * ++wc);
-	arr[wc - 1] = ft_strsub(str, prev_i, i - prev_i);
-	arr = realloc(arr, sizeof(char *) * ++wc);
-	arr[wc - 1] = 0;
+	if (i - prev_i > 0)
+		arr[++wc] = ft_strsub(str, prev_i, i - prev_i);
+	arr[++wc] = NULL;
 	return (arr);
 }
 
@@ -184,21 +204,26 @@ char	*ft_supertrim(char *str)
 
 	if (!str)
 		return (NULL);
-	final = NULL;
-	i = -1;
 	trim = ft_strtrim(str);
+	if (!trim)
+		return (NULL);
 	if (trim[0] && trim[0] == '/'
 		&& trim[1] && trim[1] == '/')
 		return (NULL);
 	arr = ft_strsplitwhitespace(trim);
+	final = NULL;
+	i = -1;
 	while (arr[++i])
 	{
 		tram = ft_strtrim(arr[i]);
+		if (!tram)
+			continue ;
 		ft_stradd(&final, tram);
 		if (arr[i + 1])
 			ft_straddchar(&final, ' ');
 		ft_strdel(&tram);
 	}
+	ft_arraydel(arr);
 	return (final);
 }
 
