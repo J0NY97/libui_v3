@@ -75,6 +75,7 @@ typedef struct s_ui_element
 	t_vec4i			screen_pos;
 	SDL_Surface		*textures[UI_STATE_AMOUNT];
 	SDL_Texture		*texture;
+	t_vec2i			current_texture_size;
 	SDL_Surface		*images[UI_STATE_AMOUNT];
 	bool			use_images;
 	int				state;
@@ -415,6 +416,8 @@ void					ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
 void					ui_checkbox_event(t_ui_element *elem, SDL_Event e);
 int						ui_checkbox_render(t_ui_element *elem);
 void					ui_checkbox_free(void *elem);
+void					ui_checkbox_toggle_on(t_ui_element *elem);
+void					ui_checkbox_toggle_off(t_ui_element *elem);
 
 // Radio
 void					ui_radio_new(t_ui_window *win, t_ui_element *elem);

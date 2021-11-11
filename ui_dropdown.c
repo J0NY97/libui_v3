@@ -51,9 +51,12 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 
 	drop = elem->element;
 	ui_checkbox_event(elem, e);
+	// this is getting kind of convoluted, so thats why we have these both; (im not sure which of these we should have);
 	drop->menu.show = elem->state == UI_STATE_CLICK;
-	if (!drop->menu.show) // if menu isnt shown, no point event handling children;
+	drop->menu.show = elem->is_toggle;
+	if (!drop->menu.show || !drop->menu.children) // if menu isnt shown, no point event handling children;
 	{
+		ui_checkbox_toggle_off(elem);
 		drop->scrollbar.show = 0;
 		return ;
 	}
@@ -88,11 +91,11 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 			drop->scrollbar.show = 0;
 		ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y, drop->menu.pos.w, total_height));
 	}
-	if(e.type == SDL_MOUSEBUTTONDOWN // close the menu if you click somewhere else but the menu of dropdown;
-		&& elem->is_hover != 1 && !ui_element_is_hover(&drop->scrollbar))
+	if (elem->win->mouse_down // close the menu if you click somewhere else but the menu of dropdown;
+		&& !ui_element_is_hover(elem)
+		&& !ui_element_is_hover(&drop->scrollbar))
 	{
-		elem->is_click = 0;
-		elem->state = UI_STATE_DEFAULT;
+		ui_checkbox_toggle_off(elem);
 		drop->menu.show = 0;
 		drop->drop_exit = 1;
 		drop->scrollbar.show = 0;

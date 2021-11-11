@@ -87,6 +87,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 	}
 	if (!elem->texture)
 		elem->texture = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
+	SDL_QueryTexture(elem->texture, NULL, NULL, &elem->current_texture_size.x, &elem->current_texture_size.y);
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_HOVER] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_CLICK] = ui_surface_new(elem->pos.w, elem->pos.h);

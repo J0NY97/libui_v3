@@ -18,11 +18,16 @@ void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
 */
 void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 {
-	elem->is_hover = 0;
-	if (point_in_rect(elem->win->mouse_pos, elem->screen_pos))
-		elem->is_hover = 1;
-	if (elem->is_hover && e.type == SDL_MOUSEBUTTONDOWN)
-		elem->is_click = elem->is_click == 0;
+	elem->is_hover = ui_element_is_hover(elem); 
+	if (elem->is_hover && elem->win->mouse_down_last_frame)
+	{
+		if (elem->is_toggle)
+			ui_checkbox_toggle_off(elem);
+		else
+			ui_checkbox_toggle_on(elem);
+	}
+	if (elem->is_toggle)
+		elem->is_click = 1;
 	if (elem->is_click)
 		elem->state = UI_STATE_CLICK;
 	else if (elem->is_hover)
@@ -40,4 +45,25 @@ int	ui_checkbox_render(t_ui_element *elem)
 void	ui_checkbox_free(void *elem)
 {
 	(void)elem;
+}
+
+/*
+ * We don't need to check if the element_type is checkbox,
+ * 	because we don't do anything to the checkbox element.
+ * Might make this ui_element_toggle_on rather;
+*/
+void	ui_checkbox_toggle_on(t_ui_element *elem)
+{
+	elem->is_click = 1;
+	elem->is_toggle = 1;
+	elem->was_click = 1;
+	elem->state = UI_STATE_CLICK;
+}
+
+void	ui_checkbox_toggle_off(t_ui_element *elem)
+{
+	elem->is_click = 0;
+	elem->is_toggle = 0;
+	if (elem->state == UI_STATE_CLICK)
+		elem->state = UI_STATE_DEFAULT;
 }
