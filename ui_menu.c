@@ -16,7 +16,7 @@ void	ui_menu_event(t_ui_element *elem, SDL_Event e)
 	t_ui_menu		*menu;
 
 	menu = elem->element;
-	if (!menu->event_and_render_children)
+	if (!menu->event_children)
 		return ;
 	ui_list_event(elem->children, e);
 }
@@ -28,7 +28,7 @@ int	ui_menu_render(t_ui_element *elem)
 	if (!ui_element_render(elem))
 		return (0);
 	menu = elem->element;
-	if (!menu->event_and_render_children)
+	if (!menu->render_children)
 		return (1);
 	ui_list_sort(elem->children);
 	ui_list_render(elem->children);
@@ -46,8 +46,10 @@ void	ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		return ;
 	}
 	menu = elem->element;
-	if (ft_strinarr("event_and_render_children", recipe->flags))
-		menu->event_and_render_children = 1;
+	if (ft_strinarr("render_children", recipe->flags))
+		menu->render_children = 1;
+	if (ft_strinarr("event_children", recipe->flags))
+		menu->event_children = 1;
 }
 
 void	ui_menu_free(void *menu)

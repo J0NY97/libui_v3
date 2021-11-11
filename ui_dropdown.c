@@ -22,7 +22,8 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_menu_new(win, &drop->menu);
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
-	((t_ui_menu *)drop->menu.element)->event_and_render_children = 1;
+	((t_ui_menu *)drop->menu.element)->event_children = 1;
+	((t_ui_menu *)drop->menu.element)->render_children = 1;
 
 	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
 	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
@@ -151,6 +152,19 @@ void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
 		}
 		curr = curr->next;
 	}
+}
+
+/*
+ * This will return 0/1 every frame.
+*/
+int	ui_dropdown_is_open(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_DROPDOWN)
+	{
+		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		return (-1);
+	}
+	return (((t_ui_dropdown *)elem->element)->menu.show);
 }
 
 /*

@@ -31,7 +31,7 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 	t_ui_scrollbar	*scroll;
 	t_ui_button		*button;
 
-	if (!elem->show)
+	if (!elem->show || !elem->event)
 		return ;
 	scroll = elem->element;
 	button = scroll->button.element;

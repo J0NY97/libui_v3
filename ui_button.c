@@ -28,7 +28,7 @@ void	ui_button_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 void	ui_button_event(t_ui_element *elem, SDL_Event e)
 {
-	if (!elem->show)
+	if (!elem->show || !elem->event)
 		return ;
 	elem->is_hover = ui_element_is_hover(elem);
 	if (elem->is_hover && elem->win->mouse_down)

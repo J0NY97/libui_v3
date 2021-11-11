@@ -120,11 +120,10 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	t_ui_label	*label;
 	int			len;
 
+	if (!elem->was_rendered_last_frame || !elem->event)
+		return ;
 	input = elem->element;
 	label = input->label.element;
-
-	if (!elem->was_rendered_last_frame)
-		return ;
 	elem->is_hover = ui_element_is_hover(elem);
 	if (elem->is_hover == 1 && e.type == SDL_MOUSEBUTTONDOWN)
 	{

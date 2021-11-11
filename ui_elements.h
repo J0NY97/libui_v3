@@ -59,6 +59,7 @@ typedef struct s_ui_window
  * void			*element;					the real element.
  * int			element_type;				the type of the real element enum t_element_type.
  * bool			show;						wheather to render or not.
+ * bool			event;						wheather to event or not.
  * char			*id;						id of the element, so we can write a get_element_by_id();
  * bool			is_hover;					1 if the mouse is hovering over the element.
  * bool			is_click;					1 if you have mouse button down on the element. basically if hover && mouse_down;
@@ -87,6 +88,7 @@ typedef struct s_ui_element
 	int				element_type;
 	t_list			*children;
 	bool			show;
+	bool			event;
 	char			*id;
 	bool			is_hover;
 	bool			is_click;
@@ -111,7 +113,8 @@ typedef struct s_ui_element
 typedef struct s_ui_menu
 {
 	t_ui_element		*elem;
-	bool				event_and_render_children;
+	bool				event_children;
+	bool				render_children;
 }						t_ui_menu;
 
 /*
@@ -361,6 +364,7 @@ void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
 void					ui_dropdown_free(void *drop);
 void					ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem);
+int						ui_dropdown_is_open(t_ui_element *elem);
 int						ui_dropdown_open(t_ui_element *elem);
 int						ui_dropdown_exit(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);

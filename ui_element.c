@@ -26,6 +26,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_ELEMENT;
 	elem->show = 1;
+	elem->event = 1;
 	elem->last_state = -999;
 	elem->children = NULL;
 }
