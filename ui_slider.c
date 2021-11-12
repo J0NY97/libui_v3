@@ -83,7 +83,7 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 	t_ui_slider	*slider;
 	t_ui_button	*button;
 
-	if (!elem->show)
+	if (!elem->show || !elem->event)
 		return ;
 	slider = elem->element;
 	button = slider->button.element;

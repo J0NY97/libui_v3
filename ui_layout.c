@@ -468,6 +468,11 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->bg_images_set[jj] = 1;
 		}
 	}
+	if (child->z_set)
+	{
+		target->z = child->z;
+		target->z_set = 1;
+	}
 	if (child->title != NULL)
 	{
 		if (target->title)
@@ -640,6 +645,11 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		{
 			recipe->bg_images[UI_STATE_CLICK] = ft_strdup(key_value[1]);
 			recipe->bg_images_set[UI_STATE_CLICK] = 1;
+		}
+		else if (ft_strequ(key_value[0], "z"))
+		{
+			recipe->z = ft_atoi(key_value[1]);
+			recipe->z_set = 1;
 		}
 		else if (ft_strequ(key_value[0], "title"))
 		{
@@ -928,6 +938,8 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		if (ft_strinarr("render_on_parent", recipe->flags))
 			elem->render_me_on_parent = 1;
 	}
+	if (recipe->z_set)
+		elem->z = recipe->z;
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else

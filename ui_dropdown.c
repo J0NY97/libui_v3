@@ -54,6 +54,10 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	// this is getting kind of convoluted, so thats why we have these both; (im not sure which of these we should have);
 	drop->menu.show = elem->state == UI_STATE_CLICK;
 	drop->menu.show = elem->is_toggle;
+
+	drop->menu.z = elem->z;
+	drop->scrollbar.z = drop->menu.z;
+
 	if (!drop->menu.show || !drop->menu.children) // if menu isnt shown, no point event handling children;
 	{
 		ui_checkbox_toggle_off(elem);

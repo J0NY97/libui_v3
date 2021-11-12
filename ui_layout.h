@@ -35,10 +35,12 @@ typedef struct s_ui_recipe
 	t_vec4			pos;
 	Uint32			bg_colors[UI_STATE_AMOUNT];
 	char			*bg_images[UI_STATE_AMOUNT];
+	int				z;
 
 	bool			pos_set[VEC4_SIZE];
 	bool			bg_colors_set[UI_STATE_AMOUNT];
 	bool			bg_images_set[UI_STATE_AMOUNT];
+	bool			z_set;
 
 	// Label only
 	char			*title;
