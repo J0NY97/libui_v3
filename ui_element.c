@@ -165,6 +165,7 @@ int	ui_element_render(t_ui_element *elem)
 	SDL_RenderCopy(elem->win->renderer, elem->texture,
 		&(SDL_Rect){elem->from_pos.x, elem->from_pos.y, elem->from_pos.w, elem->from_pos.h},
 		&(SDL_Rect){elem->to_pos.x, elem->to_pos.y, elem->to_pos.w, elem->to_pos.h});
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	elem->last_state = elem->state;
 	elem->was_rendered_last_frame = 1;
 	return (1);
