@@ -408,6 +408,10 @@ void	ui_element_print(t_ui_element *elem)
 	print_vec(elem->pos.v, 4);
 	ft_printf("\tscreen_pos : ");
 	print_veci(elem->screen_pos.v, 4);
+	ft_printf("\tfrom_pos : ");
+	print_veci(elem->from_pos.v, 4);
+	ft_printf("\tto_pos : ");
+	print_veci(elem->to_pos.v, 4);
 	ft_printf("\tparent_pos : ");
 	print_veci(elem->parent_screen_pos->v, 4);
 	ft_printf("\tuse_images : %d\n", elem->use_images);
@@ -421,12 +425,19 @@ void	ui_element_print(t_ui_element *elem)
 		ft_printf("\tparent z : %d\n", ((t_ui_element *)elem->parent)->z);
 	}
 	ft_printf("\tz : %d\n", elem->z);
+	ft_printf("\tfigure_out_z : %d\n", elem->figure_out_z);
 	ft_printf("\tshow : %d\n", elem->show);
+	ft_printf("\tevent : %d\n", elem->event);
 	ft_printf("\tparent show : %d\n", *elem->parent_show);
 	ft_printf("\tis_hover : %d\n", elem->is_hover);
 	ft_printf("\tis_click : %d\n", elem->is_click);
+	ft_printf("\tis_toggle : %d\n", elem->is_toggle);
+	ft_printf("\twas_click : %d\n", elem->was_click);
 	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
 	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
+	ft_printf("\twas_rendered_last_frame : %d\n", elem->was_rendered_last_frame);
+	ft_printf("\trender_me_on_parent : %d\n", elem->render_me_on_parent);
+	ft_printf("\tis_a_part_of_another : %d\n", elem->is_a_part_of_another);
 	if (g_acceptable[elem->element_type].printer)
 		g_acceptable[elem->element_type].printer(elem);
 }
