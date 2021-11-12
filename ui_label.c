@@ -35,8 +35,10 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ft_strdel(&label->text);
 		label->text = ft_strnew(0); // TODO: FIX: This is effing sheit! When you have title without text (you want no text) if you just strdel it, everything breaks if you try to use label->text and its NULL, so we just set an empty string in it instead.
 	}
-	if (recipe->text_color)
+	if (recipe->text_color_set)
 		ui_label_color_set(elem, recipe->text_color);
+	if (recipe->text_size_set)
+		ui_label_size_set(elem, recipe->text_size);
 	if (recipe->text_align_set)
 		ui_label_text_align(elem, recipe->text_align);
 	pos = elem->pos;
@@ -183,6 +185,16 @@ void	ui_label_size_set(t_ui_element *label, size_t size)
 	lab->font_size = size;
 }
 
+Uint32	ui_label_get_color(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_LABEL)	
+	{
+		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (0);
+	}
+	return (ui_label_get_label(elem)->font_color);
+}
+
 void	ui_label_color_set(t_ui_element *label, Uint32 color)
 {
 	t_ui_label	*lab;
@@ -253,7 +265,12 @@ void	ui_label_print(t_ui_element *elem)
  * Get
 */
 
-t_ui_label	*ui_label_get(t_ui_element *elem)
+t_ui_label	*ui_label_get_label(t_ui_element *elem)
 {
+	if (elem->element_type != UI_TYPE_LABEL)	
+	{
+		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
 	return (elem->element);
 }

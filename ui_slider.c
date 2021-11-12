@@ -12,6 +12,7 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	slider->elem = elem;
 
 	ui_button_new(win, &slider->button);
+	slider->button.is_a_part_of_another = 1;
 	ui_element_pos_set(&slider->button, vec4(0, 0, elem->pos.h, elem->pos.h));
 	ui_element_color_set(&slider->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
 	ui_element_color_set(&slider->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
@@ -102,11 +103,10 @@ int	ui_slider_render(t_ui_element *elem)
 	t_ui_slider	*slider;
 	t_ui_button	*button;
 
-	slider = elem->element;
-	button = slider->button.element;
-
 	if (!ui_element_render(elem))
 		return (0);
+	slider = elem->element;
+	button = slider->button.element;
 	if (slider->update)
 	{
 		slider->button.pos.x = ft_clamp(ui_set_slider_value(slider->value, slider->min_value, slider->max_value, elem->pos.w - slider->button.pos.w), 0, elem->pos.w - slider->button.pos.w);

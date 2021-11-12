@@ -66,6 +66,8 @@ typedef struct s_ui_window
  * bool			was_click;					1 if the element was clicked this frame; resets every time you event handle;
  * t_list		children;					list of t_ui_element;
  * int			z;							z value of the elements, aka render order;
+ * bool			is_a_part_of_another;		this element is another element a part of another element; (button label or slider button...)
+ * bool			figure_out_z;				whether the ui_element_render will update z how it wants or not;
 */
 typedef struct s_ui_element
 {
@@ -100,6 +102,8 @@ typedef struct s_ui_element
 	bool			was_rendered_last_frame;
 	bool			*parent_was_rendered_last_frame;
 	bool			render_me_on_parent;
+	bool			is_a_part_of_another;
+	bool			figure_out_z;
 	int				z;
 }					t_ui_element;
 
@@ -327,10 +331,11 @@ void					ui_label_set_text(t_ui_element *label, char *text);
 void					ui_label_font_set(t_ui_element *label, char *font_path);
 void					ui_label_size_set(t_ui_element *label, size_t size);
 void					ui_label_color_set(t_ui_element *label, Uint32 color);
+Uint32					ui_label_get_color(t_ui_element *elem);
 void					ui_label_text_center(t_ui_element *elem);
 void					ui_label_text_align(t_ui_element *elem, int align);
 // Getters
-t_ui_label				*ui_label_get(t_ui_element *elem);
+t_ui_label				*ui_label_get_label(t_ui_element *elem);
 char					*ui_label_get_text(t_ui_element *elem);
 
 // Button
@@ -372,6 +377,7 @@ t_ui_element			*ui_dropdown_get(t_ui_element *elem, int ui_type);
 // Getters
 t_ui_element			*ui_dropdown_get_button_element(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
+t_ui_element			*ui_dropdown_get_scrollbar_element(t_ui_element *elem);
 t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
 t_ui_menu				*ui_dropdown_get_menu(t_ui_element *elem);
 t_ui_element			*ui_dropdown_active(t_ui_element *elem);
@@ -442,6 +448,7 @@ void					ui_scrollbar_event(t_ui_element *elem, SDL_Event e);
 int						ui_scrollbar_render(t_ui_element *elem);
 void					ui_scrollbar_free(void *args);
 void					ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe);
+t_ui_element			*ui_scrollbar_get(t_ui_element *elem, int element_type);
 // Other
 void					ui_scroll_value_set(t_ui_element *elem, int value);
 void					ui_scrollbar_recount(t_ui_element *elem);

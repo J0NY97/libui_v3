@@ -28,7 +28,7 @@ void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->placeholder_text)
 	{
 		ui_label_set_text(&input->placeholder, recipe->placeholder_text);
-		ui_label_color_set(&input->placeholder, ui_color_change_brightness(ui_label_get(&input->label)->font_color, -0.5));
+		ui_label_color_set(&input->placeholder, ui_color_change_brightness(ui_label_get_label(&input->label)->font_color, -0.5));
 	}
 	input->input_type = recipe->input_type;
 }

@@ -14,6 +14,7 @@ void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(elem, UI_STATE_CLICK, 0xff73956f);
 
 	ui_label_new(win, &button->label);
+	button->label.is_a_part_of_another = 1;
 	ui_element_set_parent(&button->label, elem, UI_TYPE_ELEMENT);
 	ui_label_text_align(&button->label, UI_TEXT_ALIGN_CENTER);
 }
@@ -52,6 +53,7 @@ bool	ui_button(t_ui_element *elem)
 	{
 		elem->is_click = 0;
 		elem->is_hover = 0;
+		elem->state = UI_STATE_CLICK;
 		return (1);
 	}
 	return (0);

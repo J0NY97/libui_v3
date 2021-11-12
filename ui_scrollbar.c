@@ -11,6 +11,7 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 	scroll = elem->element;
 
 	ui_button_new(win, &scroll->button);
+	scroll->button.is_a_part_of_another = 1;
 	ui_element_set_parent(&scroll->button, elem, UI_TYPE_ELEMENT);
 	ui_element_pos_set(&scroll->button, vec4(0, 0, elem->pos.h, elem->pos.h));
 	ui_element_color_set(&scroll->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
@@ -49,11 +50,12 @@ int	ui_scrollbar_render(t_ui_element *elem)
 	t_ui_scrollbar	*scroll;
 	t_ui_button		*button;
 
-	scroll = elem->element;
-	button = scroll->button.element;
-
 	if (!ui_element_render(elem))
 		return (0);
+	scroll = elem->element;
+	button = scroll->button.element;
+	if (scroll->target)
+		elem->z = ((t_ui_element *)scroll->target)->z;
 	ui_scrollbar_recount(elem);
 	if (scroll->update)
 	{
@@ -137,6 +139,15 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 		scroll->top_most = vec2i(0, min);
 		scroll->bot_most = vec2i(0, max);
 	}
+}
+
+t_ui_element	*ui_scrollbar_get(t_ui_element *elem, int element_type)
+{
+	if (elem->element_type != UI_TYPE_SCROLLBAR)
+		return (NULL);
+	if (element_type == UI_TYPE_BUTTON)
+		return (ui_scrollbar_get_button_element(elem));
+	return (NULL);
 }
 
 t_ui_element	*ui_scrollbar_get_button_element(t_ui_element *elem)

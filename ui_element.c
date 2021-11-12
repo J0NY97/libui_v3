@@ -29,6 +29,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->event = 1;
 	elem->last_state = -999;
 	elem->children = NULL;
+	elem->figure_out_z = 1;
 }
 
 void	ui_element_free(t_ui_element *elem)
@@ -131,7 +132,7 @@ int	ui_element_render(t_ui_element *elem)
 	}
 	else if (elem->state != elem->last_state)
 		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
-	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT)
+	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT && elem->figure_out_z)
 		elem->z = ((t_ui_element *)elem->parent)->z + 1;
 	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT && ((t_ui_element *)elem->parent)->render_me_on_parent)
 		elem->render_me_on_parent = 1;

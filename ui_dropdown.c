@@ -17,9 +17,11 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_pos_set(elem, vec4(0, 0, 50, 20));
 
 	ui_label_new(win, &drop->label);
+	drop->label.is_a_part_of_another = 1;
 	ui_label_set_text(&drop->label, "Dropdown");
 
 	ui_menu_new(win, &drop->menu);
+	drop->menu.is_a_part_of_another = 1;
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
 	((t_ui_menu *)drop->menu.element)->event_children = 1;
@@ -30,6 +32,7 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 
 	drop->max_h = 100; // TODO: change this to -1 by default; maybe;
 	ui_scrollbar_new(win, &drop->scrollbar);
+	drop->scrollbar.is_a_part_of_another = 1;
 	ui_element_set_parent(&drop->scrollbar, elem, UI_TYPE_ELEMENT);
 	ui_scroll_value_set(&drop->scrollbar, 0);
 	((t_ui_scrollbar *)drop->scrollbar.element)->target = &drop->menu;
@@ -56,7 +59,6 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	drop->menu.show = elem->is_toggle;
 
 	drop->menu.z = elem->z;
-	drop->scrollbar.z = drop->menu.z;
 
 	if (!drop->menu.show || !drop->menu.children) // if menu isnt shown, no point event handling children;
 	{
@@ -111,9 +113,9 @@ int	ui_dropdown_render(t_ui_element *elem)
 	t_ui_dropdown	*drop;
 	t_ui_element	*scroll_button;
 
-	drop = elem->element;
 	if (!ui_button_render(elem))
 		return (0);
+	drop = elem->element;
 	drop->drop_exit = 0;
 	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, ft_min(drop->max_h, drop->menu.pos.h)));
 	ui_menu_render(&drop->menu);
@@ -203,6 +205,8 @@ t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)
 	{
 		if (ui_type == UI_TYPE_MENU)
 			return (ui_dropdown_get_menu_element(elem));
+		if (ui_type == UI_TYPE_SCROLLBAR)
+			return (ui_dropdown_get_scrollbar_element(elem));
 	}
 	ft_printf("[%s] Something went wrong.\n");
 	return (NULL);
@@ -223,6 +227,14 @@ t_ui_element	*ui_dropdown_get_menu_element(t_ui_element *elem)
 {
 	if (elem->element_type == UI_TYPE_DROPDOWN)
 		return (&ui_dropdown_get_dropdown(elem)->menu);
+	ft_printf("[%s] Something went wrong.\n");
+	return (NULL);
+}
+
+t_ui_element	*ui_dropdown_get_scrollbar_element(t_ui_element *elem)
+{
+	if (elem->element_type == UI_TYPE_DROPDOWN)
+		return (&ui_dropdown_get_dropdown(elem)->scrollbar);
 	ft_printf("[%s] Something went wrong.\n");
 	return (NULL);
 }

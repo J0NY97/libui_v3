@@ -159,7 +159,7 @@ static const t_ui_acceptable	g_acceptable_scrollbar =
 	.eventer = &ui_scrollbar_event,
 	.edit = &ui_scrollbar_edit,
 	.printer = NULL,
-	.getter = NULL
+	.getter = &ui_scrollbar_get
 };
 
 static const t_ui_acceptable	g_acceptable_window =

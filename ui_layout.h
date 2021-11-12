@@ -15,6 +15,8 @@ struct s_ui_layout
 
 	t_list			*families;	// t_list of t_ui_family;
 	t_list			*recipes; // t_list of t_ui_recipe_v2;
+
+	int				dropdowns;
 };
 
 typedef struct s_ui_family
@@ -45,12 +47,14 @@ typedef struct s_ui_recipe
 	// Label only
 	char			*title;
 	Uint32			text_color;
+	int				text_size;
 	int				text_align;
 	int				text_style;
 	char			*font;
 	t_vec4			text_pos;
 	bool			remove_title;
 
+	bool			text_size_set;
 	bool			text_color_set;
 	bool			text_style_set;
 	bool			text_align_set;
@@ -77,6 +81,7 @@ typedef struct s_ui_recipe
 ///////////////
 void				ui_layout_event(t_ui_layout *layout, SDL_Event e);
 void				ui_layout_render(t_ui_layout *layout);
+void				ui_layout_list_render(t_list *list);
 void				ui_layout_load(t_ui_layout *layout, char *file);
 void				layout_apply_style(t_ui_layout *layout);
 void				layout_make_recipes(t_ui_layout *layout);

@@ -136,9 +136,15 @@ void	ui_window_flag_set(t_ui_window *win, int flags)
 
 	curr_flags = SDL_GetWindowFlags(win->win);
 	if (flags & UI_WINDOW_HIDE)
+	{
 		SDL_HideWindow(win->win);
+		win->show = 0;
+	}
 	if (flags & UI_WINDOW_SHOW)
+	{
 		SDL_ShowWindow(win->win);
+		win->show = 1;
+	}
 	if (flags & UI_WINDOW_MAXIMIZE)
 		SDL_MaximizeWindow(win->win);
 	if (flags & UI_WINDOW_MINIMIZE)

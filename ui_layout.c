@@ -24,7 +24,7 @@ void	ui_layout_render(t_ui_layout *layout)
 	t_ui_window		*win;
 
 	ui_list_sort(layout->elements);
-	ui_list_render(layout->elements);
+	ui_layout_list_render(layout->elements);
 
 	// Render The Windows
 	curr = layout->windows;
@@ -492,6 +492,11 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 		target->text_color = child->text_color;
 		target->text_color_set = 1;
 	}
+	if (child->text_size_set)
+	{
+		target->text_size = child->text_size;
+		target->text_size_set = 1;
+	}
 	if (child->font != NULL)
 	{
 		if (target->font)
@@ -664,6 +669,11 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		{
 			recipe->text_color = (unsigned int)strtoul(key_value[1], NULL, 16);
 			recipe->text_color_set = 1;
+		}
+		else if (ft_strequ(key_value[0], "text_size"))
+		{
+			recipe->text_size = ft_atoi(key_value[1]); // should we check if this number is something that makes sense;
+			recipe->text_size_set = 1;
 		}
 		else if (ft_strequ(key_value[0], "font"))
 		{
@@ -939,7 +949,10 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 			elem->render_me_on_parent = 1;
 	}
 	if (recipe->z_set)
+	{
 		elem->z = recipe->z;
+		elem->figure_out_z = 0;
+	}
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
