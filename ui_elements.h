@@ -346,7 +346,9 @@ bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
 void					ui_button_free(void *button);
 t_ui_element			*ui_button_get(t_ui_element *elem, int ui_type);
+void					ui_button_print(t_ui_element *elem);
 // Getters
+t_ui_button				*ui_button_get_button(t_ui_element *elem);
 t_ui_element			*ui_button_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_button_get_label(t_ui_element *elem);
 char					*ui_button_get_text(t_ui_element *elem);

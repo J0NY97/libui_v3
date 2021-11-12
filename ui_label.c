@@ -41,6 +41,8 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_label_size_set(elem, recipe->text_size);
 	if (recipe->text_align_set)
 		ui_label_text_align(elem, recipe->text_align);
+	if (recipe->font)
+		ui_label_font_set(elem, recipe->font);
 	pos = elem->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)

@@ -41,7 +41,7 @@ static const t_ui_acceptable	g_acceptable_button =
 	.renderer = &ui_button_render,
 	.eventer = &ui_button_event,
 	.edit = &ui_button_edit,
-	.printer = NULL,
+	.printer = &ui_button_print,
 	.getter = NULL //&ui_button_get , button doesnt need this, you can acess the label stuff anyways.
 };
 

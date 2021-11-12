@@ -82,15 +82,42 @@ int	ui_button_render(t_ui_element *elem)
 */
 t_ui_element	*ui_button_get(t_ui_element *elem, int ui_type)
 {
-	if (elem->element_type == UI_TYPE_BUTTON
-		&& ui_type == UI_TYPE_LABEL)
+	if (elem->element_type != UI_TYPE_BUTTON)
+		return (NULL);
+	if (ui_type == UI_TYPE_LABEL)
 		return (ui_button_get_label_element(elem));
-	return (NULL);
+}
+
+t_ui_button	*ui_button_get_button(t_ui_element *elem)
+{
+	if (elem->element_type != UI_TYPE_BUTTON)
+	{
+		ft_printf("[%s] Elem is not of type button. <%d : %s>\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return (NULL);
+	}
+	return (elem->element);
 }
 
 void	ui_button_free(void *button)
 {
 	(void)button;
+}
+
+
+void	ui_button_print(t_ui_element *elem)
+{
+	t_ui_button	*button;
+
+	if (elem->element_type != UI_TYPE_BUTTON)
+	{
+		ft_printf("[%s] You\'re not giving element of type button. <%d : %s>", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		return ;
+	}
+	ft_printf("We should be printing some button stuff here.\n");
+	button = ui_button_get_button(elem);
+	if (!button)
+		return ;
+	ui_element_print(&button->label);
 }
 
 /*
