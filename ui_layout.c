@@ -967,7 +967,7 @@ void	layout_apply_style(t_ui_layout *layout)
 	t_list			*curr;
 	t_ui_window		*win;
 	t_ui_element	*elem;
-	t_ui_recipe	*recipe;
+	t_ui_recipe		*recipe;
 
 	curr = layout->windows;
 	while (curr)

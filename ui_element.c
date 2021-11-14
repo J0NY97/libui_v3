@@ -143,8 +143,8 @@ int	ui_element_render(t_ui_element *elem)
 			elem->from_pos.x = ((t_ui_element *)elem->parent)->from_pos.x - (int)elem->pos.x;
 			elem->from_pos.w = (int)elem->pos.w - elem->from_pos.x;
 		}
-		else if ((int)elem->pos.x + (int)elem->pos.w > elem->parent_screen_pos->w)
-			elem->from_pos.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - elem->parent_screen_pos->w);
+		else if ((int)elem->pos.x + (int)elem->pos.w > ((t_ui_element *)elem->parent)->to_pos.w)
+			elem->from_pos.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - ((t_ui_element *)elem->parent)->to_pos.w);
 
 		if ((int)elem->pos.y < ((t_ui_element *)elem->parent)->from_pos.y)
 		{
