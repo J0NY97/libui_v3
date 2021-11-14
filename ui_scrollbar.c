@@ -23,8 +23,10 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 
 	scroll->min = 0;
 	scroll->max = 100;
+	/*
 	ui_scroll_value_set(elem, 50);
 	scroll->update = 1;
+	*/
 }
 
 void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
