@@ -87,10 +87,9 @@ int	ui_window_render(t_ui_window *win)
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
 
 	SDL_SetRenderTarget(win->renderer, win->texture);
-	SDL_RenderClear(win->renderer);
 	rgba = hex_to_rgba(win->bg_color);
 	SDL_SetRenderDrawColor(win->renderer, rgba.r, rgba.g, rgba.b, rgba.a);
-	SDL_RenderFillRect(win->renderer, NULL);
+	SDL_RenderClear(win->renderer);
 
 	SDL_SetRenderTarget(win->renderer, NULL);
 	win->textures_recreate = 0;
