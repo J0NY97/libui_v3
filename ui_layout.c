@@ -66,13 +66,21 @@ int	get_special(t_ui_layout *layout, char *str)
 	int		result;
 
 	result = 0;
-	arr = ft_strsplit(str, ':');
+	arr = ft_strsplitfirstoccurence(str, ':');
 	if (!arr || !arr[0] || !arr[1])
 		return (0);
 	ft_strtrimwholearr(arr);
 	if (ft_strequ(arr[0], "style"))
 	{
 		layout->style_file = ft_strndup(arr[1], ft_strlen(arr[1]) - 1); // remove ';' from the end;
+		result = 1;
+	}
+	else if (ft_strequ(arr[0], "resource_dir"))
+	{
+		char	*temp;
+		temp = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
+		layout->resource_dirs = ft_arradd(layout->resource_dirs, temp);
+		ft_strdel(&temp);
 		result = 1;
 	}
 	ft_arraydel(arr);
@@ -357,41 +365,10 @@ void	layout_compile_elements(t_ui_layout *layout)
 	print_all_elements_in_list(layout->elements);
 }
 
-char	*get_style_content(char *file)
-{
-	char	*content;
-	char	*line;
-	char	*trim;
-	size_t	len;
-	ssize_t	nread;
-	FILE	*fd;
-
-	fd = fopen(file, "r");
-	if (!fd)
-		return (NULL);
-	line = NULL;
-	content = NULL;
-	while (1)
-	{
-		nread = getline(&line, &len, fd);
-		if (nread == -1)
-			break ;
-		trim = ft_supertrim(line);
-		if (trim != NULL) // whole line was trimmed if is NULL (could happen if the line was a comment);
-		{
-			ft_stradd(&content, trim);
-			ft_strdel(&trim);
-		}
-		ft_strdel(&line);
-	}
-	ft_printf("[%s] Content read.\n", __FUNCTION__);
-	return (content);
-}
-
 void	layout_read_style(t_ui_layout *layout)
 {
 	ft_printf("[%s] Lets see if you have some style.\n", __FUNCTION__);
-	layout->style_file_content = get_style_content(layout->style_file);
+	layout->style_file_content = get_file_content(layout, layout->style_file);//get_style_content(layout->style_file);
 	ft_printf("%s\n", layout->style_file_content);
 }
 
@@ -941,7 +918,26 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	while (++i < UI_STATE_AMOUNT)
 	{
 		if (recipe->bg_images_set[i])
-			ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
+		{
+			if (!access(recipe->bg_images[i], F_OK))
+				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
+			else
+			{
+				int jjj = -1;
+				while (elem->win->layout->resource_dirs[++jjj])
+				{
+					char *temp = ft_sprintf("%s%s", elem->win->layout->resource_dirs[jjj], recipe->bg_images[i]);
+					if (!access(temp, F_OK))
+					{
+						ft_strdel(&recipe->bg_images[i]);
+						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;
+						break ;
+					}
+					ft_strdel(&temp);
+				}
+				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
+			}
+		}
 	}
 	if (recipe->flags)
 	{

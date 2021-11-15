@@ -16,7 +16,7 @@ struct s_ui_layout
 	t_list			*families;	// t_list of t_ui_family;
 	t_list			*recipes; // t_list of t_ui_recipe_v2;
 
-	int				dropdowns;
+	char			**resource_dirs;
 };
 
 typedef struct s_ui_family

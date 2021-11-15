@@ -319,3 +319,30 @@ int	ft_strinarr(char *str, char **arr)
 			return (1);
 	return (0);
 }
+
+int	ft_arrlen(char **arr)
+{
+	int	i;
+
+	if (!arr)
+		return (0);
+	i = -1;
+	while (arr[++i]);
+	return (i);
+}
+
+/*
+ * returns arr;
+*/
+char	**ft_arradd(char **arr, char *add)
+{
+	int	len;
+
+	if (!add)
+		return (arr);
+	len = ft_arrlen(arr);
+	arr = realloc(arr, sizeof(char *) * (len + 2));
+	arr[len] = ft_strdup(add);
+	arr[len + 1] = NULL;
+	return (arr);	
+}
