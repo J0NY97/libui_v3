@@ -930,7 +930,7 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 					if (!access(temp, F_OK))
 					{
 						ft_strdel(&recipe->bg_images[i]);
-						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;
+						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;!
 						break ;
 					}
 					ft_strdel(&temp);
