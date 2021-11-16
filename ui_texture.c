@@ -79,45 +79,40 @@ SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
 	t_rgba		rgba;
 	SDL_Color	color;
 
-	// First try to find with absolute path...
+	// 1. First try to find with absolute path...
+	// 2. ... if not found, try to find from UI_FONT_PATH/"font_name" ...
+	// 3. ... if still not found, try to find default font. IF this is not found, its the dev's fault.
 	if (!recipe->font || recipe->font_recreate)
 	{
+		int found = 0;
 		if (recipe->font)
 			TTF_CloseFont(recipe->font);
+		// 1.
+		if (access(recipe->font_path, F_OK))
+		{
+			char	*temp_font_path = ft_strdup(recipe->font_path);
+			ft_strdel(&recipe->font_path);
+			recipe->font_path = ft_strjoin(UI_FONT_PATH, temp_font_path);
+			ft_strdel(&temp_font_path);
+		}
+		else
+			found = 1;
+		// 2.
+		if (!found && access(recipe->font_path, F_OK))
+		{
+			ft_strdel(&recipe->font_path);
+			recipe->font_path = ft_strdup(UI_FONT_PATH"DroidSans.ttf");
+		}
+		else
+			found = 1;
+
 		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
+		if (!recipe->font)
+			return (NULL);
 		recipe->font_recreate = 0;
-		ft_printf("[%s] Font recretead.\n", __FUNCTION__);
+		ft_printf("[%s] Font recreated.\n", __FUNCTION__);
 	}
-	// ... if not found, try to find from UI_FONT_PATH/"font_name" ...
-	if (!recipe->font)
-	{
-		char	*temp_font_path;
-		temp_font_path = ft_strdup(recipe->font_path);
-		ft_printf("[%s] 2nd try : %s, trying to find from libui fonts. %s%s\n", __FUNCTION__, TTF_GetError(), UI_FONT_PATH, recipe->font_path);
-		if (recipe->font_path)
-			ft_strdel(&recipe->font_path);
-		recipe->font_path = ft_strjoin(UI_FONT_PATH, temp_font_path);
-		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
-		if (!recipe->font)
-		{
-			ft_printf("[%s] Well apparently that didn\'t work either.\n", __FUNCTION__);
-			return (NULL);
-		}
-	}
-	// ... if still not found, try to find default font. IF this is not found, its the dev's fault.
-	if (!recipe->font)
-	{
-		ft_printf("[%s] 3rd try : %s, defaulting to %sDroidSans.ttf\n", __FUNCTION__, TTF_GetError(), UI_FONT_PATH);
-		if (recipe->font_path)
-			ft_strdel(&recipe->font_path);
-		recipe->font_path = ft_strdup(UI_FONT_PATH"DroidSans.ttf");
-		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
-		if (!recipe->font)
-		{
-			ft_printf("[%s] Well apparently that didn\'t work either.\n", __FUNCTION__);
-			return (NULL);
-		}
-	}
+
 	TTF_SizeUTF8(recipe->font, recipe->text, &recipe->text_wh.x, &recipe->text_wh.y);
 	rgba = hex_to_rgba(recipe->font_color);
 	color.r = rgba.r;
