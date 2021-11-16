@@ -38,11 +38,18 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 		return ;
 	scroll = elem->element;
 	button = scroll->button.element;
-	if (ui_element_is_click(elem))
+	if (ui_element_is_click(elem)) // dragging
 	{
 		scroll->value = ui_get_slider_value(scroll->min, scroll->max,
 				(elem->win->mouse_pos.y - elem->screen_pos.y) - scroll->button.pos.h / 2,
 				elem->pos.h - scroll->button.pos.h);
+		scroll->update = 1;
+	}
+	else if (ui_element_is_hover(scroll->target) // scrolling
+		&& ((t_ui_element *)scroll->target)->win->scroll != 0)
+	{
+		scroll->value -= ((t_ui_element *)scroll->target)->win->scroll * 30;
+		scroll->value = ft_clamp(scroll->value, scroll->min, scroll->max);
 		scroll->update = 1;
 	}
 }

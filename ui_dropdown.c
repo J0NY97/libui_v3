@@ -60,7 +60,7 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 
 	drop->menu.z = elem->z;
 
-	if (!drop->menu.show || !drop->menu.children) // if menu isnt shown, no point event handling children;
+	if (!drop->menu.show)// || !drop->menu.children) // if menu isnt shown, no point event handling children;
 	{
 		ui_checkbox_toggle_off(elem);
 		drop->scrollbar.show = 0;
