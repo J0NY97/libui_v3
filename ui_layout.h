@@ -1,6 +1,9 @@
 #include "libui.h"
 
 typedef struct s_ui_layout	t_ui_layout;
+typedef struct s_ui_element	t_ui_element;
+typedef struct s_ui_window	t_ui_window;
+typedef struct s_ui_recipe	t_ui_recipe;
 
 struct s_ui_layout
 {
@@ -92,6 +95,9 @@ void				layout_make_family_trees(t_ui_layout *layout);
 void				layout_split_elements(t_ui_layout *layout);
 void				layout_read_file(t_ui_layout *layout, char *file);
 void				print_recipe(t_ui_recipe *recipe);
+t_ui_window			*ui_layout_get_window(t_ui_layout *layout, char *id);
+t_ui_element		*ui_layout_get_element(t_ui_layout *layout, char *id);
+t_ui_recipe			*ui_layout_get_recipe(t_ui_layout *layout, char *id);
 
 ///////////////
 // Recipe
