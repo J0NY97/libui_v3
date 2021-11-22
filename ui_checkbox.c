@@ -67,3 +67,11 @@ void	ui_checkbox_toggle_off(t_ui_element *elem)
 	if (elem->state == UI_STATE_CLICK)
 		elem->state = UI_STATE_DEFAULT;
 }
+
+void	ui_checkbox_toggle_accordingly(t_ui_element *elem, bool want_to_toggle)
+{
+	if (want_to_toggle)
+		ui_checkbox_toggle_on(elem);
+	else
+		ui_checkbox_toggle_off(elem);
+}
