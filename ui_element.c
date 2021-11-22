@@ -116,6 +116,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 int	ui_element_render(t_ui_element *elem)
 {
 	elem->was_rendered_last_frame = 0;
+//	elem->was_click = 0;
 	if (!*elem->parent_was_rendered_last_frame)
 		return (0);
 	if (!*elem->parent_show || !elem->show)
