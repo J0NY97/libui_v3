@@ -58,6 +58,7 @@ t_vec2i				vec2i(int x, int y);
 void				vec2i_swap(t_vec2i *v1, t_vec2i *v2);
 void				vec2_swap(t_vec2 *v1, t_vec2 *v2);
 t_vec2i				vec2i_add(t_vec2i v1, t_vec2i v2);
+t_vec2i				vec2i_sub(t_vec2i v1, t_vec2i v2);
 
 // Vec4
 t_vec4i				vec4i(int x, int y, int w, int h);
@@ -71,5 +72,7 @@ void				print_veci(int *vec, size_t size);
 int					compare_veci(int *vec1, int *vec2, size_t size);
 int					compare_vec(float *vec1, float *vec2, size_t size);
 int					vec2_in_vec4(t_vec2i v2, t_vec4i v4);
+int					*veci_add(int *result, int *v1, int *v2, size_t size);
+int					*veci_sub(int *result, int *v1, int *v2, size_t size);
 
 #endif

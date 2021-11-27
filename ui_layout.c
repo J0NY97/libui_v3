@@ -450,6 +450,11 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 		target->z = child->z;
 		target->z_set = 1;
 	}
+	if (child->show_set)
+	{
+		target->show = child->show;
+		target->show_set = 1;
+	}
 	if (child->title != NULL)
 	{
 		if (target->title)
@@ -632,6 +637,11 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		{
 			recipe->z = ft_atoi(key_value[1]);
 			recipe->z_set = 1;
+		}
+		else if (ft_strequ(key_value[0], "show"))
+		{
+			recipe->show = ft_atoi(key_value[1]);
+			recipe->show_set = 1;
 		}
 		else if (ft_strequ(key_value[0], "title"))
 		{
@@ -949,6 +959,8 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		elem->z = recipe->z;
 		elem->figure_out_z = 0;
 	}
+	if (recipe->show_set)
+		elem->show = recipe->show;
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else

@@ -115,9 +115,9 @@ int	ui_label_render(t_ui_element *elem)
 {
 	t_ui_label	*label;
 
-	label = elem->element;
 	if (!ui_element_render(elem))
 		return (0);
+	label = elem->element;
 	if (label->texture_recreate || elem->win->textures_recreate)
 	{
 		ui_label_texture_redo(elem);

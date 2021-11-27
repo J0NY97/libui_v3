@@ -41,11 +41,13 @@ typedef struct s_ui_recipe
 	Uint32			bg_colors[UI_STATE_AMOUNT];
 	char			*bg_images[UI_STATE_AMOUNT];
 	int				z;
+	bool			show;
 
 	bool			pos_set[VEC4_SIZE];
 	bool			bg_colors_set[UI_STATE_AMOUNT];
 	bool			bg_images_set[UI_STATE_AMOUNT];
 	bool			z_set;
+	bool			show_set;
 
 	// Label only
 	char			*title;

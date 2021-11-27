@@ -40,7 +40,6 @@ void	vec2_swap(t_vec2 *v1, t_vec2 *v2)
 		v2->v[i] = temp.v[i];
 }
 
-
 t_vec2i	vec2i_add(t_vec2i v1, t_vec2i v2)
 {
 	t_vec2i	v;
@@ -49,6 +48,19 @@ t_vec2i	vec2i_add(t_vec2i v1, t_vec2i v2)
 	v.y = v1.y + v2.y;
 	return (v);
 }
+
+t_vec2i	vec2i_sub(t_vec2i v1, t_vec2i v2)
+{
+	t_vec2i	v;
+
+	v.x = v1.x - v2.x;
+	v.y = v1.y - v2.y;
+	return (v);
+}
+
+//////////////////////
+// Vec4
+//////////////////////
 
 t_vec4	vec4(float x, float y, float w, float h)
 {
@@ -148,4 +160,30 @@ int	vec2_in_vec4(t_vec2i v2, t_vec4i v4)
 		&& v2.x < v4.x + v4.w && v2.y < v4.y + v4.h)
 		return (1);
 	return (0);
+}
+
+int	*veci_add(int *result, int *v1, int *v2, size_t size)
+{
+	size_t	ii;
+
+	ii = 0;
+	while (ii < size)
+	{
+		result[ii] = v1[ii] + v2[ii];	
+		ii++;
+	}
+	return (result);
+}
+
+int	*veci_sub(int *result, int *v1, int *v2, size_t size)
+{
+	size_t	ii;
+
+	ii = 0;
+	while (ii < size)
+	{
+		result[ii] = v1[ii] - v2[ii];	
+		ii++;
+	}
+	return (result);
 }
