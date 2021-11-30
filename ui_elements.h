@@ -382,6 +382,7 @@ t_ui_element			*ui_dropdown_get_menu_element(t_ui_element *elem);
 t_ui_element			*ui_dropdown_get_scrollbar_element(t_ui_element *elem);
 t_ui_dropdown			*ui_dropdown_get_dropdown(t_ui_element *elem);
 t_ui_menu				*ui_dropdown_get_menu(t_ui_element *elem);
+t_ui_element			*ui_dropdown_get_button_with_text(t_ui_element *elem, char *text);
 t_ui_element			*ui_dropdown_active(t_ui_element *elem);
 char					*ui_dropdown_active_text(t_ui_element *elem);
 

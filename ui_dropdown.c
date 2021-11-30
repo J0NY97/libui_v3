@@ -276,3 +276,15 @@ char	*ui_dropdown_active_text(t_ui_element *elem)
 		return (NULL);
 	return (label->text);
 }
+
+t_ui_element	*ui_dropdown_get_button_with_text(t_ui_element *elem, char *text)
+{
+	t_ui_element	*menu;
+
+	if (!elem || elem->element_type != UI_TYPE_DROPDOWN || !text)
+		return (NULL);
+	menu = ui_dropdown_get_menu_element(elem);
+	if (!menu)
+		return (NULL);
+	return (ui_list_get_button_with_text(menu->children, text));
+}
