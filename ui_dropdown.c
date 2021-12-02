@@ -45,7 +45,6 @@ void	ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 	drop = elem->element;
 	ui_label_edit(&drop->label, recipe);
-//	ui_element_edit(&drop->label, recipe);
 }
 
 void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
@@ -83,7 +82,8 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 		while (curr)
 		{
 			child = curr->content;
-			ui_element_pos_set2(child, vec2(child->pos.x, total_height - ((t_ui_scrollbar *)drop->scrollbar.element)->value));
+			ui_element_pos_set2(child, vec2(child->pos.x, total_height
+					- ((t_ui_scrollbar *)drop->scrollbar.element)->value));
 			total_height += child->pos.h;
 			child->render_me_on_parent = 1; // making all the children render on parent;
 			curr = curr->next;
@@ -95,7 +95,9 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 		}
 		else
 			drop->scrollbar.show = 0;
-		ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y, drop->menu.pos.w, total_height));
+		ui_element_pos_set(&drop->menu,
+			vec4(drop->menu.pos.x, drop->menu.pos.y,
+				drop->menu.pos.w, total_height + 1));
 	}
 	if (elem->win->mouse_down // close the menu if you click somewhere else but the menu of dropdown;
 		&& !ui_element_is_hover(elem)
@@ -117,11 +119,17 @@ int	ui_dropdown_render(t_ui_element *elem)
 		return (0);
 	drop = elem->element;
 	drop->drop_exit = 0;
-	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, ft_min(drop->max_h, drop->menu.pos.h)));
+	ui_element_pos_set(&drop->menu,
+		vec4(0, elem->pos.h,
+			drop->menu.pos.w, ft_min(drop->max_h, drop->menu.pos.h)));
 	ui_menu_render(&drop->menu);
-	ui_element_pos_set(&drop->scrollbar, vec4(drop->menu.pos.x + drop->menu.pos.w, elem->pos.h, 10, drop->menu.pos.h));
+	ui_element_pos_set(&drop->scrollbar,
+		vec4(drop->menu.pos.x + drop->menu.pos.w, elem->pos.h,
+			10, drop->menu.pos.h));
 	scroll_button = ui_scrollbar_get_button_element(&drop->scrollbar);
-	ui_element_pos_set(scroll_button, vec4(scroll_button->pos.x, scroll_button->pos.y, drop->scrollbar.pos.w, scroll_button->pos.h));
+	ui_element_pos_set(scroll_button,
+		vec4(scroll_button->pos.x, scroll_button->pos.y,
+			drop->scrollbar.pos.w, scroll_button->pos.h));
 	ui_scrollbar_render(&drop->scrollbar);
 	return (1);
 }
