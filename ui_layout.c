@@ -362,7 +362,7 @@ void	layout_compile_elements(t_ui_layout *layout)
 		}
 		curr = curr->next;
 	}
-	print_all_elements_in_list(layout->elements);
+	//print_all_elements_in_list(layout->elements);
 }
 
 void	layout_read_style(t_ui_layout *layout)
@@ -893,6 +893,7 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 	if (recipe->bg_colors_set[UI_STATE_DEFAULT])
 		win->bg_color = recipe->bg_colors[UI_STATE_DEFAULT];
 
+	// TODO Put those xhides into the make_usable...;
 	if (ft_strinarr("xhides", recipe->flags))
 		win->hide_on_x = 1;
 	if (ft_strinarr("xdoesnthides", recipe->flags))

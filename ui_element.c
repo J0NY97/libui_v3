@@ -217,14 +217,8 @@ t_vec4i	ui_element_screen_pos_get(t_ui_element *elem)
 
 void	ui_element_pos_set(t_ui_element *elem, t_vec4 pos)
 {
-	if (pos.x < 1.0f && pos.x > 0.0f)
-		pos.x = elem->parent_screen_pos->w * pos.x;
-	if (pos.y < 1.0f && pos.y > 0.0f)
-		pos.y = elem->parent_screen_pos->h * pos.y;
-	if (pos.w < 1.0f && pos.w > 0.0f)
-		pos.w = elem->parent_screen_pos->w * pos.w;
-	if (pos.h < 1.0f && pos.h > 0.0f)
-		pos.h = elem->parent_screen_pos->h * pos.h;
+	t_vec4	new_pos;
+
 	if (elem->pos.w != pos.w || elem->pos.h != pos.h)
 		elem->texture_recreate = 1;
 	elem->pos = pos;

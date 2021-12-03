@@ -23,6 +23,7 @@ typedef struct s_ui_window
 	Uint32			window_id;
 	t_vec4			pos;
 	t_vec4i			screen_pos;
+	t_vec2i			texture_size;
 	t_vec2			texture_scale;
 	SDL_Window		*win;
 	SDL_Renderer	*renderer;
@@ -291,6 +292,7 @@ void					ui_window_flag_set(t_ui_window *win, int flags);
 void					ui_window_title_set(t_ui_window *win, const char *title);
 void					ui_window_id_set(t_ui_window *win, const char *id);
 void					ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win);
+void					ui_window_texture_pos_set(t_ui_window *win, t_vec2i pos);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
