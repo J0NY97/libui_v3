@@ -189,16 +189,21 @@ void	ui_window_id_set(t_ui_window *win, const char *id)
 */
 void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 {
+	t_vec4i	pos;
+
 	if (ui_win->win)
 		SDL_DestroyWindow(ui_win->win);
 	ui_win->win = sdl_win;
+	SDL_GetWindowPosition(ui_win->win, &pos.x, &pos.y);
+	SDL_GetWindowSize(ui_win->win, &pos.w, &pos.h);
+	ui_win->pos = vec4(pos.x, pos.y, pos.w, pos.h);
 	if (ui_win->renderer)
 		SDL_DestroyRenderer(ui_win->renderer);
 	ui_win->renderer = SDL_GetRenderer(sdl_win);
 	if (!ui_win->renderer)
 		ui_win->renderer = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
 	else
-		ft_printf("[%s] The new window already had a renderer associated with it.\n", __FUNCTION__);
+		ft_printf("[%s] The window already had a renderer.\n", __FUNCTION__);
 	if (ui_win->texture)
 		SDL_DestroyTexture(ui_win->texture);
 	ui_win->texture = SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,
