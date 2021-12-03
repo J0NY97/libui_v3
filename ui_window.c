@@ -10,14 +10,18 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->pos = pos;
 	win->win = SDL_CreateWindow(win->title, win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
-	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+	// NOTE : Default create same sized texture as window;
+	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888,
+		SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
 	win->show = 1;
 	win->children = NULL;
 
 	win->window_id = SDL_GetWindowID(win->win);
 
-	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
-	win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
+	win->screen_pos.w = pos.w;
+	win->screen_pos.h = pos.h;
+	win->texture_scale = vec2(win->screen_pos.w / win->pos.w,
+			win->screen_pos.h / win->pos.h);
 	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
 	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y; 
@@ -32,8 +36,12 @@ void	ui_window_event(t_ui_window *win, SDL_Event e)
 		{
 			if (e.window.event == SDL_WINDOWEVENT_RESIZED)
 			{
-				SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
-				win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
+				t_vec2i	new_pos;
+				SDL_GetWindowSize(win->win, &new_pos.x, &new_pos.y);
+				win->pos.w = new_pos.x;
+				win->pos.h = new_pos.y;
+				win->texture_scale = vec2(win->screen_pos.w / win->pos.w,
+						win->screen_pos.h / win->pos.h);
 				win->textures_recreate = 1;
 			}
 			else if (e.window.event == SDL_WINDOWEVENT_CLOSE)
@@ -116,17 +124,40 @@ void	ui_window_texture_redo(t_ui_window *win)
 {
 	if (win->texture)
 		SDL_DestroyTexture(win->texture);
-	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_ARGB8888,
+			SDL_TEXTUREACCESS_TARGET, win->screen_pos.w, win->screen_pos.h);
+	win->texture_scale = vec2(win->screen_pos.w / win->pos.w,
+			win->screen_pos.h / win->pos.h);
 }
 
+/*
+ * Change the position of the actual window : screen_pos;
+*/
 void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
 {
-	win->pos = pos;
-	SDL_SetWindowPosition(win->win, win->pos.x, win->pos.y);
-	SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);
-	ui_window_texture_redo(win);
-	SDL_GetWindowSize(win->win, &win->screen_pos.w, &win->screen_pos.h);
-	win->texture_scale = vec2(win->pos.w / win->screen_pos.w, win->pos.h / win->screen_pos.h);
+	if (win->pos.x != pos.x && win->pos.y != pos.y)
+	{
+		win->pos.x = pos.x;
+		win->pos.y = pos.y;
+		SDL_SetWindowPosition(win->win, win->pos.x, win->pos.y);
+	}
+	if (win->pos.w != pos.w && win->pos.h != pos.h)
+	{
+		win->pos.w = pos.w;
+		win->pos.h = pos.h;
+		SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);
+		win->texture_scale = vec2(win->screen_pos.w / win->pos.w,
+				win->screen_pos.h / win->pos.h);
+	}
+}
+
+void	ui_window_texture_pos_set(t_ui_window *win, t_vec2i pos)
+{
+	if (pos.x != win->screen_pos.w && pos.y != win->screen_pos.h)
+	{
+		win->screen_pos = vec4i(win->screen_pos.x, win->screen_pos.y, pos.x, pos.y);
+		ui_window_texture_redo(win);
+	}
 }
 
 void	ui_window_flag_set(t_ui_window *win, int flags)
@@ -209,4 +240,16 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 	ui_win->texture = SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,
 		SDL_TEXTUREACCESS_TARGET, ui_win->pos.w, ui_win->pos.h);
 	ui_win->window_id = SDL_GetWindowID(sdl_win);
+}
+
+void	ui_window_print(t_ui_window *win)
+{
+	ft_printf("[%s]\n", __FUNCTION__);
+	ft_printf("\tid : %s\n", win->id);
+	ft_printf("\tpos : ");
+	print_vec(win->pos.v, 4);
+	ft_printf("\tscreen_pos : ");
+	print_veci(win->screen_pos.v, 4);
+	ft_printf("\ttexture_scale : ");
+	print_vec(win->texture_scale.v, 2);
 }
