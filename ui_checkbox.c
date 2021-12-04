@@ -21,6 +21,7 @@ void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 	elem->is_hover = ui_element_is_hover(elem); 
 	if (elem->is_hover && elem->win->mouse_down_last_frame)
 	{
+		elem->was_click = 1;
 		if (elem->is_toggle)
 			ui_checkbox_toggle_off(elem);
 		else
@@ -38,6 +39,7 @@ void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 
 int	ui_checkbox_render(t_ui_element *elem)
 {
+	elem->was_click = 0;
 	if (!ui_element_render(elem))
 		return (0);
 }
