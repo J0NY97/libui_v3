@@ -786,9 +786,12 @@ t_ui_recipe	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *
 	return (recipe);
 }
 
-void	print_recipe(t_ui_recipe *recipe)
+void	ui_recipe_print(t_ui_recipe *recipe)
 {
 	ft_printf("%s\n", recipe->id);	
+	ft_printf("pos_set : %d %d %d %d\n",
+		recipe->pos_set[0], recipe->pos_set[1],
+		recipe->pos_set[2], recipe->pos_set[3]);
 	if (recipe->pos_set[0] || recipe->pos_set[1]
 		|| recipe->pos_set[2] || recipe->pos_set[3])
 	{
@@ -853,7 +856,7 @@ void	layout_make_recipes(t_ui_layout *layout)
 	t_list *curr = layout->recipes;
 	while (curr)
 	{
-		print_recipe(curr->content);
+		ui_recipe_print(curr->content);
 		curr = curr->next;
 	}
 	*/
@@ -906,6 +909,7 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 			pos.v[i] = recipe->pos.v[i];
 	}
 	ui_window_pos_set(win, pos);
+	ui_window_texture_pos_set(win, vec2i(pos.w, pos.h));
 	if (recipe->title)
 		ui_window_title_set(win, recipe->title);
 	if (recipe->bg_colors_set[UI_STATE_DEFAULT])
@@ -917,6 +921,9 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 	if (ft_strinarr("xdoesnthides", recipe->flags))
 		win->hide_on_x = 0;
 	ui_window_flag_set(win, make_usable_win_flags(recipe->flags));
+
+	ui_recipe_print(recipe);
+	ui_window_print(win);
 	ft_printf("Leaving [%s]\n", __FUNCTION__);
 }
 

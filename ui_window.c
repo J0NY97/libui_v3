@@ -122,6 +122,11 @@ void	ui_window_free(void *win)
 
 void	ui_window_texture_redo(t_ui_window *win)
 {
+	if (!win)
+	{
+		ft_printf("[%s] Error : No window.\n", __FUNCTION__);
+		return ;
+	}
 	if (win->texture)
 		SDL_DestroyTexture(win->texture);
 	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_ARGB8888,
@@ -131,18 +136,19 @@ void	ui_window_texture_redo(t_ui_window *win)
 }
 
 /*
- * Change the position of the actual window : screen_pos;
+ * Change the position of the actual window : win->pos;
 */
 void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
 {
-	if (win->pos.x != pos.x && win->pos.y != pos.y)
+	if (win->pos.x != pos.x || win->pos.y != pos.y)
 	{
 		win->pos.x = pos.x;
 		win->pos.y = pos.y;
 		SDL_SetWindowPosition(win->win, win->pos.x, win->pos.y);
 	}
-	if (win->pos.w != pos.w && win->pos.h != pos.h)
+	if (win->pos.w != pos.w || win->pos.h != pos.h)
 	{
+		ft_printf("[%s]\n", __FUNCTION__);
 		win->pos.w = pos.w;
 		win->pos.h = pos.h;
 		SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);
@@ -153,7 +159,7 @@ void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
 
 void	ui_window_texture_pos_set(t_ui_window *win, t_vec2i pos)
 {
-	if (pos.x != win->screen_pos.w && pos.y != win->screen_pos.h)
+	if (pos.x != win->screen_pos.w || pos.y != win->screen_pos.h)
 	{
 		win->screen_pos = vec4i(win->screen_pos.x, win->screen_pos.y, pos.x, pos.y);
 		ui_window_texture_redo(win);
