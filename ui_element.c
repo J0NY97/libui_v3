@@ -48,9 +48,10 @@ void	ui_element_free(t_ui_element *elem)
 		if (elem->images[i])
 			SDL_FreeSurface(elem->images[i]);
 	}
-	elem->win = NULL; // pointer
-	elem->parent_screen_pos = NULL; // pointer
-	elem->element = NULL; // pointer, make sure you have made a free for the type of element and added that to g_acceptable;
+	elem->win = NULL;
+	elem->parent_screen_pos = NULL;
+	elem->element = NULL;
+	// ui_list_element_free(elem->children);
 	elem->children = NULL; // TODO: make sure you remove all the children parents when you delete this elem children;
 	if (elem->id)
 		ft_strdel(&elem->id);
@@ -68,45 +69,60 @@ void	ui_element_event(t_ui_element *elem, SDL_Event e)
 	(void)e;
 }
 
-/*
- * Redos the textures, helpful if you have changed the w and/or h of the element.
-*/
-void	ui_element_textures_redo(t_ui_element *elem)
+void	ui_element_set_images_internal(t_ui_element *elem)
 {
 	int	i;
 
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
+		if (!elem->images[i])
+			continue ;
+		SDL_BlitScaled(elem->images[i], NULL, elem->textures[i], NULL);
+	}
+}
+
+void	ui_element_textures_free(t_ui_element *elem)
+{
+	int	i;
+
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
 		if (elem->textures[i])
 			SDL_FreeSurface(elem->textures[i]);
-	}
+}
+
+/*
+ * Redos the textures, helpful if you have changed the w and/or h of the element.
+*/
+void	ui_element_textures_redo(t_ui_element *elem)
+{
+	ui_element_textures_free(elem);
 	if (elem->texture)
 	{
 		SDL_DestroyTexture(elem->texture);
 		elem->texture = NULL;
 	}
 	if (!elem->texture)
-		elem->texture = ui_create_texture(elem->win->renderer, vec2i(elem->pos.w, elem->pos.h));
-	SDL_QueryTexture(elem->texture, NULL, NULL, &elem->current_texture_size.x, &elem->current_texture_size.y);
+		elem->texture = ui_create_texture(elem->win->renderer,
+				vec2i(elem->pos.w, elem->pos.h));
+	SDL_QueryTexture(elem->texture, NULL, NULL,
+		&elem->current_texture_size.x, &elem->current_texture_size.y);
 	elem->textures[UI_STATE_DEFAULT] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_HOVER] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->textures[UI_STATE_CLICK] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->texture_recreate = 0;
 	if (elem->use_images)
 	{
-		i = -1;
-		while (++i < UI_STATE_AMOUNT)
-		{
-			if (!elem->images[i])
-				continue ;
-			SDL_BlitScaled(elem->images[i], NULL, elem->textures[i], NULL);
-		}
+		ui_element_set_images_internal(elem);
 		return ;
 	}
-	ui_surface_fill(elem->textures[UI_STATE_DEFAULT], elem->colors[UI_STATE_DEFAULT]);
-	ui_surface_fill(elem->textures[UI_STATE_HOVER], elem->colors[UI_STATE_HOVER]);
-	ui_surface_fill(elem->textures[UI_STATE_CLICK], elem->colors[UI_STATE_CLICK]);
+	SDL_FillRect(elem->textures[UI_STATE_DEFAULT], NULL,
+		elem->colors[UI_STATE_DEFAULT]);
+	SDL_FillRect(elem->textures[UI_STATE_HOVER], NULL,
+		elem->colors[UI_STATE_HOVER]);
+	SDL_FillRect(elem->textures[UI_STATE_CLICK], NULL,
+		elem->colors[UI_STATE_CLICK]);
 }
 
 /*
