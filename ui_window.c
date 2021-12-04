@@ -253,3 +253,10 @@ void	ui_window_print(t_ui_window *win)
 	ft_printf("\ttexture_scale : ");
 	print_vec(win->texture_scale.v, 2);
 }
+
+void	ui_window_render_texture(t_ui_window *win, SDL_Texture *texture)
+{
+	SDL_SetRenderTarget(win->renderer, win->texture);
+	SDL_RenderCopy(win->renderer, texture, NULL, NULL);
+	SDL_SetRenderTarget(win->renderer, NULL);
+}

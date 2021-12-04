@@ -293,6 +293,7 @@ void					ui_window_id_set(t_ui_window *win, const char *id);
 void					ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win);
 void					ui_window_texture_pos_set(t_ui_window *win, t_vec2i pos);
 void					ui_window_print(t_ui_window *win);
+void					ui_window_render_texture(t_ui_window *win, SDL_Texture *texture);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);

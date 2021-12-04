@@ -100,6 +100,7 @@ void				print_recipe(t_ui_recipe *recipe);
 t_ui_window			*ui_layout_get_window(t_ui_layout *layout, char *id);
 t_ui_element		*ui_layout_get_element(t_ui_layout *layout, char *id);
 t_ui_recipe			*ui_layout_get_recipe(t_ui_layout *layout, char *id);
+void				ui_layout_free(t_ui_layout *layout);
 
 ///////////////
 // Recipe
