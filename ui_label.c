@@ -175,7 +175,6 @@ char	*ui_label_get_text(t_ui_element *elem)
 	return (label->text);
 }
 
-
 void	ui_label_font_set(t_ui_element *label, char *font_path)
 {
 	t_ui_label	*lab;
@@ -205,7 +204,8 @@ Uint32	ui_label_get_color(t_ui_element *elem)
 	if (elem->element_type != UI_TYPE_LABEL)
 	{
 		ft_printf("[%s] Elem not of type UI_TYPE_LABEL. <%d : %s>\n",
-			__FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (0);
 	}
 	return (ui_label_get_label(elem)->font_color);
@@ -265,21 +265,23 @@ void	ui_label_print(t_ui_element *elem)
 	ft_printf("\tfont_size : %d\n", label->font_size);
 	ft_printf("\tfont_color : %#x\n", label->font_color);
 	ft_printf("\tmax_w : %d\n", label->max_w);
-	ft_printf("\tfont ? : %d\n", label->font ? 1 : 0);
+	ft_printf("\tfont ? : %d\n", !(!label->font));
 	ft_printf("\tfont_recreate : %d\n", label->font_recreate);
 	ft_printf("\ttexture_recreate : %d\n", label->texture_recreate);
-	ft_printf("\ttext_align : [%d] %s\n", label->text_align, text_align_to_str(label->text_align));
+	ft_printf("\ttext_align : [%d] %s\n", label->text_align,
+		text_align_to_str(label->text_align));
 }
 
 /*
  * Get
 */
-
 t_ui_label	*ui_label_get_label(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_LABEL)
 	{
-		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_LABEL.<%d:%s>\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (elem->element);

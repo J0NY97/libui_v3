@@ -22,7 +22,8 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 
 	ui_menu_new(win, &drop->menu);
 	drop->menu.is_a_part_of_another = 1;
-	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	ui_element_pos_set(&drop->menu,
+		vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
 	((t_ui_menu *)drop->menu.element)->event_children = 1;
 	((t_ui_menu *)drop->menu.element)->render_children = 1;
@@ -30,7 +31,7 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
 	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
 
-	drop->max_h = 100; // TODO: change this to -1 by default; maybe;
+	drop->max_h = 100;
 	ui_scrollbar_new(win, &drop->scrollbar);
 	drop->scrollbar.is_a_part_of_another = 1;
 	ui_element_set_parent(&drop->scrollbar, elem, UI_TYPE_ELEMENT);
@@ -55,13 +56,14 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 
 	drop = elem->element;
 	ui_checkbox_event(elem, e);
-	// this is getting kind of convoluted, so thats why we have these both; (im not sure which of these we should have);
+	// this is getting kind of convoluted, so thats why we have these both;
+	// (im not sure which of these we should have);
 	drop->menu.show = elem->state == UI_STATE_CLICK;
 	drop->menu.show = elem->is_toggle;
 
 	drop->menu.z = elem->z;
 
-	if (!drop->menu.show)// || !drop->menu.children) // if menu isnt shown, no point event handling children;
+	if (!drop->menu.show)// || !drop->menu.children) // if menu isnt shown, no point event handling children; // or not;
 	{
 		ui_checkbox_toggle_off(elem);
 		drop->scrollbar.show = 0;
@@ -72,8 +74,8 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 	ui_list_radio_event(drop->menu.children, &drop->active);
 	if (drop->active)
 	{
-		ui_element_render(drop->active); // because we want it to update.
-		ui_label_set_text(&drop->label, ui_button_get_label(drop->active)->text);
+		ui_element_render(drop->active);
+		ui_label_set_text(&drop->label, ui_dropdown_active_text(elem));
 	}
 	{
 		// This could be changed to the menu in the same wave as you render or event handle the children.
@@ -147,24 +149,16 @@ void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
 	t_ui_dropdown	*d;
 
 	if (!elem)
-	{
-		ft_printf("[%s] No elem.\n", __FUNCTION__);
 		return ;
-	}
 	d = ui_dropdown_get_dropdown(drop);
 	if (!drop || !d)
-	{
-		ft_printf("[%s] No dropdown.\n", __FUNCTION__);
 		return ;
-	}
 	curr = ui_dropdown_get_menu_element(drop)->children;
 	while (curr)
 	{
 		if (elem == curr->content)
 		{
 			d->active = elem;
-
-			// These are yoinked directly from the dropdown event handler; should probably be put in a function like drop_update;
 			ui_element_render(d->active);
 			ui_label_set_text(&d->label, ui_button_get_label(d->active)->text);
 			break ;
@@ -180,7 +174,9 @@ int	ui_dropdown_is_open(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 	{
-		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem is not of type UI_TYPE_DROPDOWN.[%s, %s]\n",
+			__FUNCTION__, elem->id,
+			ui_element_type_to_string(elem->element_type));
 		return (-1);
 	}
 	return (((t_ui_dropdown *)elem->element)->menu.show);
@@ -193,7 +189,9 @@ int	ui_dropdown_open(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 	{
-		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem is not of type UI_TYPE_DROPDOWN.[%s, %s]\n",
+			__FUNCTION__, elem->id,
+			ui_element_type_to_string(elem->element_type));
 		return (-1);
 	}
 	return (((t_ui_dropdown *)elem->element)->drop_open);
@@ -203,7 +201,9 @@ int	ui_dropdown_exit(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 	{
-		ft_printf("[%s] Youre calling a dropdown function on a non dropdown type element... [%s, %s]\n", __FUNCTION__, elem->id, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem is not of type UI_TYPE_DROPDOWN.[%s, %s]\n",
+			__FUNCTION__, elem->id,
+			ui_element_type_to_string(elem->element_type));
 		return (-1);
 	}
 	return (((t_ui_dropdown *)elem->element)->drop_exit);
@@ -218,7 +218,7 @@ t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)
 		if (ui_type == UI_TYPE_SCROLLBAR)
 			return (ui_dropdown_get_scrollbar_element(elem));
 	}
-	ft_printf("[%s] Something went wrong.\n");
+	ft_printf("[%s] Something went wrong.\n", __FUNCTION__);
 	return (NULL);
 }
 
@@ -228,6 +228,8 @@ t_ui_menu	*ui_dropdown_get_menu(t_ui_element *elem)
 	t_ui_menu		*menu;
 
 	drop = ui_dropdown_get_dropdown(elem);
+	if (!drop)
+		return (NULL);
 	return (ui_menu_get_menu(&drop->menu));
 }
 
@@ -237,7 +239,7 @@ t_ui_element	*ui_dropdown_get_menu_element(t_ui_element *elem)
 {
 	if (elem->element_type == UI_TYPE_DROPDOWN)
 		return (&ui_dropdown_get_dropdown(elem)->menu);
-	ft_printf("[%s] Something went wrong.\n");
+	ft_printf("[%s] Something went wrong.\n", __FUNCTION__);
 	return (NULL);
 }
 
@@ -245,7 +247,7 @@ t_ui_element	*ui_dropdown_get_scrollbar_element(t_ui_element *elem)
 {
 	if (elem->element_type == UI_TYPE_DROPDOWN)
 		return (&ui_dropdown_get_dropdown(elem)->scrollbar);
-	ft_printf("[%s] Something went wrong.\n");
+	ft_printf("[%s] Something went wrong.\n", __FUNCTION__);
 	return (NULL);
 }
 
@@ -263,9 +265,13 @@ t_ui_element	*ui_dropdown_active(t_ui_element *elem)
 {
 	t_ui_dropdown	*drop;
 
+	if (!elem)
+		return (NULL);
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 	{
-		ft_printf("[%s] Element given is not dropdown but %d %s.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_DROPDOWN.%d %s.\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (ui_dropdown_get_dropdown(elem)->active);
