@@ -118,7 +118,7 @@ int	ui_slider_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_slider_free(void *elem)
+void	ui_slider_free(void *elem, size_t size)
 {
 	(void)elem;
 }

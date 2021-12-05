@@ -72,7 +72,7 @@ int	ui_tab_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_tab_free(void *elem)
+void	ui_tab_free(void *elem, size_t size)
 {
 	(void)elem;
 }

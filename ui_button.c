@@ -98,7 +98,7 @@ t_ui_button	*ui_button_get_button(t_ui_element *elem)
 	return (elem->element);
 }
 
-void	ui_button_free(void *button)
+void	ui_button_free(void *button, size_t size)
 {
 	(void)button;
 }

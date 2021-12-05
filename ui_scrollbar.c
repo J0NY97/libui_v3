@@ -92,7 +92,7 @@ void	ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_scroll_value_set(elem, recipe->value[0]);
 }
 
-void	ui_scrollbar_free(void *args)
+void	ui_scrollbar_free(void *args, size_t size)
 {
 	(void)args;
 }

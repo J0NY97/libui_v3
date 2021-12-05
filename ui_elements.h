@@ -16,6 +16,8 @@
  * bool			hide_on_x;			if true when x is clicked, hide window (this and wants_to_close cant be set at the same time);
  * bool			user_handled_event;	true, when user has decided to event handle the window themselves; (so we dont do it twice); (used in the layout event handler);
  * t_ui_layout	*layout;			the layout it is part of, or if NULL it is not part of any layout;
+ * bool			win_replaced;		the user has replaced win->win with their own, which means they handle the destroying of it too;
+ * bool			renderer_replaced;	the user had renderer associated with the win->win they gave in, so they handle destroying of it;
 */
 typedef struct s_ui_window
 {
@@ -42,6 +44,8 @@ typedef struct s_ui_window
 	t_list			*children;
 	t_ui_layout		*layout;
 	Uint32			bg_color;
+	bool			win_replaced;
+	bool			renderer_replaced;
 }					t_ui_window;
 
 /*
@@ -282,7 +286,7 @@ typedef struct s_ui_scrollbar
 void					ui_window_new(t_ui_window *win, char *title, t_vec4 pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
 int						ui_window_render(t_ui_window *win);
-void					ui_window_free(void *win);
+void					ui_window_free(void *win, size_t size);
 void					ui_window_edit(t_ui_window *win, t_ui_recipe *recipe);
 // Window other
 void					ui_window_texture_redo(t_ui_window *win);
@@ -297,7 +301,7 @@ void					ui_window_render_texture(t_ui_window *win, SDL_Texture *texture);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
-void					ui_element_free(t_ui_element *elem);
+void					ui_element_free(void *elem, size_t size);
 void					ui_element_event(t_ui_element *elem, SDL_Event e);
 void					ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_element_textures_redo(t_ui_element *elem);
@@ -328,7 +332,7 @@ void					ui_label_texture_redo(t_ui_element *label);
 void					ui_label_event(t_ui_element *elem, SDL_Event e);
 int						ui_label_render(t_ui_element *label);
 void					ui_label_print(t_ui_element *elem);
-void					ui_label_free(void *label);
+void					ui_label_free(void *label, size_t size);
 // label other
 void					ui_label_set_text(t_ui_element *label, char *text);
 void					ui_label_font_set(t_ui_element *label, char *font_path);
@@ -347,7 +351,7 @@ void					ui_button_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_button_event(t_ui_element *button, SDL_Event e);
 bool					ui_button(t_ui_element *button);
 int						ui_button_render(t_ui_element *button);
-void					ui_button_free(void *button);
+void					ui_button_free(void *button, size_t size);
 t_ui_element			*ui_button_get(t_ui_element *elem, int ui_type);
 void					ui_button_print(t_ui_element *elem);
 // Getters
@@ -364,7 +368,7 @@ void					ui_menu_new(t_ui_window *win, t_ui_element *menu);
 int						ui_menu_render(t_ui_element *menu);
 void					ui_menu_event(t_ui_element *menu, SDL_Event e);
 void					ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe);
-void					ui_menu_free(void *menu);
+void					ui_menu_free(void *menu, size_t size);
 // getters
 t_ui_menu				*ui_menu_get_menu(t_ui_element *elem);
 
@@ -373,7 +377,7 @@ void					ui_dropdown_new(t_ui_window *win, t_ui_element *drop);
 void					ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_dropdown_event(t_ui_element *drop, SDL_Event e);
 int						ui_dropdown_render(t_ui_element *drop);
-void					ui_dropdown_free(void *drop);
+void					ui_dropdown_free(void *drop, size_t size);
 void					ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem);
 int						ui_dropdown_is_open(t_ui_element *elem);
 int						ui_dropdown_open(t_ui_element *elem);
@@ -394,7 +398,7 @@ void					ui_input_new(t_ui_window *win, t_ui_element *elem);
 void					ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
-void					ui_input_free(void *elem);
+void					ui_input_free(void *elem, size_t size);
 void					ui_input_print(t_ui_element *elem);
 t_ui_input				*ui_input_get(t_ui_element *elem);
 t_ui_element			*ui_input_get_label_element(t_ui_element *elem);
@@ -409,7 +413,7 @@ void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
 void					ui_slider_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_slider_event(t_ui_element *elem, SDL_Event e);
 int						ui_slider_render(t_ui_element *elem);
-void					ui_slider_free(void *elem);
+void					ui_slider_free(void *elem, size_t size);
 t_ui_element			*ui_slider_get(t_ui_element *elem, int ui_type);
 // Other
 int						ui_slider_updated(t_ui_element *elem);
@@ -427,7 +431,7 @@ int						ui_set_slider_value(int value, int min, int max, int w);
 void					ui_checkbox_new(t_ui_window *win, t_ui_element *elem);
 void					ui_checkbox_event(t_ui_element *elem, SDL_Event e);
 int						ui_checkbox_render(t_ui_element *elem);
-void					ui_checkbox_free(void *elem);
+void					ui_checkbox_free(void *elem, size_t size);
 void					ui_checkbox_toggle_on(t_ui_element *elem);
 void					ui_checkbox_toggle_off(t_ui_element *elem);
 void					ui_checkbox_toggle_accordingly(t_ui_element *elem, bool want_to_toggle);
@@ -436,7 +440,7 @@ void					ui_checkbox_toggle_accordingly(t_ui_element *elem, bool want_to_toggle)
 void					ui_radio_new(t_ui_window *win, t_ui_element *elem);
 void					ui_radio_event(t_ui_element *elem, SDL_Event e);
 int						ui_radio_render(t_ui_element *elem);
-void					ui_radio_free(void *elem);
+void					ui_radio_free(void *elem, size_t size);
 // Other radio
 void					ui_radio_button_toggle_on(t_ui_element *elem, t_ui_element *toggle_this);
 int						ui_list_radio_event(t_list *list, t_ui_element **active);
@@ -445,7 +449,7 @@ int						ui_list_radio_event(t_list *list, t_ui_element **active);
 void					ui_tab_new(t_ui_window *win, t_ui_element *elem);
 void					ui_tab_event(t_ui_element *elem, SDL_Event e);
 int						ui_tab_render(t_ui_element *elem);
-void					ui_tab_free(void *elem);
+void					ui_tab_free(void *elem, size_t size);
 // Other tab
 void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu);
 
@@ -453,7 +457,7 @@ void					ui_tab_add(t_ui_element *elem, t_ui_element *button, t_ui_element *menu
 void					ui_scrollbar_new(t_ui_window *win, t_ui_element *elem);
 void					ui_scrollbar_event(t_ui_element *elem, SDL_Event e);
 int						ui_scrollbar_render(t_ui_element *elem);
-void					ui_scrollbar_free(void *args);
+void					ui_scrollbar_free(void *args, size_t size);
 void					ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe);
 t_ui_element			*ui_scrollbar_get(t_ui_element *elem, int element_type);
 // Other

@@ -67,7 +67,7 @@ void	ui_label_texture_redo(t_ui_element *elem)
 		SDL_FreeSurface(elem->textures[UI_STATE_DEFAULT]);
 	if (elem->texture)
 		SDL_DestroyTexture(elem->texture);
-	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);	
+	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);
 	if (!elem->textures[UI_STATE_DEFAULT])
 		elem->textures[UI_STATE_DEFAULT] = ui_surface_new(1, 1);
 	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
@@ -191,7 +191,7 @@ void	ui_label_size_set(t_ui_element *label, size_t size)
 
 Uint32	ui_label_get_color(t_ui_element *elem)
 {
-	if (elem->element_type != UI_TYPE_LABEL)	
+	if (elem->element_type != UI_TYPE_LABEL)
 	{
 		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		return (0);
@@ -226,13 +226,13 @@ void	ui_label_text_center(t_ui_element *elem)
 	}
 	if (elem->parent_type == UI_TYPE_WINDOW)
 	{
-		elem->pos.x = (((t_ui_window *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);	
-		elem->pos.y = (((t_ui_window *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);	
+		elem->pos.x = (((t_ui_window *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);
+		elem->pos.y = (((t_ui_window *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);
 	}
 	else
 	{
-		elem->pos.x = (((t_ui_element *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);	
-		elem->pos.y = (((t_ui_element *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);	
+		elem->pos.x = (((t_ui_element *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);
+		elem->pos.y = (((t_ui_element *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);
 	}
 	label->text_align = UI_TEXT_ALIGN_CENTER;
 }
@@ -240,7 +240,7 @@ void	ui_label_text_center(t_ui_element *elem)
 /*
  * End of editing functions
 */
-void	ui_label_free(void *label)
+void	ui_label_free(void *label, size_t size)
 {
 	(void)label;
 }
@@ -271,7 +271,7 @@ void	ui_label_print(t_ui_element *elem)
 
 t_ui_label	*ui_label_get_label(t_ui_element *elem)
 {
-	if (elem->element_type != UI_TYPE_LABEL)	
+	if (elem->element_type != UI_TYPE_LABEL)
 	{
 		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		return (NULL);

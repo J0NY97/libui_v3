@@ -134,7 +134,7 @@ int	ui_dropdown_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_dropdown_free(void *drop)
+void	ui_dropdown_free(void *drop, size_t size)
 {
 	(void)drop;
 }

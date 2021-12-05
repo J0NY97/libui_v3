@@ -24,7 +24,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 			win->screen_pos.h / win->pos.h);
 	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
 	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
-	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y; 
+	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 	win->bg_color = 0xff000000;
 }
 
@@ -111,9 +111,22 @@ int	ui_window_render(t_ui_window *win)
 	return (1);
 }
 
-void	ui_window_free(void *win)
+void	ui_window_free(void *window, size_t size)
 {
-	(void)win;
+	t_ui_window	*win;
+
+	win = window;
+	if (!win)
+		return ;
+	free(win->id);
+	if (!win->win_replaced)
+		SDL_DestroyWindow(win->win);
+	if (!win->renderer_replaced)
+		SDL_DestroyRenderer(win->renderer);
+	SDL_DestroyTexture(win->texture);
+	free(win->title);
+	ft_lstdel(&win->children, &ui_element_free);
+	win->layout = NULL;
 }
 
 /*
@@ -228,6 +241,7 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 {
 	t_vec4i	pos;
 
+	ui_win->win_replaced = 1;
 	if (ui_win->win)
 		SDL_DestroyWindow(ui_win->win);
 	ui_win->win = sdl_win;
@@ -240,7 +254,10 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 	if (!ui_win->renderer)
 		ui_win->renderer = SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
 	else
+	{
 		ft_printf("[%s] The window already had a renderer.\n", __FUNCTION__);
+		ui_win->renderer_replaced = 1;
+	}
 	if (ui_win->texture)
 		SDL_DestroyTexture(ui_win->texture);
 	ui_win->texture = SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,

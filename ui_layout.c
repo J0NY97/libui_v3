@@ -1052,11 +1052,34 @@ t_ui_recipe	*ui_layout_get_recipe(t_ui_layout *layout, char *id)
 	return (ui_list_get_recipe_by_id(layout->recipes, id));
 }
 
+void	ui_family_free(void *family, size_t size)
+{
+	t_ui_family	*fam;
+
+	fam = family;
+	if (!fam)
+		return ;
+	free(fam->parent_id);
+	ft_arraydel(fam->children_strings);
+	ft_lstdel(&fam->children, &ui_family_free);
+}
+
 /*
  * Layout shouldnt be malloced, so dont free it;
  * 	(if its malloced, the user has done it, so he has to do it;
 */
 void	ui_layout_free(t_ui_layout *layout)
 {
-	(void)layout;
+	if (!layout)
+		return ;
+	free(layout->layout_file);
+	free(layout->layout_file_content);
+	ft_arraydel(layout->layout_element_strings);
+	free(layout->style_file);
+	free(layout->style_file_content);
+	ft_arraydel(layout->style_recipe_strings);
+	ft_lstdel(&layout->windows, &ui_window_free);
+	ft_lstdel(&layout->families, &ui_family_free);
+	ft_lstdel(&layout->recipes, &ui_recipe_free);
+	ft_arraydel(layout->resource_dirs);
 }

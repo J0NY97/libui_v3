@@ -32,14 +32,16 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->figure_out_z = 1;
 }
 
-void	ui_element_free(t_ui_element *elem)
+void	ui_element_free(void *elem_p, size_t size)
 {
-	int	i;
+	t_ui_element	*elem;
+	int				i;
 
+	elem = elem_p;
 	if (!elem)
 		return ;
 	if (g_acceptable[elem->element_type].freer)
-		g_acceptable[elem->element_type].freer(elem);
+		g_acceptable[elem->element_type].freer(elem, elem->element_type);
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
@@ -51,12 +53,12 @@ void	ui_element_free(t_ui_element *elem)
 	elem->win = NULL;
 	elem->parent_screen_pos = NULL;
 	elem->element = NULL;
-	// ui_list_element_free(elem->children);
-	elem->children = NULL; // TODO: make sure you remove all the children parents when you delete this elem children;
+	ui_element_remove_child_from_parent(elem);
+	ft_lstdel(&elem->children, &ui_element_free);
+	elem->children = NULL;
 	if (elem->id)
 		ft_strdel(&elem->id);
 	elem->parent_was_rendered_last_frame = NULL;
-	ui_element_remove_child_from_parent(elem);
 	// free(elem); // dont free, if the user of this library has malloced its their own responsibility to free; (TODO: in the layout free-er make sure you free all the elements, because there i have malloced the elements);
 }
 

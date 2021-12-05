@@ -10,7 +10,7 @@ typedef struct s_ui_acceptable
 {
 	char			*name;
 	int				type;
-	void			(*freer)(void *args);
+	void			(*freer)(void *elem, size_t size);
 	void			(*maker)(t_ui_window *win, t_ui_element *elem);
 	int				(*renderer)(t_ui_element *elem);
 	void			(*eventer)(t_ui_element *elem, SDL_Event e);

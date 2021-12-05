@@ -52,7 +52,7 @@ void	ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		menu->event_children = 1;
 }
 
-void	ui_menu_free(void *menu)
+void	ui_menu_free(void *menu, size_t size)
 {
 	(void)menu;
 }

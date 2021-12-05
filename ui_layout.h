@@ -105,5 +105,5 @@ void				ui_layout_free(t_ui_layout *layout);
 ///////////////
 // Recipe
 ///////////////
-void				ui_recipe_free(t_ui_recipe *recipe);
+void				ui_recipe_free(void *recipe, size_t size);
 void				ui_recipe_print(t_ui_recipe *recipe);

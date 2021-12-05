@@ -23,8 +23,8 @@ void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_ui_input	*input;
 
 	input = elem->element;
-	ui_element_edit(&input->label, recipe);	
-	ui_element_edit(&input->placeholder, recipe);	
+	ui_element_edit(&input->label, recipe);
+	ui_element_edit(&input->placeholder, recipe);
 	if (recipe->placeholder_text)
 	{
 		ui_label_set_text(&input->placeholder, recipe->placeholder_text);
@@ -38,7 +38,7 @@ void	remove_str_from_n_to_m(char **dest, int n, int m)
 	char *temp0;
 	char *temp1;
 	int len;
-	
+
 	len = ft_strlen(*dest);
 	temp0 = ft_strsub(*dest, 0, n);
 	temp1 = ft_strsub(*dest, m, len);
@@ -53,7 +53,7 @@ void	remove_char_after_nth_char(char **dest, int n)
 	char *temp0;
 	char *temp1;
 	int len;
-	
+
 	len = ft_strlen(*dest);
 	temp0 = ft_strsub(*dest, 0, n - 1);
 	temp1 = ft_strsub(*dest, n, len);
@@ -68,7 +68,7 @@ void	insert_str_after_nth_char(char **dest, char *src, int n)
 	char *temp0;
 	char *temp1;
 	int len;
-	
+
 	len = ft_strlen(*dest);
 	temp0 = ft_strsub(*dest, 0, n);
 	temp1 = ft_strsub(*dest, n, len);
@@ -262,7 +262,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 					input->cursor_on_char_num = small;
 				}
 			}
-			else 
+			else
 			{
 				// This needs to gtfo
 				int small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
@@ -294,7 +294,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 					// Dont need y because that doesnt matter. only needed if the text can stack on top of eachother, think about it, hard to explain.
 					input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
 				}
-				input->cursor_from_char_num = input->cursor_on_char_num; // IMPORTANT:make this is in hover != 1 
+				input->cursor_from_char_num = input->cursor_on_char_num; // IMPORTANT:make this is in hover != 1
 			}
 			else if (e.button.clicks == 2) // select word your cursor is at.
 			{
@@ -386,7 +386,7 @@ int	ui_input_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_input_free(void *elem)
+void	ui_input_free(void *elem, size_t size)
 {
 	(void)elem;
 }
@@ -429,7 +429,7 @@ t_ui_label	*ui_input_get_label(t_ui_element *elem)
 
 char	*ui_input_get_text(t_ui_element *elem)
 {
-	t_ui_input	*input;	
+	t_ui_input	*input;
 	t_ui_label	*label;
 
 	if (!elem)

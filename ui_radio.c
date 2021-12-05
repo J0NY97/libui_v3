@@ -70,7 +70,7 @@ int	ui_radio_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_radio_free(void *elem)
+void	ui_radio_free(void *elem, size_t size)
 {
 	(void)elem;
 }

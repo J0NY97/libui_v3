@@ -18,7 +18,7 @@ void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
 */
 void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 {
-	elem->is_hover = ui_element_is_hover(elem); 
+	elem->is_hover = ui_element_is_hover(elem);
 	if (elem->is_hover && elem->win->mouse_down_last_frame)
 	{
 		elem->was_click = 1;
@@ -44,7 +44,7 @@ int	ui_checkbox_render(t_ui_element *elem)
 		return (0);
 }
 
-void	ui_checkbox_free(void *elem)
+void	ui_checkbox_free(void *elem, size_t size)
 {
 	(void)elem;
 }
