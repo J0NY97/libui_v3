@@ -138,7 +138,7 @@ void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint
 		while (i != end_val)
 		{
 			if (i % 5 != 0) // the 5 is the gap
-				ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);	
+				ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
 			j += dec_inc;
 			i += increment_val;
 		}
@@ -191,11 +191,11 @@ void	ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uin
 		dec_inc = (short_len << 16) / long_len;
 	j = 0;
 	if (y_longer)
-	{	
+	{
 		i = 0;
 		while (i != end_val)
 		{
-			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);	
+			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
 			j += dec_inc;
 			i += increment_val;
 		}
@@ -248,7 +248,7 @@ void	ui_surface_line_draw_v2(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint3
 	{
 		while (i != end_val)
 		{
-			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);	
+			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
 			j += dec_inc;
 			i += increment_val;
 		}
@@ -278,7 +278,7 @@ void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	long_len = p2.x - p1.x;
 	j = 0;
 	i = 0;
-	y_longer = abs(short_len) > abs(long_len);
+	y_longer = fabsf(short_len) > fabsf(long_len);
 	if (y_longer)
 	{
 		float temp = short_len;
@@ -299,7 +299,7 @@ void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	{
 		while (i != end_val)
 		{
-			ui_surface_pixel_set(surface, p1.x + (int)j, p1.y + i, color);	
+			ui_surface_pixel_set(surface, p1.x + (int)j, p1.y + i, color);
 			j += dec_inc;
 			i += increment_val;
 		}
@@ -451,7 +451,7 @@ void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Ui
 	int r_sqr;
 
 	r_sqr = r * r;
-	x = -r;	
+	x = -r;
 	while (++x < r)
 	{
 		hh = sqrt(r_sqr - x * x);
@@ -464,7 +464,7 @@ void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Ui
 }
 
 void	ui_surface_line_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
-{ 
+{
 	float	angle;
 	int		i;
 

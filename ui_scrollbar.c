@@ -134,7 +134,7 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 	}
 	scroll->target_size = abs(min - max);
 	if (((t_ui_element *)scroll->target)->pos.h - scroll->target_size < 0)
-		scroll->max = abs(((t_ui_element *)scroll->target)->pos.h - scroll->target_size);
+		scroll->max = fabsf(((t_ui_element *)scroll->target)->pos.h - scroll->target_size);
 	else
 		scroll->max = 0;
 	int new_h = (((t_ui_element *)scroll->target)->pos.h / scroll->target_size) * elem->pos.h;

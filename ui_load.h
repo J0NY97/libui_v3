@@ -309,8 +309,7 @@ static const t_ui_acceptable g_acceptable[] =
 		.edit = NULL,
 		.printer = NULL,
 		.getter = NULL
-	},
-	NULL
+	}
 };
 /*
 // NOTE: these must be in the same order as the UI_TYPE_ENUM

@@ -86,6 +86,7 @@ t_ui_element	*ui_button_get(t_ui_element *elem, int ui_type)
 		return (NULL);
 	if (ui_type == UI_TYPE_LABEL)
 		return (ui_button_get_label_element(elem));
+	return (NULL);
 }
 
 t_ui_button	*ui_button_get_button(t_ui_element *elem)
