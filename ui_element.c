@@ -58,8 +58,7 @@ void	ui_element_free(void *elem_p, size_t size)
 	elem->children = NULL;
 	if (elem->id)
 		ft_strdel(&elem->id);
-	elem->parent_was_rendered_last_frame = NULL;
-	// free(elem); // dont free, if the user of this library has malloced its their own responsibility to free; (TODO: in the layout free-er make sure you free all the elements, because there i have malloced the elements);
+	elem->parent_rendered_last_frame = NULL;
 }
 
 /*
@@ -94,6 +93,16 @@ void	ui_element_textures_free(t_ui_element *elem)
 			SDL_FreeSurface(elem->textures[i]);
 }
 
+void	ui_element_set_colors_internal(t_ui_element *elem)
+{
+	SDL_FillRect(elem->textures[UI_STATE_DEFAULT], NULL,
+		elem->colors[UI_STATE_DEFAULT]);
+	SDL_FillRect(elem->textures[UI_STATE_HOVER], NULL,
+		elem->colors[UI_STATE_HOVER]);
+	SDL_FillRect(elem->textures[UI_STATE_CLICK], NULL,
+		elem->colors[UI_STATE_CLICK]);
+}
+
 /*
  * Redos the textures, helpful if you have changed the w and/or h of the element.
 */
@@ -115,30 +124,67 @@ void	ui_element_textures_redo(t_ui_element *elem)
 	elem->textures[UI_STATE_CLICK] = ui_surface_new(elem->pos.w, elem->pos.h);
 	elem->texture_recreate = 0;
 	if (elem->use_images)
-	{
 		ui_element_set_images_internal(elem);
-		return ;
+	else
+		ui_element_set_colors_internal(elem);
+}
+
+/*
+ * NOTE: we dont always update all the values in 'result';
+*/
+void	complicated_math(
+		t_vec4i *result, t_vec4i pos,
+		t_vec4i parent_from_pos, t_vec4i parent_to_pos)
+{
+	if (pos.x < parent_from_pos.x)
+	{
+		result->x = parent_from_pos.x - pos.x;
+		result->w = pos.w - result->x;
 	}
-	SDL_FillRect(elem->textures[UI_STATE_DEFAULT], NULL,
-		elem->colors[UI_STATE_DEFAULT]);
-	SDL_FillRect(elem->textures[UI_STATE_HOVER], NULL,
-		elem->colors[UI_STATE_HOVER]);
-	SDL_FillRect(elem->textures[UI_STATE_CLICK], NULL,
-		elem->colors[UI_STATE_CLICK]);
+	else if (pos.x + pos.w > parent_to_pos.w)
+		result->w = pos.w - abs((pos.x + pos.w) - parent_to_pos.w);
+	if (pos.y < parent_from_pos.y)
+	{
+		result->y = parent_from_pos.y - pos.y;
+		result->h = pos.h - result->y;
+	}
+	else if (pos.y + pos.h > parent_to_pos.h)
+		result->h = pos.h - abs((pos.y + pos.h) - parent_to_pos.h);
+}
+
+/*
+ * TODO: from and to should be pointer, and if they are null,
+ * 		we put whole 'texture' on 'win->texture';
+ *
+ * From 'texture' at pos 'from' blit pixels to 'win->texture' to pos 'to';
+ * Returns if the texture was blat or not;
+*/
+int	ui_puttextureonwindow(
+		t_ui_window *win, SDL_Texture *texture, t_vec4i from, t_vec4i to)
+{
+	if (to.w <= 0 || to.h <= 0 || from.w <= 0 || from.h <= 0)
+		return (0);
+	SDL_SetRenderTarget(win->renderer, win->texture);
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+	SDL_RenderCopy(win->renderer, texture,
+		&(SDL_Rect){from.x, from.y, from.w, from.h},
+		&(SDL_Rect){to.x, to.y, to.w, to.h});
+	SDL_SetRenderTarget(win->renderer, NULL);
+	return (1);
 }
 
 /*
  * Return: 1 if rendering successful, 0 if not.
+ *
+ * TODO: when radio is either removed or reworked,
+ * move: elem->rendered_last_frame = 1;
 */
 int	ui_element_render(t_ui_element *elem)
 {
-	elem->was_rendered_last_frame = 0;
-//	elem->was_click = 0;
-	if (!*elem->parent_was_rendered_last_frame)
-		return (0);
-	if (!*elem->parent_show || !elem->show)
-		return (0);
-	if (!elem->textures[elem->state])
+	elem->rendered_last_frame = 0;
+	if (!*elem->parent_rendered_last_frame
+		|| !*elem->parent_show || !elem->show
+		|| !elem->textures[elem->state])
 		return (0);
 	elem->screen_pos = ui_element_screen_pos_get(elem);
 	elem->from_pos = vec4i(0, 0, elem->pos.w, elem->pos.h);
@@ -146,55 +192,41 @@ int	ui_element_render(t_ui_element *elem)
 	if (elem->texture_recreate || elem->win->textures_recreate)
 	{
 		ui_element_textures_redo(elem);
-		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
+		elem->last_state = -909;
 	}
-	else if (elem->state != elem->last_state)
-		SDL_UpdateTexture(elem->texture, NULL, elem->textures[elem->state]->pixels, elem->textures[elem->state]->pitch);
-	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT && elem->figure_out_z)
+	if (elem->state != elem->last_state)
+		SDL_UpdateTexture(elem->texture, NULL,
+			elem->textures[elem->state]->pixels,
+			elem->textures[elem->state]->pitch);
+	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT
+		&& elem->figure_out_z)
 		elem->z = ((t_ui_element *)elem->parent)->z + 1;
-	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT && ((t_ui_element *)elem->parent)->render_me_on_parent)
+	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT
+		&& ((t_ui_element *)elem->parent)->render_me_on_parent)
 		elem->render_me_on_parent = 1;
 	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
 	{
-		if ((int)elem->pos.x < ((t_ui_element *)elem->parent)->from_pos.x)
-		{
-			elem->from_pos.x = ((t_ui_element *)elem->parent)->from_pos.x - (int)elem->pos.x;
-			elem->from_pos.w = (int)elem->pos.w - elem->from_pos.x;
-		}
-		else if ((int)elem->pos.x + (int)elem->pos.w > ((t_ui_element *)elem->parent)->to_pos.w)
-			elem->from_pos.w = (int)elem->pos.w - abs(((int)elem->pos.x + (int)elem->pos.w) - ((t_ui_element *)elem->parent)->to_pos.w);
-
-		if ((int)elem->pos.y < ((t_ui_element *)elem->parent)->from_pos.y)
-		{
-			elem->from_pos.y = ((t_ui_element *)elem->parent)->from_pos.y - (int)elem->pos.y;
-			elem->from_pos.h = (int)elem->pos.h - elem->from_pos.y;
-		}
-		else if ((int)elem->pos.y + (int)elem->pos.h > ((t_ui_element *)elem->parent)->to_pos.h)
-			elem->from_pos.h = (int)elem->pos.h - abs(((int)elem->pos.y + (int)elem->pos.h) - ((t_ui_element *)elem->parent)->to_pos.h);
-		// This doesnt take into account stretched resolution yet;
+		complicated_math(&elem->from_pos, vec4_to_vec4i(elem->pos),
+			((t_ui_element *)elem->parent)->from_pos,
+			((t_ui_element *)elem->parent)->to_pos);
 		elem->to_pos.x += elem->from_pos.x;
 		elem->to_pos.w = elem->from_pos.w;
 		elem->to_pos.y += elem->from_pos.y;
 		elem->to_pos.h = elem->from_pos.h;
-		if (elem->to_pos.w <= 0 || elem->to_pos.h <= 0)
-			return (0);
 	}
-	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
-	SDL_SetTextureBlendMode(elem->texture, SDL_BLENDMODE_BLEND); // TODO: elem->blendmode == BLEND, because this might take more processing;
-	SDL_RenderCopy(elem->win->renderer, elem->texture,
-		&(SDL_Rect){elem->from_pos.x, elem->from_pos.y, elem->from_pos.w, elem->from_pos.h},
-		&(SDL_Rect){elem->to_pos.x, elem->to_pos.y, elem->to_pos.w, elem->to_pos.h});
-	SDL_SetRenderTarget(elem->win->renderer, NULL);
 	elem->last_state = elem->state;
-	elem->was_rendered_last_frame = 1;
+	elem->rendered_last_frame = 1;
+	if (!ui_puttextureonwindow(elem->win, elem->texture,
+			elem->from_pos, elem->to_pos))
+		return (0);
 	return (1);
 }
 
 int	ui_element_is_hover(t_ui_element *elem)
 {
 	if (elem->show
-		&& elem->was_rendered_last_frame
-		//&& *elem->parent_show
+		&& elem->rendered_last_frame
+		&& *elem->parent_show // Why was this commented out?;
 		&& point_in_rect(elem->win->mouse_pos, elem->to_pos))
 		return (1);
 	return (0);
@@ -205,7 +237,7 @@ int	ui_element_is_hover(t_ui_element *elem)
 */
 int	ui_element_was_hover(t_ui_element *elem)
 {
-	if (elem->was_rendered_last_frame
+	if (elem->rendered_last_frame
 		&& point_in_rect(elem->win->mouse_pos_prev, elem->to_pos))
 		return (1);
 	return (0);
@@ -271,7 +303,8 @@ void	ui_element_color_set(t_ui_element *elem, int state, Uint32 color)
 	elem->colors[state] = color;
 }
 
-void	ui_element_image_set_from_path(t_ui_element *elem, int state, char *image_path)
+void	ui_element_image_set_from_path(
+		t_ui_element *elem, int state, char *image_path)
 {
 	SDL_Surface	*image;
 
@@ -290,9 +323,11 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 	int	amount_to_make;
 	int	made;
 
-	if (!elem || state < 0 || state > UI_STATE_AMOUNT || !image || !image->w || !image->h)
+	if (!elem || state < 0 || state > UI_STATE_AMOUNT
+		|| !image || !image->w || !image->h)
 	{
-		ft_printf("[%s] Couldn\'t set image, could be one of the 50 different reasons. elem ? %d, state ? %d, image ? %d, image->w %d, image->h %d\n", __FUNCTION__, elem ? 1 : 0, state, image ? 1 : 0, image->w, image->h);
+		ft_printf("[%s] Error! elem?%d, state?%d, image?%d, w:%d, h:%d\n",
+			__FUNCTION__, !(!elem), state, !(!image), image->w, image->h);
 		return ;
 	}
 	i = -1;
@@ -329,35 +364,22 @@ void	ui_element_remove_child_from_parent(t_ui_element *elem)
 	t_list	*curr;
 	t_list	**list;
 
+	//*list = NULL;
 	if (!elem->parent)
-	{
-		ft_printf("[%s] Element doesnt have a parent.\n", __FUNCTION__);
 		return ;
-	}
 	if (elem->parent_type == UI_TYPE_WINDOW)
 	{
 		if (((t_ui_window *)elem->parent)->children)
 			list = &((t_ui_window *)elem->parent)->children;
 		else
-		{
-			ft_printf("[%s] Parent element didnt have children.\n", __FUNCTION__);
 			return ;
-		}
 	}
 	else if (elem->parent_type == UI_TYPE_ELEMENT)
 	{
 		if (((t_ui_element *)elem->parent)->children)
 			list = &((t_ui_element *)elem->parent)->children;
 		else
-		{
-			ft_printf("[%s] Parent element didnt have children.\n", __FUNCTION__);
 			return ;
-		}
-	}
-	else
-	{
-		ft_printf("[%s] Parent of type [%d] %s not supported.\n", __FUNCTION__, elem->parent_type, ui_element_type_to_string(elem->parent_type));
-		return ;
 	}
 	curr = *list;
 	while (curr)
@@ -385,7 +407,7 @@ void	ui_element_set_parent(t_ui_element *elem, void *parent, int type)
 		elem->parent_type = type;
 		elem->parent_screen_pos = &parent_win->screen_pos;
 		elem->parent_show = &parent_win->show;
-		elem->parent_was_rendered_last_frame = &parent_win->show;
+		elem->parent_rendered_last_frame = &parent_win->show;
 		add_to_list(&parent_win->children, elem, UI_TYPE_ELEMENT);
 	}
 	else if (type == UI_TYPE_ELEMENT)
@@ -395,11 +417,9 @@ void	ui_element_set_parent(t_ui_element *elem, void *parent, int type)
 		elem->parent_type = type;
 		elem->parent_screen_pos = &parent_elem->screen_pos;
 		elem->parent_show = &parent_elem->show;
-		elem->parent_was_rendered_last_frame = &parent_elem->was_rendered_last_frame;
+		elem->parent_rendered_last_frame = &parent_elem->rendered_last_frame;
 		add_to_list(&parent_elem->children, elem, UI_TYPE_ELEMENT);
 	}
-	else
-		ft_printf("[%s] Element of type %d is not supported.\n", __FUNCTION__, type);
 }
 
 void	ui_element_set_id(t_ui_element *elem, char *id)
@@ -449,7 +469,7 @@ void	ui_element_print(t_ui_element *elem)
 	ft_printf("\twas_click : %d\n", elem->was_click);
 	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
 	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
-	ft_printf("\twas_rendered_last_frame : %d\n", elem->was_rendered_last_frame);
+	ft_printf("\trendered_last_frame : %d\n", elem->rendered_last_frame);
 	ft_printf("\trender_me_on_parent : %d\n", elem->render_me_on_parent);
 	ft_printf("\tis_a_part_of_another : %d\n", elem->is_a_part_of_another);
 	if (g_acceptable[elem->element_type].printer)
@@ -480,7 +500,9 @@ const char	*ui_element_type_to_string(int type)
 {
 	if (type < 0 || type >= UI_TYPE_AMOUNT)
 	{
-		ft_printf("[%s] Something Went Wrong : For some reason trying to convert type %d to str when that doesnt exist.\n", __FUNCTION__, type);
+		ft_printf("[%s] Something Went Wrong : For some reason trying to "
+			"convert type %d to str when that doesnt exist.\n",
+			__FUNCTION__, type);
 		return ("none");
 	}
 	return (g_acceptable[type].name);
@@ -496,7 +518,8 @@ void	ui_element_move_list(t_list *list, t_vec2i amount)
 	while (list)
 	{
 		elem = list->content;
-		ui_element_pos_set2(elem, vec2(elem->pos.x + amount.x, elem->pos.y + amount.y));
+		ui_element_pos_set2(elem,
+			vec2(elem->pos.x + amount.x, elem->pos.y + amount.y));
 		list = list->next;
 	}
 }

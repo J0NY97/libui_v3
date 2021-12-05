@@ -65,6 +65,7 @@ t_vec4i				vec4i(int x, int y, int w, int h);
 t_vec4				vec4(float x, float y, float w, float h);
 void				vec4i_swap(t_vec4i *v1, t_vec4i *v2);
 void				vec4_swap(t_vec4 *v1, t_vec4 *v2);
+t_vec4i				vec4_to_vec4i(t_vec4 src);
 
 // Other
 void				print_vec(float *vec, size_t size);

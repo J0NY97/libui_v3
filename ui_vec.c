@@ -154,6 +154,11 @@ int	compare_vec(float *vec1, float *vec2, size_t size)
 	return (1);
 }
 
+t_vec4i	vec4_to_vec4i(t_vec4 src)
+{
+	return (vec4i(src.x, src.y, src.w, src.h));	
+}
+
 int	vec2_in_vec4(t_vec2i v2, t_vec4i v4)
 {
 	if (v2.x >= v4.x && v2.y >= v4.y

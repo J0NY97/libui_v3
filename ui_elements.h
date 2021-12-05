@@ -103,8 +103,8 @@ typedef struct s_ui_element
 	bool			was_click;
 	bool			texture_recreate;
 	Uint32			colors[UI_STATE_AMOUNT];
-	bool			was_rendered_last_frame;
-	bool			*parent_was_rendered_last_frame;
+	bool			rendered_last_frame;
+	bool			*parent_rendered_last_frame;
 	bool			render_me_on_parent;
 	bool			is_a_part_of_another;
 	bool			figure_out_z;
