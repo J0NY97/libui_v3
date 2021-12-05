@@ -118,6 +118,7 @@ void	ui_window_free(void *window, size_t size)
 	win = window;
 	if (!win)
 		return ;
+		/*
 	free(win->id);
 	if (!win->win_replaced)
 		SDL_DestroyWindow(win->win);
@@ -127,6 +128,7 @@ void	ui_window_free(void *window, size_t size)
 	free(win->title);
 	ft_lstdel(&win->children, &ui_element_free);
 	win->layout = NULL;
+	*/
 }
 
 /*

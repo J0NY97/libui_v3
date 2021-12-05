@@ -442,7 +442,9 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 	{
 		if (child->bg_images_set[jj])
 		{
-			target->bg_images[jj] = child->bg_images[jj];
+			if (target->bg_images_set[jj])
+				ft_strdel(&target->bg_images[jj]);
+			target->bg_images[jj] = ft_strdup(child->bg_images[jj]);
 			target->bg_images_set[jj] = 1;
 		}
 	}
@@ -615,22 +617,30 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 			jj = -1;
 			while (++jj < UI_STATE_AMOUNT)
 			{
+				if (recipe->bg_images_set[jj])
+					ft_strdel(&recipe->bg_images[jj]);
 				recipe->bg_images[jj] = ft_strdup(key_value[1]);
 				recipe->bg_images_set[jj] = 1;
 			}
 		}
 		else if (ft_strequ(key_value[0], "bg_image_default"))
 		{
+			if (recipe->bg_images_set[UI_STATE_DEFAULT])
+				ft_strdel(&recipe->bg_images[UI_STATE_DEFAULT]);
 			recipe->bg_images[UI_STATE_DEFAULT] = ft_strdup(key_value[1]);
 			recipe->bg_images_set[UI_STATE_DEFAULT] = 1;
 		}
 		else if (ft_strequ(key_value[0], "bg_image_hover"))
 		{
+			if (recipe->bg_images_set[UI_STATE_HOVER])
+				ft_strdel(&recipe->bg_images[UI_STATE_HOVER]);
 			recipe->bg_images[UI_STATE_HOVER] = ft_strdup(key_value[1]);
 			recipe->bg_images_set[UI_STATE_HOVER] = 1;
 		}
 		else if (ft_strequ(key_value[0], "bg_image_click"))
 		{
+			if (recipe->bg_images_set[UI_STATE_CLICK])
+				ft_strdel(&recipe->bg_images[UI_STATE_CLICK]);
 			recipe->bg_images[UI_STATE_CLICK] = ft_strdup(key_value[1]);
 			recipe->bg_images_set[UI_STATE_CLICK] = 1;
 		}
@@ -685,7 +695,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 				recipe->value[jj] = ft_atoi(values[jj]);
 				recipe->value_set[jj] = 1;
 			}
-			ft_arraydel(key_value);
+			ft_arraydel(values);
 		}
 		else if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
 		{
@@ -752,6 +762,7 @@ t_ui_recipe	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *
 	ft_putarr(args);
 	recipe = ft_memalloc(sizeof(t_ui_recipe));
 	recipe->id = ft_strdup(name_and_prefabs[0]);
+	ft_printf("[%s] Making recipe : %s\n", __FUNCTION__, recipe->id);
 	if (elem || win) // if we have found elem with the same id;
 	{
 		if (elem)
@@ -765,6 +776,8 @@ t_ui_recipe	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *
 			ft_putstr("recipe was filled by child : \n");
 			ft_putarr(recipe->flags);
 		}
+		else
+			ft_printf("[%s] No 'global' recipe for that type.\n", __FUNCTION__);
 	}
 	else
 		ft_printf("[%s] No element nor window with recipe id %s found.\n", __FUNCTION__, name_and_prefabs[0]);
@@ -773,11 +786,9 @@ t_ui_recipe	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *
 	{
 		child_recipe = ui_list_get_recipe_by_id(recipes, name_and_prefabs[i]);
 		if (!child_recipe)
-		{
 			ft_printf("[%s] No recipe with id %s found, couldn\'t copy recipe.\n", __FUNCTION__, name_and_prefabs[i]);
-			continue ;
-		}
-		fill_recipe_from_recipe(recipe, child_recipe);
+		else
+			fill_recipe_from_recipe(recipe, child_recipe);
 	}
 	fill_recipe_from_args(recipe, args);
 	ft_putstr("final : \n");
@@ -821,9 +832,9 @@ void	ui_recipe_print(t_ui_recipe *recipe)
 		ft_printf("bg_color_click : %#x\n", recipe->bg_colors[UI_STATE_CLICK]);
 	if (recipe->bg_images_set[0])
 		ft_printf("bg_image_default : %s\n", recipe->bg_images[UI_STATE_DEFAULT]);
-	if (recipe->bg_images_set[0])
+	if (recipe->bg_images_set[1])
 		ft_printf("bg_image_hover : %s\n", recipe->bg_images[UI_STATE_HOVER]);
-	if (recipe->bg_images_set[0])
+	if (recipe->bg_images_set[2])
 		ft_printf("bg_image_click : %s\n", recipe->bg_images[UI_STATE_CLICK]);
 	ft_printf("\n");
 }
@@ -954,7 +965,7 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
-		if (recipe->bg_images_set[i])
+		if (recipe->bg_images_set[i] && recipe->bg_images[i])
 		{
 			if (!access(recipe->bg_images[i], F_OK))
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
@@ -963,19 +974,26 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 				int jjj = -1;
 				while (elem->win->layout->resource_dirs[++jjj])
 				{
+					ft_printf("[%d] resource dir [%d]\n", i, jjj);
 					char *temp = ft_sprintf("%s%s", elem->win->layout->resource_dirs[jjj], recipe->bg_images[i]);
+					ft_printf("temp : %s\n", temp);
+					ft_printf("bg_image : %s\n", recipe->bg_images[i]);
 					if (!access(temp, F_OK))
 					{
-						ft_strdel(&recipe->bg_images[i]);
+						ft_printf("image found\n");
+						free(recipe->bg_images[i]);
 						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;!
+						ft_printf("image copied\n");
 						break ;
 					}
 					ft_strdel(&temp);
 				}
+				ft_printf("We have found the correct one : %s\n", recipe->bg_images[i]);
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 			}
 		}
 	}
+	ft_printf("[%s] Done with bg_image setting.\n", __FUNCTION__);
 	if (recipe->flags)
 	{
 		if (ft_strinarr("render_on_parent", recipe->flags))
@@ -988,10 +1006,12 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	}
 	if (recipe->show_set)
 		elem->show = recipe->show;
+	ft_printf("[%s] Edit with specific to that element_type.\n", __FUNCTION__);
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
 		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+	ft_printf("[%s] Done.\n", __FUNCTION__);
 }
 
 /*
@@ -1018,13 +1038,19 @@ void	layout_apply_style(t_ui_layout *layout)
 	while (curr)
 	{
 		elem = curr->content;
+		if (!elem)
+			ft_printf("[%s] no elem...\n", __FUNCTION__);
 		recipe = ui_list_get_recipe_by_id(layout->recipes, elem->id);
+		if (recipe)
+			ft_printf("[%s] we want to edit with recipe : %s ", __FUNCTION__, recipe->id);
 		if (elem && recipe)
 			ui_element_edit(elem, recipe);
 		else
 			ft_printf("[%s] Couldn\'t find recipe for element %s.\n", __FUNCTION__, elem->id);
+		ft_printf("success.\n");
 		curr = curr->next;
 	}
+	ft_printf("[%s] Done\n", __FUNCTION__);
 }
 
 /*

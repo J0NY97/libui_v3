@@ -43,6 +43,8 @@ void	ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_dropdown	*drop;
 
+	if (!elem || !recipe)
+		return ;
 	drop = elem->element;
 	ui_label_edit(&drop->label, recipe);
 }
@@ -252,7 +254,7 @@ t_ui_element	*ui_dropdown_get_scrollbar_element(t_ui_element *elem)
 */
 t_ui_dropdown	*ui_dropdown_get_dropdown(t_ui_element *elem)
 {
-	if (!elem || !elem->element_type == UI_TYPE_DROPDOWN)
+	if (!elem || elem->element_type != UI_TYPE_DROPDOWN)
 		return (NULL);
 	return (elem->element);
 }

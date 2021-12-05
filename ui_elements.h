@@ -404,8 +404,8 @@ t_ui_input				*ui_input_get(t_ui_element *elem);
 t_ui_element			*ui_input_get_label_element(t_ui_element *elem);
 t_ui_label				*ui_input_get_label(t_ui_element *elem);
 char					*ui_input_get_text(t_ui_element *elem);
-char					*ui_input_set_text(t_ui_element *elem, char *str);
-char					*ui_input_set_placeholder_text(t_ui_element *elem, char *str);
+void					ui_input_set_text(t_ui_element *elem, char *str);
+void					ui_input_set_placeholder_text(t_ui_element *elem, char *str);
 int						ui_input_exit(t_ui_element *elem);
 
 // Slider

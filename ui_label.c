@@ -25,7 +25,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_vec4		pos;
 	int			i;
 
-	if (elem->element_type != UI_TYPE_LABEL)
+	if (!elem || elem->element_type != UI_TYPE_LABEL)
 		return ;
 	label = elem->element;
 	if (recipe->title && !recipe->remove_title)

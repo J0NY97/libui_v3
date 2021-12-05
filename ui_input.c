@@ -23,8 +23,8 @@ void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_ui_input	*input;
 
 	input = elem->element;
-	ui_element_edit(&input->label, recipe);
-	ui_element_edit(&input->placeholder, recipe);
+	ui_label_edit(&input->label, recipe);
+	ui_label_edit(&input->placeholder, recipe);
 	if (recipe->placeholder_text)
 	{
 		ui_label_set_text(&input->placeholder, recipe->placeholder_text);
@@ -443,12 +443,12 @@ char	*ui_input_get_text(t_ui_element *elem)
 	return (label->text);
 }
 
-char	*ui_input_set_text(t_ui_element *elem, char *str)
+void	ui_input_set_text(t_ui_element *elem, char *str)
 {
 	ui_label_set_text(ui_input_get_label_element(elem), str);
 }
 
-char	*ui_input_set_placeholder_text(t_ui_element *elem, char *str)
+void	ui_input_set_placeholder_text(t_ui_element *elem, char *str)
 {
 	ui_label_set_text(&ui_input_get(elem)->placeholder, str);
 }
