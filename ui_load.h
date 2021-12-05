@@ -190,17 +190,6 @@ static const t_ui_acceptable g_acceptable[] =
 		.getter = NULL
 	},
 	{
-		.name = "Button",
-		.type = UI_TYPE_BUTTON,
-		.freer = &ui_button_free,
-		.maker = &ui_button_new,
-		.renderer = &ui_button_render,
-		.eventer = &ui_button_event,
-		.edit = &ui_button_edit,
-		.printer = &ui_button_print,
-		.getter = NULL //&ui_button_get , button doesnt need this, you can acess the label stuff anyways.
-	},
-	{
 		.name = "Label",
 		.type = UI_TYPE_LABEL,
 		.freer = &ui_label_free,
@@ -210,6 +199,17 @@ static const t_ui_acceptable g_acceptable[] =
 		.edit = &ui_label_edit,
 		.printer = &ui_label_print,
 		.getter = NULL
+	},
+	{
+		.name = "Button",
+		.type = UI_TYPE_BUTTON,
+		.freer = &ui_button_free,
+		.maker = &ui_button_new,
+		.renderer = &ui_button_render,
+		.eventer = &ui_button_event,
+		.edit = &ui_button_edit,
+		.printer = &ui_button_print,
+		.getter = NULL //&ui_button_get , button doesnt need this, you can acess the label stuff anyways.
 	},
 	{
 		.name = "Menu",

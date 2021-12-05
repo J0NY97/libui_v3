@@ -936,7 +936,6 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_vec4	pos;
 	int		i;
 
-	ft_printf("[%s] recipe->id : %s\n", __FUNCTION__, recipe->id);
 	pos = elem->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
@@ -992,7 +991,6 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
 		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
-	ft_printf("[%s] Done\n", __FUNCTION__);
 }
 
 /*
@@ -1021,10 +1019,7 @@ void	layout_apply_style(t_ui_layout *layout)
 		elem = curr->content;
 		recipe = ui_list_get_recipe_by_id(layout->recipes, elem->id);
 		if (elem && recipe)
-		{
-			ft_printf("[%s] id : %s\n", __FUNCTION__, recipe->id);
 			ui_element_edit(elem, recipe);
-		}
 		else
 			ft_printf("[%s] Couldn\'t find recipe for element %s.\n", __FUNCTION__, elem->id);
 		curr = curr->next;
