@@ -49,7 +49,7 @@ Uint32	rgba_to_hex(t_rgba rgba)
 */
 Uint32	ui_color_change_brightness(Uint32 orig_col, float procentage)
 {
-	t_rgba	rgba;	
+	t_rgba	rgba;
 
 	rgba = hex_to_rgba(orig_col);
 	if (procentage < 0)
@@ -209,8 +209,12 @@ char	*ft_supertrim(char *str)
 		return (NULL);
 	if (trim[0] && trim[0] == '/'
 		&& trim[1] && trim[1] == '/')
+	{
+		ft_strdel(&trim);
 		return (NULL);
+	}
 	arr = ft_strsplitwhitespace(trim);
+	ft_strdel(&trim);
 	final = NULL;
 	i = -1;
 	while (arr[++i])
@@ -272,7 +276,7 @@ void	ft_strtrimwholearr(char **arr)
 	{
 		temp = ft_strtrim(arr[i]);
 		ft_strdel(&arr[i]);
-		arr[i] = ft_strdup(temp);
+		arr[i] = temp;
 	}
 }
 
@@ -344,5 +348,5 @@ char	**ft_arradd(char **arr, char *add)
 	arr = realloc(arr, sizeof(char *) * (len + 2));
 	arr[len] = ft_strdup(add);
 	arr[len + 1] = NULL;
-	return (arr);	
+	return (arr);
 }

@@ -46,7 +46,6 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	layout_split_elements(layout);
 	layout_make_family_trees(layout);
 	layout_compile_elements(layout);
-
 	if (!layout->style_file)
 	{
 		ft_printf("[%s] We have no style file given, so lets just then dont do anything.\n", __FUNCTION__);
@@ -68,7 +67,10 @@ int	get_special(t_ui_layout *layout, char *str)
 	result = 0;
 	arr = ft_strsplitfirstoccurence(str, ':');
 	if (!arr || !arr[0] || !arr[1])
+	{
+		ft_arraydel(arr);
 		return (0);
+	}
 	ft_strtrimwholearr(arr);
 	if (ft_strequ(arr[0], "style"))
 	{
@@ -111,10 +113,8 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 			break ;
 		trim = ft_supertrim(line);
 		if (trim != NULL && !get_special(layout, trim)) // whole line was trimmed if is NULL (could happen if the line was a comment);
-		{
 			ft_stradd(&content, trim);
-			ft_strdel(&trim);
-		}
+		ft_strdel(&trim);
 	}
 	ft_strdel(&line);
 	fclose(fd);
@@ -218,6 +218,7 @@ t_ui_family	*make_family_from_string(char *str)
 	family->parent_id = ft_strdup(type_n_name[1]);
 	family->parent_type = ui_element_type_from_string(type_n_name[0]);
 	family->children_strings = split_string_into_array(children);
+	ft_strdel(&children);
 	int k = -1;
 	while (family->children_strings[++k])
 	{
