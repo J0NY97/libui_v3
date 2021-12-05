@@ -12,7 +12,6 @@ void	ui_button_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xff95d7ae);
 	ui_element_color_set(elem, UI_STATE_HOVER, 0xff7bae7f);
 	ui_element_color_set(elem, UI_STATE_CLICK, 0xff73956f);
-
 	ui_label_new(win, &button->label);
 	button->label.is_a_part_of_another = 1;
 	ui_element_set_parent(&button->label, elem, UI_TYPE_ELEMENT);
@@ -24,7 +23,7 @@ void	ui_button_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_ui_button	*button;
 
 	button = elem->element;
-	ui_element_edit(&button->label, recipe);
+	ui_label_edit(&button->label, recipe);
 }
 
 void	ui_button_event(t_ui_element *elem, SDL_Event e)
@@ -78,7 +77,8 @@ int	ui_button_render(t_ui_element *elem)
 }
 
 /*
- * Returns from button element its child elements (that are specific to this type of element only);
+ * Returns from button element its child elements
+ * 	(that are specific to this type of element only);
 */
 t_ui_element	*ui_button_get(t_ui_element *elem, int ui_type)
 {
@@ -93,7 +93,9 @@ t_ui_button	*ui_button_get_button(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_BUTTON)
 	{
-		ft_printf("[%s] Elem is not of type button. <%d : %s>\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem is not of type button. <%d : %s>\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (elem->element);
@@ -104,17 +106,17 @@ void	ui_button_free(void *button, size_t size)
 	(void)button;
 }
 
-
 void	ui_button_print(t_ui_element *elem)
 {
 	t_ui_button	*button;
 
 	if (elem->element_type != UI_TYPE_BUTTON)
 	{
-		ft_printf("[%s] You\'re not giving element of type button. <%d : %s>", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Not elem of type button. <%d : %s>",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return ;
 	}
-	ft_printf("We should be printing some button stuff here.\n");
 	button = ui_button_get_button(elem);
 	if (!button)
 		return ;
@@ -135,15 +137,14 @@ t_ui_element	*ui_button_get_label_element(t_ui_element *elem)
 	}
 	if (elem->element_type != UI_TYPE_BUTTON)
 	{
-		ft_printf("[%s] Element is not of type UI_TYPE_BUTTON. It\'s %d %s.", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Element not of type UI_TYPE_BUTTON. It\'s %d %s.",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	button = elem->element;
 	if (!button)
-	{
-		ft_printf("[%s] No button.\n", __FUNCTION__);
 		return (NULL);
-	}
 	return (&button->label);
 }
 
@@ -187,5 +188,3 @@ t_ui_element	*ui_list_get_button_with_text(t_list *list, const char *str)
 	ft_printf("[%s] No button with text %s in list.\n", __FUNCTION__, str);
 	return (NULL);
 }
-
-

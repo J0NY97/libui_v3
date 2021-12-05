@@ -19,6 +19,13 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab->texture_recreate = 1;
 }
 
+/*
+ * TODO:
+ *	1. at some point only remove text aligns that dont make sense;
+ *	2. When you have title without text (you want no text)
+ *		if you just strdel it, everything breaks if you try to use label->text
+ *		and its NULL, so we just set an empty string in it instead.
+*/
 void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_label	*label;
@@ -33,7 +40,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (recipe->remove_title)
 	{
 		ft_strdel(&label->text);
-		label->text = ft_strnew(0); // TODO: FIX: This is effing sheit! When you have title without text (you want no text) if you just strdel it, everything breaks if you try to use label->text and its NULL, so we just set an empty string in it instead.
+		label->text = ft_strnew(0);
 	}
 	if (recipe->text_color_set)
 		ui_label_color_set(elem, recipe->text_color);
@@ -50,7 +57,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		if (recipe->text_pos_set[i])
 		{
 			pos.v[i] = recipe->text_pos.v[i];
-			label->text_align = 0; // at some point only remove text aligns that dont make sense;
+			label->text_align = 0;
 		}
 	}
 	if (recipe->text_pos_set[2])
@@ -67,10 +74,12 @@ void	ui_label_texture_redo(t_ui_element *elem)
 		SDL_FreeSurface(elem->textures[UI_STATE_DEFAULT]);
 	if (elem->texture)
 		SDL_DestroyTexture(elem->texture);
-	elem->textures[UI_STATE_DEFAULT] = ui_surface_create_from_text_recipe(elem->element);
+	elem->textures[UI_STATE_DEFAULT]
+		= ui_surface_create_from_text_recipe(elem->element);
 	if (!elem->textures[UI_STATE_DEFAULT])
 		elem->textures[UI_STATE_DEFAULT] = ui_surface_new(1, 1);
-	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer, elem->textures[UI_STATE_DEFAULT]);
+	elem->texture = SDL_CreateTextureFromSurface(elem->win->renderer,
+			elem->textures[UI_STATE_DEFAULT]);
 	label->texture_recreate = 0;
 	elem->pos.w = elem->textures[UI_STATE_DEFAULT]->w;
 	elem->pos.h = elem->textures[UI_STATE_DEFAULT]->h;
@@ -86,8 +95,10 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 	{
 		if (align & UI_TEXT_ALIGN_CENTER)
 		{
-			elem->pos.x = (elem->parent_screen_pos->w / 2) - (label->text_wh.x / 2);
-			elem->pos.y = (elem->parent_screen_pos->h / 2) - (label->text_wh.y / 2);
+			elem->pos.x = (elem->parent_screen_pos->w / 2)
+				- (label->text_wh.x / 2);
+			elem->pos.y = (elem->parent_screen_pos->h / 2)
+				- (label->text_wh.y / 2);
 		}
 		if (align & UI_TEXT_ALIGN_TOP)
 			elem->pos.y = 0;
@@ -101,6 +112,8 @@ void	ui_label_text_align(t_ui_element *elem, int align)
 }
 
 /*
+ * Only made so it wouldnt spam the chat.
+ *
  * We are only making blank event handler for label,
  * because the ui_layout event handler doesnt like when
  * an element doesnt have one.
@@ -149,13 +162,11 @@ char	*ui_label_get_text(t_ui_element *elem)
 	t_ui_label	*label;
 
 	if (!elem)
-	{
-		ft_printf("[%s] youre giving null elem ...\n", __FUNCTION__);
 		return (NULL);
-	}
 	if (elem->element_type != UI_TYPE_LABEL)
 	{
-		ft_printf("[%s] for some reason youre trying to get a %s\'s text, which it doesnt have...\n", __FUNCTION__, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_LABEL. <%s>\n",
+			__FUNCTION__, ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	label = elem->element;
@@ -193,7 +204,8 @@ Uint32	ui_label_get_color(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_LABEL)
 	{
-		ft_printf("[%s] Elem type given is not of label. <%d : %s> (returning 0)\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_LABEL. <%d : %s>\n",
+			__FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
 		return (0);
 	}
 	return (ui_label_get_label(elem)->font_color);
@@ -214,26 +226,20 @@ void	ui_label_text_center(t_ui_element *elem)
 	t_ui_label		*label;
 
 	label = elem->element;
-	if (!label || elem->element_type != UI_TYPE_LABEL || !label->font || !label->text)
+	if (!label || elem->element_type != UI_TYPE_LABEL
+		|| !label->font || !label->text || !elem->parent)
 	{
 		if (!label)
-			ft_printf("[ui_label_text_center] No label in element.\n");
+			ft_printf("[%s] No label in element.\n", __FUNCTION__);
 		else if (elem->element_type != UI_TYPE_LABEL)
-			ft_printf("[ui_label_text_center] Element not of type UI_TYPE_LABEL is %d.\n", elem->element_type);
+			ft_printf("[%s] Elem not of type UI_TYPE_LABEL. <%d>\n",
+				__FUNCTION__, elem->element_type);
 		else
-			ft_printf("[ui_label_text_center] One of the 15 warning you could get... come here and check.\n");
+			ft_printf("[%s] Misc problem (come check).\n", __FUNCTION__);
 		return ;
 	}
-	if (elem->parent_type == UI_TYPE_WINDOW)
-	{
-		elem->pos.x = (((t_ui_window *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);
-		elem->pos.y = (((t_ui_window *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);
-	}
-	else
-	{
-		elem->pos.x = (((t_ui_element *)elem->parent)->pos.w / 2) - (label->text_wh.x / 2);
-		elem->pos.y = (((t_ui_element *)elem->parent)->pos.h / 2) - (label->text_wh.y / 2);
-	}
+	elem->pos.x = (elem->parent_screen_pos->w / 2) - (label->text_wh.x / 2);
+	elem->pos.y = (elem->parent_screen_pos->h / 2) - (label->text_wh.y / 2);
 	label->text_align = UI_TEXT_ALIGN_CENTER;
 }
 

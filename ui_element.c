@@ -364,23 +364,21 @@ void	ui_element_remove_child_from_parent(t_ui_element *elem)
 	t_list	*curr;
 	t_list	**list;
 
-	//*list = NULL;
+	list = NULL;
 	if (!elem->parent)
 		return ;
 	if (elem->parent_type == UI_TYPE_WINDOW)
 	{
 		if (((t_ui_window *)elem->parent)->children)
 			list = &((t_ui_window *)elem->parent)->children;
-		else
-			return ;
 	}
 	else if (elem->parent_type == UI_TYPE_ELEMENT)
 	{
 		if (((t_ui_element *)elem->parent)->children)
 			list = &((t_ui_element *)elem->parent)->children;
-		else
-			return ;
 	}
+	if (!list)
+		return ;
 	curr = *list;
 	while (curr)
 	{
