@@ -47,7 +47,7 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	layout_make_family_trees(layout);
 	layout_compile_elements(layout);
 
-	if (!layout->style_file)	
+	if (!layout->style_file)
 	{
 		ft_printf("[%s] We have no style file given, so lets just then dont do anything.\n", __FUNCTION__);
 		return ;
@@ -788,7 +788,7 @@ t_ui_recipe	*make_recipe_from_string(t_list *windows, t_list *elements, t_list *
 
 void	ui_recipe_print(t_ui_recipe *recipe)
 {
-	ft_printf("%s\n", recipe->id);	
+	ft_printf("%s\n", recipe->id);
 	ft_printf("pos_set : %d %d %d %d\n",
 		recipe->pos_set[0], recipe->pos_set[1],
 		recipe->pos_set[2], recipe->pos_set[3]);
@@ -936,6 +936,7 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	t_vec4	pos;
 	int		i;
 
+	ft_printf("[%s] recipe->id : %s\n", __FUNCTION__, recipe->id);
 	pos = elem->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
@@ -991,6 +992,7 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
 		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+	ft_printf("[%s] Done\n", __FUNCTION__);
 }
 
 /*
@@ -1012,13 +1014,17 @@ void	layout_apply_style(t_ui_layout *layout)
 			ui_window_edit(win, recipe);
 		curr = curr->next;
 	}
+	ft_printf("[%s] Done editing windows.\n", __FUNCTION__);
 	curr = layout->elements;
 	while (curr)
 	{
 		elem = curr->content;
 		recipe = ui_list_get_recipe_by_id(layout->recipes, elem->id);
 		if (elem && recipe)
+		{
+			ft_printf("[%s] id : %s\n", __FUNCTION__, recipe->id);
 			ui_element_edit(elem, recipe);
+		}
 		else
 			ft_printf("[%s] Couldn\'t find recipe for element %s.\n", __FUNCTION__, elem->id);
 		curr = curr->next;
