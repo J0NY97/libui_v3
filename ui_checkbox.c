@@ -47,7 +47,17 @@ int	ui_checkbox_render(t_ui_element *elem)
 
 void	ui_checkbox_free(void *elem, size_t size)
 {
-	(void)elem;
+	t_ui_element	*element;
+	t_ui_checkbox	*checkbox;
+
+	element = elem;
+	if (!elem)
+		return ;
+	checkbox = element->element;
+	if (!checkbox)
+		return ;
+	free(checkbox);
+	(void)size;
 }
 
 /*

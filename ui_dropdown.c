@@ -138,9 +138,22 @@ int	ui_dropdown_render(t_ui_element *elem)
 	return (1);
 }
 
-void	ui_dropdown_free(void *drop, size_t size)
+void	ui_dropdown_free(void *elem, size_t size)
 {
-	(void)drop;
+	t_ui_element	*element;
+	t_ui_dropdown	*dropdown;
+
+	element = elem;
+	if (!element)
+		return ;
+	dropdown = element->element;
+	if (!dropdown)
+		return ;
+	ui_element_free(&dropdown->label, UI_TYPE_LABEL);
+	ui_element_free(&dropdown->menu, UI_TYPE_MENU);
+	ui_element_free(&dropdown->scrollbar, UI_TYPE_SCROLLBAR);
+	free(dropdown);
+	(void)size;
 }
 
 void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)

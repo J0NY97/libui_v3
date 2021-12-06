@@ -52,9 +52,19 @@ void	ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		menu->event_children = 1;
 }
 
-void	ui_menu_free(void *menu, size_t size)
+void	ui_menu_free(void *elem, size_t size)
 {
-	(void)menu;
+	t_ui_element	*element;
+	t_ui_menu		*menu;
+
+	element = elem;
+	if (!element)
+		return ;
+	menu = element->element;
+	if (!menu)
+		return ;
+	free(menu);
+	(void)size;
 }
 
 // Gettesr

@@ -101,9 +101,20 @@ t_ui_button	*ui_button_get_button(t_ui_element *elem)
 	return (elem->element);
 }
 
-void	ui_button_free(void *button, size_t size)
+void	ui_button_free(void *elem, size_t size)
 {
-	(void)button;
+	t_ui_element	*element;
+	t_ui_button		*button;
+
+	element = elem;
+	if (!elem)
+		return ;
+	button = element->element;
+	if (!button)
+		return ;
+	ui_element_free(&button->label, UI_TYPE_LABEL);
+	free(button);
+	(void)size;
 }
 
 void	ui_button_print(t_ui_element *elem)

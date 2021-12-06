@@ -246,9 +246,22 @@ void	ui_label_text_center(t_ui_element *elem)
 /*
  * End of editing functions
 */
-void	ui_label_free(void *label, size_t size)
+void	ui_label_free(void *elem, size_t size)
 {
-	(void)label;
+	t_ui_element	*element;
+	t_ui_label		*label;
+
+	element = elem;
+	if (!element)
+		return ;
+	label = element->element;
+	if (!label)
+		return ;
+	ft_strdel(&label->text);
+	ft_strdel(&label->font_path);
+	TTF_CloseFont(label->font);
+	free(label);
+	(void)size;
 }
 
 void	ui_label_print(t_ui_element *elem)

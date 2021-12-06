@@ -388,7 +388,19 @@ int	ui_input_render(t_ui_element *elem)
 
 void	ui_input_free(void *elem, size_t size)
 {
-	(void)elem;
+	t_ui_element	*element;
+	t_ui_input		*input;
+
+	element = elem;
+	if (!element)
+		return ;
+	input = element->element;
+	if (!input)
+		return ;
+	ui_element_free(&input->label, UI_TYPE_LABEL);
+	ui_element_free(&input->placeholder, UI_TYPE_LABEL);
+	free(input);
+	(void)size;
 }
 
 void	ui_input_print(t_ui_element *elem)

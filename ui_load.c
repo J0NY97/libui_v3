@@ -112,6 +112,7 @@ int	text_align_getter(char *str)
 		else if (ft_strequ(temp[i], "none"))
 			result = UI_TEXT_ALIGN_NONE;
 	}
+	ft_arraydel(temp);
 	return (result);
 }
 
