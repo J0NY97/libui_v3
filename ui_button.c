@@ -112,7 +112,7 @@ void	ui_button_free(void *elem, size_t size)
 	button = element->element;
 	if (!button)
 		return ;
-	ui_element_free(&button->label, UI_TYPE_LABEL);
+	//ui_element_free(&button->label, UI_TYPE_LABEL);
 	free(button);
 	(void)size;
 }

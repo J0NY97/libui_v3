@@ -145,7 +145,9 @@ void	ui_layout_list_render(t_list *list)
 			&& g_acceptable[elem->element_type].renderer)
 			g_acceptable[elem->element_type].renderer(elem);
 		else if (!elem->is_a_part_of_another)
-			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+			ft_printf("[%s] Element of type %d (%s) is not supported.\n",
+				__FUNCTION__, elem->element_type,
+				ui_element_type_to_string(elem->element_type));
 		curr = curr->next;
 	}
 }
@@ -157,15 +159,21 @@ void	ui_layout_list_render(t_list *list)
 void	ui_list_element_free(t_list	**list)
 {
 	t_list	*curr;
+	int		i;
 
 	if (!list)
 		return ;
 	curr = *list;
+	i = 0;
 	while (curr)
 	{
+		ft_printf("%d\n", i);
 		ui_element_free(curr->content, UI_TYPE_ELEMENT);
+		if (!*list)
+			break ;
 		curr->content = NULL;
 		curr = curr->next;
+		i++;
 	}
 	ft_lstdel(list, &dummy_free_er);
 }

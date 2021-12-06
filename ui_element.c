@@ -41,8 +41,10 @@ void	ui_element_free(void *elem_p, size_t size)
 	elem = elem_p;
 	if (!elem)
 		return ;
+	ft_printf("[%s] ", __FUNCTION__); ft_printf("%s\n", elem->id);
 	if (g_acceptable[elem->element_type].freer)
 		g_acceptable[elem->element_type].freer(elem, elem->element_type);
+	elem->element = NULL;
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
@@ -54,16 +56,17 @@ void	ui_element_free(void *elem_p, size_t size)
 	SDL_DestroyTexture(elem->texture);
 	elem->win = NULL;
 	elem->parent_screen_pos = NULL;
-	elem->element = NULL;
-	ui_element_remove_child_from_parent(elem);
-	//ft_lstdel(&elem->children, &ui_element_free);
-	//ui_list_element_free(&elem->children);
-	elem->children = NULL;
 	if (elem->id)
 		ft_strdel(&elem->id);
 	elem->parent_rendered_last_frame = NULL;
-	if (elem->free_me)
+	ui_element_remove_child_from_parent(elem);
+	ft_printf("children : %d\n", ft_lstlen(elem->children));
+	ui_list_element_free(&elem->children);
+	//ft_lstdel(&elem->children, &ui_element_free);
+	elem->children = NULL;
+	if (elem->free_me && !elem->is_a_part_of_another)
 		free(elem);
+	ft_printf("[%s] Done\n", __FUNCTION__);
 }
 
 /*

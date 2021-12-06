@@ -16,6 +16,7 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_set_text(&input->placeholder, "Placeholder");
 	ui_element_set_parent(&input->placeholder, elem, UI_TYPE_ELEMENT);
 	input->label.render_me_on_parent = 1;
+	input->placeholder.render_me_on_parent = 1;
 }
 
 void	ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe)
@@ -397,8 +398,10 @@ void	ui_input_free(void *elem, size_t size)
 	input = element->element;
 	if (!input)
 		return ;
+		/*
 	ui_element_free(&input->label, UI_TYPE_LABEL);
 	ui_element_free(&input->placeholder, UI_TYPE_LABEL);
+	*/
 	free(input);
 	(void)size;
 }
