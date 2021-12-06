@@ -1088,6 +1088,7 @@ void	ui_family_free(void *family, size_t size)
 	free(fam->parent_id);
 	ft_arraydel(fam->children_strings);
 	ft_lstdel(&fam->children, &ui_family_free);
+	free(fam);
 }
 
 /*

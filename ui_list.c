@@ -149,3 +149,23 @@ void	ui_layout_list_render(t_list *list)
 		curr = curr->next;
 	}
 }
+
+/*
+ * Calls ui_element_free on everything in 'list'.
+ * And then frees the whole list, no questions asked.
+*/
+void	ui_list_element_free(t_list	**list)
+{
+	t_list	*curr;
+
+	if (!list)
+		return ;
+	curr = *list;
+	while (curr)
+	{
+		ui_element_free(curr->content, UI_TYPE_ELEMENT);
+		curr->content = NULL;
+		curr = curr->next;
+	}
+	ft_lstdel(list, &dummy_free_er);
+}

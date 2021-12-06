@@ -30,6 +30,7 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->last_state = -999;
 	elem->children = NULL;
 	elem->figure_out_z = 1;
+	elem->free_me = 1;
 }
 
 void	ui_element_free(void *elem_p, size_t size)
@@ -50,15 +51,19 @@ void	ui_element_free(void *elem_p, size_t size)
 		if (elem->images[i])
 			SDL_FreeSurface(elem->images[i]);
 	}
+	SDL_DestroyTexture(elem->texture);
 	elem->win = NULL;
 	elem->parent_screen_pos = NULL;
 	elem->element = NULL;
 	ui_element_remove_child_from_parent(elem);
-	ft_lstdel(&elem->children, &ui_element_free);
+	//ft_lstdel(&elem->children, &ui_element_free);
+	//ui_list_element_free(&elem->children);
 	elem->children = NULL;
 	if (elem->id)
 		ft_strdel(&elem->id);
 	elem->parent_rendered_last_frame = NULL;
+	if (elem->free_me)
+		free(elem);
 }
 
 /*
@@ -383,7 +388,10 @@ void	ui_element_remove_child_from_parent(t_ui_element *elem)
 	while (curr)
 	{
 		if (curr->content == elem)
+		{
 			ft_lstdelone_nonfree(list, curr);
+			return ;
+		}
 		curr = curr->next;
 	}
 }

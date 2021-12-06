@@ -18,5 +18,6 @@ void	ui_recipe_free(void *recipe, size_t size)
 	ft_arraydel(rcp->flags);
 	ft_strdel(&rcp->placeholder_text);
 	ft_strdel(&rcp->target);
+	free(rcp);
 	(void)size;
 }

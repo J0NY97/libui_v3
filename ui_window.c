@@ -26,6 +26,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->mouse_pos.x = win->window_mouse_pos.x * win->texture_scale.x;
 	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 	win->bg_color = 0xff000000;
+	win->free_me = 1;
 }
 
 void	ui_window_event(t_ui_window *win, SDL_Event e)
@@ -118,17 +119,21 @@ void	ui_window_free(void *window, size_t size)
 	win = window;
 	if (!win)
 		return ;
-		/*
-	free(win->id);
+	ft_strdel(&win->id);
 	if (!win->win_replaced)
 		SDL_DestroyWindow(win->win);
 	if (!win->renderer_replaced)
 		SDL_DestroyRenderer(win->renderer);
 	SDL_DestroyTexture(win->texture);
-	free(win->title);
-	ft_lstdel(&win->children, &ui_element_free);
+	ft_strdel(&win->title);
+	ft_printf("title\n");
+	ui_list_element_free(&win->children);
+	//ft_lstdel(&win->children, &ui_element_free);
+	ft_printf("children\n");
 	win->layout = NULL;
-	*/
+	if (win->free_me)
+		free(win);
+	ft_printf("me\n");
 }
 
 /*

@@ -18,6 +18,7 @@
  * t_ui_layout	*layout;			the layout it is part of, or if NULL it is not part of any layout;
  * bool			win_replaced;		the user has replaced win->win with their own, which means they handle the destroying of it too;
  * bool			renderer_replaced;	the user had renderer associated with the win->win they gave in, so they handle destroying of it;
+ * bool			free_me;			when calling ui_window_free, check if the s_ui_window should be freed;
 */
 typedef struct s_ui_window
 {
@@ -46,6 +47,7 @@ typedef struct s_ui_window
 	Uint32			bg_color;
 	bool			win_replaced;
 	bool			renderer_replaced;
+	bool			free_me;
 }					t_ui_window;
 
 /*
@@ -72,6 +74,7 @@ typedef struct s_ui_window
  * int			z;							z value of the elements, aka render order;
  * bool			is_a_part_of_another;		this element is another element a part of another element; (button label or slider button...)
  * bool			figure_out_z;				whether the ui_element_render will update z how it wants or not;
+ * bool			free_me;					when calling ui_element_free, check if the s_ui_element should be freed;
 */
 typedef struct s_ui_element
 {
@@ -109,6 +112,7 @@ typedef struct s_ui_element
 	bool			is_a_part_of_another;
 	bool			figure_out_z;
 	int				z;
+	bool			free_me;
 }					t_ui_element;
 
 /*

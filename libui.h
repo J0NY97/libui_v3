@@ -89,6 +89,7 @@ void					dummy_free_er(void *dont, size_t care);
 char					**ft_arrdup(char **src);
 int						ft_strinarr(char *str, char **arr);
 char					**ft_arradd(char **arr, char *add);
+void					ui_list_element_free(t_list	**list);
 
 // Load
 void					ui_print_accepted(void);
