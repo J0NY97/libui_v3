@@ -10,15 +10,13 @@ void	ui_slider_new(t_ui_window *win, t_ui_element *elem)
 	elem->element_type = UI_TYPE_SLIDER;
 	slider = elem->element;
 	slider->elem = elem;
-
 	ui_button_new(win, &slider->button);
 	slider->button.is_a_part_of_another = 1;
 	ui_element_pos_set(&slider->button, vec4(0, 0, elem->pos.h, elem->pos.h));
-	ui_element_color_set(&slider->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
-	ui_element_color_set(&slider->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
-	ui_element_color_set(&slider->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
+	slider->button.colors[UI_STATE_DEFAULT] = UI_COLOR_ORANGEISH;
+	slider->button.colors[UI_STATE_HOVER] = UI_COLOR_ORANGEISH_DARKER;
+	slider->button.colors[UI_STATE_CLICK] = UI_COLOR_ORANGEISH_DARKEST;
 	ui_element_set_parent(&slider->button, elem, UI_TYPE_ELEMENT);
-
 	slider->min_value = 0;
 	slider->max_value = 100;
 	ui_slider_value_set(elem, 50);
@@ -46,7 +44,9 @@ int	ui_slider_value_get(t_ui_element *elem)
 	t_ui_slider	*slider;
 
 	slider = elem->element;
-	return (ui_get_slider_value(slider->min_value, slider->max_value, slider->button.pos.x, elem->pos.w - slider->button.pos.w));
+	return (ui_get_slider_value(
+			slider->min_value, slider->max_value,
+			slider->button.pos.x, elem->pos.w - slider->button.pos.w));
 }
 
 void	ui_slider_value_set(t_ui_element *elem, int value)
@@ -55,7 +55,11 @@ void	ui_slider_value_set(t_ui_element *elem, int value)
 
 	slider = elem->element;
 	slider->value = value;
-	slider->button.pos.x = ft_clamp(ui_set_slider_value(value, slider->min_value, slider->max_value, elem->pos.w - slider->button.pos.w), 0, elem->pos.w - slider->button.pos.w);
+	slider->button.pos.x = ft_clamp(
+			ui_set_slider_value(
+				value, slider->min_value, slider->max_value,
+				elem->pos.w - slider->button.pos.w),
+			0, elem->pos.w - slider->button.pos.w);
 	slider->update = 1;
 }
 
@@ -90,8 +94,10 @@ void	ui_slider_event(t_ui_element *elem, SDL_Event e)
 	button = slider->button.element;
 	if (ui_element_is_click(elem))
 	{
-		slider->value = ui_get_slider_value(slider->min_value, slider->max_value,
-				(elem->win->mouse_pos.x - elem->screen_pos.x) - slider->button.pos.h / 2,
+		slider->value
+			= ui_get_slider_value(slider->min_value, slider->max_value,
+				(elem->win->mouse_pos.x - elem->screen_pos.x)
+				- slider->button.pos.h / 2,
 				elem->pos.w - slider->button.pos.w);
 		slider->update = 1;
 	}
@@ -109,7 +115,10 @@ int	ui_slider_render(t_ui_element *elem)
 	button = slider->button.element;
 	if (slider->update)
 	{
-		slider->button.pos.x = ft_clamp(ui_set_slider_value(slider->value, slider->min_value, slider->max_value, elem->pos.w - slider->button.pos.w), 0, elem->pos.w - slider->button.pos.w);
+		slider->button.pos.x = ft_clamp(ui_set_slider_value(
+					slider->value, slider->min_value,
+					slider->max_value, elem->pos.w - slider->button.pos.w),
+				0, elem->pos.w - slider->button.pos.w);
 		ft_b_itoa(slider->value, temp);
 		ui_label_set_text(&button->label, temp);
 		slider->update = 0;
@@ -123,14 +132,10 @@ void	ui_slider_free(void *elem, size_t size)
 	(void)elem;
 }
 
-// Other
-
 int	ui_slider_updated(t_ui_element *elem)
 {
 	return (ui_slider_get_slider(elem)->update);
 }
-
-// Getters
 
 t_ui_element	*ui_slider_get(t_ui_element *elem, int ui_type)
 {
