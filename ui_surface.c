@@ -2,7 +2,8 @@
 
 SDL_Surface	*ui_surface_new(int w, int h)
 {
-	return (SDL_CreateRGBSurface(0, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000));
+	return (SDL_CreateRGBSurface(0, w, h, 32,
+			0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000));
 }
 
 void	ui_surface_fill(SDL_Surface *surface, Uint32 color)
@@ -30,7 +31,8 @@ void	ui_surface_print(SDL_Surface *surface)
 	ft_printf("\th : %d\n", surface->h);
 	ft_printf("\tpitch : %d\n", surface->pitch);
 	ft_printf("\tformat : \n");
-	ft_printf("\t\tformat : %d %s\n", surface->format->format, SDL_GetPixelFormatName(surface->format->format));
+	ft_printf("\t\tformat : %d %s\n", surface->format->format,
+		SDL_GetPixelFormatName(surface->format->format));
 	ft_printf("\t\tBitsPerPixel : %d\n", surface->format->BitsPerPixel);
 	ft_printf("\t\tBytesPerPixel : %d\n", surface->format->BytesPerPixel);
 	ft_printf("\t\tRmask : %.8x\n", surface->format->Rmask);
@@ -39,7 +41,8 @@ void	ui_surface_print(SDL_Surface *surface)
 	ft_printf("\t\tAmask : %.8x\n", surface->format->Amask);
 }
 
-SDL_Surface	*ui_surface_text_new(char *text, char *font_path, int size, Uint32 font_color)
+SDL_Surface	*ui_surface_text_new(
+		char *text, char *font_path, int size, Uint32 font_color)
 {
 	SDL_Surface	*surface;
 	TTF_Font	*font;
@@ -69,13 +72,14 @@ SDL_Surface	*ui_surface_image_new(char *image_path)
 
 	surface = IMG_Load(image_path);
 	if (!surface)
-		ft_printf("[%s] Image couldn\'t be loaded from path. <%s>\n", __FUNCTION__, image_path);
+		ft_printf("[%s] Error loading image from path. <%s>\n",
+			__FUNCTION__, image_path);
 	return (surface);
 }
 
 void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 {
-	Uint32 *pixels;
+	Uint32	*pixels;
 
 	if (!(x >= 0 && x < surface->w && y >= 0 && y < surface->h))
 		return ;
@@ -85,7 +89,7 @@ void	ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color)
 
 Uint32	ui_surface_pixel_get(SDL_Surface *surface, int x, int y)
 {
-	Uint32 *pixels;
+	Uint32	*pixels;
 
 	if (!(x >= 0 && x < surface->w && y >= 0 && y < surface->h))
 		return (1);
@@ -93,64 +97,15 @@ Uint32	ui_surface_pixel_get(SDL_Surface *surface, int x, int y)
 	return (pixels[y * surface->w + x]);
 }
 
-void	ui_surface_draw_border(SDL_Surface *surface, size_t thiccness, Uint32 color)
+void	ui_surface_draw_border(
+		SDL_Surface *surface, size_t thiccness, Uint32 color)
 {
 	size_t	i;
 
 	i = -1;
 	while (++i < thiccness)
-		ui_surface_rect_draw(surface, vec2i(i, i), vec2i(surface->w - i - 1, surface->h - i - 1), color);
-}
-
-void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
-{
-	bool	y_longer;
-	int		increment_val;
-	int		end_val;
-	int		short_len;
-	int		long_len;
-	int		dec_inc;
-	int		j;
-	int		i;
-	int		gap;
-
-	y_longer = false;
-	short_len = p2.y - p1.y;
-	long_len = p2.x - p1.x;
-	j = 0;
-	i = 0;
-	gap = 5;
-	y_longer = abs(short_len) > abs(long_len);
-	if (y_longer)
-		ft_swap(&short_len, &long_len);
-	end_val = long_len;
-	increment_val = 1;
-	if (long_len < 0)
-	{
-		increment_val = -1;
-		long_len = -long_len;
-	}
-	dec_inc = 0;
-	if (long_len != 0)
-		dec_inc = (short_len << 16) / long_len;
-	if (y_longer)
-	{
-		while (i != end_val)
-		{
-			if (i % 5 != 0) // the 5 is the gap
-				ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
-			j += dec_inc;
-			i += increment_val;
-		}
-		return ;
-	}
-	while (i != end_val)
-	{
-		if (i % 5 != 0) // the 5 is the gap
-			ui_surface_pixel_set(surface, p1.x + i, p1.y + (j >> 16), color);
-		j += dec_inc;
-		i += increment_val;
-	}
+		ui_surface_rect_draw(surface, vec2i(i, i),
+			vec2i(surface->w - i - 1, surface->h - i - 1), color);
 }
 
 /*
@@ -158,120 +113,18 @@ void	ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint
  * http://elynxsdk.free.fr/ext-docs/Rasterization/Lines/Lines%20algorithms.htm
  * http://www.edepot.com/lined.html
 */
-void	ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
-{
-	bool	y_longer = false;
-	int		increment_val;
-	int		end_val;
-	int		short_len = p2.y - p1.y;
-	int		long_len= p2.x - p1.x;
-	int		dec_inc;
-	int		swap;
-	int		j;
-	int		i;
-
-	if (abs(short_len) > abs(long_len))
-	{
-		swap = short_len;
-		short_len = long_len;
-		long_len = swap;
-		y_longer = true;
-	}
-	end_val = long_len;
-	if (long_len < 0)
-	{
-		increment_val = -1;
-		long_len = -long_len;
-	}
-	else
-		increment_val = 1;
-	if (long_len == 0)
-		dec_inc = 0;
-	else
-		dec_inc = (short_len << 16) / long_len;
-	j = 0;
-	if (y_longer)
-	{
-		i = 0;
-		while (i != end_val)
-		{
-			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
-			j += dec_inc;
-			i += increment_val;
-		}
-	}
-	else
-	{
-		i = 0;
-		while (i != end_val)
-		{
-			ui_surface_pixel_set(surface, p1.x + i, p1.y + (j >> 16), color);
-			j += dec_inc;
-			i += increment_val;
-		}
-	}
-}
-
-/*
- * Reduced version.
-*/
-void	ui_surface_line_draw_v2(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+void	ui_surface_line_draw(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	bool	y_longer;
 	int		increment_val;
 	int		end_val;
-	int		short_len;
-	int		long_len;
-	int		dec_inc;
-	int		j;
+	float	short_len;
+	float	long_len;
+	float	dec_inc;
+	float	j;
 	int		i;
-
-	y_longer = false;
-	short_len = p2.y - p1.y;
-	long_len = p2.x - p1.x;
-	j = 0;
-	i = 0;
-	y_longer = abs(short_len) > abs(long_len);
-	if (y_longer)
-		ft_swap(&short_len, &long_len);
-	end_val = long_len;
-	increment_val = 1;
-	if (long_len < 0)
-	{
-		increment_val = -1;
-		long_len = -long_len;
-	}
-	dec_inc = 0;
-	if (long_len != 0)
-		dec_inc = (short_len << 16) / long_len;
-	if (y_longer)
-	{
-		while (i != end_val)
-		{
-			ui_surface_pixel_set(surface, p1.x + (j >> 16), p1.y + i, color);
-			j += dec_inc;
-			i += increment_val;
-		}
-		return ;
-	}
-	while (i != end_val)
-	{
-		ui_surface_pixel_set(surface, p1.x + i, p1.y + (j >> 16), color);
-		j += dec_inc;
-		i += increment_val;
-	}
-}
-
-void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
-{
-	bool	y_longer;
-	int		increment_val;
-	int		end_val;
-	float		short_len;
-	float		long_len;
-	float		dec_inc;
-	float		j;
-	int		i;
+	float	temp;
 
 	y_longer = false;
 	short_len = p2.y - p1.y;
@@ -281,7 +134,7 @@ void	ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	y_longer = fabsf(short_len) > fabsf(long_len);
 	if (y_longer)
 	{
-		float temp = short_len;
+		temp = short_len;
 		short_len = long_len;
 		long_len = temp;
 	}
@@ -334,7 +187,8 @@ static inline void	line_calc(t_vec2i v1, t_vec2i v2,
 		*cath_y = ((int)v2.x - (int)v1.x);
 }
 
-void	ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 color)
+void	ui_surface_line_draw_nik(
+		SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 color)
 {
 	int			cath_x;
 	int			cath_y;
@@ -364,8 +218,8 @@ void	ui_surface_line_draw_nik(SDL_Surface *surf, t_vec2i v1, t_vec2i v2, Uint32 
  * t_vec2i		p1;			the top left corner of the rect;
  * t_vec2i		p2;			the bot right corner of the rect;
 */
-// TODO: rename to draw_rect;
-void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+void	ui_surface_rect_draw(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	ui_surface_line_draw(surface, p1, vec2i(p2.x, p1.y), color);
 	ui_surface_line_draw(surface, p1, vec2i(p1.x, p2.y), color);
@@ -373,12 +227,17 @@ void	ui_surface_rect_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 c
 	ui_surface_line_draw(surface, p2, vec2i(p2.x, p1.y), color);
 }
 
-void	ui_surface_rect_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
+/*
+ * tl	top, left
+ * br	bot, right
+*/
+void	ui_surface_rect_draw_thicc(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
-	int	i;
-	int	iter;
-	t_vec2i	tl; // top left
-	t_vec2i	br; // bot right
+	int		i;
+	int		iter;
+	t_vec2i	tl;
+	t_vec2i	br;
 
 	tl.x = ft_min(p1.x, p2.x);
 	tl.y = ft_min(p1.y, p2.y);
@@ -388,17 +247,22 @@ void	ui_surface_rect_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, in
 	i = -1;
 	while (++i < iter)
 	{
-		ui_surface_line_draw(surface, vec2i(tl.x, tl.y + i), vec2i(br.x, tl.y + i), color); // top left , top right
-		ui_surface_line_draw(surface, vec2i(tl.x, br.y - i), vec2i(br.x, br.y - i), color); // bot left , bot right
-
-		ui_surface_line_draw(surface, vec2i(tl.x + i, tl.y), vec2i(tl.x + i, br.y), color); // top left , bot left
-		ui_surface_line_draw(surface, vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color); // top right , bot right
+		ui_surface_line_draw(surface,
+			vec2i(tl.x, tl.y + i), vec2i(br.x, tl.y + i), color);
+		ui_surface_line_draw(surface,
+			vec2i(tl.x, br.y - i), vec2i(br.x, br.y - i), color);
+		ui_surface_line_draw(surface,
+			vec2i(tl.x + i, tl.y), vec2i(tl.x + i, br.y), color);
+		ui_surface_line_draw(surface,
+			vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color);
 	}
 }
 
-void	ui_surface_rect_draw_filled(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+void	ui_surface_rect_draw_filled(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
-	SDL_FillRect(surface, &(SDL_Rect){p1.x, p1.y, p2.x - p1.x, p2.y - p1.y}, color);
+	SDL_FillRect(surface,
+		&(SDL_Rect){p1.x, p1.y, p2.x - p1.x, p2.y - p1.y}, color);
 }
 
 /*
@@ -406,20 +270,24 @@ void	ui_surface_rect_draw_filled(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, U
  * Filled : https://stackoverflow.com/a/1201227
  * Empty  : https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 */
-void	ui_surface_circle_draw(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
+void	ui_surface_circle_draw(
+		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
-	int x = 0;
-	int y = r;
-	int d = 3 - 2 * r;
+	int	x;
+	int	y;
+	int	d;
 
-	ui_surface_pixel_set(surface, orig.x +x, orig.y +y, color);
-	ui_surface_pixel_set(surface, orig.x -x, orig.y +y, color);
-	ui_surface_pixel_set(surface, orig.x +x, orig.y -y, color);
-	ui_surface_pixel_set(surface, orig.x -x, orig.y -y, color);
-	ui_surface_pixel_set(surface, orig.x +y, orig.y +x, color);
-	ui_surface_pixel_set(surface, orig.x -y, orig.y +x, color);
-	ui_surface_pixel_set(surface, orig.x +y, orig.y -x, color);
-	ui_surface_pixel_set(surface, orig.x -y, orig.y -x, color);
+	x = 0;
+	y = r;
+	d = 3 - 2 * r;
+	ui_surface_pixel_set(surface, orig.x + x, orig.y + y, color);
+	ui_surface_pixel_set(surface, orig.x - x, orig.y + y, color);
+	ui_surface_pixel_set(surface, orig.x + x, orig.y - y, color);
+	ui_surface_pixel_set(surface, orig.x - x, orig.y - y, color);
+	ui_surface_pixel_set(surface, orig.x + y, orig.y + x, color);
+	ui_surface_pixel_set(surface, orig.x - y, orig.y + x, color);
+	ui_surface_pixel_set(surface, orig.x + y, orig.y - x, color);
+	ui_surface_pixel_set(surface, orig.x - y, orig.y - x, color);
 	while (y >= x)
 	{
 		x++;
@@ -430,25 +298,26 @@ void	ui_surface_circle_draw(SDL_Surface *surface, t_vec2i orig, int r, Uint32 co
 		}
 		else
 			d = d + 4 * x + 6;
-		ui_surface_pixel_set(surface, orig.x +x, orig.y +y, color);
-		ui_surface_pixel_set(surface, orig.x -x, orig.y +y, color);
-		ui_surface_pixel_set(surface, orig.x +x, orig.y -y, color);
-		ui_surface_pixel_set(surface, orig.x -x, orig.y -y, color);
-		ui_surface_pixel_set(surface, orig.x +y, orig.y +x, color);
-		ui_surface_pixel_set(surface, orig.x -y, orig.y +x, color);
-		ui_surface_pixel_set(surface, orig.x +y, orig.y -x, color);
-		ui_surface_pixel_set(surface, orig.x -y, orig.y -x, color);
+		ui_surface_pixel_set(surface, orig.x + x, orig.y + y, color);
+		ui_surface_pixel_set(surface, orig.x - x, orig.y + y, color);
+		ui_surface_pixel_set(surface, orig.x + x, orig.y - y, color);
+		ui_surface_pixel_set(surface, orig.x - x, orig.y - y, color);
+		ui_surface_pixel_set(surface, orig.x + y, orig.y + x, color);
+		ui_surface_pixel_set(surface, orig.x - y, orig.y + x, color);
+		ui_surface_pixel_set(surface, orig.x + y, orig.y - x, color);
+		ui_surface_pixel_set(surface, orig.x - y, orig.y - x, color);
 	}
 }
 
-void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
+void	ui_surface_circle_draw_filled(
+		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
 	int	x;
 	int	y;
-	int hh;
-	int rx;
-	int ph;
-	int r_sqr;
+	int	hh;
+	int	rx;
+	int	ph;
+	int	r_sqr;
 
 	r_sqr = r * r;
 	x = -r;
@@ -463,20 +332,27 @@ void	ui_surface_circle_draw_filled(SDL_Surface *surface, t_vec2i orig, int r, Ui
 	}
 }
 
-void	ui_surface_line_draw_thicc(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
+void	ui_surface_line_draw_thicc(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
 	float	angle;
 	int		i;
+	t_vec2i	v0;
+	t_vec2i	v1;
 
 	angle = atan2(p2.y - p1.y, p2.x - p1.x);
 	i = -1;
 	while (++i < thicc)
 	{
-		t_vec2i v0 = vec2i(p1.x + i * cos(angle + M_PI / 2), p1.y + i * sin(angle + M_PI / 2));
-		t_vec2i v3 = vec2i(p2.x + i * cos(angle + M_PI / 2), p2.y + i * sin(angle + M_PI / 2));
-		ui_surface_line_draw_nik(surface, v0, v3, color);
-    	t_vec2i v1 = vec2i(p1.x + i * cos(angle - M_PI / 2), p1.y + i * sin(angle - M_PI / 2));
-	    t_vec2i v2 = vec2i(p2.x + i * cos(angle - M_PI / 2), p2.y + i * sin(angle - M_PI / 2));
-		ui_surface_line_draw_nik(surface, v1, v2, color);
+		v0 = vec2i(p1.x + i * cos(angle + M_PI / 2),
+				p1.y + i * sin(angle + M_PI / 2));
+		v1 = vec2i(p2.x + i * cos(angle + M_PI / 2),
+				p2.y + i * sin(angle + M_PI / 2));
+		ui_surface_line_draw_nik(surface, v0, v1, color);
+		v0 = vec2i(p1.x + i * cos(angle - M_PI / 2),
+				p1.y + i * sin(angle - M_PI / 2));
+		v1 = vec2i(p2.x + i * cos(angle - M_PI / 2),
+				p2.y + i * sin(angle - M_PI / 2));
+		ui_surface_line_draw_nik(surface, v0, v1, color);
 	}
 }

@@ -50,7 +50,6 @@ SDL_Surface				*ui_surface_image_new(char *image_path);
 void					ui_surface_pixel_set(SDL_Surface *surface, int x, int y, Uint32 color);
 Uint32					ui_surface_pixel_get(SDL_Surface *surface, int x, int y);
 void					ui_surface_draw_border(SDL_Surface *surface, size_t thiccness, Uint32 color);
-void					ui_surface_line_draw_dot(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color);
 void					ui_surface_line_draw(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // reduced
 void					ui_surface_line_draw_v2(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // reduced
 void					ui_surface_line_draw_orig(SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color); // orig
