@@ -108,11 +108,14 @@ void	ui_scroll_value_set(t_ui_element *elem, int value)
 
 	scroll = elem->element;
 	scroll->value = value;
-	scroll->button.pos.y = ft_clamp(ui_set_slider_value(value, scroll->min, scroll->max, elem->pos.h - scroll->button.pos.h), 0, elem->pos.h - scroll->button.pos.h);
+	scroll->button.pos.y = ft_clamp(
+			ui_set_slider_value(
+				value, scroll->min, scroll->max,
+				elem->pos.h - scroll->button.pos.h),
+			0, elem->pos.h - scroll->button.pos.h);
 	scroll->update = 1;
 }
 
-// Help
 /*
  * recalculates the value of the list of childrens size;
 */
@@ -123,6 +126,7 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 	t_ui_element	*child;
 	int				min;
 	int				max;
+	int				new_h;
 
 	scroll = elem->element;
 	curr = ((t_ui_element *)scroll->target)->children;
@@ -142,7 +146,7 @@ void	ui_scrollbar_recount(t_ui_element *elem)
 		scroll->max = fabsf(((t_ui_element *)scroll->target)->pos.h - scroll->target_size);
 	else
 		scroll->max = 0;
-	int new_h = (((t_ui_element *)scroll->target)->pos.h / scroll->target_size) * elem->pos.h;
+	new_h = (((t_ui_element *)scroll->target)->pos.h / scroll->target_size) * elem->pos.h;
 	new_h = ft_clamp(elem->pos.h, elem->pos.h * 0.05, new_h);
 	ui_element_pos_set(&scroll->button,
 		vec4(scroll->button.pos.x, scroll->button.pos.y, scroll->button.pos.w, new_h));
@@ -168,7 +172,9 @@ t_ui_element	*ui_scrollbar_get_button_element(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_SCROLLBAR)
 	{
-		ft_printf("[%s] elem type of %d %s given instead of scrollbar.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_SCROLLBAR. %d %s.\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (&((t_ui_scrollbar *)elem->element)->button);
@@ -178,7 +184,9 @@ t_ui_button	*ui_scrollbar_get_button(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_SCROLLBAR)
 	{
-		ft_printf("[%s] elem type of %d %s given instead of scrollbar.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_SCROLLBAR. %d %s.\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (((t_ui_scrollbar *)elem->element)->button.element);
