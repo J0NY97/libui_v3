@@ -12,18 +12,27 @@ int	point_in_rect(t_vec2i point, t_vec4i rect)
 
 int	rect_in_rect(t_vec4i rect1, t_vec4i rect2)
 {
-	if (rect1.x < rect2.x + rect2.w &&
-		rect1.x + rect1.w > rect2.x &&
-		rect1.y < rect2.y + rect2.h &&
-		rect1.h + rect1.y > rect2.y)
+	if (rect1.x < rect2.x + rect2.w
+		&& rect1.x + rect1.w > rect2.x
+		&& rect1.y < rect2.y + rect2.h
+		&& rect1.h + rect1.y > rect2.y)
 		return (1);
 	return (0);
+}
+
+void	pointer_swap(void *p1, void *p2)
+{
+	void	*temp;
+
+	temp = p1;
+	p1 = p2;
+	p2 = temp;
 }
 
 SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
 {
 	return ((SDL_Rect){x, y, w, h});
-};
+}
 
 t_rgba	hex_to_rgba(Uint32 color_hex)
 {
@@ -67,9 +76,8 @@ Uint32	ui_color_change_brightness(Uint32 orig_col, float procentage)
 }
 
 /*
- * Returns text starting from char[0] till the char at pos x (coordinate on the screen)
- * NOTE: remember to remove the offset of the text, this only takes into consideration the full str,
- * starting at x 0 for the first char.
+ * Returns text starting from char[0] till
+ * 	the char at pos x (coordinate on the screen)
 */
 char	*get_text_to_char_at_x(char *str, int x, TTF_Font *font)
 {
@@ -132,14 +140,19 @@ int	get_nth_char_of_text_at_x(char *str, int x, TTF_Font *font)
 
 int	dist(t_vec2i p1, t_vec2i p2)
 {
-	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+	return (sqrt((p2.x - p1.x) * (p2.x - p1.x)
+			+ (p2.y - p1.y) * (p2.y - p1.y)));
 }
 
 float	fdist(t_vec2 p1, t_vec2 p2)
 {
-	return (sqrt((p2.x - p1.x) * (p2.x - p1.x) + (p2.y - p1.y) * (p2.y - p1.y)));
+	return (sqrt((p2.x - p1.x) * (p2.x - p1.x)
+			+ (p2.y - p1.y) * (p2.y - p1.y)));
 }
 
+/*
+ * Every word should have whitespace between them;
+*/
 int	actual_word_count(char *str)
 {
 	int		count;
@@ -154,7 +167,8 @@ int	actual_word_count(char *str)
 		if (ft_isspace(str[i]))
 		{
 			count++;
-			while (ft_isspace(str[++i]));
+			while (ft_isspace(str[++i]))
+				;
 		}
 	}
 	return (count);
@@ -179,7 +193,8 @@ char	**ft_strsplitwhitespace(char *str)
 		if (ft_isspace(str[i]))
 		{
 			arr[++wc] = ft_strsub(str, prev_i, i - prev_i);
-			while (ft_isspace(str[++i]));
+			while (ft_isspace(str[++i]))
+				;
 			prev_i = i;
 		}
 	}
@@ -240,7 +255,8 @@ char	**ft_strsplitfirstoccurence(char *str, char c)
 		return (NULL);
 	arr = ft_memalloc(sizeof(char *) * 3);
 	i = -1;
-	while (str[++i] && str[i] != c);
+	while (str[++i] && str[i] != c)
+		;
 	arr[0] = ft_strsub(str, 0, i);
 	if (str[i] == c && str[i + 1])
 		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
@@ -259,7 +275,8 @@ char	**ft_strsplitfirstoccurenceor(char *str, char b, char c)
 		return (NULL);
 	arr = ft_memalloc(sizeof(char *) * 3);
 	i = -1;
-	while (str[++i] && str[i] != c && str[i] != b);
+	while (str[++i] && str[i] != c && str[i] != b)
+		;
 	arr[0] = ft_strsub(str, 0, i);
 	if (str[i] == c || str[i] == b)
 		arr[1] = ft_strsub(str, i + 1, ft_strlen(str) - 1);
@@ -285,7 +302,7 @@ void	ft_putarr(char **arr)
 	int	i;
 
 	if (!arr)
-		return;
+		return ;
 	i = -1;
 	while (arr[++i])
 	{
@@ -302,7 +319,8 @@ char	**ft_arrdup(char **src)
 	if (!src)
 		return (NULL);
 	ii = -1;
-	while (src[++ii]);
+	while (src[++ii])
+		;
 	dest = malloc(sizeof(char *) * ii);
 	ii = -1;
 	while (src[++ii])
@@ -331,7 +349,8 @@ int	ft_arrlen(char **arr)
 	if (!arr)
 		return (0);
 	i = -1;
-	while (arr[++i]);
+	while (arr[++i])
+		;
 	return (i);
 }
 

@@ -95,7 +95,6 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 	char	*line;
 	char	*trim;
 	size_t	len;
-	ssize_t	nread;
 	FILE	*fd;
 
 	fd = fopen(file, "r");
@@ -108,8 +107,7 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 	content = NULL;
 	while (1)
 	{
-		nread = getline(&line, &len, fd);
-		if (nread == -1)
+		if (getline(&line, &len, fd) == -1)
 			break ;
 		trim = ft_supertrim(line);
 		if (trim != NULL && !get_special(layout, trim)) // whole line was trimmed if is NULL (could happen if the line was a comment);
@@ -974,26 +972,19 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 				int jjj = -1;
 				while (elem->win->layout->resource_dirs[++jjj])
 				{
-					ft_printf("[%d] resource dir [%d]\n", i, jjj);
 					char *temp = ft_sprintf("%s%s", elem->win->layout->resource_dirs[jjj], recipe->bg_images[i]);
-					ft_printf("temp : %s\n", temp);
-					ft_printf("bg_image : %s\n", recipe->bg_images[i]);
 					if (!access(temp, F_OK))
 					{
-						ft_printf("image found\n");
 						free(recipe->bg_images[i]);
 						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;!
-						ft_printf("image copied\n");
 						break ;
 					}
 					ft_strdel(&temp);
 				}
-				ft_printf("We have found the correct one : %s\n", recipe->bg_images[i]);
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 			}
 		}
 	}
-	ft_printf("[%s] Done with bg_image setting.\n", __FUNCTION__);
 	if (recipe->flags)
 	{
 		if (ft_strinarr("render_on_parent", recipe->flags))
@@ -1006,12 +997,10 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	}
 	if (recipe->show_set)
 		elem->show = recipe->show;
-	ft_printf("[%s] Edit with specific to that element_type.\n", __FUNCTION__);
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
 		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
-	ft_printf("[%s] Done.\n", __FUNCTION__);
 }
 
 /*

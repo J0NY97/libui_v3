@@ -7,28 +7,23 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 	ui_element_new(win, elem);
 	elem->element = ft_memalloc(sizeof(t_ui_scrollbar));
 	elem->element_type = UI_TYPE_SCROLLBAR;
-
 	scroll = elem->element;
-
 	ui_button_new(win, &scroll->button);
 	scroll->button.is_a_part_of_another = 1;
 	ui_element_set_parent(&scroll->button, elem, UI_TYPE_ELEMENT);
 	ui_element_pos_set(&scroll->button, vec4(0, 0, elem->pos.h, elem->pos.h));
-	ui_element_color_set(&scroll->button, UI_STATE_DEFAULT, UI_COLOR_ORANGEISH);
-	ui_element_color_set(&scroll->button, UI_STATE_HOVER, UI_COLOR_ORANGEISH_DARKER);
-	ui_element_color_set(&scroll->button, UI_STATE_CLICK, UI_COLOR_ORANGEISH_DARKEST);
-
+	scroll->button.colors[UI_STATE_DEFAULT] = UI_COLOR_ORANGEISH;
+	scroll->button.colors[UI_STATE_HOVER] = UI_COLOR_ORANGEISH_DARKER;
+	scroll->button.colors[UI_STATE_CLICK] = UI_COLOR_ORANGEISH_DARKEST;
 	ui_label_size_set(&ui_scrollbar_get_button(elem)->label, 20);
 	ui_label_set_text(&ui_scrollbar_get_button(elem)->label, "=");
-
 	scroll->min = 0;
 	scroll->max = 100;
-	/*
-	ui_scroll_value_set(elem, 50);
-	scroll->update = 1;
-	*/
 }
 
+/*
+ * TODO: maybe dont event handle if the target is not shown.
+*/
 void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 {
 	t_ui_scrollbar	*scroll;
@@ -38,14 +33,15 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 		return ;
 	scroll = elem->element;
 	button = scroll->button.element;
-	if (ui_element_is_click(elem)) // dragging
+	if (ui_element_is_click(elem))
 	{
 		scroll->value = ui_get_slider_value(scroll->min, scroll->max,
-				(elem->win->mouse_pos.y - elem->screen_pos.y) - scroll->button.pos.h / 2,
+				(elem->win->mouse_pos.y - elem->screen_pos.y)
+				- scroll->button.pos.h / 2,
 				elem->pos.h - scroll->button.pos.h);
 		scroll->update = 1;
 	}
-	else if (ui_element_is_hover(scroll->target) // scrolling
+	else if (ui_element_is_hover(scroll->target)
 		&& ((t_ui_element *)scroll->target)->win->scroll != 0)
 	{
 		scroll->value -= ((t_ui_element *)scroll->target)->win->scroll * 30;
@@ -54,6 +50,9 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 	}
 }
 
+/*
+ * TODO: maybe dont event render if the target is not shown.
+*/
 int	ui_scrollbar_render(t_ui_element *elem)
 {
 	t_ui_scrollbar	*scroll;
@@ -68,9 +67,14 @@ int	ui_scrollbar_render(t_ui_element *elem)
 	ui_scrollbar_recount(elem);
 	if (scroll->update)
 	{
-		scroll->button.pos.y = ft_clamp(ui_set_slider_value(scroll->value, scroll->min, scroll->max, elem->pos.h - scroll->button.pos.h), 0, elem->pos.h - scroll->button.pos.h);
+		scroll->button.pos.y = ft_clamp(
+				ui_set_slider_value(
+					scroll->value, scroll->min,
+					scroll->max, elem->pos.h - scroll->button.pos.h),
+				0, elem->pos.h - scroll->button.pos.h);
 		scroll->update = 0;
-		ui_element_move_list(((t_ui_element *)scroll->target)->children, vec2i(0, scroll->last_value - scroll->value));
+		ui_element_move_list(((t_ui_element *)scroll->target)->children,
+			vec2i(0, scroll->last_value - scroll->value));
 	}
 	scroll->last_value = scroll->value;
 	ui_button_render(&scroll->button);
@@ -83,7 +87,8 @@ void	ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 	scroll = elem->element;
 	if (recipe->target)
-		scroll->target = ui_list_get_element_by_id(elem->win->layout->elements, recipe->target);
+		scroll->target = ui_list_get_element_by_id(
+				elem->win->layout->elements, recipe->target);
 	if (recipe->value_set[1])
 		scroll->min = recipe->value[1];
 	if (recipe->value_set[2])

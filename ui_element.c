@@ -485,15 +485,6 @@ void	ui_element_print(t_ui_element *elem)
 		g_acceptable[elem->element_type].printer(elem);
 }
 
-void	ui_element_swap(t_ui_element *one, t_ui_element *two)
-{
-	t_ui_element	*temp;
-
-	temp = one;
-	one = two;
-	two = temp;
-}
-
 int	ui_element_type_from_string(char *str)
 {
 	int	k;
@@ -509,9 +500,8 @@ const char	*ui_element_type_to_string(int type)
 {
 	if (type < 0 || type >= UI_TYPE_AMOUNT)
 	{
-		ft_printf("[%s] Something Went Wrong : For some reason trying to "
-			"convert type %d to str when that doesnt exist.\n",
-			__FUNCTION__, type);
+		ft_printf("[%s] Error : Element type "
+			"[%d] doesn\'t exist.\n", __FUNCTION__, type);
 		return ("none");
 	}
 	return (g_acceptable[type].name);

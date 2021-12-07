@@ -46,6 +46,15 @@ void	ui_button_event(t_ui_element *elem, SDL_Event e)
 		elem->state = UI_STATE_CLICK;
 }
 
+void	ui_button_toggle_on(t_ui_element *elem)
+{
+	if (elem)
+	{
+		elem->is_toggle = 1;
+		elem->state = UI_STATE_CLICK;
+	}
+}
+
 bool	ui_button(t_ui_element *elem)
 {
 	if (elem->is_click)

@@ -1,9 +1,5 @@
 #include "libui.h"
 
-/*
- * NOTE: the reason dropdown has element, is becuase of the parent stuff,
- * 	we dont actually need to show anything thats why the size of it is 0 x 0
-*/
 void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 {
 	t_ui_dropdown	*drop;
@@ -19,6 +15,7 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_new(win, &drop->label);
 	drop->label.is_a_part_of_another = 1;
 	ui_label_set_text(&drop->label, "Dropdown");
+	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
 
 	ui_menu_new(win, &drop->menu);
 	drop->menu.is_a_part_of_another = 1;
@@ -27,8 +24,6 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	drop->menu.show = 0;
 	((t_ui_menu *)drop->menu.element)->event_children = 1;
 	((t_ui_menu *)drop->menu.element)->render_children = 1;
-
-	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
 	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
 
 	drop->max_h = 100;

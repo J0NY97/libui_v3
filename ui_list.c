@@ -17,16 +17,13 @@ void	ui_list_sort(t_list *list)
 		next = curr->next;
 		if (!next || !curr->content || !curr->next->content)
 			break ;
-		if (((t_ui_element *)curr->content)->z > ((t_ui_element *)curr->next->content)->z)
+		if (((t_ui_element *)curr->content)->z
+			> ((t_ui_element *)curr->next->content)->z)
 		{
 			temp = curr->content;
 			curr->content = curr->next->content;
 			curr->next->content = temp;
-
-			temp_int = curr->content_size;
-			curr->content_size = curr->next->content_size;
-			curr->next->content_size = temp_int;
-
+			pointer_swap(&curr->content_size, &curr->next->content_size);
 			curr = list;
 		}
 		else
@@ -98,7 +95,9 @@ void	ui_list_event(t_list *list, SDL_Event e)
 				g_acceptable[elem->element_type].eventer(elem, e);
 		}
 		else
-			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+			ft_printf("[%s] Element of type %d (%s) not supported.\n",
+				__FUNCTION__, elem->element_type,
+				ui_element_type_to_string(elem->element_type));
 		curr = curr->next;
 	}
 }
@@ -111,7 +110,6 @@ void	ui_list_render(t_list *list)
 	t_list			*curr;
 	t_ui_element	*elem;
 
-	// Render The Elements
 	curr = list;
 	while (curr)
 	{
@@ -121,7 +119,9 @@ void	ui_list_render(t_list *list)
 			&& g_acceptable[elem->element_type].renderer)
 			g_acceptable[elem->element_type].renderer(elem);
 		else
-			ft_printf("[%s] Element of type %d (%s) is not supported.\n", __FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+			ft_printf("[%s] Element of type %d (%s) not supported.\n",
+				__FUNCTION__, elem->element_type,
+				ui_element_type_to_string(elem->element_type));
 		curr = curr->next;
 	}
 }
@@ -134,7 +134,6 @@ void	ui_layout_list_render(t_list *list)
 	t_list			*curr;
 	t_ui_element	*elem;
 
-	// Render The Elements
 	curr = list;
 	while (curr)
 	{

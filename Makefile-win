@@ -17,7 +17,7 @@ SRCS = ./ui_element.c \
        ./ui_layout.c \
        ./ui_recipe.c \
        ./ui_texture.c \
-       ./ui_load.c \
+       ./ui_text_align.c \
        ./ui_init.c \
        ./ui_help.c \
        ./ui_list.c \

@@ -27,6 +27,9 @@ void	ui_radio_event(t_ui_element *elem, SDL_Event e)
 /*
  * Assumes everything in list is t_ui_element, and preferably t_ui_button type;
  * Return: if a new active 1 else 0;
+ *
+ * If we have set active outside this function this still
+ * 	toggles it on (so dont remove the last if(*active)...;
 */
 int	ui_list_radio_event(t_list *list, t_ui_element **active)
 {
@@ -50,18 +53,15 @@ int	ui_list_radio_event(t_list *list, t_ui_element **active)
 			elem->state = UI_STATE_DEFAULT;
 		list = list->next;
 	}
-	if (*active)
-	{
-		(*active)->state = UI_STATE_CLICK;
-		(*active)->is_toggle = 1;
-	}
+	ui_button_toggle_on(*active);
 	return (result);
 }
 
 /*
  * radio will only update its screen position so that
  * its children render correctly.
- * and ofc check if the parent of this elem was shown/renderer and other stuff that the renderer checks;
+ * and ofc check if the parent of this elem was shown/renderer and
+ * 	other stuff that the renderer checks;
 */
 int	ui_radio_render(t_ui_element *elem)
 {
