@@ -6,7 +6,6 @@ void	ui_layout_event(t_ui_layout *layout, SDL_Event e)
 	t_ui_window		*win;
 	t_ui_element	*elem;
 
-	// Event windows
 	curr = layout->windows;
 	while (curr)
 	{
@@ -25,8 +24,6 @@ void	ui_layout_render(t_ui_layout *layout)
 
 	ui_list_sort(layout->elements);
 	ui_layout_list_render(layout->elements);
-
-	// Render The Windows
 	curr = layout->windows;
 	while (curr)
 	{
@@ -1095,6 +1092,7 @@ void	ui_layout_free(t_ui_layout *layout)
 	free(layout->style_file_content);
 	ft_arraydel(layout->style_recipe_strings);
 	ft_lstdel(&layout->windows, &ui_window_free);
+	ft_lstdel(&layout->elements, &dummy_free_er);
 	ft_lstdel(&layout->families, &ui_family_free);
 	ft_lstdel(&layout->recipes, &ui_recipe_free);
 	ft_arraydel(layout->resource_dirs);

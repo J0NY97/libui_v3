@@ -129,7 +129,16 @@ int	ui_slider_render(t_ui_element *elem)
 
 void	ui_slider_free(void *elem, size_t size)
 {
-	(void)elem;
+	t_ui_element	*element;
+	t_ui_slider		*slider;
+
+	element = elem;
+	if (!element)
+		return ;
+	slider = element->element;
+	if (!slider)
+		return ;
+	free(slider);
 }
 
 int	ui_slider_updated(t_ui_element *elem)

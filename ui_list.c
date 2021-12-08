@@ -158,6 +158,7 @@ void	ui_layout_list_render(t_list *list)
 void	ui_list_element_free(t_list	**list)
 {
 	t_list	*curr;
+	t_list	*next;
 	int		i;
 
 	if (!list)
@@ -167,11 +168,14 @@ void	ui_list_element_free(t_list	**list)
 	while (curr)
 	{
 		ft_printf("%d\n", i);
+		next = curr->next;
 		ui_element_free(curr->content, UI_TYPE_ELEMENT);
 		if (!*list)
 			break ;
-		curr->content = NULL;
-		curr = curr->next;
+		if (next)
+			curr = next;
+		else
+			break ;
 		i++;
 	}
 	ft_lstdel(list, &dummy_free_er);

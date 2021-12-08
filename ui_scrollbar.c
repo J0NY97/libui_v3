@@ -97,9 +97,19 @@ void	ui_scrollbar_edit(t_ui_element *elem, t_ui_recipe *recipe)
 		ui_scroll_value_set(elem, recipe->value[0]);
 }
 
-void	ui_scrollbar_free(void *args, size_t size)
+void	ui_scrollbar_free(void *elem, size_t size)
 {
-	(void)args;
+	t_ui_element	*element;
+	t_ui_scrollbar	*scroll;
+
+	element = elem;
+	if (!element)
+		return ;
+	scroll = element->element;
+	if (!scroll)
+		return ;
+	scroll->target = NULL;
+	free(scroll);
 }
 
 void	ui_scroll_value_set(t_ui_element *elem, int value)

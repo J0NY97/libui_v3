@@ -21,7 +21,6 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 	elem->images[UI_STATE_CLICK] = NULL;
 	elem->use_images = 0;
 	elem->texture_recreate = 1;
-	ui_element_textures_redo(elem);
 	ui_element_set_parent(elem, win, UI_TYPE_WINDOW);
 	elem->element = NULL;
 	elem->element_type = UI_TYPE_ELEMENT;
@@ -190,6 +189,11 @@ int	ui_puttextureonwindow(
 int	ui_element_render(t_ui_element *elem)
 {
 	elem->rendered_last_frame = 0;
+	if (elem->texture_recreate || elem->win->textures_recreate)
+	{
+		ui_element_textures_redo(elem);
+		elem->last_state = -909;
+	}
 	if (!*elem->parent_rendered_last_frame
 		|| !*elem->parent_show || !elem->show
 		|| !elem->textures[elem->state])
@@ -197,11 +201,6 @@ int	ui_element_render(t_ui_element *elem)
 	elem->screen_pos = ui_element_screen_pos_get(elem);
 	elem->from_pos = vec4i(0, 0, elem->pos.w, elem->pos.h);
 	elem->to_pos = elem->screen_pos;
-	if (elem->texture_recreate || elem->win->textures_recreate)
-	{
-		ui_element_textures_redo(elem);
-		elem->last_state = -909;
-	}
 	if (elem->state != elem->last_state)
 		SDL_UpdateTexture(elem->texture, NULL,
 			elem->textures[elem->state]->pixels,

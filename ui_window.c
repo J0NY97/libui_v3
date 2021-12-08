@@ -11,8 +11,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->win = SDL_CreateWindow(win->title,
 			win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
-	win->texture = SDL_CreateTexture(win->renderer, SDL_PIXELFORMAT_RGBA8888,
-			SDL_TEXTUREACCESS_TARGET, win->pos.w, win->pos.h);
+	win->texture = ui_create_texture(win->renderer, vec2i(win->pos.w, win->pos.h));
 	win->show = 1;
 	win->children = NULL;
 	win->window_id = SDL_GetWindowID(win->win);
@@ -25,6 +24,7 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->mouse_pos.y = win->window_mouse_pos.y * win->texture_scale.y;
 	win->bg_color = 0xff000000;
 	win->free_me = 1;
+	win->textures_recreate = 1;
 }
 
 void	ui_window_resize_event(t_ui_window *win, SDL_Event e)
@@ -140,7 +140,7 @@ void	ui_window_free(void *window, size_t size)
 	ft_strdel(&win->title);
 	ft_printf("title\n");
 	ui_list_element_free(&win->children);
-	//ft_lstdel(&win->children, &ui_element_free);
+	ft_lstdel(&win->children, &dummy_free_er);
 	ft_printf("children\n");
 	win->layout = NULL;
 	if (win->free_me)
@@ -260,26 +260,28 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 	t_vec4i	pos;
 
 	ui_win->win_replaced = 1;
+	if (ui_win->renderer)
+		SDL_DestroyRenderer(ui_win->renderer);
 	if (ui_win->win)
 		SDL_DestroyWindow(ui_win->win);
 	ui_win->win = sdl_win;
 	SDL_GetWindowPosition(ui_win->win, &pos.x, &pos.y);
 	SDL_GetWindowSize(ui_win->win, &pos.w, &pos.h);
 	ui_win->pos = vec4(pos.x, pos.y, pos.w, pos.h);
-	if (ui_win->renderer)
-		SDL_DestroyRenderer(ui_win->renderer);
-	ui_win->renderer = SDL_GetRenderer(sdl_win);
+	ui_win->renderer = SDL_GetRenderer(ui_win->win);
 	if (!ui_win->renderer)
 		ui_win->renderer
 			= SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
 	else
 		ui_win->renderer_replaced = 1;
-	if (ui_win->texture)
-		SDL_DestroyTexture(ui_win->texture);
-	ui_win->texture
-		= SDL_CreateTexture(ui_win->renderer, SDL_PIXELFORMAT_RGBA8888,
-			SDL_TEXTUREACCESS_TARGET, ui_win->pos.w, ui_win->pos.h);
-	ui_win->window_id = SDL_GetWindowID(sdl_win);
+	ui_win->texture = ui_create_texture(ui_win->renderer,
+			vec2i(ui_win->pos.w, ui_win->pos.h));
+	ui_win->window_id = SDL_GetWindowID(ui_win->win);
+	ui_win->screen_pos.w = pos.w;
+	ui_win->screen_pos.h = pos.h;
+	ui_win->texture_scale = vec2(ui_win->screen_pos.w / ui_win->pos.w,
+			ui_win->screen_pos.h / ui_win->pos.h);
+	ui_win->textures_recreate = 1;
 }
 
 void	ui_window_print(t_ui_window *win)

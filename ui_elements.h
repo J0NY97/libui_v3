@@ -266,7 +266,7 @@ typedef struct s_ui_tab
 /*
  * Slider event:ish but vertical, plus it will move the position of the target children up or down;
  *
- * void		*target;		the element on which the event will happen on;
+ * void		*target;		the element on which the event will happen on; DONT FREE
  * int		target_type;	the type of element, either UI_TYPE_ELEMENT OR -_WINDOW;
  * int		target_size;	the size of all children elements of target together;
  * bool		update;			has been updated this frame;
