@@ -246,7 +246,7 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				else
 					remove_str_from_n_to_m(&label->text, small, big);
 			}
-			else
+			else if (!(KMOD_LSHIFT & SDL_GetModState()))
 				ui_input_remove_selected(elem);
 		} // END of e.type == SDL_KEYDOWN
 		if (e.type == SDL_MOUSEBUTTONDOWN)
@@ -301,12 +301,39 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 	}
 }
 
+void	ui_input_render_highlight(t_ui_element *elem)
+{
+	t_vec2i		pos_on;
+	t_vec2i		pos_from;
+	t_ui_input	*input;
+	t_ui_label	*label;
+	t_vec2i		w;
+
+	input = elem->element;
+	label = ui_input_get_label(elem);
+	pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x,
+			elem->screen_pos.y + 2);
+	pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x,
+			elem->screen_pos.y + 2);
+	SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
+	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
+	SDL_RenderDrawLine(elem->win->renderer,
+		pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->screen_pos.h - 4);
+	SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
+	SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y,
+		pos_from.x, pos_from.y + elem->screen_pos.h - 4);
+	SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
+	w.x = ft_max(pos_from.x, pos_on.x);
+	w.y = ft_min(pos_from.x, pos_on.x);
+	SDL_RenderFillRect(elem->win->renderer,
+		&(SDL_Rect){w.y, pos_from.y, w.x - w.y, elem->screen_pos.h - 4});
+	SDL_SetRenderTarget(elem->win->renderer, NULL);
+}
+
 int	ui_input_render(t_ui_element *elem)
 {
 	t_ui_input	*input;
 	t_ui_label	*label;
-	t_vec2i		pos_on;
-	t_vec2i		pos_from;
 
 	input = elem->element;
 	label = input->label.element;
@@ -319,21 +346,11 @@ int	ui_input_render(t_ui_element *elem)
 		input->placeholder.show = 1;
 	if (elem->is_click)
 	{
-		input->cursor_on_char_x = get_x_of_char_in_text(label->text, input->cursor_on_char_num, label->font) + input->label.pos.x;
-		input->cursor_from_char_x = get_x_of_char_in_text(label->text, input->cursor_from_char_num, label->font) + input->label.pos.x;
-		pos_on = vec2i(input->cursor_on_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
-		pos_from = vec2i(input->cursor_from_char_x + elem->screen_pos.x, elem->screen_pos.y + 2);
-		SDL_SetRenderTarget(elem->win->renderer, elem->win->texture);
-		SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
-		SDL_RenderDrawLine(elem->win->renderer, pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->screen_pos.h - 4);
-		SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
-		SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y, pos_from.x, pos_from.y + elem->screen_pos.h - 4);
-
-		SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
-		int wmax = ft_max(pos_from.x, pos_on.x);
-		int wmin = ft_min(pos_from.x, pos_on.x);
-		SDL_RenderFillRect(elem->win->renderer, &(SDL_Rect){wmin, pos_from.y, wmax - wmin, elem->screen_pos.h - 4});
-		SDL_SetRenderTarget(elem->win->renderer, NULL);
+		input->cursor_on_char_x = get_x_of_char_in_text(label->text,
+				input->cursor_on_char_num, label->font) + input->label.pos.x;
+		input->cursor_from_char_x = get_x_of_char_in_text(label->text,
+				input->cursor_from_char_num, label->font) + input->label.pos.x;
+		ui_input_render_highlight(elem);
 	}
 	ui_label_render(&input->label);
 	ui_label_render(&input->placeholder);
@@ -351,10 +368,6 @@ void	ui_input_free(void *elem, size_t size)
 	input = element->element;
 	if (!input)
 		return ;
-		/*
-	ui_element_free(&input->label, UI_TYPE_LABEL);
-	ui_element_free(&input->placeholder, UI_TYPE_LABEL);
-	*/
 	free(input);
 	(void)size;
 }
@@ -370,14 +383,13 @@ void	ui_input_print(t_ui_element *elem)
 	ui_label_print(&input->placeholder);
 }
 
-/*
- * Getters
-*/
 t_ui_input	*ui_input_get(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_INPUT)
 	{
-		ft_printf("[%s] Element given is not of type <%d> %s, it\'s of type <%d> %s.\n", __FUNCTION__, UI_TYPE_INPUT, ui_element_type_to_string(UI_TYPE_INPUT), elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Elem not of type UI_TYPE_INPUT. %d %s.\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 		return (NULL);
 	}
 	return (elem->element);
