@@ -414,6 +414,8 @@ char					*ui_input_get_text(t_ui_element *elem);
 void					ui_input_set_text(t_ui_element *elem, char *str);
 void					ui_input_set_placeholder_text(t_ui_element *elem, char *str);
 int						ui_input_exit(t_ui_element *elem);
+void					ui_input_remove_selected(t_ui_element *elem);
+void					ui_input_add(t_ui_element *elem, char *str);
 
 // Slider
 void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
