@@ -115,83 +115,94 @@ char	*str_remove_all_letters(char *str)
 	return (final);
 }
 
+void	ui_input_add(t_ui_element *elem, char *str)
+{
+	t_ui_input	*input;
+	t_ui_label	*label;
+	char	*temp;
+
+	input = elem->element;
+	label = ui_input_get_label(elem);
+	if (input->input_type == 1)
+		temp = str_remove_all_letters(str);
+	else if (input->input_type == 2)
+		temp = str_remove_all_numbers(str);
+	else
+		temp = ft_strdup(str);
+	ui_input_remove_selected(elem);
+	insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
+	input->cursor_on_char_num += ft_strlen(temp);
+	input->cursor_from_char_num = input->cursor_on_char_num;
+	ft_strdel(&temp);
+}
+
+void	ui_input_remove_selected(t_ui_element *elem)
+{
+	t_ui_input	*input;
+	t_ui_label	*label;
+	int			small;
+	int			big;
+
+	input = elem->element;
+	label = ui_input_get_label(elem);
+	small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
+	big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
+	if (big - small > 0)
+	{
+		remove_str_from_n_to_m(&label->text, small, big);
+		input->cursor_on_char_num = small;
+		input->cursor_from_char_num = input->cursor_on_char_num;
+	}
+}
+
 void	ui_input_event(t_ui_element *elem, SDL_Event e)
 {
 	t_ui_input	*input;
 	t_ui_label	*label;
 	int			len;
+	char		*temp;
 
 	if (!elem->rendered_last_frame || !elem->event)
 		return ;
 	input = elem->element;
 	label = input->label.element;
 	elem->is_hover = ui_element_is_hover(elem);
-	if (elem->is_hover == 1 && e.type == SDL_MOUSEBUTTONDOWN)
+	// Start Input
+	if (elem->is_hover && elem->win->mouse_down)
 	{
-		if (elem->is_click == 0)
-		{
+		if (!elem->is_click)
 			SDL_StartTextInput();
-			input->cursor_on_char_num = ft_strlen(label->text);
-			input->cursor_from_char_num = input->cursor_on_char_num;
-		}
 		elem->is_click = 1;
 	}
-	if (elem->is_click == 1)
+	if (!elem->is_hover && elem->win->mouse_down)
+	{
+		elem->is_click = 0;
+		input->input_exit = 1;
+		SDL_StopTextInput();
+		return ;
+	}
+	if (elem->is_click)
 	{
 		len = ft_strlen(label->text);
+		int small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
+		int big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
 		if (e.type == SDL_TEXTINPUT)
-		{
-			char	*temp;
-
-			if (input->input_type == 1)
-				temp = str_remove_all_letters(e.text.text);
-			else if (input->input_type == 2)
-				temp = str_remove_all_numbers(e.text.text);
-			else
-				temp = ft_strdup(e.text.text);
-			insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
-			input->cursor_on_char_num++;
-			ft_strdel(&temp);
-		}
+			ui_input_add(elem, e.text.text);
 		else if (e.type == SDL_KEYDOWN)
 		{
-			if (KMOD_LCTRL & SDL_GetModState()) // All the modstate thingys should probably come first of all. Because some of them use other keys that are in use without the modstate.
+			if (KMOD_LCTRL & SDL_GetModState())
 			{
-				// This needs to gtfo too.
-				int small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
-				int big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
 				if (e.key.keysym.sym == SDLK_c)
 				{
-					char *clipboard;
-
-					clipboard = ft_strsub(label->text, small, big - small);
-					SDL_SetClipboardText(clipboard);
-					ft_strdel(&clipboard);
+					temp = ft_strsub(label->text, small, big - small);
+					SDL_SetClipboardText(temp);
+					ft_strdel(&temp);
 				}
 				else if (e.key.keysym.sym == SDLK_v)
 				{
-					char *clipboard;
-					clipboard = SDL_GetClipboardText();
-
-					// This needs to gtfo
-					if (big - small > 0)
-					{
-						remove_str_from_n_to_m(&label->text, small, big);
-						input->cursor_on_char_num = small;
-					}
-					char	*temp;
-
-					if (input->input_type == 1)
-						temp = str_remove_all_letters(clipboard);
-					else if (input->input_type == 2)
-						temp = str_remove_all_numbers(clipboard);
-					else
-						temp = ft_strdup(clipboard);
-					insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
-					input->cursor_on_char_num += ft_strlen(temp);
-					SDL_free(clipboard);
-					ft_strdel(&temp);
-					input->cursor_from_char_num = input->cursor_on_char_num;
+					temp = SDL_GetClipboardText();
+					ui_input_add(elem, temp);
+					SDL_free(temp);
 				}
 				else if (e.key.keysym.sym == SDLK_a)
 				{
@@ -200,28 +211,16 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				}
 				else if (e.key.keysym.sym == SDLK_x)
 				{
-					char *clipboard;
-
-					clipboard = ft_strsub(label->text, small, big - small);
-					SDL_SetClipboardText(clipboard);
-					ft_strdel(&clipboard);
-					// This needs to gtfo
-					if (big - small > 0)
-					{
-						remove_str_from_n_to_m(&label->text, small, big);
-						input->cursor_on_char_num = small;
-						input->cursor_from_char_num = small;
-					}
+					temp = ft_strsub(label->text, small, big - small);
+					SDL_SetClipboardText(temp);
+					ft_strdel(&temp);
+					ui_input_remove_selected(elem);
 				}
 			}
 			else if (e.key.keysym.sym == SDLK_END)
-			{
 				input->cursor_on_char_num = len;
-			}
 			else if (e.key.keysym.sym == SDLK_HOME)
-			{
 				input->cursor_on_char_num = 0;
-			}
 			else if (e.key.keysym.sym == SDLK_RETURN)
 			{
 				SDL_StopTextInput();
@@ -230,105 +229,63 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				return ;
 			}
 			else if (e.key.keysym.sym == SDLK_LEFT)
-			{
 				input->cursor_on_char_num--;
-			}
 			else if (e.key.keysym.sym == SDLK_RIGHT)
-			{
 				input->cursor_on_char_num++;
-			}
-			else if (e.key.keysym.sym == SDLK_BACKSPACE || e.key.keysym.sym == SDLK_DELETE)
+			// Removing chars
+			else if (e.key.keysym.sym == SDLK_BACKSPACE
+				|| e.key.keysym.sym == SDLK_DELETE)
 			{
-				int small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
-				int big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
 				if (big - small == 0)
 				{
 					if (e.key.keysym.sym == SDLK_BACKSPACE)
-					{
-						if (len - 1 >= 0 && input->cursor_on_char_num - 1 >= 0)
-						{
-							remove_str_from_n_to_m(&label->text, input->cursor_on_char_num - 1, input->cursor_on_char_num);
-							input->cursor_on_char_num--;
-						}
-					}
+						remove_str_from_n_to_m(&label->text, small - 1, small);
 					else
-					{
-						if (input->cursor_on_char_num < len)
-							remove_char_after_nth_char(&label->text, input->cursor_on_char_num + 1);
-					}
+						remove_str_from_n_to_m(&label->text, small, small + 1);
 				}
 				else
-				{
 					remove_str_from_n_to_m(&label->text, small, big);
-					input->cursor_on_char_num = small;
-				}
 			}
 			else
-			{
-				// This needs to gtfo
-				int small = ft_min(input->cursor_on_char_num, input->cursor_from_char_num);
-				int big = ft_max(input->cursor_on_char_num, input->cursor_from_char_num);
-				if (big - small > 0)
-				{
-					remove_str_from_n_to_m(&label->text, small, big);
-					input->cursor_on_char_num = small;
-				}
-			}
-		} // END of e->type == SDL_KEYDOWN
-		if(e.type == SDL_MOUSEBUTTONDOWN)
+				ui_input_remove_selected(elem);
+		} // END of e.type == SDL_KEYDOWN
+		if (e.type == SDL_MOUSEBUTTONDOWN)
 		{
-			if (elem->is_hover != 1)
-			{
-				elem->is_click = 0;
-				input->input_exit = 1;
-				//SDL_StopTextInput();
-				return ;
-			}
-			// clicks == 1, move the cursor there
-			// clicks == 2, select first word at cursor
-			// clicks == 3, select whole text
 			e.button.clicks %= 4; // small hackeroni, to cycle all the clicks.
 			if (e.button.clicks == 1) // if one click, move the cursor to that point.
 			{
-				if (elem->is_hover == 1)
-				{
-					// Dont need y because that doesnt matter. only needed if the text can stack on top of eachother, think about it, hard to explain.
-					input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
-				}
-				input->cursor_from_char_num = input->cursor_on_char_num; // IMPORTANT:make this is in hover != 1
+				input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
+				input->cursor_from_char_num = input->cursor_on_char_num;
 			}
 			else if (e.button.clicks == 2) // select word your cursor is at.
 			{
-				if (elem->is_hover == 1)
-				{
-					int i = input->cursor_on_char_num - 1;
-					while (label->text[i] && !ft_isspace(label->text[i]))
-						i--;
+				int i;
+
+				i = input->cursor_on_char_num - 1;
+				while (label->text[i] && !ft_isspace(label->text[i]))
+					i--;
+				i++;
+				input->cursor_from_char_num = ft_clamp(i, 0, len);
+				while (label->text[i] && !ft_isspace(label->text[i]))
 					i++;
-					input->cursor_from_char_num = ft_clamp(i, 0, len);
-					while (label->text[i] && !ft_isspace(label->text[i]))
-						i++;
-					input->cursor_on_char_num = ft_clamp(i, 0, len);
-				}
+				input->cursor_on_char_num = ft_clamp(i, 0, len);
 			}
 			else if (e.button.clicks == 3) // if triple click select the whole text.
 			{
-				if (elem->is_hover == 1)
-				{
-					input->cursor_from_char_num = 0;
-					input->cursor_on_char_num = len;
-				}
+				input->cursor_from_char_num = 0;
+				input->cursor_on_char_num = len;
 			}
 		}
 		else if ((SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) && e.type == SDL_MOUSEMOTION)
 		{
-			if (elem->is_hover == 1)
+			if (elem->is_hover)
 			{
 				if (e.button.state == SDL_PRESSED)
 					input->cursor_from_char_num = input->cursor_on_char_num;
 				input->cursor_on_char_num = get_nth_char_of_text_at_x(label->text, elem->win->mouse_pos.x - input->label.screen_pos.x, label->font);
 			}
 		}
+		label->texture_recreate = 1;
 		len = ft_strlen(label->text);
 		input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
 		input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
@@ -341,10 +298,6 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 		{
 			input->cursor_from_char_num = input->cursor_on_char_num;
 		}
-		label->texture_recreate = 1;
-		len = ft_strlen(label->text);
-		input->cursor_on_char_num = ft_clamp(input->cursor_on_char_num, 0, len);
-		input->cursor_from_char_num = ft_clamp(input->cursor_from_char_num, 0, len);
 	}
 }
 
