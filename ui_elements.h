@@ -179,6 +179,7 @@ typedef struct s_ui_dropdown
 	bool				drop_open;
 	t_ui_element		scrollbar;
 	int					max_h;
+	int					total_h;
 }						t_ui_dropdown;
 
 /*

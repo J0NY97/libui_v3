@@ -68,8 +68,8 @@ bool	ui_button(t_ui_element *elem)
 }
 
 /*
- * NOTE: !!!!!!!!!!!! Dont do anything that needs the element type to be UI_TYPE_BUTTOn
- * since our dropdown is using this button_redner for reason.!!!!!!!!!!!!!!!!!!!!!!!!!!
+ * NOTE: !!!!! Dont do anything that needs the element type to be UI_TYPE_BUTTOn
+ * since our dropdown is using this button_redner for reason.!!!!!!!!!!!!!!!!!!!
 */
 int	ui_button_render(t_ui_element *elem)
 {
@@ -121,7 +121,6 @@ void	ui_button_free(void *elem, size_t size)
 	button = element->element;
 	if (!button)
 		return ;
-	//ui_element_free(&button->label, UI_TYPE_LABEL);
 	free(button);
 	(void)size;
 }

@@ -8,15 +8,10 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = ft_memalloc(sizeof(t_ui_dropdown));
 	elem->element_type = UI_TYPE_DROPDOWN;
 	drop = elem->element;
-
-	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xffff0000);
-	ui_element_pos_set(elem, vec4(0, 0, 50, 20));
-
 	ui_label_new(win, &drop->label);
 	drop->label.is_a_part_of_another = 1;
 	ui_label_set_text(&drop->label, "Dropdown");
 	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
-
 	ui_menu_new(win, &drop->menu);
 	drop->menu.is_a_part_of_another = 1;
 	ui_element_pos_set(&drop->menu,
@@ -25,7 +20,6 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	((t_ui_menu *)drop->menu.element)->event_children = 1;
 	((t_ui_menu *)drop->menu.element)->render_children = 1;
 	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
-
 	drop->max_h = 100;
 	ui_scrollbar_new(win, &drop->scrollbar);
 	drop->scrollbar.is_a_part_of_another = 1;
@@ -45,61 +39,64 @@ void	ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	ui_label_edit(&drop->label, recipe);
 }
 
+void	ui_dropdown_event2(t_ui_element *elem, SDL_Event e)
+{
+	t_ui_dropdown	*drop;
+	t_list			*curr;
+	t_ui_element	*child;
+
+	drop = elem->element;
+	curr = drop->menu.children;
+	drop->total_h = 0;
+	while (curr)
+	{
+		child = curr->content;
+		ui_element_pos_set2(child, vec2(child->pos.x, drop->total_h
+				- ((t_ui_scrollbar *)drop->scrollbar.element)->value));
+		drop->total_h += child->pos.h;
+		child->render_me_on_parent = 1;
+		curr = curr->next;
+	}
+	if (drop->max_h != -1 && drop->total_h > drop->max_h)
+	{
+		drop->scrollbar.show = 1;
+		ui_scrollbar_event(&drop->scrollbar, e);
+	}
+	else
+		drop->scrollbar.show = 0;
+	ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y,
+			drop->menu.pos.w, drop->total_h + 1));
+}
+
+void	ui_dropdown_check_active_internal(
+	t_ui_element *elem, t_ui_dropdown *drop)
+{
+	if (ui_list_radio_event(drop->menu.children, &drop->active))
+	{
+		ui_element_render(drop->active);
+		ui_label_set_text(&drop->label, ui_dropdown_active_text(elem));
+	}
+}
+
 void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 {
 	t_ui_dropdown	*drop;
 
 	drop = elem->element;
 	ui_checkbox_event(elem, e);
-	// this is getting kind of convoluted, so thats why we have these both;
-	// (im not sure which of these we should have);
 	drop->menu.show = elem->state == UI_STATE_CLICK;
-	drop->menu.show = elem->is_toggle;
-
-	drop->menu.z = elem->z;
-
-	if (!drop->menu.show)// || !drop->menu.children) // if menu isnt shown, no point event handling children; // or not;
+	if (!drop->menu.show)
 	{
 		ui_checkbox_toggle_off(elem);
 		drop->scrollbar.show = 0;
 		return ;
 	}
-	drop->drop_open = elem->win->mouse_down_last_frame && ui_element_is_hover(elem);
+	drop->drop_open
+		= elem->win->mouse_down_last_frame && ui_element_is_hover(elem);
 	ui_menu_event(&drop->menu, e);
-	ui_list_radio_event(drop->menu.children, &drop->active);
-	if (drop->active)
-	{
-		ui_element_render(drop->active);
-		ui_label_set_text(&drop->label, ui_dropdown_active_text(elem));
-	}
-	{
-		// This could be changed to the menu in the same wave as you render or event handle the children.
-		t_list *curr;
-		t_ui_element *child;
-		curr = drop->menu.children;
-		int total_height = 0;
-		while (curr)
-		{
-			child = curr->content;
-			ui_element_pos_set2(child, vec2(child->pos.x, total_height
-					- ((t_ui_scrollbar *)drop->scrollbar.element)->value));
-			total_height += child->pos.h;
-			child->render_me_on_parent = 1; // making all the children render on parent;
-			curr = curr->next;
-		}
-		if (drop->max_h != -1 && total_height > drop->max_h)
-		{
-			drop->scrollbar.show = 1;
-			ui_scrollbar_event(&drop->scrollbar, e);
-		}
-		else
-			drop->scrollbar.show = 0;
-		ui_element_pos_set(&drop->menu,
-			vec4(drop->menu.pos.x, drop->menu.pos.y,
-				drop->menu.pos.w, total_height + 1));
-	}
-	if (elem->win->mouse_down // close the menu if you click somewhere else but the menu of dropdown;
-		&& !ui_element_is_hover(elem)
+	ui_dropdown_check_active_internal(elem, drop);
+	ui_dropdown_event2(elem, e);
+	if (elem->win->mouse_down && !ui_element_is_hover(elem)
 		&& !ui_element_is_hover(&drop->scrollbar))
 	{
 		ui_checkbox_toggle_off(elem);
@@ -118,6 +115,7 @@ int	ui_dropdown_render(t_ui_element *elem)
 		return (0);
 	drop = elem->element;
 	drop->drop_exit = 0;
+	drop->menu.z = elem->z;
 	ui_element_pos_set(&drop->menu,
 		vec4(0, elem->pos.h,
 			drop->menu.pos.w, ft_min(drop->max_h, drop->menu.pos.h)));
@@ -301,7 +299,8 @@ char	*ui_dropdown_active_text(t_ui_element *elem)
 	return (label->text);
 }
 
-t_ui_element	*ui_dropdown_get_button_with_text(t_ui_element *elem, char *text)
+t_ui_element	*ui_dropdown_get_button_with_text(
+	t_ui_element *elem, char *text)
 {
 	t_ui_element	*menu;
 
