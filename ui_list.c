@@ -167,7 +167,6 @@ void	ui_list_element_free(t_list	**list)
 	i = 0;
 	while (curr)
 	{
-		ft_printf("%d\n", i);
 		next = curr->next;
 		ui_element_free(curr->content, UI_TYPE_ELEMENT);
 		if (!*list)

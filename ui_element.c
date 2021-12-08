@@ -40,18 +40,11 @@ void	ui_element_free(void *elem_p, size_t size)
 	elem = elem_p;
 	if (!elem)
 		return ;
-	ft_printf("[%s] ", __FUNCTION__); ft_printf("%s\n", elem->id);
 	if (g_acceptable[elem->element_type].freer)
 		g_acceptable[elem->element_type].freer(elem, elem->element_type);
 	elem->element = NULL;
-	i = -1;
-	while (++i < UI_STATE_AMOUNT)
-	{
-		if (elem->textures[i])
-			SDL_FreeSurface(elem->textures[i]);
-		if (elem->images[i])
-			SDL_FreeSurface(elem->images[i]);
-	}
+	ui_element_textures_free(elem);
+	ui_element_images_free(elem);
 	SDL_DestroyTexture(elem->texture);
 	elem->win = NULL;
 	elem->parent_screen_pos = NULL;
@@ -59,13 +52,10 @@ void	ui_element_free(void *elem_p, size_t size)
 		ft_strdel(&elem->id);
 	elem->parent_rendered_last_frame = NULL;
 	ui_element_remove_child_from_parent(elem);
-	ft_printf("children : %d\n", ft_lstlen(elem->children));
 	ui_list_element_free(&elem->children);
-	//ft_lstdel(&elem->children, &ui_element_free);
 	elem->children = NULL;
 	if (elem->free_me && !elem->is_a_part_of_another)
 		free(elem);
-	ft_printf("[%s] Done\n", __FUNCTION__);
 }
 
 /*
@@ -98,6 +88,18 @@ void	ui_element_textures_free(t_ui_element *elem)
 	while (++i < UI_STATE_AMOUNT)
 		if (elem->textures[i])
 			SDL_FreeSurface(elem->textures[i]);
+}
+
+void	ui_element_images_free(t_ui_element *elem)
+{
+	int	i;
+
+	i = -1;
+	while (++i < UI_STATE_AMOUNT)
+	{
+		if (elem->images[i])
+			SDL_FreeSurface(elem->images[i]);
+	}
 }
 
 void	ui_element_set_colors_internal(t_ui_element *elem)
@@ -134,6 +136,7 @@ void	ui_element_textures_redo(t_ui_element *elem)
 		ui_element_set_images_internal(elem);
 	else
 		ui_element_set_colors_internal(elem);
+	ui_element_update_texture(elem);
 }
 
 /*
@@ -180,6 +183,22 @@ int	ui_puttextureonwindow(
 	return (1);
 }
 
+void	ui_element_update_texture(t_ui_element *elem)
+{
+	SDL_UpdateTexture(elem->texture, NULL,
+		elem->textures[elem->state]->pixels,
+		elem->textures[elem->state]->pitch);
+}
+
+void	ui_element_update_to_from(t_ui_element *elem)
+{
+	complicated_math(&elem->from_pos, vec4_to_vec4i(elem->pos),
+		((t_ui_element *)elem->parent)->from_pos,
+		((t_ui_element *)elem->parent)->to_pos);
+	elem->to_pos = vec4i(elem->to_pos.x + elem->from_pos.x, elem->to_pos.y
+			+ elem->from_pos.y, elem->from_pos.w, elem->from_pos.h);
+}
+
 /*
  * Return: 1 if rendering successful, 0 if not.
  *
@@ -190,10 +209,7 @@ int	ui_element_render(t_ui_element *elem)
 {
 	elem->rendered_last_frame = 0;
 	if (elem->texture_recreate || elem->win->textures_recreate)
-	{
 		ui_element_textures_redo(elem);
-		elem->last_state = -909;
-	}
 	if (!*elem->parent_rendered_last_frame
 		|| !*elem->parent_show || !elem->show
 		|| !elem->textures[elem->state])
@@ -202,25 +218,14 @@ int	ui_element_render(t_ui_element *elem)
 	elem->from_pos = vec4i(0, 0, elem->pos.w, elem->pos.h);
 	elem->to_pos = elem->screen_pos;
 	if (elem->state != elem->last_state)
-		SDL_UpdateTexture(elem->texture, NULL,
-			elem->textures[elem->state]->pixels,
-			elem->textures[elem->state]->pitch);
-	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT
-		&& elem->figure_out_z)
+		ui_element_update_texture(elem);
+	if (elem->parent_type == UI_TYPE_ELEMENT && elem->figure_out_z)
 		elem->z = ((t_ui_element *)elem->parent)->z + 1;
 	if (elem->parent && elem->parent_type == UI_TYPE_ELEMENT
 		&& ((t_ui_element *)elem->parent)->render_me_on_parent)
 		elem->render_me_on_parent = 1;
 	if (elem->render_me_on_parent && elem->parent_type != UI_TYPE_WINDOW)
-	{
-		complicated_math(&elem->from_pos, vec4_to_vec4i(elem->pos),
-			((t_ui_element *)elem->parent)->from_pos,
-			((t_ui_element *)elem->parent)->to_pos);
-		elem->to_pos.x += elem->from_pos.x;
-		elem->to_pos.w = elem->from_pos.w;
-		elem->to_pos.y += elem->from_pos.y;
-		elem->to_pos.h = elem->from_pos.h;
-	}
+		ui_element_update_to_from(elem);
 	elem->last_state = elem->state;
 	elem->rendered_last_frame = 1;
 	if (!ui_puttextureonwindow(elem->win, elem->texture,
@@ -332,11 +337,7 @@ void	ui_element_image_set(t_ui_element *elem, int state, SDL_Surface *image)
 
 	if (!elem || state < 0 || state > UI_STATE_AMOUNT
 		|| !image || !image->w || !image->h)
-	{
-		ft_printf("[%s] Error! elem?%d, state?%d, image?%d, w:%d, h:%d\n",
-			__FUNCTION__, !(!elem), state, !(!image), image->w, image->h);
 		return ;
-	}
 	i = -1;
 	amount_to_make = 1;
 	made = 0;
@@ -362,18 +363,13 @@ void	dummy_free_er(void *dont, size_t care)
 	(void)care;
 }
 
-/*
- * Goes through parent->children and find "elem" if found,
- * it removes it from the list.
-*/
-void	ui_element_remove_child_from_parent(t_ui_element *elem)
+t_list	**ui_element_get_parent_children(t_ui_element *elem)
 {
-	t_list	*curr;
 	t_list	**list;
 
-	list = NULL;
 	if (!elem->parent)
-		return ;
+		return (NULL);
+	list = NULL;
 	if (elem->parent_type == UI_TYPE_WINDOW)
 	{
 		if (((t_ui_window *)elem->parent)->children)
@@ -384,6 +380,19 @@ void	ui_element_remove_child_from_parent(t_ui_element *elem)
 		if (((t_ui_element *)elem->parent)->children)
 			list = &((t_ui_element *)elem->parent)->children;
 	}
+	return (list);
+}
+
+/*
+ * Goes through parent->children and find "elem" if found,
+ * it removes it from the list.
+*/
+void	ui_element_remove_child_from_parent(t_ui_element *elem)
+{
+	t_list	*curr;
+	t_list	**list;
+
+	list = ui_element_get_parent_children(elem);
 	if (!list)
 		return ;
 	curr = *list;
@@ -435,53 +444,6 @@ void	ui_element_set_id(t_ui_element *elem, char *id)
 	if (elem->id)
 		ft_strdel(&elem->id);
 	elem->id = ft_strdup(id);
-}
-
-void	ui_element_print(t_ui_element *elem)
-{
-	if (!elem)
-	{
-		ft_printf("[%s] No element.\n", __FUNCTION__);
-		return ;
-	}
-	ft_printf("[%s]\n", __FUNCTION__);
-	ft_printf("\tid : %s\n", elem->id);
-	ft_printf("\tpos : ");
-	print_vec(elem->pos.v, 4);
-	ft_printf("\tscreen_pos : ");
-	print_veci(elem->screen_pos.v, 4);
-	ft_printf("\tfrom_pos : ");
-	print_veci(elem->from_pos.v, 4);
-	ft_printf("\tto_pos : ");
-	print_veci(elem->to_pos.v, 4);
-	ft_printf("\tparent_pos : ");
-	print_veci(elem->parent_screen_pos->v, 4);
-	ft_printf("\tuse_images : %d\n", elem->use_images);
-	ft_printf("\tcolors : %#x %#x %#x\n", elem->colors[0], elem->colors[1], elem->colors[2]);
-	ft_printf("\tstate : %d\n", elem->state);
-	ft_printf("\tlast_state : %d\n", elem->last_state);
-	ft_printf("\tparent_type : %s\n", ui_element_type_to_string(elem->parent_type));
-	if (elem->parent_type == UI_TYPE_ELEMENT)
-	{
-		ft_printf("\tparent element_type : %s\n", ui_element_type_to_string(((t_ui_element *)elem->parent)->element_type));
-		ft_printf("\tparent z : %d\n", ((t_ui_element *)elem->parent)->z);
-	}
-	ft_printf("\tz : %d\n", elem->z);
-	ft_printf("\tfigure_out_z : %d\n", elem->figure_out_z);
-	ft_printf("\tshow : %d\n", elem->show);
-	ft_printf("\tevent : %d\n", elem->event);
-	ft_printf("\tparent show : %d\n", *elem->parent_show);
-	ft_printf("\tis_hover : %d\n", elem->is_hover);
-	ft_printf("\tis_click : %d\n", elem->is_click);
-	ft_printf("\tis_toggle : %d\n", elem->is_toggle);
-	ft_printf("\twas_click : %d\n", elem->was_click);
-	ft_printf("\ttexture_recreate : %d\n", elem->texture_recreate);
-	ft_printf("\telement_type : %s\n", ui_element_type_to_string(elem->element_type));
-	ft_printf("\trendered_last_frame : %d\n", elem->rendered_last_frame);
-	ft_printf("\trender_me_on_parent : %d\n", elem->render_me_on_parent);
-	ft_printf("\tis_a_part_of_another : %d\n", elem->is_a_part_of_another);
-	if (g_acceptable[elem->element_type].printer)
-		g_acceptable[elem->element_type].printer(elem);
 }
 
 int	ui_element_type_from_string(char *str)
