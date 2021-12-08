@@ -41,8 +41,8 @@ void	ui_menu_edit(t_ui_element *elem, t_ui_recipe *recipe)
 
 	if (elem->element_type != UI_TYPE_MENU)
 	{
-		ft_printf("[%s] The elem given is not a menu.\n", __FUNCTION__);
-		ui_element_print(elem);
+		ft_printf("[%s] Elem not of type UI_TYPE_MENU. %d %s.\n",
+			__FUNCTION__, ui_element_type_to_string(elem->element_type));
 		return ;
 	}
 	menu = elem->element;

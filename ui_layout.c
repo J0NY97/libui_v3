@@ -313,19 +313,6 @@ void	make_elements_from_family(t_list **list, t_ui_window *win, void *parent, in
 	add_to_list(list, elem, UI_TYPE_ELEMENT); // this should be done here so that in the end, the parent will be rendered before children;
 }
 
-void	print_all_elements_in_list(t_list *list)
-{
-	int	i;
-
-	i = -1;
-	while (list)
-	{
-		ft_printf("[%s] #%d", __FUNCTION__, ++i);
-		ui_element_print(list->content);
-		list = list->next;
-	}
-}
-
 /*
  * This goes through family and searches for window as the head parent,
  * since all elements need a window, to be created.

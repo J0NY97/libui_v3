@@ -139,7 +139,7 @@ void	ui_button_print(t_ui_element *elem)
 	button = ui_button_get_button(elem);
 	if (!button)
 		return ;
-	ui_element_print(&button->label);
+	ui_label_print(&button->label);
 }
 
 /*

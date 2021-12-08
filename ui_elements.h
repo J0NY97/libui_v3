@@ -322,7 +322,6 @@ void					ui_element_image_set_from_path(t_ui_element *elem, int state, char *ima
 void					ui_element_remove_child_from_parent(t_ui_element *elem);
 void					ui_element_set_parent(t_ui_element *elem, void *parent, int type);
 void					ui_element_set_id(t_ui_element *elem, char *id);
-void					ui_element_print(t_ui_element *elem);
 t_vec4i					ui_element_screen_pos_get(t_ui_element *elem);
 int						ui_element_type_from_string(char *str);
 const char				*ui_element_type_to_string(int type);

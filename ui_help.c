@@ -183,7 +183,6 @@ char	**ft_strsplitwhitespace(char *str)
 
 	if (!str)
 		return (NULL);
-	i = -1;
 	arr = malloc(sizeof(char *) * (actual_word_count(str) + 1));
 	prev_i = 0;
 	i = -1;
@@ -204,6 +203,28 @@ char	**ft_strsplitwhitespace(char *str)
 	return (arr);
 }
 
+char	*create_final(char **arr)
+{
+	char	*final;
+	char	*trim;
+	int		i;
+
+	final = NULL;
+	i = -1;
+	while (arr[++i])
+	{
+		trim = ft_strtrim(arr[i]);
+		if (!trim)
+			continue ;
+		ft_stradd(&final, trim);
+		if (arr[i + 1])
+			ft_straddchar(&final, ' ');
+		ft_strdel(&trim);
+	}
+	ft_arraydel(arr);
+	return (final);
+}
+
 /*
  * Remove all whitespace at the ends,
  * replace all whitespace with space,
@@ -211,39 +232,22 @@ char	**ft_strsplitwhitespace(char *str)
 */
 char	*ft_supertrim(char *str)
 {
-	char	*final;
 	char	*trim;
-	char	*tram;
 	char	**arr;
-	int		i;
 
 	if (!str)
 		return (NULL);
 	trim = ft_strtrim(str);
 	if (!trim)
 		return (NULL);
-	if (trim[0] && trim[0] == '/'
-		&& trim[1] && trim[1] == '/')
+	if (trim[0] && trim[0] == '/' && trim[1] && trim[1] == '/')
 	{
 		ft_strdel(&trim);
 		return (NULL);
 	}
 	arr = ft_strsplitwhitespace(trim);
 	ft_strdel(&trim);
-	final = NULL;
-	i = -1;
-	while (arr[++i])
-	{
-		tram = ft_strtrim(arr[i]);
-		if (!tram)
-			continue ;
-		ft_stradd(&final, tram);
-		if (arr[i + 1])
-			ft_straddchar(&final, ' ');
-		ft_strdel(&tram);
-	}
-	ft_arraydel(arr);
-	return (final);
+	return (create_final(arr));
 }
 
 char	**ft_strsplitfirstoccurence(char *str, char c)
