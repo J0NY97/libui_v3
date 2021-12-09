@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/09 12:33:03 by nneronin         ###   ########.fr        #
+#    Updated: 2021/12/09 13:40:51 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -56,7 +56,7 @@ INCLUDES =		-I $(LIB_DIR)/libft \
 				-F $(LIB_DIR)/SDL_Frameworks
 
 all: thing $(ODIR) $(NAME)
-	@printf ${GREEN}"\e[J> $(NAME) ready!\n"${RESET}
+	@printf $(GREEN)"\e[J[INFO] $(NAME) ready!\n"$(RESET)
 
 $(ODIR):
 	@mkdir -p $@
@@ -75,11 +75,11 @@ $(NAME): $(OBJS)
 	@ranlib $(NAME)
 
 clean: 
-	@printf ${CYAN}"[INFO] Removing objs.\n"${RESET}
+	@printf $(CYAN)"[INFO] $(NAME) cleaned!\n"$(RESET)
 	@rm -rf $(ODIR)
 
 fclean: clean
-	@printf ${CYAN}"[INFO] Removing $(NAME)\n"${RESET}
+	
 	@rm $(NAME)
 
 re: fclean all
