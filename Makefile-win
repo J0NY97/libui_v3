@@ -45,11 +45,13 @@ $(ODIR)/%.o: $(CDIR)/%.c
 		$(SDL_INC)
 	@printf $(YELLOW)"\e[F\e[JCompiling $<\n"$(RESET)
 
-$(NAME): $(OBJS)
-	@sh ui_path_win.sh
+$(NAME): thing $(OBJS)
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)
 	@echo "$(NAME) was successfully created."
+
+thing:
+	@sh ui_path_win.sh
 
 clean:
 	@rm -f $(OBJS)
