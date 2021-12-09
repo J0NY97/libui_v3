@@ -123,13 +123,13 @@ void	ui_input_add(t_ui_element *elem, char *str)
 
 	input = elem->element;
 	label = ui_input_get_label(elem);
+	ui_input_remove_selected(elem);
 	if (input->input_type == 1)
 		temp = str_remove_all_letters(str);
 	else if (input->input_type == 2)
 		temp = str_remove_all_numbers(str);
 	else
 		temp = ft_strdup(str);
-	ui_input_remove_selected(elem);
 	insert_str_after_nth_char(&label->text, temp, input->cursor_on_char_num);
 	input->cursor_on_char_num += ft_strlen(temp);
 	input->cursor_from_char_num = input->cursor_on_char_num;
@@ -245,10 +245,6 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				}
 				else
 					remove_str_from_n_to_m(&label->text, small, big);
-				/*
-				input->cursor_on_char_x = small;
-				input->cursor_from_char_x = small;
-				*/
 			}
 			else if (!(KMOD_LSHIFT & SDL_GetModState()))
 				ui_input_remove_selected(elem);

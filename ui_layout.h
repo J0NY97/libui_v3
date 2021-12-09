@@ -107,3 +107,9 @@ void				ui_layout_free(t_ui_layout *layout);
 ///////////////
 void				ui_recipe_free(void *recipe, size_t size);
 void				ui_recipe_print(t_ui_recipe *recipe);
+
+///////////////
+// Family
+///////////////
+t_ui_family			*make_family_from_string(char *str);
+void				make_elements_from_family(t_list **list, t_ui_window *win, void *parent, int parent_type, t_ui_family *family);
