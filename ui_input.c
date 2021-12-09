@@ -245,6 +245,10 @@ void	ui_input_event(t_ui_element *elem, SDL_Event e)
 				}
 				else
 					remove_str_from_n_to_m(&label->text, small, big);
+				/*
+				input->cursor_on_char_x = small;
+				input->cursor_from_char_x = small;
+				*/
 			}
 			else if (!(KMOD_LSHIFT & SDL_GetModState()))
 				ui_input_remove_selected(elem);

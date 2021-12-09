@@ -36,7 +36,6 @@ void	ui_layout_render(t_ui_layout *layout)
 void	ui_layout_load(t_ui_layout *layout, char *file)
 {
 	memset(layout, 0, sizeof(t_ui_layout));
-
 	layout_read_file(layout, file);
 	if (layout->layout_file_content == NULL)
 		return ;
@@ -45,7 +44,7 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	layout_compile_elements(layout);
 	if (!layout->style_file)
 	{
-		ft_printf("[%s] We have no style file given, so lets just then dont do anything.\n", __FUNCTION__);
+		ft_printf("[%s] No style file given. Skipping\n", __FUNCTION__);
 		return ;
 	}
 	layout_read_style(layout);
@@ -60,27 +59,25 @@ int	get_special(t_ui_layout *layout, char *str)
 {
 	char	**arr;
 	int		result;
+	char	*temp;
 
 	result = 0;
 	arr = ft_strsplitfirstoccurence(str, ':');
-	if (!arr || !arr[0] || !arr[1])
+	if (arr && arr[0] && arr[1])
 	{
-		ft_arraydel(arr);
-		return (0);
-	}
-	ft_strtrimwholearr(arr);
-	if (ft_strequ(arr[0], "style"))
-	{
-		layout->style_file = ft_strndup(arr[1], ft_strlen(arr[1]) - 1); // remove ';' from the end;
-		result = 1;
-	}
-	else if (ft_strequ(arr[0], "resource_dir"))
-	{
-		char	*temp;
-		temp = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
-		layout->resource_dirs = ft_arradd(layout->resource_dirs, temp);
-		ft_strdel(&temp);
-		result = 1;
+		ft_strtrimwholearr(arr);
+		if (ft_strequ(arr[0], "style"))
+		{
+			layout->style_file = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
+			result = 1;
+		}
+		else if (ft_strequ(arr[0], "resource_dir"))
+		{
+			temp = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
+			layout->resource_dirs = ft_arradd(layout->resource_dirs, temp);
+			ft_strdel(&temp);
+			result = 1;
+		}
 	}
 	ft_arraydel(arr);
 	return (result);
@@ -95,24 +92,21 @@ char	*get_file_content(t_ui_layout *layout, char *file)
 	FILE	*fd;
 
 	fd = fopen(file, "r");
-	if (!fd)
-	{
-		ft_printf("[%s] Couldn\'t open file <%s>\n", __FUNCTION__, file);
-		return (NULL);
-	}
 	line = NULL;
 	content = NULL;
-	while (1)
+	while (fd)
 	{
 		if (getline(&line, &len, fd) == -1)
 			break ;
 		trim = ft_supertrim(line);
-		if (trim != NULL && !get_special(layout, trim)) // whole line was trimmed if is NULL (could happen if the line was a comment);
+		if (trim != NULL && !get_special(layout, trim))
 			ft_stradd(&content, trim);
 		ft_strdel(&trim);
 	}
 	ft_strdel(&line);
 	fclose(fd);
+	if (!content)
+		ft_printf("[%s] Couldn\'t open file <%s>\n", __FUNCTION__, file);
 	return (content);
 }
 
@@ -120,41 +114,60 @@ void	layout_read_file(t_ui_layout *layout, char *file)
 {
 	layout->layout_file = ft_strdup(file);
 	layout->layout_file_content = get_file_content(layout, file);
-	ft_printf("[%s] %s : \nContent: %s\n", __FUNCTION__, layout->layout_file, layout->layout_file_content);
+}
+
+/*
+ * Returns how many 'global' elements in the file;
+ * One global elem is where the string ends in ';' and
+ * the '{' count matches '}' count;
+*/
+void	elems_in_string(char *str, int *elem_pos, int *amount)
+{
+	int	i;
+	int	close;
+	int	open;
+	int	prev_i;
+
+	i = -1;
+	open = 0;
+	close = 0;
+	prev_i = 0;
+	*amount = 0;
+	while (str[++i])
+	{
+		if (str[i] == ';' && open == close)
+		{
+			elem_pos[*amount] = prev_i;
+			elem_pos[*amount + 1] = i - prev_i + 1;
+			prev_i = i + 1;
+			*amount += 2;
+		}
+		else if (str[i] == '{')
+			open++;
+		else if (str[i] == '}')
+			close++;
+	}
 }
 
 char	**split_string_into_array(char *str)
 {
 	char	**final;
-	int	i;
-	int	j;
-	int	opening;
-	int	closing;
-	int	prev_i;
-	int	elem_count;
+	int		i;
+	int		elem_count;
+	int		elem_pos[1024];
+	int		amount;
 
-	i = -1;
-	j = -1;
-	opening = 0;
-	closing = 0;
-	prev_i = 0;
-	elem_count = 0;
-	final = malloc(sizeof(char *) * 1);
-	while (str[++i])
+	i = 0;
+	elem_count = -1;
+	amount = 0;
+	elems_in_string(str, elem_pos, &amount);
+	final = malloc(sizeof(char *) * ((amount / 2) + 1));
+	while (i < amount)
 	{
-		if (str[i] == ';' && opening == closing)
-		{
-			final = realloc(final, sizeof(char *) * ++elem_count);
-			final[elem_count - 1] = ft_strsub(str, prev_i, i - prev_i + 1);
-			prev_i = i + 1;
-		}
-		else if (str[i] == '{')
-			opening++;
-		else if (str[i] == '}')
-			closing++;
+		final[++elem_count] = ft_strsub(str, elem_pos[i], elem_pos[i + 1]);
+		i += 2;
 	}
-	final = realloc(final, sizeof(char *) * ++elem_count);
-	final[elem_count - 1] = 0;
+	final[++elem_count] = 0;
 	return (final);
 }
 

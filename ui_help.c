@@ -301,20 +301,6 @@ void	ft_strtrimwholearr(char **arr)
 	}
 }
 
-void	ft_putarr(char **arr)
-{
-	int	i;
-
-	if (!arr)
-		return ;
-	i = -1;
-	while (arr[++i])
-	{
-		ft_putstr(arr[i]);
-		ft_putchar('\n');
-	}
-}
-
 char	**ft_arrdup(char **src)
 {
 	char	**dest;
