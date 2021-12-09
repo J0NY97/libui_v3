@@ -34,6 +34,17 @@ SDL_Rect	create_sdl_rect(int x, int y, int w, int h)
 	return ((SDL_Rect){x, y, w, h});
 }
 
+SDL_Color	rgba_to_sdl_color(t_rgba rgba)
+{
+	SDL_Color	color;
+
+	color.r = rgba.r;
+	color.g = rgba.g;
+	color.b = rgba.b;
+	color.a = rgba.a;
+	return (color);
+}
+
 t_rgba	hex_to_rgba(Uint32 color_hex)
 {
 	t_rgba	rgba;

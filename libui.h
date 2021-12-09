@@ -66,6 +66,7 @@ int						point_in_rect(t_vec2i point, t_vec4i rect);
 int						rect_in_rect(t_vec4i rect1, t_vec4i rect2);
 void					pointer_swap(void *p1, void *p2);
 SDL_Rect				create_sdl_rect(int x, int y, int w, int h);
+SDL_Color				rgba_to_sdl_color(t_rgba rgba);
 t_rgba					hex_to_rgba(Uint32 color_hex);
 Uint32					rgba_to_hex(t_rgba rgba);
 Uint32					ui_color_change_brightness(Uint32 orig_col, float procentage);
