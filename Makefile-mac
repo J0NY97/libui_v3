@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/09 10:38:33 by nneronin         ###   ########.fr        #
+#    Updated: 2021/12/09 12:33:03 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,54 +18,57 @@ MAGENTA	:= "\e[0;35m"
 CYAN	:= "\e[0;36m"
 RESET	:= "\e[0m"
 
-SRCS = ./ui_element.c \
-       ./ui_button.c \
-       ./ui_label.c \
-       ./ui_menu.c \
-       ./ui_checkbox.c \
-       ./ui_dropdown.c \
-       ./ui_slider.c \
-       ./ui_input.c \
-       ./ui_tab.c \
-       ./ui_scrollbar.c \
-       ./ui_radio.c \
-       ./ui_window.c \
-       ./ui_layout.c \
-       ./ui_recipe.c \
-       ./ui_texture.c \
-       ./ui_text_align.c \
-       ./ui_init.c \
-       ./ui_help.c \
-       ./ui_list.c \
-       ./ui_surface.c \
-       ./ui_vec.c
+SRCS = ui_element.c\
+       ui_button.c\
+       ui_label.c\
+       ui_menu.c\
+       ui_checkbox.c\
+       ui_dropdown.c\
+       ui_slider.c\
+       ui_input.c\
+       ui_tab.c\
+       ui_scrollbar.c\
+       ui_radio.c\
+       ui_window.c\
+       ui_layout.c\
+       ui_recipe.c\
+       ui_texture.c\
+       ui_text_align.c\
+       ui_init.c\
+       ui_help.c\
+       ui_list.c\
+       ui_surface.c\
+       ui_vec.c
 
 NAME = libui.a
-OBJS = $(SRCS:.c=.o)
-JOHNNY = $(SRCS:.c=.d)
-
-LIB_FOLDER	:= ../
-SDL_DIR		:= $(LIB_FOLDER)/SDL_Frameworks
-SDL_MAIN	:= -I$(SDL_DIR)/SDL2.framework/Headers
-SDL_IMAGE	:= -I$(SDL_DIR)/SDL2_image.framework/Headers
-SDL_TTF		:= -I$(SDL_DIR)/SDL2_ttf.framework/Headers
-SDL_INC		:= $(SDL_MAIN) $(SDL_IMAGE) $(SDL_TTF) -F$(SDL_DIR)
-
-ODIR = .
+ODIR = obj
 CDIR = .
+OBJS = $(addprefix $(ODIR)/,$(SRCS:.c=.o))
+JOHNNY = $(SRCS:.c=.d)
+CFLAGS = -MMD #-Wall -Wextra
 
-all: thing $(NAME)
+LIB_DIR =		../
+INCLUDES =		-I $(LIB_DIR)/libft \
+				-I $(LIB_DIR)/libpf \
+				-I $(LIB_DIR)/SDL_Frameworks/SDL2.framework/Headers \
+				-I $(LIB_DIR)/SDL_Frameworks/SDL2_image.framework/Headers \
+				-I $(LIB_DIR)/SDL_Frameworks/SDL2_ttf.framework/Headers \
+				-F $(LIB_DIR)/SDL_Frameworks
+
+all: thing $(ODIR) $(NAME)
 	@printf ${GREEN}"\e[J> $(NAME) ready!\n"${RESET}
 
--include $(DEP)
+$(ODIR):
+	@mkdir -p $@
+
+-include $(JOHNNY)
 
 thing:
 	@sh ./ui_path_mac.sh
 
 $(ODIR)/%.o: $(CDIR)/%.c
 	@printf $(YELLOW)"\e[JCompiling $<\n\e[F"$(RESET)
-	@gcc -c $< -o $@ -MMD -I$(LIB_FOLDER)/libpf \
-		-I$(LIB_FOLDER)/libft $(CFLAGS) $(SDL_INC)
+	@gcc -c $< -o $@ $(INCLUDES) $(CFLAGS) $(SDL_INC)
 
 $(NAME): $(OBJS)
 	@ar rc $(NAME) $(OBJS)
@@ -73,7 +76,7 @@ $(NAME): $(OBJS)
 
 clean: 
 	@printf ${CYAN}"[INFO] Removing objs.\n"${RESET}
-	@rm -rf $(OBJS) $(JOHNNY)
+	@rm -rf $(ODIR)
 
 fclean: clean
 	@printf ${CYAN}"[INFO] Removing $(NAME)\n"${RESET}
