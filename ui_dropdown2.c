@@ -42,7 +42,6 @@ int	ui_dropdown_exit(t_ui_element *elem)
 	return (((t_ui_dropdown *)elem->element)->drop_exit);
 }
 
-
 char	*ui_dropdown_active_text(t_ui_element *elem)
 {
 	t_ui_element	*active;

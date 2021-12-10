@@ -108,11 +108,69 @@ void				ui_layout_free(t_ui_layout *layout);
 void				ui_recipe_free(void *recipe, size_t size);
 void				ui_recipe_print(t_ui_recipe *recipe);
 
+void				try_getting_xywh_separate(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_xywh(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_text_pos(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_bgcolor_separate(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_bgcolor(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_bgimage_separate(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_bgimage(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_z_show(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_text_stuff2(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_text_stuff(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_value(t_ui_recipe *recipe, char **key_value);
+void				try_getting_flags(t_ui_recipe *recipe, char **key_value);
+void				try_getting_input_stuff(t_ui_recipe *recipe,
+						char **key_value);
+void				try_getting_scrollbar_stuff(t_ui_recipe *recipe,
+						char **key_value);
+void				fill_recipe_from_args(t_ui_recipe *recipe, char **args);
+
+void				recipe_pos_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_bgcolor_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_bgimage_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_z_show_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_text_stuff_set_fill2(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_text_stuff_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_value_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				recipe_flag_set_fill(t_ui_recipe *target,
+						t_ui_recipe *child);
+void				fill_recipe_from_recipe(t_ui_recipe *target,
+						t_ui_recipe *child);
+
 ///////////////
 // Family
 ///////////////
 t_ui_family			*make_family_from_string(char *str);
 void				make_elements_from_family(t_list **list, void *parent,
 						int parent_type, t_ui_family *family);
+void				ui_family_free(void *family, size_t size);
+
+void				make_family_from_children(t_list **list, void *parent,
+						int parent_type, t_ui_family *family);
+
+///////////////
+// Help
+///////////////
+char				**split_string_into_array(char *str);
+int					actual_word_count(char *str);
+char				*get_file_content(t_ui_layout *layout, char *file);
 
 #endif

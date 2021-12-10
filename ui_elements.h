@@ -453,6 +453,19 @@ void					ui_input_set_placeholder_text(t_ui_element *elem,
 int						ui_input_exit(t_ui_element *elem);
 void					ui_input_remove_selected(t_ui_element *elem);
 void					ui_input_add(t_ui_element *elem, char *str);
+void					remove_str_from_n_to_m(char **dest, int n, int m);
+void					ui_input_remove(t_ui_input *input, t_ui_label *label,
+							SDL_Event e);
+char					*str_remove_all_numbers(char *str);
+char					*str_remove_all_letters(char *str);
+void					insert_str_after_nth_char(char **dest, char *src,
+							int n);
+
+void					ui_input_key_events(t_ui_element *elem, SDL_Event e);
+void					ui_input_ctrl_events(t_ui_element *elem,
+							t_ui_input *input, t_ui_label *label, SDL_Event e);
+void					ui_input_mouse_events(t_ui_element *elem,
+							t_ui_input *input, t_ui_label *lbl, SDL_Event e);
 
 // Slider
 void					ui_slider_new(t_ui_window *win, t_ui_element *elem);
