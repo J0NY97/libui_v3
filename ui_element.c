@@ -500,6 +500,7 @@ void	ui_element_remove_from_list(t_ui_element *elem, t_list **list)
 	}
 }
 
+/*
 void	ui_element_print(t_ui_element *elem)
 {
 	if (!elem)
@@ -550,3 +551,4 @@ ui_element_type_to_string(((t_ui_element *)elem->parent)->element_type));
 	if (g_acceptable[elem->element_type].printer)
 		g_acceptable[elem->element_type].printer(elem);
 }
+*/

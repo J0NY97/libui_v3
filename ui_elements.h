@@ -403,6 +403,7 @@ char					*ui_dropdown_active_text(t_ui_element *elem);
 
 // Input
 void					ui_input_new(t_ui_window *win, t_ui_element *elem);
+void					ui_input(t_ui_element *elem, SDL_Event e);
 void					ui_input_edit(t_ui_element *elem, t_ui_recipe *recipe);
 void					ui_input_event(t_ui_element *elem, SDL_Event e);
 int						ui_input_render(t_ui_element *elem);
