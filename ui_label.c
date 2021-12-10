@@ -19,6 +19,26 @@ void	ui_label_new(t_ui_window *win, t_ui_element *label)
 	lab->texture_recreate = 1;
 }
 
+void	ui_label_edit_helper(
+	t_ui_element *elem, t_ui_label *label, t_ui_recipe *recipe)
+{
+	if (recipe->title && !recipe->remove_title)
+		ui_label_set_text(elem, recipe->title);
+	if (recipe->remove_title)
+	{
+		ft_strdel(&label->text);
+		label->text = ft_strnew(0);
+	}
+	if (recipe->text_color_set)
+		ui_label_color_set(elem, recipe->text_color);
+	if (recipe->text_size_set)
+		ui_label_size_set(elem, recipe->text_size);
+	if (recipe->text_align_set)
+		ui_label_text_align(elem, recipe->text_align);
+	if (recipe->font)
+		ui_label_font_set(elem, recipe->font);
+}
+
 /*
  * TODO:
  *	1. at some point only remove text aligns that dont make sense;
@@ -35,21 +55,7 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (!elem || elem->element_type != UI_TYPE_LABEL)
 		return ;
 	label = elem->element;
-	if (recipe->title && !recipe->remove_title)
-		ui_label_set_text(elem, recipe->title);
-	if (recipe->remove_title)
-	{
-		ft_strdel(&label->text);
-		label->text = ft_strnew(0);
-	}
-	if (recipe->text_color_set)
-		ui_label_color_set(elem, recipe->text_color);
-	if (recipe->text_size_set)
-		ui_label_size_set(elem, recipe->text_size);
-	if (recipe->text_align_set)
-		ui_label_text_align(elem, recipe->text_align);
-	if (recipe->font)
-		ui_label_font_set(elem, recipe->font);
+	ui_label_edit_helper(elem, label, recipe);
 	pos = elem->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
