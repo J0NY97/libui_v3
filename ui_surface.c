@@ -113,7 +113,8 @@ void	ui_surface_draw_border(
  * http://elynxsdk.free.fr/ext-docs/Rasterization/Lines/Lines%20algorithms.htm
  * http://www.edepot.com/lined.html
 */
-void	ui_surface_line_draw(
+/*
+void	ui_surface_line_draw_non_norme(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
 {
 	bool	y_longer;
@@ -124,20 +125,13 @@ void	ui_surface_line_draw(
 	float	dec_inc;
 	float	j;
 	int		i;
-	float	temp;
 
 	y_longer = false;
 	short_len = p2.y - p1.y;
 	long_len = p2.x - p1.x;
-	j = 0;
-	i = 0;
 	y_longer = fabsf(short_len) > fabsf(long_len);
 	if (y_longer)
-	{
-		temp = short_len;
-		short_len = long_len;
-		long_len = temp;
-	}
+		ft_fswap(&short_len, &long_len);
 	end_val = long_len;
 	increment_val = 1;
 	if (long_len < 0)
@@ -148,11 +142,13 @@ void	ui_surface_line_draw(
 	dec_inc = 0;
 	if (long_len != 0)
 		dec_inc = short_len / long_len;
+	j = 0;
+	i = 0;
 	if (y_longer)
 	{
 		while (i != end_val)
 		{
-			ui_surface_pixel_set(surface, p1.x + (int)j, p1.y + i, color);
+			ui_surface_pixel_set(surface, p1.x + j, p1.y + i, color);
 			j += dec_inc;
 			i += increment_val;
 		}
@@ -164,6 +160,86 @@ void	ui_surface_line_draw(
 		j += dec_inc;
 		i += increment_val;
 	}
+}
+*/
+
+static inline void	helperson(
+	t_vec2 *short_long, t_vec2i *inc_end, float *dec_inc)
+{
+	inc_end->y = short_long->y;
+	inc_end->x = 1;
+	if (short_long->y < 0)
+	{
+		inc_end->x = -1;
+		short_long->y = -short_long->y;
+	}
+	*dec_inc = 0;
+	if (short_long->y != 0)
+		*dec_inc = short_long->x / short_long->y;
+}
+
+static inline void	drawelson_yshorter(
+	SDL_Surface *surface, t_vec2i p, t_vec2i inc_end, float dec_inc)
+{
+	float	j;
+	int		i;
+	Uint32	*color;
+
+	j = 0;
+	i = 0;
+	color = surface->userdata;
+	while (i != inc_end.y)
+	{
+		ui_surface_pixel_set(surface, p.x + i, p.y + j, *color);
+		j += dec_inc;
+		i += inc_end.x;
+	}
+}
+
+static inline void	drawelson_ylonger(
+	SDL_Surface *surface, t_vec2i p, t_vec2i inc_end, float dec_inc)
+{
+	float	j;
+	int		i;
+	Uint32	*color;
+
+	j = 0;
+	i = 0;
+	color = surface->userdata;
+	while (i != inc_end.y)
+	{
+		ui_surface_pixel_set(surface, p.x + j, p.y + i, *color);
+		j += dec_inc;
+		i += inc_end.x;
+	}
+}
+
+/*
+ * t_vec2 short_long; x == short_len, y == long_len;
+ * t_vec2i inc_end; x == increment_val, y == end_val;
+*/
+void	ui_surface_line_draw(
+		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
+{
+	bool	y_longer;
+	float	dec_inc;
+	t_vec2	short_long;
+	t_vec2i	inc_end;
+
+	y_longer = false;
+	short_long.x = p2.y - p1.y;
+	short_long.y = p2.x - p1.x;
+	y_longer = fabsf(short_long.x) > fabsf(short_long.y);
+	surface->userdata = &color;
+	if (y_longer)
+	{
+		ft_fswap(&short_long.x, &short_long.y);
+		helperson(&short_long, &inc_end, &dec_inc);
+		drawelson_ylonger(surface, p1, inc_end, dec_inc);
+		return ;
+	}
+	helperson(&short_long, &inc_end, &dec_inc);
+	drawelson_yshorter(surface, p1, inc_end, dec_inc);
 }
 
 // niklas version
@@ -231,6 +307,7 @@ void	ui_surface_rect_draw(
  * tl	top, left
  * br	bot, right
 */
+/*
 void	ui_surface_rect_draw_thicc(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
@@ -257,6 +334,7 @@ void	ui_surface_rect_draw_thicc(
 			vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color);
 	}
 }
+*/
 
 void	ui_surface_rect_draw_filled(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
@@ -270,6 +348,7 @@ void	ui_surface_rect_draw_filled(
  * Filled : https://stackoverflow.com/a/1201227
  * Empty  : https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 */
+/*
 void	ui_surface_circle_draw(
 		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
@@ -308,30 +387,31 @@ void	ui_surface_circle_draw(
 		ui_surface_pixel_set(surface, orig.x - y, orig.y - x, color);
 	}
 }
+*/
 
 void	ui_surface_circle_draw_filled(
 		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
-	int	x;
-	int	y;
-	int	hh;
-	int	rx;
-	int	ph;
-	int	r_sqr;
+	t_vec2i	xy;
+	int		hh;
+	int		rx;
+	int		ph;
+	int		r_sqr;
 
 	r_sqr = r * r;
-	x = -r;
-	while (++x < r)
+	xy.x = -r;
+	while (++xy.x < r)
 	{
-		hh = sqrt(r_sqr - x * x);
-		rx = orig.x + x;
+		hh = sqrt(r_sqr - xy.x * xy.x);
+		rx = orig.x + xy.x;
 		ph = orig.y + hh;
-		y = orig.y - hh;
-		while (++y < ph)
-			ui_surface_pixel_set(surface, rx, y, color);
+		xy.y = orig.y - hh;
+		while (++xy.y < ph)
+			ui_surface_pixel_set(surface, rx, xy.y, color);
 	}
 }
 
+/*
 void	ui_surface_line_draw_thicc(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
@@ -356,3 +436,4 @@ void	ui_surface_line_draw_thicc(
 		ui_surface_line_draw_nik(surface, v0, v1, color);
 	}
 }
+*/
