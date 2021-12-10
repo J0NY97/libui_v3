@@ -12,14 +12,14 @@ typedef struct s_ui_acceptable
 	int				type;
 	void			(*freer)(void *elem, size_t size);
 	void			(*maker)(t_ui_window *win, t_ui_element *elem);
-	int				(*renderer)(t_ui_element *elem);
+	int				(*renderer)(t_ui_element	*elem);
 	void			(*eventer)(t_ui_element *elem, SDL_Event e);
 	void			(*edit)(t_ui_element *elem, t_ui_recipe *recipe);
-	void			(*printer)(t_ui_element *elem);
+	void			(*printer)(t_ui_element	*elem);
 	t_ui_element	*(*getter)(t_ui_element *elem, int ui_element_type);
 }				t_ui_acceptable;
 
-static const t_ui_acceptable g_acceptable[] =
+static const t_ui_acceptable	g_acceptable[] =
 {
 	{
 		.name = "Element",
@@ -28,7 +28,7 @@ static const t_ui_acceptable g_acceptable[] =
 		.maker = NULL,
 		.renderer = &ui_element_render,
 		.eventer = &ui_element_event,
-		.edit = NULL, //&ui_element_edit,
+		.edit = NULL,
 		.printer = NULL,
 		.getter = NULL
 	},
@@ -52,7 +52,7 @@ static const t_ui_acceptable g_acceptable[] =
 		.eventer = &ui_button_event,
 		.edit = &ui_button_edit,
 		.printer = &ui_button_print,
-		.getter = NULL //&ui_button_get , button doesnt need this, you can acess the label stuff anyways.
+		.getter = NULL
 	},
 	{
 		.name = "Menu",
