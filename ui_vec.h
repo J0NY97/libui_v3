@@ -8,49 +8,49 @@ typedef struct s_vec2
 {
 	union {
 		struct {
-			float x;
-			float y;
+			float	x;
+			float	y;
 		};
-		float v[VEC2_SIZE];
+		float	v[VEC2_SIZE];
 	};
-}					t_vec2;
+}	t_vec2;
 
 typedef struct s_vec2i
 {
 	union {
 		struct {
-			int x;
-			int y;
+			int	x;
+			int	y;
 		};
-		int v[VEC2_SIZE];
+		int	v[VEC2_SIZE];
 	};
-}					t_vec2i;
+}	t_vec2i;
 
 typedef struct s_vec4
 {
 	union {
 		struct {
-			float x;
-			float y;
-			float w;
-			float h;
+			float	x;
+			float	y;
+			float	w;
+			float	h;
 		};
-		float v[VEC4_SIZE];
+		float	v[VEC4_SIZE];
 	};
-}					t_vec4;
+}	t_vec4;
 
 typedef struct s_vec4i
 {
 	union {
 		struct {
-			int x;
-			int y;
-			int w;
-			int h;
+			int	x;
+			int	y;
+			int	w;
+			int	h;
 		};
-		int v[VEC4_SIZE];
+		int	v[VEC4_SIZE];
 	};
-}					t_vec4i;
+}	t_vec4i;
 
 // Vec2
 t_vec2				vec2(float x, float y);
