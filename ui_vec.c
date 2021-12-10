@@ -18,52 +18,6 @@ t_vec2i	vec2i(int x, int y)
 	return (v);
 }
 
-void	vec2i_swap(t_vec2i *v1, t_vec2i *v2)
-{
-	t_vec2i	temp;
-	int		i;
-
-	temp = *v1;
-	i = -1;
-	while (++i < VEC2_SIZE)
-		v1->v[i] = v2->v[i];
-	i = -1;
-	while (++i < VEC2_SIZE)
-		v2->v[i] = temp.v[i];
-}
-
-void	vec2_swap(t_vec2 *v1, t_vec2 *v2)
-{
-	t_vec2	temp;
-	int		i;
-
-	temp = *v1;
-	i = -1;
-	while (++i < VEC2_SIZE)
-		v1->v[i] = v2->v[i];
-	i = -1;
-	while (++i < VEC2_SIZE)
-		v2->v[i] = temp.v[i];
-}
-
-t_vec2i	vec2i_add(t_vec2i v1, t_vec2i v2)
-{
-	t_vec2i	v;
-
-	v.x = v1.x + v2.x;
-	v.y = v1.y + v2.y;
-	return (v);
-}
-
-t_vec2i	vec2i_sub(t_vec2i v1, t_vec2i v2)
-{
-	t_vec2i	v;
-
-	v.x = v1.x - v2.x;
-	v.y = v1.y - v2.y;
-	return (v);
-}
-
 //////////////////////
 // Vec4
 //////////////////////
@@ -90,117 +44,10 @@ t_vec4i	vec4i(int x, int y, int w, int h)
 	return (v);
 }
 
-void	vec4i_swap(t_vec4i *v1, t_vec4i *v2)
-{
-	t_vec4i	temp;
-	int		i;
-
-	temp = *v1;
-	i = -1;
-	while (++i < VEC4_SIZE)
-		v1->v[i] = v2->v[i];
-	i = -1;
-	while (++i < VEC4_SIZE)
-		v2->v[i] = temp.v[i];
-}
-
-void	vec4_swap(t_vec4 *v1, t_vec4 *v2)
-{
-	t_vec4	temp;
-	int		i;
-
-	temp = *v1;
-	i = -1;
-	while (++i < VEC4_SIZE)
-		v1->v[i] = v2->v[i];
-	i = -1;
-	while (++i < VEC4_SIZE)
-		v2->v[i] = temp.v[i];
-}
-
-void	print_vec(float *vec, size_t size)
-{
-	size_t	i;
-
-	i = -1;
-	ft_printf("vec { ");
-	while (++i < size)
-		ft_printf("%.2f ", vec[i]);
-	ft_printf("}\n");
-}
-
-void	print_veci(int *vec, size_t size)
-{
-	size_t	i;
-
-	i = -1;
-	ft_printf("vec { ");
-	while (++i < size)
-		ft_printf("%d ", vec[i]);
-	ft_printf("}\n");
-}
-
-int	compare_veci(int *vec1, int *vec2, size_t size)
-{
-	size_t	i;
-
-	i = -1;
-	while (++i < size)
-	{
-		if (vec1[i] != vec2[i])
-			return (0);
-	}
-	return (1);
-}
-
-int	compare_vec(float *vec1, float *vec2, size_t size)
-{
-	size_t	i;
-
-	i = -1;
-	while (++i < size)
-	{
-		if (vec1[i] != vec2[i])
-			return (0);
-	}
-	return (1);
-}
-
-t_vec4i	vec4_to_vec4i(t_vec4 src)
-{
-	return (vec4i(src.x, src.y, src.w, src.h));
-}
-
 int	vec2_in_vec4(t_vec2i v2, t_vec4i v4)
 {
 	if (v2.x >= v4.x && v2.y >= v4.y
 		&& v2.x < v4.x + v4.w && v2.y < v4.y + v4.h)
 		return (1);
 	return (0);
-}
-
-int	*veci_add(int *result, int *v1, int *v2, size_t size)
-{
-	size_t	ii;
-
-	ii = 0;
-	while (ii < size)
-	{
-		result[ii] = v1[ii] + v2[ii];
-		ii++;
-	}
-	return (result);
-}
-
-int	*veci_sub(int *result, int *v1, int *v2, size_t size)
-{
-	size_t	ii;
-
-	ii = 0;
-	while (ii < size)
-	{
-		result[ii] = v1[ii] - v2[ii];
-		ii++;
-	}
-	return (result);
 }
