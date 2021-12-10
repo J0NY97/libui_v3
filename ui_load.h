@@ -121,17 +121,6 @@ static const t_ui_acceptable g_acceptable[] =
 		.getter = NULL
 	},
 	{
-		.name = "Tab",
-		.type = UI_TYPE_TAB,
-		.freer = &ui_tab_free,
-		.maker = &ui_tab_new,
-		.renderer = &ui_tab_render,
-		.eventer = &ui_tab_event,
-		.edit = NULL,
-		.printer = NULL,
-		.getter = NULL
-	},
-	{
 		.name = "Scrollbar",
 		.type = UI_TYPE_SCROLLBAR,
 		.freer = &ui_scrollbar_free,
