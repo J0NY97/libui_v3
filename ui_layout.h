@@ -1,10 +1,18 @@
-#include "libui.h"
+#ifndef UI_LAYOUT_H
+# define UI_LAYOUT_H
+# include "libui.h"
 
 typedef struct s_ui_layout	t_ui_layout;
 typedef struct s_ui_element	t_ui_element;
 typedef struct s_ui_window	t_ui_window;
 typedef struct s_ui_recipe	t_ui_recipe;
 
+/*
+ * t_list	*windows;	t_ui_window;
+ * t_list	*elements;	t_ui_element;
+ * t_list	*families;	t_ui_family;
+ * t_list	*recipes;	t_ui_recipe;
+*/
 struct s_ui_layout
 {
 	char			*layout_file;
@@ -15,19 +23,20 @@ struct s_ui_layout
 	char			**style_recipe_strings;
 	t_list			*windows;
 	t_list			*elements;
-
-	t_list			*families;	// t_list of t_ui_family;
-	t_list			*recipes; // t_list of t_ui_recipe_v2;
-
+	t_list			*families;
+	t_list			*recipes;
 	char			**resource_dirs;
 };
 
+/*
+ * t_list	*children;	t_ui_family;
+*/
 typedef struct s_ui_family
 {
 	char			*id;
 	int				type;
 	char			**children_strings;
-	t_list			*children; // t_list of t_ui_family;
+	t_list			*children;
 }					t_ui_family;
 
 /*
@@ -42,14 +51,11 @@ typedef struct s_ui_recipe
 	char			*bg_images[UI_STATE_AMOUNT];
 	int				z;
 	bool			show;
-
 	bool			pos_set[VEC4_SIZE];
 	bool			bg_colors_set[UI_STATE_AMOUNT];
 	bool			bg_images_set[UI_STATE_AMOUNT];
 	bool			z_set;
 	bool			show_set;
-
-	// Label only
 	char			*title;
 	Uint32			text_color;
 	int				text_size;
@@ -64,20 +70,12 @@ typedef struct s_ui_recipe
 	bool			text_style_set;
 	bool			text_align_set;
 	bool			text_pos_set[VEC4_SIZE];
-
-	// Slider only
 	int				value[3];
 	int				value_set[3];
-
-	// Window / Menu only
 	char			**flags;
-
-	// Input only
 	bool			input_type_set;
 	Uint32			input_type;
 	char			*placeholder_text;
-
-	// Scrollbar only
 	char			*target;
 }					t_ui_recipe;
 
@@ -112,4 +110,7 @@ void				ui_recipe_print(t_ui_recipe *recipe);
 // Family
 ///////////////
 t_ui_family			*make_family_from_string(char *str);
-void				make_elements_from_family(t_list **list, void *parent, int parent_type, t_ui_family *family);
+void				make_elements_from_family(t_list **list, void *parent,
+						int parent_type, t_ui_family *family);
+
+#endif
