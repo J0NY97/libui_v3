@@ -71,15 +71,34 @@ void	ui_label_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	ui_element_pos_set(elem, pos);
 }
 
+void	ui_label_get_valid_font_path(t_ui_element *elem, t_ui_label *label)
+{
+	char	*temp;
+
+	if (access(label->font_path, F_OK))
+	{
+		temp = ui_layout_get_file_from_resource_dirs(elem->win->layout,
+			label->font_path);
+		if (temp)
+		{
+			ft_strdel(&label->font_path);
+			label->font_path = temp;
+		}
+	}
+
+}
+
 void	ui_label_texture_redo(t_ui_element *elem)
 {
 	t_ui_label	*label;
+	char		*temp;
 
 	label = elem->element;
 	if (elem->textures[UI_STATE_DEFAULT])
 		SDL_FreeSurface(elem->textures[UI_STATE_DEFAULT]);
 	if (elem->texture)
 		SDL_DestroyTexture(elem->texture);
+	ui_label_get_valid_font_path(elem, label);
 	elem->textures[UI_STATE_DEFAULT]
 		= ui_surface_create_from_text_recipe(elem->element);
 	if (!elem->textures[UI_STATE_DEFAULT])

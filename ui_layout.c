@@ -170,6 +170,8 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 	ft_printf("[%s] Recipe made.\n", __FUNCTION__);
 	layout_apply_style(layout);
 	ft_printf("[%s] Recipes applied.\n", __FUNCTION__);
+	ft_printf("[%s] Resource dirs.\n", __FUNCTION__);
+	ft_putarr(layout->resource_dirs);
 }
 
 /*
@@ -1082,7 +1084,7 @@ char	*ui_layout_get_file_from_resource_dirs(t_ui_layout *layout, char *file)
 	iii = -1;
 	while (layout->resource_dirs[++iii])
 	{
-		temp = ft_strjoin(layout->resource_dirs[++iii], file);
+		temp = ft_strjoin(layout->resource_dirs[iii], file);
 		if (!access(temp, F_OK))
 			return (temp);
 		ft_strdel(&temp);

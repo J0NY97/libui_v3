@@ -84,6 +84,8 @@ void	ui_texture_draw_border(
  * 2. ... if not found, try to find from UI_FONT_PATH/"font_name" ...
  * 3. ... if still not found, try to find default font.
  * 		IF this is not found, it's my fault.
+ *
+ * Seg faults if font_path == NULL;
 */
 char	*get_font_path(char *font_path)
 {
