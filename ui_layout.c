@@ -772,7 +772,6 @@ t_ui_recipe	*make_recipe_from_string(
 	return (recipe);
 }
 
-/*
 void	ui_recipe_print(t_ui_recipe *recipe)
 {
 	ft_printf("%s\n", recipe->id);
@@ -818,9 +817,11 @@ void	ui_recipe_print(t_ui_recipe *recipe)
 	if (recipe->bg_images_set[2])
 		ft_printf("bg_image_click : %s\n",
 			recipe->bg_images[UI_STATE_CLICK]);
+	ft_printf("flags : ");
+	ft_putarr(recipe->flags);
 	ft_printf("\n");
 }
-*/
+
 /*
  * These are done from the first to the last,
  * which means if you have a child recipe

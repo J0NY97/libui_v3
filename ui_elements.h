@@ -330,6 +330,7 @@ void					ui_element_remove_from_list(t_ui_element *elem, t_list **list);
 void					ui_element_textures_free(t_ui_element *elem);
 void					ui_element_images_free(t_ui_element *elem);
 void					ui_element_update_texture(t_ui_element *elem);
+void					ui_element_print(t_ui_element *elem);
 
 // Label
 void					ui_label_new(t_ui_window *win, t_ui_element *label);
