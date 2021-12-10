@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/06 12:03:34 by nneronin          #+#    #+#             */
-/*   Updated: 2021/12/10 19:24:03 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:27:23 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 #include "libpf.h"
 #include "fcntl.h"
 #include "sys/stat.h"
-#define SDL_MAIN_HANDLED
 #include "SDL.h"
+#define SDL_MAIN_HANDLED
 
 char	*build_non_rword_path(char *rword_path)
 {
