@@ -483,6 +483,248 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 	}
 }
 
+/***************************************
+ * FILL FROM ARGS
+***************************************/
+void	try_getting_xywh_separate(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "x"))
+	{
+		recipe->pos.v[0] = ft_atof(key_value[1]);
+		recipe->pos_set[0] = 1;
+	}
+	else if (ft_strequ(key_value[0], "y"))
+	{
+		recipe->pos.v[1] = ft_atof(key_value[1]);
+		recipe->pos_set[1] = 1;
+	}
+	else if (ft_strequ(key_value[0], "w"))
+	{
+		recipe->pos.v[2] = ft_atof(key_value[1]);
+		recipe->pos_set[2] = 1;
+	}
+	else if (ft_strequ(key_value[0], "h"))
+	{
+		recipe->pos.v[3] = ft_atof(key_value[1]);
+		recipe->pos_set[3] = 1;
+	}
+}
+
+void	try_getting_xywh(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "xywh"))
+	{
+		char	**pos;
+		int		pp;
+
+		pp = -1;
+		pos = ft_strsplit(key_value[1], ',');
+		while (++pp < VEC4_SIZE)
+		{
+			recipe->pos.v[pp] = ft_atof(pos[pp]);
+			recipe->pos_set[pp] = 1;
+		}
+		ft_arraydel(pos);
+	}
+}
+
+void	try_getting_text_pos(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "text_pos"))
+	{
+		char	**pos;
+		int		pp;
+
+		pp = -1;
+		pos = ft_strsplit(key_value[1], ',');
+		while (++pp < VEC4_SIZE)
+		{
+			recipe->text_pos.v[pp] = ft_atof(pos[pp]);
+			recipe->text_pos_set[pp] = 1;
+		}
+		ft_arraydel(pos);
+	}
+}
+
+void	try_getting_bgcolor(t_ui_recipe *recipe, char **key_value)
+{
+	int		jj;
+
+	if (ft_strequ(key_value[0], "bg_color"))
+	{
+		jj = -1;
+		while (++jj < UI_STATE_AMOUNT)
+		{
+			recipe->bg_colors[jj] = (unsigned int)strtoul(key_value[1], NULL, 16);
+			recipe->bg_colors_set[jj] = 1;
+		}
+	}
+	else if (ft_strequ(key_value[0], "bg_color_default"))
+	{
+		recipe->bg_colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_DEFAULT] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_color_hover"))
+	{
+		recipe->bg_colors[UI_STATE_HOVER] = (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_HOVER] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_color_click"))
+	{
+		recipe->bg_colors[UI_STATE_CLICK] = (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_CLICK] = 1;
+	}
+}
+
+void	try_getting_bgimage(t_ui_recipe *recipe, char **key_value)
+{
+	int	jj;
+
+	if (ft_strequ(key_value[0], "bg_image"))
+	{
+		jj = -1;
+		while (++jj < UI_STATE_AMOUNT)
+		{
+			if (recipe->bg_images_set[jj])
+				ft_strdel(&recipe->bg_images[jj]);
+			recipe->bg_images[jj] = ft_strdup(key_value[1]);
+			recipe->bg_images_set[jj] = 1;
+		}
+	}
+	else if (ft_strequ(key_value[0], "bg_image_default"))
+	{
+		if (recipe->bg_images_set[UI_STATE_DEFAULT])
+			ft_strdel(&recipe->bg_images[UI_STATE_DEFAULT]);
+		recipe->bg_images[UI_STATE_DEFAULT] = ft_strdup(key_value[1]);
+		recipe->bg_images_set[UI_STATE_DEFAULT] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_image_hover"))
+	{
+		if (recipe->bg_images_set[UI_STATE_HOVER])
+			ft_strdel(&recipe->bg_images[UI_STATE_HOVER]);
+		recipe->bg_images[UI_STATE_HOVER] = ft_strdup(key_value[1]);
+		recipe->bg_images_set[UI_STATE_HOVER] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_image_click"))
+	{
+		if (recipe->bg_images_set[UI_STATE_CLICK])
+			ft_strdel(&recipe->bg_images[UI_STATE_CLICK]);
+		recipe->bg_images[UI_STATE_CLICK] = ft_strdup(key_value[1]);
+		recipe->bg_images_set[UI_STATE_CLICK] = 1;
+	}
+}
+
+void	try_getting_z_show(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "z"))
+	{
+		recipe->z = ft_atoi(key_value[1]);
+		recipe->z_set = 1;
+	}
+	else if (ft_strequ(key_value[0], "show"))
+	{
+		recipe->show = ft_atoi(key_value[1]);
+		recipe->show_set = 1;
+	}
+}
+
+void	try_getting_text_stuff(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "title"))
+	{
+		if (recipe->title)
+			ft_strdel(&recipe->title);
+		if (!key_value[1])
+			recipe->remove_title = 1;
+		else
+			recipe->title = ft_strdup(key_value[1]);
+	}
+	else if (ft_strequ(key_value[0], "text_color"))
+	{
+		recipe->text_color = (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->text_color_set = 1;
+	}
+	else if (ft_strequ(key_value[0], "text_size"))
+	{
+		recipe->text_size = ft_atoi(key_value[1]); // should we check if this number is something that makes sense;
+		recipe->text_size_set = 1;
+	}
+	else if (ft_strequ(key_value[0], "font"))
+	{
+		if (recipe->font)
+			ft_strdel(&recipe->font);
+		recipe->font = ft_strdup(key_value[1]);
+	}
+	else if (ft_strequ(key_value[0], "text_align"))
+	{
+		recipe->text_align = text_align_getter(key_value[1]);
+		recipe->text_align_set = 1;
+	}
+}
+
+void	try_getting_value(t_ui_recipe *recipe, char **key_value)
+{
+	int	jj;
+
+	if (ft_strequ(key_value[0], "value") || ft_strequ(key_value[0], "values"))
+	{
+		char	**values;
+
+		jj = -1;
+		values = ft_strsplit(key_value[1], ',');
+		while (++jj < 3)
+		{
+			recipe->value[jj] = ft_atoi(values[jj]);
+			recipe->value_set[jj] = 1;
+		}
+		ft_arraydel(values);
+	}
+}
+
+void	try_getting_flags(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
+	{
+		char	**flags = ft_strsplit(key_value[1], ' ');
+		char	**final_flags = ft_arrjoin(recipe->flags, flags);
+		ft_arraydel(flags);
+		ft_arraydel(recipe->flags);
+		recipe->flags = final_flags;
+	}
+}
+
+void	try_getting_input_stuff(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "type"))
+	{
+		if (ft_strequ(key_value[1], "numbers"))
+		{
+			recipe->input_type = 1;
+			recipe->input_type_set = 1;
+		}
+		else if (ft_strequ(key_value[1], "letters"))
+		{
+			recipe->input_type = 2;
+			recipe->input_type_set = 1;
+		}
+		else if (ft_strequ(key_value[1], "everything"))
+		{
+			recipe->input_type = 0;
+			recipe->input_type_set = 1;
+		}
+	}
+	else if (ft_strequ(key_value[0], "target"))
+	{
+		recipe->target = ft_strdup(key_value[1]);
+	}
+	else if (ft_strequ(key_value[0], "placeholder"))
+	{
+		if (recipe->placeholder_text)
+			ft_strdel(&recipe->placeholder_text);
+		recipe->placeholder_text = ft_strdup(key_value[1]);
+	}
+}
+
 void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 {
 	int		i;
@@ -496,6 +738,17 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 	{
 		key_value = ft_strsplitfirstoccurence(args[i], ':');
 		ft_strtrimwholearr(key_value);
+		try_getting_xywh_separate(recipe, key_value);
+		try_getting_xywh(recipe, key_value);
+		try_getting_text_pos(recipe, key_value);
+		try_getting_bgcolor(recipe, key_value);
+		try_getting_bgimage(recipe, key_value);
+		try_getting_z_show(recipe, key_value);
+		try_getting_text_stuff(recipe, key_value);
+		try_getting_value(recipe, key_value);
+		try_getting_flags(recipe, key_value);
+		try_getting_input_stuff(recipe, key_value);
+		/*
 		if (ft_strequ(key_value[0], "x"))
 		{
 			recipe->pos.v[0] = ft_atof(key_value[1]);
@@ -516,7 +769,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 			recipe->pos.v[3] = ft_atof(key_value[1]);
 			recipe->pos_set[3] = 1;
 		}
-		else if (ft_strequ(key_value[0], "xywh"))
+		if (ft_strequ(key_value[0], "xywh"))
 		{
 			char	**pos;
 			int		pp;
@@ -689,6 +942,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 				ft_strdel(&recipe->placeholder_text);
 			recipe->placeholder_text = ft_strdup(key_value[1]);
 		}
+		*/
 		ft_arraydel(key_value);
 	}
 }
@@ -932,6 +1186,24 @@ void	ui_element_set_color_from_recipe(
 			ui_element_color_set(elem, i, recipe->bg_colors[i]);
 }
 
+char	*ui_layout_get_file_from_resource_dirs(t_ui_layout *layout, char *file)
+{
+	char	*temp;
+	int		iii;
+
+	if (!layout || !file)
+		return (NULL);
+	iii = -1;
+	while (layout->resource_dirs[++iii])
+	{
+		temp = ft_strjoin(layout->resource_dirs[++iii], file);
+		if (!access(temp, F_OK))
+			return (temp);
+		ft_strdel(&temp);
+	}
+	return (NULL);
+}
+
 /*
  * IMPORTANT!!!
  * DONT FREE TEMP If you set it into the bg_image;
@@ -952,19 +1224,12 @@ void	ui_element_set_bgimage_from_recipe(
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 			else
 			{
-				jjj = -1;
-				while (elem->win->layout->resource_dirs[++jjj])
-				{
-					temp = ft_strjoin(elem->win->layout->resource_dirs[jjj],
-							recipe->bg_images[i]);
-					if (!access(temp, F_OK))
-					{
-						free(recipe->bg_images[i]);
-						recipe->bg_images[i] = temp;
-						break ;
-					}
-					ft_strdel(&temp);
-				}
+				temp = ui_layout_get_file_from_resource_dirs(
+						elem->win->layout, recipe->bg_images[i]);
+				if (!temp)
+					continue ;
+				ft_strdel(&recipe->bg_images[i]);
+				recipe->bg_images[i] = temp;
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 			}
 		}
