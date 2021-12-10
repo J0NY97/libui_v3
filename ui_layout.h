@@ -24,8 +24,8 @@ struct s_ui_layout
 
 typedef struct s_ui_family
 {
-	char			*parent_id;
-	int				parent_type;
+	char			*id;
+	int				type;
 	char			**children_strings;
 	t_list			*children; // t_list of t_ui_family;
 }					t_ui_family;
@@ -112,4 +112,4 @@ void				ui_recipe_print(t_ui_recipe *recipe);
 // Family
 ///////////////
 t_ui_family			*make_family_from_string(char *str);
-void				make_elements_from_family(t_list **list, t_ui_window *win, void *parent, int parent_type, t_ui_family *family);
+void				make_elements_from_family(t_list **list, void *parent, int parent_type, t_ui_family *family);

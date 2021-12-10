@@ -198,8 +198,8 @@ t_ui_family	*create_family(char *name, char *type, char *children)
 	int			k;
 
 	family = ft_memalloc(sizeof(t_ui_family));
-	family->parent_id = ft_strdup(name);
-	family->parent_type = ui_element_type_from_string(type);
+	family->id = ft_strdup(name);
+	family->type = ui_element_type_from_string(type);
 	family->children_strings = split_string_into_array(children);
 	k = -1;
 	while (family->children_strings[++k])
@@ -244,7 +244,7 @@ void	print_family(t_ui_family *family, int nth)
 	tabs = -1;
 	while (++tabs < nth)
 		ft_putchar('\t');
-	ft_printf("%s\n", family->parent_id);
+	ft_printf("%s\n", family->id);
 	tabs = -1;
 	while (++tabs < nth)
 		ft_putchar('\t');
@@ -284,8 +284,7 @@ void	layout_make_family_trees(t_ui_layout *layout)
 }
 
 void	make_family_from_children(
-		t_list **list, t_ui_window *win,
-		void *parent, int parent_type, t_ui_family *family)
+		t_list **list, void *parent, int parent_type, t_ui_family *family)
 {
 	t_list	*rruc;
 
@@ -293,7 +292,7 @@ void	make_family_from_children(
 	while (rruc)
 	{
 		make_elements_from_family(
-			list, win, parent, parent_type, rruc->content);
+			list, parent, parent_type, rruc->content);
 		rruc = rruc->next;
 	}
 }
@@ -309,8 +308,7 @@ void	make_family_from_children(
  * 	we make a new elem.
 */
 void	make_elements_from_family(
-		t_list **list, t_ui_window *win,
-		void *parent, int parent_type, t_ui_family *family)
+		t_list **list, void *parent, int parent_type, t_ui_family *family)
 {
 	t_ui_element	*elem;
 	t_list			*rruc;
@@ -320,19 +318,22 @@ void	make_elements_from_family(
 		&& g_acceptable[((t_ui_element *)parent)->element_type].getter)
 	{
 		elem = g_acceptable[((t_ui_element *)parent)->element_type].getter(
-				parent, family->parent_type);
+				parent, family->type);
 		if (elem)
-			ui_element_set_id(elem, family->parent_id);
+			ui_element_set_id(elem, family->id);
 	}
 	if (!elem)
 	{
 		elem = ft_memalloc(sizeof(t_ui_element));
-		g_acceptable[family->parent_type].maker(win, elem);
+		if (parent_type == UI_TYPE_WINDOW)
+			g_acceptable[family->type].maker(parent, elem);
+		else
+			g_acceptable[family->type].maker(
+				((t_ui_element *)parent)->win, elem);
 		ui_element_set_parent(elem, parent, parent_type);
-		ui_element_set_id(elem, family->parent_id);
+		ui_element_set_id(elem, family->id);
 	}
-	make_family_from_children(
-		list, win, elem, UI_TYPE_ELEMENT, family);
+	make_family_from_children(list, elem, UI_TYPE_ELEMENT, family);
 	add_to_list(list, elem, UI_TYPE_ELEMENT);
 }
 
@@ -353,17 +354,17 @@ void	layout_compile_elements(t_ui_layout *layout)
 	while (curr)
 	{
 		family = curr->content;
-		if (family->parent_type == UI_TYPE_WINDOW)
+		if (family->type == UI_TYPE_WINDOW)
 		{
 			ft_printf("[%s] Creating window %s\n",
-				__FUNCTION__, family->parent_id);
+				__FUNCTION__, family->id);
 			win = ft_memalloc(sizeof(t_ui_window));
 			ui_window_new(win, NULL, vec4(0, 25, 100, 100));
-			ui_window_id_set(win, family->parent_id);
+			ui_window_id_set(win, family->id);
 			win->layout = layout;
 			add_to_list(&layout->windows, win, UI_TYPE_WINDOW);
 			make_family_from_children(
-				&layout->elements, win, win, UI_TYPE_WINDOW, family);
+				&layout->elements, win, UI_TYPE_WINDOW, family);
 		}
 		curr = curr->next;
 	}
@@ -772,6 +773,7 @@ t_ui_recipe	*make_recipe_from_string(
 	return (recipe);
 }
 
+/*
 void	ui_recipe_print(t_ui_recipe *recipe)
 {
 	ft_printf("%s\n", recipe->id);
@@ -821,6 +823,7 @@ void	ui_recipe_print(t_ui_recipe *recipe)
 	ft_putarr(recipe->flags);
 	ft_printf("\n");
 }
+*/
 
 /*
  * These are done from the first to the last,
@@ -905,11 +908,7 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 	ft_printf("Leaving [%s]\n", __FUNCTION__);
 }
 
-/*
- * This function will be called recursively for elements that are
- * contained inside other elements.
-*/
-void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
+void	ui_element_set_pos_from_recipe(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_vec4	pos;
 	int		i;
@@ -917,17 +916,33 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	pos = elem->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
-	{
 		if (recipe->pos_set[i])
 			pos.v[i] = recipe->pos.v[i];
-	}
 	ui_element_pos_set(elem, pos);
+}
+
+void	ui_element_set_color_from_recipe(
+	t_ui_element *elem, t_ui_recipe *recipe)
+{
+	int		i;
+
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
-	{
 		if (recipe->bg_colors_set[i])
 			ui_element_color_set(elem, i, recipe->bg_colors[i]);
-	}
+}
+
+/*
+ * IMPORTANT!!!
+ * DONT FREE TEMP If you set it into the bg_image;
+*/
+void	ui_element_set_bgimage_from_recipe(
+	t_ui_element *elem, t_ui_recipe *recipe)
+{
+	int		i;
+	int		jjj;
+	char	*temp;
+
 	i = -1;
 	while (++i < UI_STATE_AMOUNT)
 	{
@@ -937,14 +952,15 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 				ui_element_image_set_from_path(elem, i, recipe->bg_images[i]);
 			else
 			{
-				int jjj = -1;
+				jjj = -1;
 				while (elem->win->layout->resource_dirs[++jjj])
 				{
-					char *temp = ft_sprintf("%s%s", elem->win->layout->resource_dirs[jjj], recipe->bg_images[i]);
+					temp = ft_strjoin(elem->win->layout->resource_dirs[jjj],
+							recipe->bg_images[i]);
 					if (!access(temp, F_OK))
 					{
 						free(recipe->bg_images[i]);
-						recipe->bg_images[i] = temp; // dont free temp, since we have just put it in here;!
+						recipe->bg_images[i] = temp;
 						break ;
 					}
 					ft_strdel(&temp);
@@ -953,6 +969,17 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 			}
 		}
 	}
+}
+
+/*
+ * This function will be called recursively for elements that are
+ * contained inside other elements.
+*/
+void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
+{
+	ui_element_set_pos_from_recipe(elem, recipe);
+	ui_element_set_color_from_recipe(elem, recipe);
+	ui_element_set_bgimage_from_recipe(elem, recipe);
 	if (recipe->flags)
 	{
 		if (ft_strinarr("render_on_parent", recipe->flags))
@@ -968,8 +995,9 @@ void	ui_element_edit(t_ui_element *elem, t_ui_recipe *recipe)
 	if (g_acceptable[elem->element_type].edit)
 		g_acceptable[elem->element_type].edit(elem, recipe);
 	else
-		ft_printf("[%s] Element of type : %d : %s doenst have a edit function.\n",
-			__FUNCTION__, elem->element_type, ui_element_type_to_string(elem->element_type));
+		ft_printf("[%s] Element of type :%d:%s doenst have a edit function.\n",
+			__FUNCTION__, elem->element_type,
+			ui_element_type_to_string(elem->element_type));
 }
 
 /*
@@ -1034,7 +1062,7 @@ void	ui_family_free(void *family, size_t size)
 	fam = family;
 	if (!fam)
 		return ;
-	free(fam->parent_id);
+	free(fam->id);
 	ft_arraydel(fam->children_strings);
 	ft_lstdel(&fam->children, &ui_family_free);
 	free(fam);
