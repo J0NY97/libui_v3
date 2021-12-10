@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:53 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:24:54 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:33:10 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 	t_vec4	pos;
 	int		i;
 
-	ft_printf("Entering [%s]\n", __FUNCTION__);
 	pos = win->pos;
 	i = -1;
 	while (++i < VEC4_SIZE)
@@ -65,6 +64,4 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 	if (ft_strinarr("xdoesnthides", recipe->flags))
 		win->hide_on_x = 0;
 	ui_window_flag_set(win, make_usable_win_flags(recipe->flags));
-	ui_window_print(win);
-	ft_printf("Leaving [%s]\n", __FUNCTION__);
 }

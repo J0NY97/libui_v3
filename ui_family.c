@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:22:51 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:22:53 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:35:53 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ t_ui_family	*make_family_from_string(char *str)
 	int			len;
 	char		*children;
 
-	ft_printf("[%s] Starting making families.\n", __FUNCTION__);
 	temp = ft_strsplitfirstoccurence(str, '{');
 	len = ft_strlen(temp[1]);
 	family = NULL;

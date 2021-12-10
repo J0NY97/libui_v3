@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:38 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:39 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:35:26 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	layout_compile_elements(t_ui_layout *layout)
 		family = curr->content;
 		if (family->type == UI_TYPE_WINDOW)
 		{
-			ft_printf("[%s] Creating window %s\n",
-				__FUNCTION__, family->id);
 			win = ft_memalloc(sizeof(t_ui_window));
 			ui_window_new(win, NULL, vec4(0, 25, 100, 100));
 			ui_window_id_set(win, family->id);
@@ -121,7 +119,6 @@ t_ui_recipe	*make_recipe_from_string(
 	recipe = create_recipe(name_and_prefabs, args, recipes, global_recipe);
 	ft_arraydel(name_and_prefabs);
 	ft_arraydel(args);
-	ft_printf("[%s] Recipe %s made.\n", __FUNCTION__, recipe->id);
 	return (recipe);
 }
 

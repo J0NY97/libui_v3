@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:34 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:35 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:34:45 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,16 +62,10 @@ void	ui_layout_load(t_ui_layout *layout, char *file)
 		= get_file_content(layout, layout->style_file);
 	if (layout->style_file_content == NULL)
 		return ;
-	ft_printf("[%s] Style file content got\n", __FUNCTION__);
 	layout->style_recipe_strings
 		= split_string_into_array(layout->style_file_content);
-	ft_printf("[%s] Recipe strings made.\n", __FUNCTION__);
 	layout_make_recipes(layout);
-	ft_printf("[%s] Recipe made.\n", __FUNCTION__);
 	layout_apply_style(layout);
-	ft_printf("[%s] Recipes applied.\n", __FUNCTION__);
-	ft_printf("[%s] Resource dirs.\n", __FUNCTION__);
-	ft_putarr(layout->resource_dirs);
 }
 
 /*

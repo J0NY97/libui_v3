@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:56 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:26:00 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:33:51 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,11 @@ void	ui_window_free(void *window, size_t size)
 		SDL_DestroyRenderer(win->renderer);
 	SDL_DestroyTexture(win->texture);
 	ft_strdel(&win->title);
-	ft_printf("title\n");
 	ui_list_element_free(&win->children);
 	ft_lstdel(&win->children, &dummy_free_er);
-	ft_printf("children\n");
 	win->layout = NULL;
 	if (win->free_me)
 		free(win);
-	ft_printf("me\n");
 }
 
 /*

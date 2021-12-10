@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:58 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:24:59 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:33:36 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	ui_window_pos_set(t_ui_window *win, t_vec4 pos)
 	}
 	if (win->pos.w != pos.w || win->pos.h != pos.h)
 	{
-		ft_printf("[%s]\n", __FUNCTION__);
 		win->pos.w = pos.w;
 		win->pos.h = pos.h;
 		SDL_SetWindowSize(win->win, win->pos.w, win->pos.h);

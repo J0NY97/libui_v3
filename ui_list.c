@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:42 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:44 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/10 19:38:06 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ t_ui_recipe	*ui_list_get_recipe_by_id(t_list *list, char *id)
 			return (recipe);
 		curr = curr->next;
 	}
-	ft_printf("[%s] Couldn\'t find recipe with id : %s\n", __FUNCTION__, id);
 	return (NULL);
 }
 
@@ -73,7 +72,6 @@ t_ui_element	*ui_list_get_element_by_id(t_list *list, char *id)
 			return (elem);
 		curr = curr->next;
 	}
-	ft_printf("[%s] Couldn\'t find element with id : %s\n", __FUNCTION__, id);
 	return (NULL);
 }
 
@@ -88,6 +86,5 @@ t_ui_window	*ui_list_get_window_by_id(t_list *list, char *id)
 			return (win);
 		list = list->next;
 	}
-	ft_printf("[%s] Couldn\'t find window with id : %s\n", __FUNCTION__, id);
 	return (NULL);
 }
