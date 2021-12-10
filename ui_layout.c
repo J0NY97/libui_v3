@@ -370,12 +370,13 @@ void	layout_compile_elements(t_ui_layout *layout)
 	}
 }
 
-void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
+/***************************************
+ * FILL FROM RECIPE
+***************************************/
+void	recipe_pos_set_fill(t_ui_recipe *target, t_ui_recipe *child)
 {
 	int	jj;
 
-	if (!target || !child)
-		return ;
 	jj = -1;
 	while (++jj < VEC4_SIZE)
 	{
@@ -385,6 +386,12 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->pos_set[jj] = 1;
 		}
 	}
+}
+
+void	recipe_bgcolor_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
+	int	jj;
+
 	jj = -1;
 	while (++jj < UI_STATE_AMOUNT)
 	{
@@ -394,6 +401,12 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->bg_colors_set[jj] = 1;
 		}
 	}
+}
+
+void	recipe_bgimage_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
+	int	jj;
+
 	jj = -1;
 	while (++jj < UI_STATE_AMOUNT)
 	{
@@ -405,6 +418,10 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->bg_images_set[jj] = 1;
 		}
 	}
+}
+
+void	recipe_z_show_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
 	if (child->z_set)
 	{
 		target->z = child->z;
@@ -415,30 +432,12 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 		target->show = child->show;
 		target->show_set = 1;
 	}
-	if (child->title != NULL)
-	{
-		if (target->title)
-			ft_strdel(&target->title);
-		target->title = ft_strdup(child->title);
-	}
-	if (child->remove_title)
-		target->remove_title = 1;
-	if (child->placeholder_text != NULL)
-	{
-		if (target->placeholder_text)
-			ft_strdel(&target->placeholder_text);
-		target->placeholder_text = ft_strdup(child->placeholder_text);
-	}
-	if (child->text_color_set)
-	{
-		target->text_color = child->text_color;
-		target->text_color_set = 1;
-	}
-	if (child->text_size_set)
-	{
-		target->text_size = child->text_size;
-		target->text_size_set = 1;
-	}
+}
+
+void	recipe_text_stuff_set_fill2(t_ui_recipe *target, t_ui_recipe *child)
+{
+	int	jj;
+
 	if (child->font != NULL)
 	{
 		if (target->font)
@@ -451,28 +450,6 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 		target->text_align_set = 1;
 	}
 	jj = -1;
-	while (++jj < 3)
-	{
-		if (child->value_set[jj])
-		{
-			target->value[jj] = child->value[jj];
-			target->value_set[jj] = 1;
-		}
-	}
-	if (child->flags != NULL)
-	{
-		char	**flags = ft_arrjoin(target->flags, child->flags);
-		ft_arraydel(target->flags);
-		target->flags = flags;
-	}
-	if (child->input_type_set)
-	{
-		target->input_type = child->input_type;
-		target->input_type_set = 1;
-	}
-	if (child->target)
-		target->target = ft_strdup(child->target);
-	jj = -1;
 	while (++jj < 4)
 	{
 		if (child->text_pos_set[jj])
@@ -481,6 +458,84 @@ void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
 			target->text_pos_set[jj] = 1;
 		}
 	}
+}
+
+void	recipe_text_stuff_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
+	if (child->title != NULL)
+	{
+		if (target->title)
+			ft_strdel(&target->title);
+		target->title = ft_strdup(child->title);
+	}
+	if (child->remove_title)
+		target->remove_title = 1;
+	if (child->text_color_set)
+	{
+		target->text_color = child->text_color;
+		target->text_color_set = 1;
+	}
+	if (child->text_size_set)
+	{
+		target->text_size = child->text_size;
+		target->text_size_set = 1;
+	}
+	recipe_text_stuff_set_fill2(target, child);
+}
+
+void	recipe_value_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
+	int	jj;
+
+	jj = -1;
+	while (++jj < 3)
+	{
+		if (child->value_set[jj])
+		{
+			target->value[jj] = child->value[jj];
+			target->value_set[jj] = 1;
+		}
+	}
+	if (child->input_type_set)
+	{
+		target->input_type = child->input_type;
+		target->input_type_set = 1;
+	}
+	if (child->placeholder_text != NULL)
+	{
+		if (target->placeholder_text)
+			ft_strdel(&target->placeholder_text);
+		target->placeholder_text = ft_strdup(child->placeholder_text);
+	}
+	if (child->target)
+		target->target = ft_strdup(child->target);
+}
+
+void	recipe_flag_set_fill(t_ui_recipe *target, t_ui_recipe *child)
+{
+	char	**flags;
+
+	if (child->flags != NULL)
+	{
+		flags = ft_arrjoin(target->flags, child->flags);
+		ft_arraydel(target->flags);
+		target->flags = flags;
+	}
+}
+
+void	fill_recipe_from_recipe(t_ui_recipe *target, t_ui_recipe *child)
+{
+	int	jj;
+
+	if (!target || !child)
+		return ;
+	recipe_pos_set_fill(target, child);
+	recipe_bgcolor_set_fill(target, child);
+	recipe_bgimage_set_fill(target, child);
+	recipe_z_show_set_fill(target, child);
+	recipe_text_stuff_set_fill(target, child);
+	recipe_value_set_fill(target, child);
+	recipe_flag_set_fill(target, child);
 }
 
 /***************************************
@@ -512,11 +567,11 @@ void	try_getting_xywh_separate(t_ui_recipe *recipe, char **key_value)
 
 void	try_getting_xywh(t_ui_recipe *recipe, char **key_value)
 {
+	char	**pos;
+	int		pp;
+
 	if (ft_strequ(key_value[0], "xywh"))
 	{
-		char	**pos;
-		int		pp;
-
 		pp = -1;
 		pos = ft_strsplit(key_value[1], ',');
 		while (++pp < VEC4_SIZE)
@@ -530,11 +585,11 @@ void	try_getting_xywh(t_ui_recipe *recipe, char **key_value)
 
 void	try_getting_text_pos(t_ui_recipe *recipe, char **key_value)
 {
+	char	**pos;
+	int		pp;
+
 	if (ft_strequ(key_value[0], "text_pos"))
 	{
-		char	**pos;
-		int		pp;
-
 		pp = -1;
 		pos = ft_strsplit(key_value[1], ',');
 		while (++pp < VEC4_SIZE)
@@ -543,6 +598,28 @@ void	try_getting_text_pos(t_ui_recipe *recipe, char **key_value)
 			recipe->text_pos_set[pp] = 1;
 		}
 		ft_arraydel(pos);
+	}
+}
+
+void	try_getting_bgcolor_separate(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "bg_color_default"))
+	{
+		recipe->bg_colors[UI_STATE_DEFAULT]
+			= (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_DEFAULT] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_color_hover"))
+	{
+		recipe->bg_colors[UI_STATE_HOVER]
+			= (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_HOVER] = 1;
+	}
+	else if (ft_strequ(key_value[0], "bg_color_click"))
+	{
+		recipe->bg_colors[UI_STATE_CLICK]
+			= (unsigned int)strtoul(key_value[1], NULL, 16);
+		recipe->bg_colors_set[UI_STATE_CLICK] = 1;
 	}
 }
 
@@ -555,43 +632,17 @@ void	try_getting_bgcolor(t_ui_recipe *recipe, char **key_value)
 		jj = -1;
 		while (++jj < UI_STATE_AMOUNT)
 		{
-			recipe->bg_colors[jj] = (unsigned int)strtoul(key_value[1], NULL, 16);
+			recipe->bg_colors[jj]
+				= (unsigned int)strtoul(key_value[1], NULL, 16);
 			recipe->bg_colors_set[jj] = 1;
 		}
 	}
-	else if (ft_strequ(key_value[0], "bg_color_default"))
-	{
-		recipe->bg_colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(key_value[1], NULL, 16);
-		recipe->bg_colors_set[UI_STATE_DEFAULT] = 1;
-	}
-	else if (ft_strequ(key_value[0], "bg_color_hover"))
-	{
-		recipe->bg_colors[UI_STATE_HOVER] = (unsigned int)strtoul(key_value[1], NULL, 16);
-		recipe->bg_colors_set[UI_STATE_HOVER] = 1;
-	}
-	else if (ft_strequ(key_value[0], "bg_color_click"))
-	{
-		recipe->bg_colors[UI_STATE_CLICK] = (unsigned int)strtoul(key_value[1], NULL, 16);
-		recipe->bg_colors_set[UI_STATE_CLICK] = 1;
-	}
+	try_getting_bgcolor_separate(recipe, key_value);
 }
 
-void	try_getting_bgimage(t_ui_recipe *recipe, char **key_value)
+void	try_getting_bgimage_separate(t_ui_recipe *recipe, char **key_value)
 {
-	int	jj;
-
-	if (ft_strequ(key_value[0], "bg_image"))
-	{
-		jj = -1;
-		while (++jj < UI_STATE_AMOUNT)
-		{
-			if (recipe->bg_images_set[jj])
-				ft_strdel(&recipe->bg_images[jj]);
-			recipe->bg_images[jj] = ft_strdup(key_value[1]);
-			recipe->bg_images_set[jj] = 1;
-		}
-	}
-	else if (ft_strequ(key_value[0], "bg_image_default"))
+	if (ft_strequ(key_value[0], "bg_image_default"))
 	{
 		if (recipe->bg_images_set[UI_STATE_DEFAULT])
 			ft_strdel(&recipe->bg_images[UI_STATE_DEFAULT]);
@@ -614,6 +665,24 @@ void	try_getting_bgimage(t_ui_recipe *recipe, char **key_value)
 	}
 }
 
+void	try_getting_bgimage(t_ui_recipe *recipe, char **key_value)
+{
+	int	jj;
+
+	if (ft_strequ(key_value[0], "bg_image"))
+	{
+		jj = -1;
+		while (++jj < UI_STATE_AMOUNT)
+		{
+			if (recipe->bg_images_set[jj])
+				ft_strdel(&recipe->bg_images[jj]);
+			recipe->bg_images[jj] = ft_strdup(key_value[1]);
+			recipe->bg_images_set[jj] = 1;
+		}
+	}
+	try_getting_bgimage_separate(recipe, key_value);
+}
+
 void	try_getting_z_show(t_ui_recipe *recipe, char **key_value)
 {
 	if (ft_strequ(key_value[0], "z"))
@@ -625,6 +694,21 @@ void	try_getting_z_show(t_ui_recipe *recipe, char **key_value)
 	{
 		recipe->show = ft_atoi(key_value[1]);
 		recipe->show_set = 1;
+	}
+}
+
+void	try_getting_text_stuff2(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "font"))
+	{
+		if (recipe->font)
+			ft_strdel(&recipe->font);
+		recipe->font = ft_strdup(key_value[1]);
+	}
+	else if (ft_strequ(key_value[0], "text_align"))
+	{
+		recipe->text_align = text_align_getter(key_value[1]);
+		recipe->text_align_set = 1;
 	}
 }
 
@@ -646,30 +730,19 @@ void	try_getting_text_stuff(t_ui_recipe *recipe, char **key_value)
 	}
 	else if (ft_strequ(key_value[0], "text_size"))
 	{
-		recipe->text_size = ft_atoi(key_value[1]); // should we check if this number is something that makes sense;
+		recipe->text_size = ft_atoi(key_value[1]);
 		recipe->text_size_set = 1;
 	}
-	else if (ft_strequ(key_value[0], "font"))
-	{
-		if (recipe->font)
-			ft_strdel(&recipe->font);
-		recipe->font = ft_strdup(key_value[1]);
-	}
-	else if (ft_strequ(key_value[0], "text_align"))
-	{
-		recipe->text_align = text_align_getter(key_value[1]);
-		recipe->text_align_set = 1;
-	}
+	try_getting_text_stuff2(recipe, key_value);
 }
 
 void	try_getting_value(t_ui_recipe *recipe, char **key_value)
 {
-	int	jj;
+	int		jj;
+	char	**values;
 
 	if (ft_strequ(key_value[0], "value") || ft_strequ(key_value[0], "values"))
 	{
-		char	**values;
-
 		jj = -1;
 		values = ft_strsplit(key_value[1], ',');
 		while (++jj < 3)
@@ -683,10 +756,13 @@ void	try_getting_value(t_ui_recipe *recipe, char **key_value)
 
 void	try_getting_flags(t_ui_recipe *recipe, char **key_value)
 {
+	char	**flags;
+	char	**final_flags;
+
 	if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
 	{
-		char	**flags = ft_strsplit(key_value[1], ' ');
-		char	**final_flags = ft_arrjoin(recipe->flags, flags);
+		flags = ft_strsplit(key_value[1], ' ');
+		final_flags = ft_arrjoin(recipe->flags, flags);
 		ft_arraydel(flags);
 		ft_arraydel(recipe->flags);
 		recipe->flags = final_flags;
@@ -713,15 +789,19 @@ void	try_getting_input_stuff(t_ui_recipe *recipe, char **key_value)
 			recipe->input_type_set = 1;
 		}
 	}
-	else if (ft_strequ(key_value[0], "target"))
-	{
-		recipe->target = ft_strdup(key_value[1]);
-	}
 	else if (ft_strequ(key_value[0], "placeholder"))
 	{
 		if (recipe->placeholder_text)
 			ft_strdel(&recipe->placeholder_text);
 		recipe->placeholder_text = ft_strdup(key_value[1]);
+	}
+}
+
+void	try_getting_scrollbar_stuff(t_ui_recipe *recipe, char **key_value)
+{
+	if (ft_strequ(key_value[0], "target"))
+	{
+		recipe->target = ft_strdup(key_value[1]);
 	}
 }
 
@@ -748,201 +828,7 @@ void	fill_recipe_from_args(t_ui_recipe *recipe, char **args)
 		try_getting_value(recipe, key_value);
 		try_getting_flags(recipe, key_value);
 		try_getting_input_stuff(recipe, key_value);
-		/*
-		if (ft_strequ(key_value[0], "x"))
-		{
-			recipe->pos.v[0] = ft_atof(key_value[1]);
-			recipe->pos_set[0] = 1;
-		}
-		else if (ft_strequ(key_value[0], "y"))
-		{
-			recipe->pos.v[1] = ft_atof(key_value[1]);
-			recipe->pos_set[1] = 1;
-		}
-		else if (ft_strequ(key_value[0], "w"))
-		{
-			recipe->pos.v[2] = ft_atof(key_value[1]);
-			recipe->pos_set[2] = 1;
-		}
-		else if (ft_strequ(key_value[0], "h"))
-		{
-			recipe->pos.v[3] = ft_atof(key_value[1]);
-			recipe->pos_set[3] = 1;
-		}
-		if (ft_strequ(key_value[0], "xywh"))
-		{
-			char	**pos;
-			int		pp;
-
-			pp = -1;
-			pos = ft_strsplit(key_value[1], ',');
-			while (++pp < VEC4_SIZE)
-			{
-				recipe->pos.v[pp] = ft_atof(pos[pp]);
-				recipe->pos_set[pp] = 1;
-			}
-			ft_arraydel(pos);
-		}
-		else if (ft_strequ(key_value[0], "text_pos"))
-		{
-			char	**pos;
-			int		pp;
-
-			pp = -1;
-			pos = ft_strsplit(key_value[1], ',');
-			while (++pp < VEC4_SIZE)
-			{
-				recipe->text_pos.v[pp] = ft_atof(pos[pp]);
-				recipe->text_pos_set[pp] = 1;
-			}
-			ft_arraydel(pos);
-		}
-		else if (ft_strequ(key_value[0], "bg_color"))
-		{
-			jj = -1;
-			while (++jj < UI_STATE_AMOUNT)
-			{
-				recipe->bg_colors[jj] = (unsigned int)strtoul(key_value[1], NULL, 16);
-				recipe->bg_colors_set[jj] = 1;
-			}
-		}
-		else if (ft_strequ(key_value[0], "bg_color_default"))
-		{
-			recipe->bg_colors[UI_STATE_DEFAULT] = (unsigned int)strtoul(key_value[1], NULL, 16);
-			recipe->bg_colors_set[UI_STATE_DEFAULT] = 1;
-		}
-		else if (ft_strequ(key_value[0], "bg_color_hover"))
-		{
-			recipe->bg_colors[UI_STATE_HOVER] = (unsigned int)strtoul(key_value[1], NULL, 16);
-			recipe->bg_colors_set[UI_STATE_HOVER] = 1;
-		}
-		else if (ft_strequ(key_value[0], "bg_color_click"))
-		{
-			recipe->bg_colors[UI_STATE_CLICK] = (unsigned int)strtoul(key_value[1], NULL, 16);
-			recipe->bg_colors_set[UI_STATE_CLICK] = 1;
-		}
-		else if (ft_strequ(key_value[0], "bg_image"))
-		{
-			jj = -1;
-			while (++jj < UI_STATE_AMOUNT)
-			{
-				if (recipe->bg_images_set[jj])
-					ft_strdel(&recipe->bg_images[jj]);
-				recipe->bg_images[jj] = ft_strdup(key_value[1]);
-				recipe->bg_images_set[jj] = 1;
-			}
-		}
-		else if (ft_strequ(key_value[0], "bg_image_default"))
-		{
-			if (recipe->bg_images_set[UI_STATE_DEFAULT])
-				ft_strdel(&recipe->bg_images[UI_STATE_DEFAULT]);
-			recipe->bg_images[UI_STATE_DEFAULT] = ft_strdup(key_value[1]);
-			recipe->bg_images_set[UI_STATE_DEFAULT] = 1;
-		}
-		else if (ft_strequ(key_value[0], "bg_image_hover"))
-		{
-			if (recipe->bg_images_set[UI_STATE_HOVER])
-				ft_strdel(&recipe->bg_images[UI_STATE_HOVER]);
-			recipe->bg_images[UI_STATE_HOVER] = ft_strdup(key_value[1]);
-			recipe->bg_images_set[UI_STATE_HOVER] = 1;
-		}
-		else if (ft_strequ(key_value[0], "bg_image_click"))
-		{
-			if (recipe->bg_images_set[UI_STATE_CLICK])
-				ft_strdel(&recipe->bg_images[UI_STATE_CLICK]);
-			recipe->bg_images[UI_STATE_CLICK] = ft_strdup(key_value[1]);
-			recipe->bg_images_set[UI_STATE_CLICK] = 1;
-		}
-		else if (ft_strequ(key_value[0], "z"))
-		{
-			recipe->z = ft_atoi(key_value[1]);
-			recipe->z_set = 1;
-		}
-		else if (ft_strequ(key_value[0], "show"))
-		{
-			recipe->show = ft_atoi(key_value[1]);
-			recipe->show_set = 1;
-		}
-		else if (ft_strequ(key_value[0], "title"))
-		{
-			if (recipe->title)
-				ft_strdel(&recipe->title);
-			if (!key_value[1])
-				recipe->remove_title = 1;
-			else
-				recipe->title = ft_strdup(key_value[1]);
-		}
-		else if (ft_strequ(key_value[0], "text_color"))
-		{
-			recipe->text_color = (unsigned int)strtoul(key_value[1], NULL, 16);
-			recipe->text_color_set = 1;
-		}
-		else if (ft_strequ(key_value[0], "text_size"))
-		{
-			recipe->text_size = ft_atoi(key_value[1]); // should we check if this number is something that makes sense;
-			recipe->text_size_set = 1;
-		}
-		else if (ft_strequ(key_value[0], "font"))
-		{
-			if (recipe->font)
-				ft_strdel(&recipe->font);
-			recipe->font = ft_strdup(key_value[1]);
-		}
-		else if (ft_strequ(key_value[0], "text_align"))
-		{
-			recipe->text_align = text_align_getter(key_value[1]);
-			recipe->text_align_set = 1;
-		}
-		else if (ft_strequ(key_value[0], "value") || ft_strequ(key_value[0], "values"))
-		{
-			char	**values;
-
-			jj = -1;
-			values = ft_strsplit(key_value[1], ',');
-			while (++jj < 3)
-			{
-				recipe->value[jj] = ft_atoi(values[jj]);
-				recipe->value_set[jj] = 1;
-			}
-			ft_arraydel(values);
-		}
-		else if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
-		{
-			char	**flags = ft_strsplit(key_value[1], ' ');
-			char	**final_flags = ft_arrjoin(recipe->flags, flags);
-			ft_arraydel(flags);
-			ft_arraydel(recipe->flags);
-			recipe->flags = final_flags;
-		}
-		else if (ft_strequ(key_value[0], "type"))
-		{
-			if (ft_strequ(key_value[1], "numbers"))
-			{
-				recipe->input_type = 1;
-				recipe->input_type_set = 1;
-			}
-			else if (ft_strequ(key_value[1], "letters"))
-			{
-				recipe->input_type = 2;
-				recipe->input_type_set = 1;
-			}
-			else if (ft_strequ(key_value[1], "everything"))
-			{
-				recipe->input_type = 0;
-				recipe->input_type_set = 1;
-			}
-		}
-		else if (ft_strequ(key_value[0], "target"))
-		{
-			recipe->target = ft_strdup(key_value[1]);
-		}
-		else if (ft_strequ(key_value[0], "placeholder"))
-		{
-			if (recipe->placeholder_text)
-				ft_strdel(&recipe->placeholder_text);
-			recipe->placeholder_text = ft_strdup(key_value[1]);
-		}
-		*/
+		try_getting_scrollbar_stuff(recipe, key_value);
 		ft_arraydel(key_value);
 	}
 }
