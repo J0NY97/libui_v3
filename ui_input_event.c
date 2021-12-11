@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:10 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:11 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/11 09:27:47 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void	ui_input_decide_clickiness(
 		}
 		elem->is_click = 1;
 	}
-	else if ((!elem->is_hover && elem->win->mouse_down)
-		|| (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN))
+	else if (elem->is_click && ((!elem->is_hover && elem->win->mouse_down)
+			|| (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)))
 	{
 		text_started--;
 		if (text_started == 0)
