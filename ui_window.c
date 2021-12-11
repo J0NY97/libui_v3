@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:56 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:33:51 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/11 14:33:52 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,13 @@ void	ui_window_free(void *window, size_t size)
 	if (!win)
 		return ;
 	ft_strdel(&win->id);
-	if (!win->win_replaced)
-		SDL_DestroyWindow(win->win);
-	if (!win->renderer_replaced)
-		SDL_DestroyRenderer(win->renderer);
-	SDL_DestroyTexture(win->texture);
 	ft_strdel(&win->title);
 	ui_list_element_free(&win->children);
-	ft_lstdel(&win->children, &dummy_free_er);
+	SDL_DestroyTexture(win->texture);
+	if (!win->renderer_replaced)
+		SDL_DestroyRenderer(win->renderer);
+	if (!win->win_replaced)
+		SDL_DestroyWindow(win->win);
 	win->layout = NULL;
 	if (win->free_me)
 		free(win);

@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:18 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:19 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/11 14:28:59 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ void	ui_input_new(t_ui_window *win, t_ui_element *elem)
 	ui_label_new(win, &input->placeholder);
 	ui_label_set_text(&input->placeholder, "Placeholder");
 	ui_element_set_parent(&input->placeholder, elem, UI_TYPE_ELEMENT);
+	input->label.is_a_part_of_another = 1;
+	input->placeholder.is_a_part_of_another = 1;
 	input->label.render_me_on_parent = 1;
 	input->placeholder.render_me_on_parent = 1;
 }
