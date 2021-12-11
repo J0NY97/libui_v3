@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:36 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:37 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/11 09:38:22 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ typedef struct s_ui_recipe
 	char			*font;
 	t_vec4			text_pos;
 	bool			remove_title;
-
 	bool			text_size_set;
 	bool			text_color_set;
 	bool			text_style_set;
