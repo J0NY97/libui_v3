@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:55 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:33:00 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/12 17:19:16 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ void	ui_window_resize_event(t_ui_window *win, SDL_Event e)
 
 void	ui_window_window_events(t_ui_window *win, SDL_Event e)
 {
+	win->wants_to_close = 0;
 	if (e.window.event == SDL_WINDOWEVENT_RESIZED)
 		ui_window_resize_event(win, e);
 	else if (e.window.event == SDL_WINDOWEVENT_CLOSE)
 	{
 		if (win->hide_on_x)
 			ui_window_flag_set(win, UI_WINDOW_HIDE);
-		else
-			win->wants_to_close = 1;
+		win->wants_to_close = 1;
 	}
 	else if (e.window.event == SDL_WINDOWEVENT_SHOWN)
 		win->show = 1;
