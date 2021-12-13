@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:22:22 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:22:23 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/13 13:14:35 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
 		if (elem == curr->content)
 		{
 			d->active = elem;
+			ui_button_toggle_on(d->active);
 			ui_element_render(d->active);
 			ui_label_set_text(&d->label, ui_button_get_label(d->active)->text);
 			break ;
