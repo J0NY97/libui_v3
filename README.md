@@ -1,7 +1,7 @@
 # libui_v3
 3rd time's the charm.
 
-Only works with SDL
+Only works with SDL_WIN
 
 ![alt text](https://github.com/J0NY97/libui_v3/blob/master/images/demo.PNG?raw=true)
 

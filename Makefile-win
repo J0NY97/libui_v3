@@ -89,7 +89,7 @@ LIB_DIR		:= ../
 INCLUDES	:= \
 		-I$(LIB_DIR)/libft \
 		-I$(LIB_DIR)/libpf \
-		-I$(LIB_DIR)/SDL/include
+		-I$(LIB_DIR)/SDL_WIN/include
 
 all: thing $(ODIR) $(NAME)
 

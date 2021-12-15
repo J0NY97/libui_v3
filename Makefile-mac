@@ -6,7 +6,7 @@
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/09 13:40:51 by nneronin         ###   ########.fr        #
+#    Updated: 2021/12/15 10:17:38 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -105,10 +105,10 @@ CFLAGS = -MMD #-Wall -Wextra
 LIB_DIR =		../
 INCLUDES =		-I $(LIB_DIR)/libft \
 				-I $(LIB_DIR)/libpf \
-				-I $(LIB_DIR)/SDL_Frameworks/SDL2.framework/Headers \
-				-I $(LIB_DIR)/SDL_Frameworks/SDL2_image.framework/Headers \
-				-I $(LIB_DIR)/SDL_Frameworks/SDL2_ttf.framework/Headers \
-				-F $(LIB_DIR)/SDL_Frameworks
+				-I $(LIB_DIR)/SDL_MAC/SDL2.framework/Headers \
+				-I $(LIB_DIR)/SDL_MAC/SDL2_image.framework/Headers \
+				-I $(LIB_DIR)/SDL_MAC/SDL2_ttf.framework/Headers \
+				-F $(LIB_DIR)/SDL_MAC
 
 all: thing $(ODIR) $(NAME)
 	@printf $(GREEN)"\e[J[INFO] $(NAME) ready!\n"$(RESET)
