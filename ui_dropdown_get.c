@@ -51,3 +51,16 @@ t_ui_element	*ui_dropdown_get_scrollbar_element(t_ui_element *elem)
 	ft_printf("[%s] Something went wrong.\n", __FUNCTION__);
 	return (NULL);
 }
+
+t_ui_scrollbar	*ui_dropdown_get_scrollbar(t_ui_element *elem)
+{
+	t_ui_element	*scroll;
+
+	if (elem->element_type != UI_TYPE_DROPDOWN)
+		return (NULL);
+	scroll = ui_dropdown_get_scrollbar_element(elem); 
+	if (!scroll)
+		return (NULL);
+	return (scroll->element);
+}
+
