@@ -86,6 +86,7 @@ SRCS = \
 		ui_texture2.c\
 		ui_vec.c\
 		ui_vec2.c\
+		ui_vec2i.c\
 		ui_vec4.c\
 		ui_vec_both.c\
 		ui_vec_both2.c\
