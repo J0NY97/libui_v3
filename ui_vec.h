@@ -72,6 +72,11 @@ void				vec2_swap(t_vec2 *v1, t_vec2 *v2);
 t_vec2i				vec2i_add(t_vec2i v1, t_vec2i v2);
 t_vec2i				vec2i_sub(t_vec2i v1, t_vec2i v2);
 
+t_vec2				vec2_add(t_vec2 v1, t_vec2 v2);
+t_vec2				vec2_sub(t_vec2 v1, t_vec2 v2);
+t_vec2				vec2_divide(t_vec2 v1, t_vec2 v2);
+t_vec2				vec2_divide_float(t_vec2 v1, float n);
+
 // Vec4
 t_vec4i				vec4i(int x, int y, int w, int h);
 t_vec4				vec4(float x, float y, float w, float h);

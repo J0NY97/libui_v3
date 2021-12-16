@@ -15,8 +15,8 @@
 #include "libpf.h"
 #include "fcntl.h"
 #include "sys/stat.h"
-#include "SDL.h"
 #define SDL_MAIN_HANDLED
+#include "SDL.h"
 
 char	*build_non_rword_path(char *rword_path)
 {

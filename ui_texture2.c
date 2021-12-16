@@ -64,6 +64,14 @@ SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
 		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
 		recipe->font_recreate = 0;
 	}
+	if (!recipe->font || !recipe->text)
+	{
+		if (!recipe->font)
+			ft_printf("[%s] No font.\n", __FUNCTION__);
+		if (!recipe->text)
+			ft_printf("[%s] No text.\n", __FUNCTION__);
+		return (NULL);
+	}
 	TTF_SizeUTF8(recipe->font, recipe->text,
 		&recipe->text_wh.x, &recipe->text_wh.y);
 	color = rgba_to_sdl_color(hex_to_rgba(recipe->font_color));
