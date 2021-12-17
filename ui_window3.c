@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:25:00 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:25:00 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/17 13:14:08 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,30 @@ void	ui_window_id_set(t_ui_window *win, const char *id)
 	if (win->id)
 		ft_strdel(&win->id);
 	win->id = ft_strdup(id);
+}
+
+void	ui_window_set_icon(t_ui_window *win, char *path)
+{
+	SDL_Surface	*surface;
+
+	if (!win || !path || !win->win)
+	{
+		if (!win)
+			ft_printf("[%s] No win.\n", __FUNCTION__);
+		else if (!path)
+			ft_printf("[%s] No image path.\n", __FUNCTION__);
+		else if (!win->win)
+			ft_printf("[%s] No win->win.\n", __FUNCTION__);
+		return ;
+	}
+	surface = ui_surface_image_new(path);
+	if (!surface)
+	{
+		ft_printf("[%s] Failed creating surface from image path.\n", __FUNCTION__);
+		return ;
+	}
+	SDL_SetWindowIcon(win->win, surface);
+	SDL_FreeSurface(surface);
 }
 
 void	ui_window_print(t_ui_window *win)

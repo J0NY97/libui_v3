@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:22:45 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:22:46 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/17 12:53:14 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,9 @@
  * 										destroying of it;
  * bool			free_me;			when calling ui_window_free, check if the
  * 										s_ui_window should be freed;
+*/
+/*
+ * TODO: window icon should be editable from the style file;
 */
 typedef struct s_ui_window
 {
@@ -318,7 +321,7 @@ typedef struct s_ui_scrollbar
 	t_vec2i				bot_most;
 }						t_ui_scrollbar;
 
-// Window
+// Window s_ui_window
 void					ui_window_new(t_ui_window *win, char *title,
 							t_vec4 pos);
 void					ui_window_event(t_ui_window *win, SDL_Event e);
@@ -339,6 +342,7 @@ void					ui_window_texture_pos_set(t_ui_window *win,
 void					ui_window_print(t_ui_window *win);
 void					ui_window_render_texture(t_ui_window *win,
 							SDL_Texture *texture);
+void					ui_window_set_icon(t_ui_window *win, char *path);
 
 // Element
 void					ui_element_new(t_ui_window *win, t_ui_element *elem);
