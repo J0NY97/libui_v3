@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:16 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:17 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/17 12:27:11 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@ void	remove_str_from_n_to_m(char **dest, int n, int m)
 	char	*temp1;
 	int		len;
 
+	if (!*dest || n == m || n < 0)
+		return ;
 	len = ft_strlen(*dest);
+	if (len <= 0)
+		return ;
 	temp0 = ft_strsub(*dest, 0, n);
 	temp1 = ft_strsub(*dest, m, len);
 	ft_strdel(dest);

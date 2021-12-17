@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:10 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/11 09:27:47 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/17 11:10:51 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,12 @@ void	ui_input_remove(t_ui_input *input, t_ui_label *label, SDL_Event e)
 	if (big - small == 0)
 	{
 		if (e.key.keysym.sym == SDLK_BACKSPACE)
+		{
 			remove_str_from_n_to_m(&label->text, small - 1, small);
+			input->cursor_on_char_num
+				= ft_max(input->cursor_on_char_num - 1, 0);
+			input->cursor_from_char_num = input->cursor_on_char_num;
+		}
 		else
 			remove_str_from_n_to_m(&label->text, small, small + 1);
 	}
