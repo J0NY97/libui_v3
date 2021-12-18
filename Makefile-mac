@@ -6,7 +6,7 @@
 #    By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/18 10:06:05 by jsalmi           ###   ########.fr        #
+#    Updated: 2021/12/18 11:38:40 by jsalmi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -112,16 +112,13 @@ INCLUDES =		-I $(LIB_DIR)/libft \
 				-I $(LIB_DIR)/SDL_MAC/SDL2_ttf.framework/Headers \
 				-F $(LIB_DIR)/SDL_MAC
 
-all: thing $(ODIR) $(NAME)
+all: $(ODIR) $(NAME)
 	@printf $(GREEN)"\e[J[INFO] $(NAME) ready!\n"$(RESET)
 
 $(ODIR):
 	@mkdir -p $@
 
 -include $(JOHNNY)
-
-thing:
-	@sh ./ui_path_mac.sh
 
 $(ODIR)/%.o: $(CDIR)/%.c
 	@printf $(YELLOW)"\e[JCompiling $<\n\e[F"$(RESET)
@@ -136,7 +133,6 @@ clean:
 	@rm -rf $(ODIR)
 
 fclean: clean
-
 	@rm $(NAME)
 
 re: fclean all
