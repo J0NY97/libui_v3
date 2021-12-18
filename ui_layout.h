@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:36 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/11 09:38:22 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/18 10:06:50 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef struct s_ui_window	t_ui_window;
 typedef struct s_ui_recipe	t_ui_recipe;
 
 /*
+ * char		*root_dir;	all files/resources will be prefixed with this;
  * t_list	*windows;	t_ui_window;
  * t_list	*elements;	t_ui_element;
  * t_list	*families;	t_ui_family;
@@ -27,6 +28,7 @@ typedef struct s_ui_recipe	t_ui_recipe;
 */
 struct s_ui_layout
 {
+	char			*root_dir;
 	char			*layout_file;
 	char			*layout_file_content;
 	char			**layout_element_strings;
@@ -96,7 +98,7 @@ typedef struct s_ui_recipe
 void				ui_layout_event(t_ui_layout *layout, SDL_Event e);
 void				ui_layout_render(t_ui_layout *layout);
 void				ui_layout_list_render(t_list *list);
-void				ui_layout_load(t_ui_layout *layout, char *file);
+void				ui_layout_load(t_ui_layout *layout, char *root_dir, char *file);
 void				layout_apply_style(t_ui_layout *layout);
 void				layout_make_recipes(t_ui_layout *layout);
 void				layout_split_styles(t_ui_layout *layout);
@@ -183,5 +185,6 @@ void				make_family_from_children(t_list **list, void *parent,
 char				**split_string_into_array(char *str);
 int					actual_word_count(char *str);
 char				*get_file_content(t_ui_layout *layout, char *file);
+int					get_special(t_ui_layout *layout, char *str);
 
 #endif

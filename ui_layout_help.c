@@ -6,39 +6,11 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:32 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:34 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/18 10:01:36 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libui.h"
-
-int	get_special(t_ui_layout *layout, char *str)
-{
-	char	**arr;
-	int		result;
-	char	*temp;
-
-	result = 0;
-	arr = ft_strsplitfirstoccurence(str, ':');
-	if (arr && arr[0] && arr[1])
-	{
-		ft_strtrimwholearr(arr);
-		if (ft_strequ(arr[0], "style"))
-		{
-			layout->style_file = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
-			result = 1;
-		}
-		else if (ft_strequ(arr[0], "resource_dir"))
-		{
-			temp = ft_strndup(arr[1], ft_strlen(arr[1]) - 1);
-			layout->resource_dirs = ft_arradd(layout->resource_dirs, temp);
-			ft_strdel(&temp);
-			result = 1;
-		}
-	}
-	ft_arraydel(arr);
-	return (result);
-}
 
 char	*get_file_content(t_ui_layout *layout, char *file)
 {

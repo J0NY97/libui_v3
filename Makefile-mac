@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile-mac                                       :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
+#    By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/15 10:17:38 by nneronin         ###   ########.fr        #
+#    Updated: 2021/12/18 10:06:05 by jsalmi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -59,6 +59,7 @@ SRCS = \
 		ui_layout2.c\
 		ui_layout_get.c\
 		ui_layout_help.c\
+		ui_layout_help2.c\
 		ui_line.c\
 		ui_list.c\
 		ui_list2.c\

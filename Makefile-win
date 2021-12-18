@@ -43,6 +43,7 @@ SRCS = \
 		ui_layout2.c\
 		ui_layout_get.c\
 		ui_layout_help.c\
+		ui_layout_help2.c\
 		ui_line.c\
 		ui_list.c\
 		ui_list2.c\

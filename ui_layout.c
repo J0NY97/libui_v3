@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:34 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/11 14:33:48 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/18 10:24:15 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,15 @@ void	ui_layout_render(t_ui_layout *layout)
 	}
 }
 
-void	ui_layout_load(t_ui_layout *layout, char *file)
+void	ui_layout_load(t_ui_layout *layout, char *root_dir, char *file)
 {
 	memset(layout, 0, sizeof(t_ui_layout));
-	layout->layout_file = ft_strdup(file);
-	layout->layout_file_content = get_file_content(layout, file);
+	if (!root_dir)
+		layout->root_dir = NULL;
+	else
+		layout->root_dir = ft_strdup(root_dir);
+	layout->layout_file = ft_strjoin(layout->root_dir, file);
+	layout->layout_file_content = get_file_content(layout, layout->layout_file);
 	if (layout->layout_file_content == NULL)
 		return ;
 	layout->layout_element_strings
@@ -76,6 +80,7 @@ void	ui_layout_free(t_ui_layout *layout)
 {
 	if (!layout)
 		return ;
+	ft_strdel(&layout->root_dir);
 	free(layout->layout_file);
 	free(layout->layout_file_content);
 	ft_arraydel(layout->layout_element_strings);
