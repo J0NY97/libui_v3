@@ -2,4 +2,5 @@
 *.a
 *.d
 *.exe
-
+ui_path.h
+.DS_Store

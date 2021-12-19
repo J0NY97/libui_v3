@@ -1,9 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ui_dropdown.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/10 19:22:22 by jsalmi            #+#    #+#             */
+/*   Updated: 2021/12/13 13:14:35 by jsalmi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libui.h"
 
-/*
- * NOTE: the reason dropdown has element, is becuase of the parent stuff,
- * 	we dont actually need to show anything thats why the size of it is 0 x 0
-*/
 void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 {
 	t_ui_dropdown	*drop;
@@ -12,119 +20,101 @@ void	ui_dropdown_new(t_ui_window *win, t_ui_element *elem)
 	elem->element = ft_memalloc(sizeof(t_ui_dropdown));
 	elem->element_type = UI_TYPE_DROPDOWN;
 	drop = elem->element;
-
-	ui_element_color_set(elem, UI_STATE_DEFAULT, 0xffff0000);
-	ui_element_pos_set(elem, vec4(0, 0, 50, 20));
-
 	ui_label_new(win, &drop->label);
-	ui_label_text_set(&drop->label, "Dropdown");
-
+	drop->label.is_a_part_of_another = 1;
+	ui_label_set_text(&drop->label, "Dropdown");
+	ui_element_set_parent(&drop->label, elem, UI_TYPE_ELEMENT);
 	ui_menu_new(win, &drop->menu);
-	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	drop->menu.is_a_part_of_another = 1;
+	ui_element_pos_set(&drop->menu,
+		vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
 	drop->menu.show = 0;
-	((t_ui_menu *)drop->menu.element)->event_and_render_children = 1;
-
-	ui_element_parent_set(&drop->label, elem, UI_TYPE_ELEMENT);
-	ui_element_parent_set(&drop->menu, elem, UI_TYPE_ELEMENT);
+	((t_ui_menu *)drop->menu.element)->event_children = 1;
+	((t_ui_menu *)drop->menu.element)->render_children = 1;
+	ui_element_set_parent(&drop->menu, elem, UI_TYPE_ELEMENT);
+	drop->max_h = 100;
+	ui_scrollbar_new(win, &drop->scrollbar);
+	drop->scrollbar.is_a_part_of_another = 1;
+	ui_element_set_parent(&drop->scrollbar, elem, UI_TYPE_ELEMENT);
+	ui_scroll_value_set(&drop->scrollbar, 0);
+	((t_ui_scrollbar *)drop->scrollbar.element)->target = &drop->menu;
+	((t_ui_scrollbar *)drop->scrollbar.element)->top_most = vec2i(0, 0);
 }
 
 void	ui_dropdown_edit(t_ui_element *elem, t_ui_recipe *recipe)
 {
 	t_ui_dropdown	*drop;
 
+	if (!elem || !recipe)
+		return ;
 	drop = elem->element;
-	ui_element_edit(&drop->label, recipe);
-}
-
-void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
-{
-	t_ui_dropdown	*drop;
-
-	drop = elem->element;
-	ui_checkbox_event(elem, e);
-	drop->menu.show = elem->state == UI_STATE_CLICK;
-	if (drop->menu.show)
-	{
-		elem->state = UI_STATE_CLICK;
-		ui_menu_event(&drop->menu, e);
-		ui_list_radio_event(drop->menu.children, &drop->active, e);
-		if (drop->active)
-			ui_element_render(drop->active); // because we want it to update.
-
-		{
-			// This could be changed to the menu in the same wave as you render or event handle the children.
-			t_list *curr;
-			t_ui_element *child;
-			curr = drop->menu.children;
-			int total_height = 0;
-			while (curr)
-			{
-				child = curr->content;
-				ui_element_pos_set2(child, vec2(child->pos.x, total_height));
-				total_height += child->pos.h;
-				curr = curr->next;
-			};
-			ui_element_pos_set(&drop->menu, vec4(drop->menu.pos.x, drop->menu.pos.y, drop->menu.pos.w, total_height));
-		}
-
-	}
-	if(e.type == SDL_MOUSEBUTTONDOWN)
-	{
-		if (elem->is_hover != 1)
-		{
-			elem->is_click = 0;
-			elem->state = UI_STATE_DEFAULT;
-			drop->menu.show = 0;
-			return ;
-		}
-	}
+	ui_label_edit(&drop->label, recipe);
 }
 
 int	ui_dropdown_render(t_ui_element *elem)
 {
 	t_ui_dropdown	*drop;
+	t_ui_element	*scroll_button;
 
-	drop = elem->element;
 	if (!ui_button_render(elem))
 		return (0);
-
-	ui_element_pos_set(&drop->menu, vec4(0, elem->pos.h, drop->menu.pos.w, drop->menu.pos.h));
+	drop = elem->element;
+	drop->drop_exit = 0;
+	drop->menu.z = elem->z;
+	ui_element_pos_set(&drop->menu,
+		vec4(0, elem->pos.h,
+			drop->menu.pos.w, ft_min(drop->max_h, drop->menu.pos.h)));
 	ui_menu_render(&drop->menu);
+	ui_element_pos_set(&drop->scrollbar,
+		vec4(drop->menu.pos.x + drop->menu.pos.w, elem->pos.h,
+			10, drop->menu.pos.h));
+	scroll_button = ui_scrollbar_get_button_element(&drop->scrollbar);
+	ui_element_pos_set(scroll_button,
+		vec4(scroll_button->pos.x, scroll_button->pos.y,
+			drop->scrollbar.pos.w, scroll_button->pos.h));
+	ui_scrollbar_render(&drop->scrollbar);
 	return (1);
 }
 
-void	ui_dropdown_free(void *drop)
+void	ui_dropdown_free(void *elem, size_t size)
 {
-	(void)drop;
+	t_ui_element	*element;
+	t_ui_dropdown	*dropdown;
+
+	element = elem;
+	if (!element)
+		return ;
+	dropdown = element->element;
+	if (!dropdown)
+		return ;
+	ui_element_free(&dropdown->label, UI_TYPE_LABEL);
+	ui_element_free(&dropdown->menu, UI_TYPE_MENU);
+	ui_element_free(&dropdown->scrollbar, UI_TYPE_SCROLLBAR);
+	free(dropdown);
+	(void)size;
 }
 
-t_ui_element	*ui_dropdown_get(t_ui_element *elem, int ui_type)
+void	ui_dropdown_activate(t_ui_element *drop, t_ui_element *elem)
 {
-	if (elem->element_type == UI_TYPE_DROPDOWN)
+	t_list			*curr;
+	t_ui_dropdown	*d;
+
+	if (!elem)
+		return ;
+	d = ui_dropdown_get_dropdown(drop);
+	if (!drop || !d)
+		return ;
+	curr = ui_dropdown_get_menu_element(drop)->children;
+	while (curr)
 	{
-		if (ui_type == UI_TYPE_MENU)
-			return (ui_dropdown_get_menu_element(elem));
+		if (elem == curr->content)
+		{
+			d->active = elem;
+			ui_button_toggle_on(d->active);
+			ui_element_render(d->active);
+			ui_label_set_text(&d->label, ui_button_get_label(d->active)->text);
+			break ;
+		}
+		curr = curr->next;
 	}
-	ft_printf("[%s] Something went wrong.\n");
-	return (NULL);
-}
-
-// Getters
-
-t_ui_element	*ui_dropdown_get_menu_element(t_ui_element *elem)
-{
-	if (elem->element_type == UI_TYPE_DROPDOWN)
-		return (&ui_dropdown_get_dropdown(elem)->menu);
-	ft_printf("[%s] Something went wrong.\n");
-	return (NULL);
-}
-
-/*
- * Returns dropdown from element, if the type is dropdown;
-*/
-t_ui_dropdown	*ui_dropdown_get_dropdown(t_ui_element *elem)
-{
-	if (!elem || !elem->element_type == UI_TYPE_DROPDOWN)
-		return (NULL);
-	return (elem->element);
 }

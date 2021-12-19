@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ui_checkbox.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/10 19:22:05 by jsalmi            #+#    #+#             */
+/*   Updated: 2021/12/10 19:22:06 by jsalmi           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libui.h"
 
 void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
@@ -14,14 +26,21 @@ void	ui_checkbox_new(t_ui_window *win, t_ui_element *elem)
  * NOTE for DEV:
  * try to keep this element only,
  * because its used in the radio buttons.
+ * (or atleast should at some point)
 */
 void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 {
-	elem->is_hover = 0;
-	if (point_in_rect(elem->win->mouse_pos, elem->screen_pos))
-		elem->is_hover = 1;
-	if (elem->is_hover && e.type == SDL_MOUSEBUTTONDOWN)
-		elem->is_click = elem->is_click == 0;
+	elem->is_hover = ui_element_is_hover(elem);
+	if (elem->is_hover && elem->win->mouse_down_last_frame)
+	{
+		elem->was_click = 1;
+		if (elem->is_toggle)
+			ui_checkbox_toggle_off(elem);
+		else
+			ui_checkbox_toggle_on(elem);
+	}
+	if (elem->is_toggle)
+		elem->is_click = 1;
 	if (elem->is_click)
 		elem->state = UI_STATE_CLICK;
 	else if (elem->is_hover)
@@ -32,10 +51,23 @@ void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 
 int	ui_checkbox_render(t_ui_element *elem)
 {
-	ui_element_render(elem);
+	elem->was_click = 0;
+	if (!ui_element_render(elem))
+		return (0);
+	return (1);
 }
 
-void	ui_checkbox_free(void *elem)
+void	ui_checkbox_free(void *elem, size_t size)
 {
-	(void)elem;
+	t_ui_element	*element;
+	t_ui_checkbox	*checkbox;
+
+	element = elem;
+	if (!elem)
+		return ;
+	checkbox = element->element;
+	if (!checkbox)
+		return ;
+	free(checkbox);
+	(void)size;
 }
