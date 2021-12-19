@@ -93,21 +93,18 @@ INCLUDES	:= \
 		-I$(LIB_DIR)/libpf \
 		-I$(LIB_DIR)/SDL_WIN/include
 
-all: thing $(ODIR) $(NAME)
+all: $(ODIR) $(NAME)
 
 $(ODIR):
 	@mkdir -p $@
 
 -include $(JOHNNY)
 
-thing:
-	@sh ./ui_path_win.sh
-
 $(ODIR)/%.o: $(CDIR)/%.c
 	@gcc -c $< -o $@ -MMD $(INCLUDES)
 	@printf $(YELLOW)"\e[F\e[JCompiling $<\n"$(RESET)
 
-$(NAME): thing $(OBJS)
+$(NAME): $(OBJS)
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)
 	@echo "$(NAME) was successfully created."

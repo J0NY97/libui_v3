@@ -42,7 +42,7 @@ char	*ui_layout_get_file_from_resource_dirs(t_ui_layout *layout, char *file)
 	char	*temp;
 	int		iii;
 
-	if (!layout || !file)
+	if (!layout || !file || !layout->resource_dirs)
 		return (NULL);
 	iii = -1;
 	while (layout->resource_dirs[++iii])

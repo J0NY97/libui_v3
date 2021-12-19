@@ -19,7 +19,10 @@ void	get_style_file(t_ui_layout *layout, char *str)
 	if (!str)
 		return ;
 	temp = ft_strndup(str, ft_strlen(str) - 1);
-	layout->style_file = ft_strjoin(layout->root_dir, temp);
+	if (layout->root_dir)
+		layout->style_file = ft_strjoin(layout->root_dir, temp);
+	else
+		layout->style_file = ft_strdup(temp);
 	ft_strdel(&temp);
 }
 
@@ -31,10 +34,15 @@ void	get_resource_dir(t_ui_layout *layout, char *str)
 	if (!str)
 		return ;
 	temp = ft_strndup(str, ft_strlen(str) - 1);
-	temp2 = ft_strjoin(layout->root_dir, temp);
-	layout->resource_dirs = ft_arradd(layout->resource_dirs, temp2);
+	if (layout->root_dir)
+	{
+		temp2 = ft_strjoin(layout->root_dir, temp);
+		layout->resource_dirs = ft_arradd(layout->resource_dirs, temp2);
+		ft_strdel(&temp2);
+	}
+	else
+		layout->resource_dirs = ft_arradd(layout->resource_dirs, temp);
 	ft_strdel(&temp);
-	ft_strdel(&temp2);
 }
 
 int	get_special(t_ui_layout *layout, char *str)

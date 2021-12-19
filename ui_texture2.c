@@ -47,6 +47,18 @@ char	*get_font_path(char *font_path)
 	return (temp_font_path);
 }
 
+void	recreate_font_of_label(t_ui_label *label)
+{
+	char	*temp;
+
+	temp = get_font_path(label->font_path);
+	ft_strdel(&label->font_path);
+	label->font_path = temp;
+	if (label->font)
+		TTF_CloseFont(label->font);
+	label->font = TTF_OpenFont(label->font_path, label->font_size);
+}
+
 SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
 {
 	SDL_Surface	*surface;
@@ -56,22 +68,11 @@ SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
 
 	if (!recipe->font || recipe->font_recreate)
 	{
-		temp = get_font_path(recipe->font_path);
-		ft_strdel(&recipe->font_path);
-		recipe->font_path = temp;
-		if (recipe->font)
-			TTF_CloseFont(recipe->font);
-		recipe->font = TTF_OpenFont(recipe->font_path, recipe->font_size);
+		recreate_font_of_label(recipe);
 		recipe->font_recreate = 0;
 	}
 	if (!recipe->font || !recipe->text)
-	{
-		if (!recipe->font)
-			ft_printf("[%s] No font.\n", __FUNCTION__);
-		if (!recipe->text)
-			ft_printf("[%s] No text.\n", __FUNCTION__);
 		return (NULL);
-	}
 	TTF_SizeUTF8(recipe->font, recipe->text,
 		&recipe->text_wh.x, &recipe->text_wh.y);
 	color = rgba_to_sdl_color(hex_to_rgba(recipe->font_color));

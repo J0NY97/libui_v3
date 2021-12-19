@@ -46,7 +46,7 @@ void	ui_window_set_icon(t_ui_window *win, char *path)
 	surface = ui_surface_image_new(path);
 	if (!surface)
 	{
-		ft_printf("[%s] Failed creating surface from image path.\n", __FUNCTION__);
+		ft_printf("[%s] Failed creating surface from path.\n", __FUNCTION__);
 		return ;
 	}
 	SDL_SetWindowIcon(win->win, surface);
