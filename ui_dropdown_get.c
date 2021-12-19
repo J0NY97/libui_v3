@@ -58,9 +58,8 @@ t_ui_scrollbar	*ui_dropdown_get_scrollbar(t_ui_element *elem)
 
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 		return (NULL);
-	scroll = ui_dropdown_get_scrollbar_element(elem); 
+	scroll = ui_dropdown_get_scrollbar_element(elem);
 	if (!scroll)
 		return (NULL);
 	return (scroll->element);
 }
-
