@@ -66,8 +66,6 @@ void	ui_surface_rect_draw_thicc(
 			vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color);
 	}
 }
-/*
-*/
 
 void	ui_surface_rect_draw_filled(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
@@ -119,8 +117,6 @@ void	ui_surface_circle_draw(
 		ui_surface_pixel_set(surface, orig.x - y, orig.y - x, color);
 	}
 }
-/*
-*/
 
 void	ui_surface_circle_draw_filled(
 		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
@@ -168,5 +164,3 @@ void	ui_surface_line_draw_thicc(
 		ui_surface_line_draw(surface, v0, v1, color);
 	}
 }
-/*
-*/

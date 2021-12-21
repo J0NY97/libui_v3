@@ -53,7 +53,7 @@ void	ui_scrollbar_update_target_size(t_ui_element *elem)
 		scroll->target_size = abs(scroll->bot_most.y - scroll->top_most.y);
 	}
 	else
-		scroll->target_size = abs(INT_MAX - INT_MIN);
+		scroll->target_size = 0;
 }
 
 /*
