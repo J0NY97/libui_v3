@@ -31,11 +31,15 @@ void	layout_compile_elements(t_ui_layout *layout)
 		family = curr->content;
 		if (family->type == UI_TYPE_WINDOW)
 		{
-			win = ft_memalloc(sizeof(t_ui_window));
-			ui_window_new(win, NULL, vec4(0, 25, 100, 100));
-			ui_window_id_set(win, family->id);
+			win = ui_layout_get_window(layout, family->id);
+			if (!win)
+			{
+				win = ft_memalloc(sizeof(t_ui_window));
+				ui_window_new(win, NULL, vec4(0, 25, 100, 100));
+				ui_window_id_set(win, family->id);
+				add_to_list(&layout->windows, win, UI_TYPE_WINDOW);
+			}
 			win->layout = layout;
-			add_to_list(&layout->windows, win, UI_TYPE_WINDOW);
 			make_family_from_children(
 				&layout->elements, win, UI_TYPE_WINDOW, family);
 		}

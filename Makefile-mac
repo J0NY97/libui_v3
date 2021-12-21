@@ -91,6 +91,7 @@ SRCS = \
 		ui_vec4.c\
 		ui_vec_both.c\
 		ui_vec_both2.c\
+		ui_window_from.c\
 		ui_window.c\
 		ui_window2.c\
 		ui_window3.c\

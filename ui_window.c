@@ -22,14 +22,14 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->pos = pos;
 	win->win = SDL_CreateWindow(win->title,
 			win->pos.x, win->pos.y, win->pos.w, win->pos.h, 0);
+	win->free_win = 1;
 	win->renderer = SDL_CreateRenderer(win->win, -1, SDL_RENDERER_ACCELERATED);
-	win->texture = ui_create_texture(win->renderer,
-			vec2i(win->pos.w, win->pos.h));
+	win->free_renderer = 1;
+	win->texture = ui_create_texture(win->renderer, vec2i(pos.w, pos.h));
 	win->show = 1;
 	win->children = NULL;
 	win->window_id = SDL_GetWindowID(win->win);
-	win->screen_pos.w = pos.w;
-	win->screen_pos.h = pos.h;
+	win->screen_pos = vec4i(0, 0, pos.w, pos.h);
 	win->texture_scale = vec2(win->screen_pos.w / win->pos.w,
 			win->screen_pos.h / win->pos.h);
 	SDL_GetMouseState(&win->window_mouse_pos.x, &win->window_mouse_pos.y);
@@ -70,9 +70,9 @@ void	ui_window_free(void *window, size_t size)
 	ft_strdel(&win->title);
 	ui_list_element_free(&win->children);
 	SDL_DestroyTexture(win->texture);
-	if (!win->renderer_replaced)
+	if (win->free_renderer)
 		SDL_DestroyRenderer(win->renderer);
-	if (!win->win_replaced)
+	if (win->free_win)
 		SDL_DestroyWindow(win->win);
 	win->layout = NULL;
 	if (win->free_me)
@@ -91,7 +91,7 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 {
 	t_vec4i	pos;
 
-	ui_win->win_replaced = 1;
+	ui_win->free_win = 0;
 	if (ui_win->renderer)
 		SDL_DestroyRenderer(ui_win->renderer);
 	if (ui_win->win)
@@ -105,7 +105,7 @@ void	ui_window_replace_win(t_ui_window *ui_win, SDL_Window *sdl_win)
 		ui_win->renderer
 			= SDL_CreateRenderer(sdl_win, -1, SDL_RENDERER_ACCELERATED);
 	else
-		ui_win->renderer_replaced = 1;
+		ui_win->free_renderer = 0;
 	ui_win->texture = ui_create_texture(ui_win->renderer,
 			vec2i(ui_win->pos.w, ui_win->pos.h));
 	ui_win->window_id = SDL_GetWindowID(ui_win->win);

@@ -47,7 +47,7 @@ void	ui_layout_render(t_ui_layout *layout)
 
 void	ui_layout_load(t_ui_layout *layout, char *root_dir, char *file)
 {
-	memset(layout, 0, sizeof(t_ui_layout));
+//	memset(layout, 0, sizeof(t_ui_layout));
 	if (!root_dir)
 		layout->root_dir = NULL;
 	else

@@ -36,12 +36,10 @@
  *										(used in the layout event handler);
  * t_ui_layout	*layout;			the layout it is part of, or if NULL it is
  * 										not part of any layout;
- * bool			win_replaced;		the user has replaced win->win with their
- * 										own, which means they handle the
- * 										destroying of it too;
- * bool			renderer_replaced;	the user had renderer associated with the
- * 										win->win they gave in, so they handle
- * 										destroying of it;
+ * bool			free_win;	default 1, probably set to 0 if we have created the
+ * 								sdl window outside the ui_window_new; if 0 wont
+ * 								free win->win in the window freer;	
+ * bool			free_renderer;	same as free_win but for renderer;
  * bool			free_me;			when calling ui_window_free, check if the
  * 										s_ui_window should be freed;
 */
@@ -73,8 +71,8 @@ typedef struct s_ui_window
 	t_list			*children;
 	t_ui_layout		*layout;
 	Uint32			bg_color;
-	bool			win_replaced;
-	bool			renderer_replaced;
+	bool			free_win;
+	bool			free_renderer;
 	bool			free_me;
 }					t_ui_window;
 
@@ -337,6 +335,8 @@ void					ui_window_title_set(t_ui_window *win,
 void					ui_window_id_set(t_ui_window *win, const char *id);
 void					ui_window_replace_win(t_ui_window *ui_win,
 							SDL_Window *sdl_win);
+void					ui_window_new_from(t_ui_window *win,
+							SDL_Window *window);
 void					ui_window_texture_pos_set(t_ui_window *win,
 							t_vec2i pos);
 void					ui_window_print(t_ui_window *win);
