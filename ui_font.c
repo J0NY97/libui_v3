@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 14:06:15 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/22 14:22:09 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:42:15 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ TTF_Font	*ui_get_font(char *path, int size)
 		if (fonts[i].size == size)
 			if (ft_strequ(fonts[i].path, path))
 				return (fonts[i].font);
-	fonts = realloc(fonts, ++font_count);
+	fonts = realloc(fonts, ++font_count * sizeof(t_ui_font));
 	fonts[font_count - 1].path = ft_strdup(path);
 	fonts[font_count - 1].size = size;
 	fonts[font_count - 1].font = TTF_OpenFont(path, size);
