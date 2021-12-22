@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 14:06:15 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/22 14:42:15 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:50:02 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ TTF_Font	*ui_get_font(char *path, int size)
 	fonts[font_count - 1].path = ft_strdup(path);
 	fonts[font_count - 1].size = size;
 	fonts[font_count - 1].font = TTF_OpenFont(path, size);
+	ft_printf("[%s] Font count : %d\n", __FUNCTION__, font_count);
 	return (fonts[font_count - 1].font);
 }
