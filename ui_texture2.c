@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:41 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:24:41 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:24:46 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,33 +54,34 @@ void	recreate_font_of_label(t_ui_label *label)
 	temp = get_font_path(label->font_path);
 	ft_strdel(&label->font_path);
 	label->font_path = temp;
-	if (label->font)
-		TTF_CloseFont(label->font);
-	label->font = TTF_OpenFont(label->font_path, label->font_size);
+//	if (label->font)
+//		TTF_CloseFont(label->font);
+//	label->font = TTF_OpenFont(label->font_path, label->font_size);
+	label->font = ui_get_font(label->font_path, label->font_size);
 }
 
-SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *recipe)
+SDL_Surface	*ui_surface_create_from_text_recipe(t_ui_label *label)
 {
 	SDL_Surface	*surface;
 	t_rgba		rgba;
 	SDL_Color	color;
 	char		*temp;
 
-	if (!recipe->font || recipe->font_recreate)
+	if (!label->font || label->font_recreate)
 	{
-		recreate_font_of_label(recipe);
-		recipe->font_recreate = 0;
+		recreate_font_of_label(label);
+		label->font_recreate = 0;
 	}
-	if (!recipe->font || !recipe->text)
+	if (!label->font || !label->text)
 		return (NULL);
-	TTF_SizeUTF8(recipe->font, recipe->text,
-		&recipe->text_wh.x, &recipe->text_wh.y);
-	color = rgba_to_sdl_color(hex_to_rgba(recipe->font_color));
-	if (recipe->max_w == -1)
-		surface = TTF_RenderUTF8_Blended(recipe->font, recipe->text, color);
+	TTF_SizeUTF8(label->font, label->text,
+		&label->text_wh.x, &label->text_wh.y);
+	color = rgba_to_sdl_color(hex_to_rgba(label->font_color));
+	if (label->max_w == -1)
+		surface = TTF_RenderUTF8_Blended(label->font, label->text, color);
 	else
-		surface = TTF_RenderUTF8_Blended_Wrapped(recipe->font,
-				recipe->text, color, recipe->max_w);
+		surface = TTF_RenderUTF8_Blended_Wrapped(label->font,
+				label->text, color, label->max_w);
 	return (surface);
 }
 

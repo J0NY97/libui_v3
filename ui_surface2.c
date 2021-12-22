@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:24:36 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:24:36 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:26:56 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,31 +32,6 @@ void	ui_surface_print(SDL_Surface *surface)
 	ft_printf("\t\tGmask : %.8x\n", surface->format->Gmask);
 	ft_printf("\t\tBmask : %.8x\n", surface->format->Bmask);
 	ft_printf("\t\tAmask : %.8x\n", surface->format->Amask);
-}
-
-SDL_Surface	*ui_surface_text_new(
-		char *text, char *font_path, int size, Uint32 font_color)
-{
-	SDL_Surface	*surface;
-	TTF_Font	*font;
-	t_rgba		rgba;
-	SDL_Color	color;
-
-	font = TTF_OpenFont(font_path, size);
-	if (!font)
-	{
-		ft_printf("[%s] Font path doesnt exist.\n", __FUNCTION__);
-		return (NULL);
-	}
-	rgba = hex_to_rgba(font_color);
-	color.r = rgba.r;
-	color.g = rgba.g;
-	color.b = rgba.b;
-	color.a = rgba.a;
-	surface = TTF_RenderUTF8_Blended(font, text, color);
-	TTF_CloseFont(font);
-	font = NULL;
-	return (surface);
 }
 
 SDL_Surface	*ui_surface_image_new(char *image_path)

@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:22 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:23:23 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:26:37 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	ui_label_free(void *elem, size_t size)
 		return ;
 	ft_strdel(&label->text);
 	ft_strdel(&label->font_path);
-	TTF_CloseFont(label->font);
+//	TTF_CloseFont(label->font);
 	free(label);
 	(void)size;
 }

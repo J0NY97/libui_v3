@@ -22,6 +22,7 @@ SRCS = \
 		ui_element_edit.c\
 		ui_element_render.c\
 		ui_family.c\
+		ui_font.c\
 		ui_help.c\
 		ui_help2.c\
 		ui_help3.c\

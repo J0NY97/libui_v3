@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:26:30 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/11 15:12:37 by jsalmi           ###   ########.fr       */
+/*   Updated: 2021/12/22 14:22:41 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,9 @@ typedef struct s_rgba
 		int	rgba[4];
 	};
 }	t_rgba;
+
+// FONT
+TTF_Font				*ui_get_font(char *path, int size);
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(

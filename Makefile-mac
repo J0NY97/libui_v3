@@ -6,7 +6,7 @@
 #    By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2021/12/18 11:38:40 by jsalmi           ###   ########.fr        #
+#    Updated: 2021/12/22 14:25:19 by jsalmi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,6 +38,7 @@ SRCS = \
 		ui_element_edit.c\
 		ui_element_render.c\
 		ui_family.c\
+		ui_font.c\
 		ui_help.c\
 		ui_help2.c\
 		ui_help3.c\
