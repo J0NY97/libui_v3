@@ -17,6 +17,8 @@
 */
 int	ui_dropdown_is_open(t_ui_element *elem)
 {
+	t_ui_element	*menu;
+
 	if (elem->element_type != UI_TYPE_DROPDOWN)
 	{
 		ft_printf("[%s] Elem is not of type UI_TYPE_DROPDOWN.[%s, %s]\n",
@@ -24,7 +26,14 @@ int	ui_dropdown_is_open(t_ui_element *elem)
 			ui_element_type_to_string(elem->element_type));
 		return (-1);
 	}
-	return (((t_ui_dropdown *)elem->element)->menu.show);
+	menu = ui_dropdown_get_menu_element(elem);
+	if (!menu)
+	{
+		ft_printf("[%s] Dropdown doenst have elem->element->menu. <%s>\n",
+			__FUNCTION__, elem->id);
+		return (-1);
+	}
+	return (menu->show);
 }
 
 /*
@@ -42,6 +51,9 @@ int	ui_dropdown_open(t_ui_element *elem)
 	return (((t_ui_dropdown *)elem->element)->drop_open);
 }
 
+/*
+ * The one frame where the dropdown was closed/exited.
+*/
 int	ui_dropdown_exit(t_ui_element *elem)
 {
 	if (elem->element_type != UI_TYPE_DROPDOWN)
