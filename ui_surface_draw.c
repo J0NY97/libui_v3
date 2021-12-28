@@ -40,7 +40,6 @@ void	ui_surface_rect_draw(
  * tl	top, left
  * br	bot, right
 */
-/*
 void	ui_surface_rect_draw_thicc(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
@@ -67,7 +66,6 @@ void	ui_surface_rect_draw_thicc(
 			vec2i(br.x - i, tl.y), vec2i(br.x - i, br.y), color);
 	}
 }
-*/
 
 void	ui_surface_rect_draw_filled(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, Uint32 color)
@@ -81,7 +79,6 @@ void	ui_surface_rect_draw_filled(
  * Filled : https://stackoverflow.com/a/1201227
  * Empty  : https://www.geeksforgeeks.org/bresenhams-circle-drawing-algorithm/
 */
-/*
 void	ui_surface_circle_draw(
 		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
 {
@@ -120,7 +117,6 @@ void	ui_surface_circle_draw(
 		ui_surface_pixel_set(surface, orig.x - y, orig.y - x, color);
 	}
 }
-*/
 
 void	ui_surface_circle_draw_filled(
 		SDL_Surface *surface, t_vec2i orig, int r, Uint32 color)
@@ -144,7 +140,6 @@ void	ui_surface_circle_draw_filled(
 	}
 }
 
-/*
 void	ui_surface_line_draw_thicc(
 		SDL_Surface *surface, t_vec2i p1, t_vec2i p2, int thicc, Uint32 color)
 {
@@ -161,12 +156,11 @@ void	ui_surface_line_draw_thicc(
 				p1.y + i * sin(angle + M_PI / 2));
 		v1 = vec2i(p2.x + i * cos(angle + M_PI / 2),
 				p2.y + i * sin(angle + M_PI / 2));
-		ui_surface_line_draw_nik(surface, v0, v1, color);
+		ui_surface_line_draw(surface, v0, v1, color);
 		v0 = vec2i(p1.x + i * cos(angle - M_PI / 2),
 				p1.y + i * sin(angle - M_PI / 2));
 		v1 = vec2i(p2.x + i * cos(angle - M_PI / 2),
 				p2.y + i * sin(angle - M_PI / 2));
-		ui_surface_line_draw_nik(surface, v0, v1, color);
+		ui_surface_line_draw(surface, v0, v1, color);
 	}
 }
-*/
