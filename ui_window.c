@@ -40,22 +40,28 @@ void	ui_window_new(t_ui_window *win, char *title, t_vec4 pos)
 	win->textures_recreate = 1;
 }
 
+/*
+ * Copy the win->texture to the window.
+ * Clear the renderer and fill with win color.
+ * Reset some stuff that need to be reset every frame.
+*/
 int	ui_window_render(t_ui_window *win)
 {
 	t_rgba	rgba;
 
 	SDL_SetRenderTarget(win->renderer, NULL);
+	SDL_RenderClear(win->renderer);
 	SDL_RenderCopy(win->renderer, win->texture, NULL, NULL);
+	SDL_RenderPresent(win->renderer);
 	SDL_SetRenderTarget(win->renderer, win->texture);
+	SDL_RenderClear(win->renderer);
 	rgba = hex_to_rgba(win->bg_color);
 	SDL_SetRenderDrawColor(win->renderer, rgba.r, rgba.g, rgba.b, rgba.a);
-	SDL_RenderClear(win->renderer);
 	SDL_SetRenderTarget(win->renderer, NULL);
 	win->textures_recreate = 0;
 	win->mouse_pos_prev = win->mouse_pos;
 	win->scroll = 0;
 	win->mouse_down_last_frame = 0;
-	SDL_RenderPresent(win->renderer);
 	return (1);
 }
 

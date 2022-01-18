@@ -83,10 +83,9 @@ SRCS = \
 		ui_window_edit.c\
 		ui_window_event.c\
 
-ODIR = obj
 CDIR = .
-OBJS = $(addprefix $(ODIR)/,$(SRCS:.c=.o))
-JOHNNY = $(SRCS:.c=.d)
+ODIR = obj
+OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
 CFLAGS = -MMD #-Wall -Wextra
 
 LIB_DIR		:= ../
@@ -100,8 +99,6 @@ all: $(ODIR) $(NAME)
 $(ODIR):
 	@mkdir -p $@
 
--include $(JOHNNY)
-
 $(ODIR)/%.o: $(CDIR)/%.c
 	@gcc -c $< -o $@ -MMD $(INCLUDES)
 	@printf $(YELLOW)"\e[F\e[JCompiling $<\n"$(RESET)
@@ -112,8 +109,7 @@ $(NAME): $(OBJS)
 	@echo "$(NAME) was successfully created."
 
 clean:
-	@rm -f $(OBJS)
-	@rm -f $(JOHNNY)
+	@rm -rf $(ODIR)
 	@echo "$(NAME) was cleaned."
 
 fclean: clean

@@ -44,3 +44,20 @@ SDL_Surface	*ui_surface_image_new(char *image_path)
 			__FUNCTION__, image_path);
 	return (surface);
 }
+
+SDL_Surface	*ui_surface_text_new(
+	char *text, char *font_path, int size, Uint32 color)
+{
+	SDL_Surface	*surface;
+	t_rgba		rgba;
+	SDL_Color	col;
+	TTF_Font	*font;
+
+	font = ui_get_font(font_path, size);
+	if (!font)
+		return (NULL);
+	rgba = hex_to_rgba(color);
+	col = rgba_to_sdl_color(rgba);
+	surface = TTF_RenderUTF8_Blended(font, text, col);
+	return (surface);
+}
