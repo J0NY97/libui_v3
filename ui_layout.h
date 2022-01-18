@@ -90,6 +90,8 @@ typedef struct s_ui_recipe
 	Uint32			input_type;
 	char			*placeholder_text;
 	char			*target;
+	t_vec2i			texture_size;
+	bool			texture_size_set[2];
 }					t_ui_recipe;
 
 ///////////////

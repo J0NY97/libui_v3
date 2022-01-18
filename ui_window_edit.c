@@ -54,6 +54,10 @@ void	ui_window_edit(t_ui_window *win, t_ui_recipe *recipe)
 			pos.v[i] = recipe->pos.v[i];
 	}
 	ui_window_pos_set(win, pos);
+	if (recipe->texture_size_set[0])
+		pos.w = recipe->texture_size.v[0];
+	if (recipe->texture_size_set[1])
+		pos.h = recipe->texture_size.v[1];
 	ui_window_texture_pos_set(win, vec2i(pos.w, pos.h));
 	if (recipe->title)
 		ui_window_title_set(win, recipe->title);

@@ -34,6 +34,7 @@ void	try_getting_flags(t_ui_recipe *recipe, char **key_value)
 {
 	char	**flags;
 	char	**final_flags;
+	int		i;
 
 	if (ft_strequ(key_value[0], "flag") || ft_strequ(key_value[0], "flags"))
 	{
@@ -42,6 +43,17 @@ void	try_getting_flags(t_ui_recipe *recipe, char **key_value)
 		ft_arraydel(flags);
 		ft_arraydel(recipe->flags);
 		recipe->flags = final_flags;
+	}
+	else if (ft_strequ(key_value[0], "texture"))
+	{
+		i = -1;
+		flags = ft_strsplit(key_value[1], ' ');
+		while (flags[++i])
+		{
+			recipe->texture_size.v[i] = ft_atoi(flags[i]);
+			recipe->texture_size_set[i] = 1;
+		}
+		ft_arraydel(flags);
 	}
 }
 
