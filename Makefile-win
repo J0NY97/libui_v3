@@ -86,7 +86,7 @@ SRCS = \
 CDIR = .
 ODIR = obj
 OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
-CFLAGS = -MMD #-Wall -Wextra
+CFLAGS = -Wall -Wextra -MMD
 
 LIB_DIR		:= ../
 INCLUDES	:= \
