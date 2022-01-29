@@ -68,6 +68,7 @@ void	ui_input_render_highlight(t_ui_element *elem)
 	SDL_SetRenderDrawColor(elem->win->renderer, 255, 0, 0, 255);
 	SDL_RenderDrawLine(elem->win->renderer,
 		pos_on.x, pos_on.y, pos_on.x, pos_on.y + elem->screen_pos.h - 4);
+			/*
 	SDL_SetRenderDrawColor(elem->win->renderer, 0, 0, 255, 255);
 	SDL_RenderDrawLine(elem->win->renderer, pos_from.x, pos_from.y,
 		pos_from.x, pos_from.y + elem->screen_pos.h - 4);
@@ -76,6 +77,7 @@ void	ui_input_render_highlight(t_ui_element *elem)
 	w.y = ft_min(pos_from.x, pos_on.x);
 	SDL_RenderFillRect(elem->win->renderer,
 		&(SDL_Rect){w.y, pos_from.y, w.x - w.y, elem->screen_pos.h - 4});
+		*/
 	SDL_SetRenderTarget(elem->win->renderer, NULL);
 }
 

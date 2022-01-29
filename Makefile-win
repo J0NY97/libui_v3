@@ -1,7 +1,23 @@
-RESET	:= "\e[0m"
-YELLOW	:= "\e[0;33m"
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile-win                                       :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: jsalmi <jsalmi@student.hive.fi>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2022/01/29 10:10:07 by jsalmi            #+#    #+#              #
+#    Updated: 2022/01/29 10:10:07 by jsalmi           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-NAME = libui.a
+RED		:= "\e[0;31m"
+GREEN	:= "\e[0;32m"
+YELLOW	:= "\e[0;33m"
+BLUE	:= "\e[0;34m"
+MAGENTA	:= "\e[0;35m"
+CYAN	:= "\e[0;36m"
+RESET	:= "\e[0m"
+
 SRCS = \
 		ui_button.c\
 		ui_button2.c\
@@ -83,38 +99,42 @@ SRCS = \
 		ui_window_edit.c\
 		ui_window_event.c\
 
-CDIR = .
+NAME = libui.a
 ODIR = obj
-OBJS = $(addprefix $(ODIR)/, $(SRCS:.c=.o))
+CDIR = .
+OBJS = $(addprefix $(ODIR)/,$(SRCS:.c=.o))
+JOHNNY = $(SRCS:.c=.d)
 CFLAGS = -Wall -Wextra -MMD
 
-LIB_DIR		:= ../
-INCLUDES	:= \
-		-I$(LIB_DIR)/libft \
-		-I$(LIB_DIR)/libpf \
-		-I$(LIB_DIR)/SDL_WIN/include
+LIB_DIR		=	../
+INCLUDES	=	\
+				-I $(LIB_DIR)/libft \
+				-I $(LIB_DIR)/libpf \
+				-I $(LIB_DIR)/SDL_WIN/include \
 
 all: $(ODIR) $(NAME)
+	@printf $(GREEN)"\e[J[INFO] $(NAME) ready!\n"$(RESET)
 
 $(ODIR):
 	@mkdir -p $@
 
+-include $(JOHNNY)
+
 $(ODIR)/%.o: $(CDIR)/%.c
-	@gcc -c $< -o $@ -MMD $(INCLUDES)
-	@printf $(YELLOW)"\e[F\e[JCompiling $<\n"$(RESET)
+	@printf $(YELLOW)"\e[JCompiling $<\n\e[F"$(RESET)
+	@gcc -c $< -o $@ $(INCLUDES) $(CFLAGS) $(SDL_INC)
 
 $(NAME): $(OBJS)
 	@ar rc $(NAME) $(OBJS)
 	@ranlib $(NAME)
-	@echo "$(NAME) was successfully created."
 
 clean:
+	@printf $(CYAN)"[INFO] $(NAME) cleaned!\n"$(RESET)
 	@rm -rf $(ODIR)
-	@echo "$(NAME) was cleaned."
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm $(NAME)
 
 re: fclean all
 
-.PHONY: clean, all, re, fclean
+.PHONY: fclean all clean re $(NAME)
