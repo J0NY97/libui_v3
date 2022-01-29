@@ -117,7 +117,7 @@ static const t_ui_acceptable	g_acceptable[] =
 		.maker = &ui_checkbox_new,
 		.renderer = &ui_checkbox_render,
 		.eventer = &ui_checkbox_event,
-		.edit = NULL,
+		.edit = &ui_checkbox_edit,
 		.printer = NULL,
 		.getter = NULL
 	},

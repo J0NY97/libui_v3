@@ -12,7 +12,12 @@
 
 #include "libui.h"
 
-char	*get_file_content(t_ui_layout *layout, char *file)
+/*
+ * This function is specific to its purpose;
+ * DO NOT! use the libft get_file_content(), its no the same;
+ * Edit this's name instead;
+*/
+char	*ui_get_file_content(t_ui_layout *layout, char *file)
 {
 	char	*content;
 	char	*line;

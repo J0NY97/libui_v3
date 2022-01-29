@@ -54,7 +54,7 @@ void	ui_layout_load(t_ui_layout *layout, char *root_dir, char *file)
 	else
 		layout->root_dir = ft_strdup(root_dir);
 	layout->layout_file = ft_strjoin(layout->root_dir, file);
-	layout->layout_file_content = get_file_content(layout, layout->layout_file);
+	layout->layout_file_content = ui_get_file_content(layout, layout->layout_file);
 	if (layout->layout_file_content == NULL)
 		return ;
 	layout->layout_element_strings
@@ -64,7 +64,7 @@ void	ui_layout_load(t_ui_layout *layout, char *root_dir, char *file)
 	if (!layout->style_file)
 		return ;
 	layout->style_file_content
-		= get_file_content(layout, layout->style_file);
+		= ui_get_file_content(layout, layout->style_file);
 	if (layout->style_file_content == NULL)
 		return ;
 	layout->style_recipe_strings

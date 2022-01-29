@@ -71,3 +71,9 @@ void	ui_checkbox_free(void *elem, size_t size)
 	free(checkbox);
 	(void)size;
 }
+
+void	ui_checkbox_edit(t_ui_element *elem, t_ui_recipe *recipe)
+{
+	(void)elem;
+	(void)recipe;
+}

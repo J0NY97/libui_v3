@@ -39,6 +39,5 @@ TTF_Font	*ui_get_font(char *path, int size)
 	fonts[font_count - 1].path = ft_strdup(path);
 	fonts[font_count - 1].size = size;
 	fonts[font_count - 1].font = TTF_OpenFont(path, size);
-	ft_printf("[%s] Font count : %d\n", __FUNCTION__, font_count);
 	return (fonts[font_count - 1].font);
 }
