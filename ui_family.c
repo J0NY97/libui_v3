@@ -70,6 +70,7 @@ void	ui_family_free(void *family, size_t size)
 	ft_arraydel(fam->children_strings);
 	ft_lstdel(&fam->children, &ui_family_free);
 	free(fam);
+	(void)size;
 }
 
 void	make_family_from_children(
@@ -100,7 +101,6 @@ void	make_elements_from_family(
 		t_list **list, void *parent, int parent_type, t_ui_family *family)
 {
 	t_ui_element	*elem;
-	t_list			*rruc;
 
 	elem = NULL;
 	if (parent_type == UI_TYPE_ELEMENT

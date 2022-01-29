@@ -47,7 +47,6 @@ void	ui_element_new(t_ui_window *win, t_ui_element *elem)
 void	ui_element_free(void *elem_p, size_t size)
 {
 	t_ui_element	*elem;
-	int				i;
 
 	elem = elem_p;
 	if (!elem)
@@ -68,6 +67,7 @@ void	ui_element_free(void *elem_p, size_t size)
 	elem->children = NULL;
 	if (elem->free_me && !elem->is_a_part_of_another)
 		free(elem);
+	(void)size;
 }
 
 void	ui_element_print(t_ui_element *elem)

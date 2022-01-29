@@ -25,7 +25,7 @@ typedef struct	s_ui_font
 TTF_Font	*ui_get_font(char *path, int size)
 {
 	static t_ui_font	*fonts = NULL;
-	static size_t		font_count = 0;
+	static int			font_count = 0;
 	int					i;
 
 	if (access(path, F_OK))

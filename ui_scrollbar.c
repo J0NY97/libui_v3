@@ -39,12 +39,10 @@ void	ui_scrollbar_new(t_ui_window *win, t_ui_element *elem)
 void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 {
 	t_ui_scrollbar	*scroll;
-	t_ui_button		*button;
 
 	if (!elem->show || !elem->event)
 		return ;
 	scroll = elem->element;
-	button = scroll->button.element;
 	if (ui_element_is_click(elem))
 	{
 		scroll->value = ui_get_slider_value(scroll->min, scroll->max,
@@ -60,6 +58,7 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 		scroll->value = ft_clamp(scroll->value, scroll->min, scroll->max);
 		scroll->update = 1;
 	}
+	(void)e;
 }
 
 /*
@@ -68,12 +67,10 @@ void	ui_scrollbar_event(t_ui_element *elem, SDL_Event e)
 int	ui_scrollbar_render(t_ui_element *elem)
 {
 	t_ui_scrollbar	*scroll;
-	t_ui_button		*button;
 
 	if (!ui_element_render(elem))
 		return (0);
 	scroll = elem->element;
-	button = scroll->button.element;
 	if (scroll->target)
 		elem->z = ((t_ui_element *)scroll->target)->z;
 	ui_scrollbar_recount(elem);
@@ -122,4 +119,5 @@ void	ui_scrollbar_free(void *elem, size_t size)
 		return ;
 	scroll->target = NULL;
 	free(scroll);
+	(void)size;
 }

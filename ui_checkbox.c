@@ -47,6 +47,7 @@ void	ui_checkbox_event(t_ui_element *elem, SDL_Event e)
 		elem->state = UI_STATE_HOVER;
 	else
 		elem->state = UI_STATE_DEFAULT;
+	(void)e;
 }
 
 int	ui_checkbox_render(t_ui_element *elem)
