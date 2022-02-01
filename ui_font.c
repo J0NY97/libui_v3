@@ -38,6 +38,11 @@ void	ui_global_font_free(void)
 	free(fonts);
 }
 
+/*
+ * IMPORTANT:
+ *	If you call this anywhere, make sure to call ui_global_font_free(); when
+ *		exiting the program;
+ */
 TTF_Font	*ui_get_font(char *path, int size)
 {
 	static int		font_count = 0;
