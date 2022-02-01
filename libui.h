@@ -42,8 +42,17 @@ typedef struct s_rgba
 	};
 }	t_rgba;
 
+typedef struct s_ui_font
+{
+	char		*path;
+	int			size;
+	TTF_Font	*font;
+}	t_ui_font;
+
 // FONT
+t_ui_font				**ui_global_font(void);
 TTF_Font				*ui_get_font(char *path, int size);
+void					ui_global_font_free(void);
 
 // Texture
 SDL_Texture				*ui_texture_create_from_text_recipe(

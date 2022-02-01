@@ -92,6 +92,7 @@ void	ui_layout_free(t_ui_layout *layout)
 	ft_lstdel(&layout->families, &ui_family_free);
 	ft_lstdel(&layout->recipes, &ui_recipe_free);
 	ft_arraydel(layout->resource_dirs);
+	ui_global_font_free();
 }
 
 /*
