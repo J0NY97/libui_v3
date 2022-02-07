@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:22:10 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/10 19:22:11 by jsalmi           ###   ########.fr       */
+/*   Updated: 2022/02/07 16:16:14 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 		drop->scrollbar.show = 0;
 		return ;
 	}
-	drop->drop_open = (elem->win->mouse_down_last_frame
-		&& ui_element_is_hover(elem));
+	drop->drop_open = (elem->win->mouse_down_last_fram
+			&& ui_element_is_hover(elem));
 	ui_menu_event(&drop->menu, e);
 	ui_dropdown_event2(elem, e);
 	if (elem->win->mouse_down && !ui_element_is_hover(elem)

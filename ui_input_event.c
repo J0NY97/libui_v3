@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 19:23:10 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/17 11:10:51 by jsalmi           ###   ########.fr       */
+/*   Updated: 2022/02/07 16:18:06 by nneronin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	ui_input_check_if_unselect(t_ui_element *elem, SDL_Event e)
 	input = elem->element;
 	text_input_key_pressed = (e.type == SDL_TEXTINPUT || e.type == SDL_KEYDOWN);
 	text_input_shift_pressed = (e.type == SDL_TEXTINPUT
-		&& (KMOD_LSHIFT & SDL_GetModState()));
+			&& (KMOD_LSHIFT & SDL_GetModState()));
 	if (text_input_key_pressed && !(KMOD_LCTRL & SDL_GetModState())
 		&& (text_input_shift_pressed || !(KMOD_LSHIFT & SDL_GetModState())))
 		input->cursor_from_char_num = input->cursor_on_char_num;
