@@ -72,7 +72,6 @@ void	ui_label_free(void *elem, size_t size)
 		return ;
 	ft_strdel(&label->text);
 	ft_strdel(&label->font_path);
-//	TTF_CloseFont(label->font);
 	free(label);
 	(void)size;
 }

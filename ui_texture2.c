@@ -54,9 +54,6 @@ void	recreate_font_of_label(t_ui_label *label)
 	temp = get_font_path(label->font_path);
 	ft_strdel(&label->font_path);
 	label->font_path = temp;
-//	if (label->font)
-//		TTF_CloseFont(label->font);
-//	label->font = TTF_OpenFont(label->font_path, label->font_size);
 	label->font = ui_get_font(label->font_path, label->font_size);
 }
 
