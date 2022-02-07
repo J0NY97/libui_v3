@@ -32,7 +32,7 @@ typedef struct s_ui_acceptable
 }				t_ui_acceptable;
 
 static const t_ui_acceptable	g_acceptable[]
-= {
+	= {
 {
 	.name = "Element",
 	.type = UI_TYPE_ELEMENT,
