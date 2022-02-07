@@ -67,7 +67,7 @@ void	ui_dropdown_event(t_ui_element *elem, SDL_Event e)
 		return ;
 	}
 	drop->drop_open = elem->win->mouse_down_last_frame
-		&& ui_element_is_hover(elem);
+			&& ui_element_is_hover(elem);
 	ui_menu_event(&drop->menu, e);
 	ui_dropdown_event2(elem, e);
 	if (elem->win->mouse_down && !ui_element_is_hover(elem)
