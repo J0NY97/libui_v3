@@ -55,7 +55,7 @@ TTF_Font	*ui_get_font(char *path, int size)
 	i = -1;
 	fonts = ui_global_font();
 	while (++i < font_count)
-		if ((*fonts)[i].size == size)
+		if ((*fonts)[i].size == size && (*fonts)[i].path)
 			if (ft_strequ((*fonts)[i].path, path))
 				return ((*fonts)[i].font);
 	new_fonts = realloc(*fonts, (++font_count + 1) * sizeof(t_ui_font));
