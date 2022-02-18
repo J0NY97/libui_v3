@@ -50,7 +50,7 @@ typedef struct s_ui_font
 }	t_ui_font;
 
 // FONT
-t_ui_font				**ui_global_font(void);
+t_list					**ui_global_font(void);
 TTF_Font				*ui_get_font(char *path, int size);
 void					ui_global_font_free(void);
 

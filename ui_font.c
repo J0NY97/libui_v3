@@ -12,30 +12,25 @@
 
 #include "libui.h"
 
-t_ui_font	**ui_global_font(void)
+t_list	**ui_global_font(void)
 {
-	static t_ui_font	*fonts = NULL;
+	static t_list	*fonts = NULL;
 
 	return (&fonts);
 }
 
 void	ui_global_font_free(void)
 {
-	t_ui_font	*fonts;
-	int			i;
+	t_list		*curr;
 
-	fonts = *ui_global_font();
-	i = -1;
-	while (++i || 1)
+	curr = *ui_global_font();
+	while (curr)
 	{
-		if (fonts[i].path == NULL
-			&& fonts[i].size == -1
-			&& fonts[i].font == NULL)
-			break ;
-		free(fonts[i].path);
-		TTF_CloseFont(fonts[i].font);
+		free(((t_ui_font *)curr->content)->path);
+		TTF_CloseFont(((t_ui_font *)curr->content)->font);
+		curr = curr->next;
 	}
-	free(fonts);
+	ft_lstdel(ui_global_font(), &dummy_free_er);
 }
 
 /*
@@ -45,53 +40,25 @@ void	ui_global_font_free(void)
  */
 TTF_Font	*ui_get_font(char *path, int size)
 {
-	static int		font_count = 0;
-	t_ui_font		**fonts;
-	t_ui_font		*new_fonts;
-	int				i;
+	t_list		**fonts;
+	t_list		*curr;
+	t_ui_font	*new_font;
 
 	if (access(path, F_OK))
 		return (NULL);
-	i = -1;
 	fonts = ui_global_font();
-	while (++i < font_count)
-		if ((*fonts)[i].size == size && (*fonts)[i].path)
-			if (ft_strequ((*fonts)[i].path, path))
-				return ((*fonts)[i].font);
-	new_fonts = realloc(*fonts, (++font_count + 1) * sizeof(t_ui_font));
-	*fonts = new_fonts;
-	(*fonts)[font_count - 1].path = ft_strdup(path);
-	(*fonts)[font_count - 1].size = size;
-	(*fonts)[font_count - 1].font = TTF_OpenFont(path, size);
-	(*fonts)[font_count].path = NULL;
-	(*fonts)[font_count].size = -1;
-	(*fonts)[font_count].font = NULL;
-	return ((*fonts)[font_count - 1].font);
+	curr = *fonts;
+	while (fonts && curr)
+	{
+		if (((t_ui_font *)curr->content)->size == size)
+			if (ft_strequ(((t_ui_font *)curr->content)->path, path))
+				return (((t_ui_font *)curr->content)->font);
+		curr = curr->next;
+	}
+	new_font = malloc(sizeof(t_ui_font));
+	new_font->path = ft_strdup(path);
+	new_font->size = size;
+	new_font->font = TTF_OpenFont(path, size);
+	add_to_list(fonts, new_font, sizeof(t_ui_font));
+	return (new_font->font);
 }
-/*
-*/
-
-/*
- * Returns null if path doesnt exits;
-*/
-/*
-TTF_Font	*ui_get_font(char *path, int size)
-{
-	static t_ui_font	*fonts = NULL;
-	static int			font_count = 0;
-	int					i;
-
-	if (access(path, F_OK))
-		return (NULL);
-	i = -1;
-	while (++i < font_count)
-		if (fonts[i].size == size)
-			if (ft_strequ(fonts[i].path, path))
-				return (fonts[i].font);
-	fonts = realloc(fonts, ++font_count * sizeof(t_ui_font));
-	fonts[font_count - 1].path = ft_strdup(path);
-	fonts[font_count - 1].size = size;
-	fonts[font_count - 1].font = TTF_OpenFont(path, size);
-	return (fonts[font_count - 1].font);
-}
-*/
