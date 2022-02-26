@@ -6,7 +6,7 @@
 /*   By: jsalmi <jsalmi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/22 14:06:15 by jsalmi            #+#    #+#             */
-/*   Updated: 2021/12/22 14:50:02 by jsalmi           ###   ########.fr       */
+/*   Updated: 2022/02/26 08:27:29 by jsalmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ui_global_font_free(void)
 	{
 		free(((t_ui_font *)curr->content)->path);
 		TTF_CloseFont(((t_ui_font *)curr->content)->font);
+		free(curr->content);
 		curr = curr->next;
 	}
 	ft_lstdel(ui_global_font(), &dummy_free_er);
