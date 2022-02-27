@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile-win                                       :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jsalmi <jsalmi@student.hive.fi>            +#+  +:+       +#+         #
+#    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/29 10:10:07 by jsalmi            #+#    #+#              #
-#    Updated: 2022/01/29 10:10:07 by jsalmi           ###   ########.fr        #
+#    Updated: 2022/02/27 12:09:00 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -133,7 +133,7 @@ clean:
 	@rm -rf $(ODIR)
 
 fclean: clean
-	@rm $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 
