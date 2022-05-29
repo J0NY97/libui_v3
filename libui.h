@@ -12,6 +12,7 @@
 
 #ifndef LIBUI_H
 # define LIBUI_H
+
 # define SDL_MAIN_HANDLED
 # include "SDL.h"
 # include "SDL_image.h"
@@ -27,7 +28,6 @@
 # include "ui_load.h"
 # include "math.h"
 # include "limits.h"
-//# include "path.h"
 
 typedef struct s_rgba
 {
@@ -104,10 +104,8 @@ void					ui_surface_circle_draw(SDL_Surface *surface,
 							t_vec2i orig, int r, Uint32 color);
 void					ui_surface_circle_draw_filled(SDL_Surface *surface,
 							t_vec2i orig, int r, Uint32 color);
-/*
 void					ui_surface_line_draw_thicc(SDL_Surface *surface,
-							t_vec2i v1, t_vec2i v2, int w, Uint32 color);
-*/
+							t_vec2i *points, int w, Uint32 color);
 
 // Help
 int						point_in_rect(t_vec2i point, t_vec4i rect);
