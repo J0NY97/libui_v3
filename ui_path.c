@@ -10,13 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#define SDL_MAIN_HANDLED
 #include "stdlib.h"
 #include "libft.h"
 #include "libpf.h"
 #include "fcntl.h"
 #include "sys/stat.h"
 #include "SDL.h"
-#define SDL_MAIN_HANDLED
 
 char	*build_non_rword_path(char *rword_path)
 {

@@ -83,6 +83,7 @@ SRCS = \
 		ui_surface.c\
 		ui_surface2.c\
 		ui_surface_draw.c\
+		ui_surface_circle_draw.c\
 		ui_text_align.c\
 		ui_texture.c\
 		ui_texture2.c\
