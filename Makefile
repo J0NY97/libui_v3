@@ -102,27 +102,34 @@ CFILES =	ui_button.c\
 			ui_window_event.c\
 
 
-NAME		=	libui
-CDIR		=	../libui
-ODIR		=	./obj
-IDIR		=	-I./
+NAME		=	libui.a
+CDIR		=	.
+ODIR		=	obj
+IDIR		=	-I.
 SRCS		=	$(addprefix $(CDIR)/,$(CFILES))
 OBJS		=	$(addprefix $(ODIR)/,$(CFILES:.c=.o))
 DEP			=	$(OBJS:.o=.d)
 
-LIB_DIR		=	../
+LIB_DIR		=	..
 
-LIB_INC		=	-I $(LIB_DIR)libft -I $(LIB_DIR)libpf
+LIB_INC		=	\
+				-I $(LIB_DIR)/libft \
+				-I $(LIB_DIR)/libpf \
 
 ifeq ($(SHELL_NAME), Darwin)
 
-LIB_INC		+=	-I ../SDL_MAC/SDL2.framework/Headers -I ../SDL_MAC/SDL2_image.framework/Headers -I ../SDL_MAC/SDL2_ttf.framework/Headers -F ../SDL_MAC
-CFLAGS		=	-Wall -Wextra -MMD -O3 -Werror -Wfatal-errors# -g -fsanitize=address
+LIB_INC		+=	\
+				-I $(LIB_DIR)/SDL_MAC/SDL2.framework/Headers 
+				-I $(LIB_DIR)/SDL_MAC/SDL2_image.framework/Headers \
+				-I $(LIB_DIR)/SDL_MAC/SDL2_ttf.framework/Headers \
+				-F ../SDL_MAC
+
+CFLAGS		=	-Wall -Wextra -MMD -O3 -Werror -Wfatal-errors #-g -fsanitize=address
 
 else
 
-LIB_INC		+=	-I ../SDL_WIN/SDL2_includes
-CFLAGS		=	-Wall -Wextra -MMD -Wno-unused-variable -O3 -flto #-Werror -Wfatal-errors
+LIB_INC		+=	-I $(LIB_DIR)/SDL_WIN/include
+CFLAGS		=	-Wall -Wextra -MMD -Wno-unused-variable -O3 #-flto -Werror -Wfatal-errors
 
 endif
 
