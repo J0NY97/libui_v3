@@ -1,12 +1,12 @@
 # **************************************************************************** #
 #                                                                              #
 #                                                         :::      ::::::::    #
-#    Makefile-THIS                                      :+:      :+:    :+:    #
+#    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: nneronin <nneronin@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/09 10:30:08 by nneronin          #+#    #+#              #
-#    Updated: 2022/05/30 12:01:39 by nneronin         ###   ########.fr        #
+#    Updated: 2022/05/30 12:26:20 by nneronin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -119,7 +119,7 @@ LIB_INC		=	\
 ifeq ($(SHELL_NAME), Darwin)
 
 LIB_INC		+=	\
-				-I $(LIB_DIR)/SDL_MAC/SDL2.framework/Headers 
+				-I $(LIB_DIR)/SDL_MAC/SDL2.framework/Headers \
 				-I $(LIB_DIR)/SDL_MAC/SDL2_image.framework/Headers \
 				-I $(LIB_DIR)/SDL_MAC/SDL2_ttf.framework/Headers \
 				-F ../SDL_MAC
